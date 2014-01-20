@@ -114,11 +114,11 @@
     <Compile Include="TypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NoSweatBudgets\Logging\Logging.csproj">
-      <Project>{346B2F1B-027A-445A-A7AC-0429A566E945}</Project>
-      <Name>Logging</Name>
+    <ProjectReference Include="..\..\gems-logger\Logging\Logging.csproj">
+      <Project>{501504de-66c8-4430-b469-e1746bfb2d17}</Project>
+      <Name>Logging %28GitHub\Logging\Logging%29</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Markdown\Markdown.csproj">
+    <ProjectReference Include="..\..\gems-markdown\Markdown\Markdown.csproj">
       <Project>{32E68B04-B736-4732-8049-74E794AA0F32}</Project>
       <Name>Markdown</Name>
     </ProjectReference>
