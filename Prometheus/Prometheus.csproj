@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0F5574D0-9289-43C3-A86D-04302D7AB9D8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Prometheus</RootNamespace>
+    <AssemblyName>Prometheus</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'cgTag - Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\cgTag - Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\Prometheus.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'cgTag - Release|AnyCPU'">
+    <OutputPath>bin\cgTag - Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Prometheus.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GOLD Engine, Version=5.0.4337.25397, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>Gold\GOLD Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TokenFactory.cs" />
+    <Compile Include="Context.cs" />
+    <Compile Include="Exceptions\CommandFactoryException.cs" />
+    <Compile Include="Exceptions\EofException.cs" />
+    <Compile Include="Exceptions\InternalErrorException.cs" />
+    <Compile Include="Exceptions\LexicalException.cs" />
+    <Compile Include="Exceptions\NotLoadedException.cs" />
+    <Compile Include="Exceptions\OperatorException.cs" />
+    <Compile Include="Exceptions\ParserException.cs" />
+    <Compile Include="Exceptions\ResourceNotFoundException.cs" />
+    <Compile Include="Exceptions\SyntaxException.cs" />
+    <Compile Include="Exceptions\TypeNotFoundException.cs" />
+    <Compile Include="Exceptions\UnsupportedSymbolException.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="ParserRule.cs" />
+    <Compile Include="ParserSymbol.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="Tokens\Token.cs" />
+    <Compile Include="Tokens\Arguments\Argument.cs" />
+    <Compile Include="Tokens\Arguments\Ref.cs" />
+    <Compile Include="Tokens\Arguments\RefExpression.cs" />
+    <Compile Include="Tokens\Arguments\RefValue.cs" />
+    <Compile Include="Tokens\Arguments\RefVariable.cs" />
+    <Compile Include="Tokens\Blocks\Block.cs" />
+    <Compile Include="Tokens\Blocks\Program.cs" />
+    <Compile Include="Tokens\Commands\AcceptCommand.cs" />
+    <Compile Include="Tokens\Commands\Command.cs" />
+    <Compile Include="Tokens\Commands\RejectCommand.cs" />
+    <Compile Include="Tokens\Commands\SetCommand.cs" />
+    <Compile Include="Tokens\Expressions\AddExpression.cs" />
+    <Compile Include="Tokens\Expressions\BaseExpression.cs" />
+    <Compile Include="Tokens\Expressions\DivideExpression.cs" />
+    <Compile Include="Tokens\Expressions\Expression.cs" />
+    <Compile Include="Tokens\Expressions\MultiplyExpression.cs" />
+    <Compile Include="Tokens\Expressions\OperatorExpression.cs" />
+    <Compile Include="Tokens\Expressions\SearchTerm.cs" />
+    <Compile Include="Tokens\Expressions\SubExpression.cs" />
+    <Compile Include="Tokens\Expressions\UnaryOperator.cs" />
+    <Compile Include="Tokens\Statements\Statement.cs" />
+    <Compile Include="Tokens\Statements\Statements.cs" />
+    <Compile Include="TypeConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\NoSweatBudgets\Logging\Logging.csproj">
+      <Project>{346B2F1B-027A-445A-A7AC-0429A566E945}</Project>
+      <Name>Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Markdown\Markdown.csproj">
+      <Project>{32E68B04-B736-4732-8049-74E794AA0F32}</Project>
+      <Name>Markdown</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ParserGrammar.egt" />
+    <None Include="ParserGrammar.grm" />
+    <None Include="Template\ParserRule.pgt" />
+    <None Include="Template\ParserSymbol.pgt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>$(ProjectDir)Gold\goldbuild $(ProjectDir)\ParserGrammar.grm $(ProjectDir)\ParserGrammar.egt
+$(ProjectDir)Gold\goldprog $(ProjectDir)\ParserGrammar.egt $(ProjectDir)\Template\ParserRule.pgt $(ProjectDir)\ParserRule.cs
+$(ProjectDir)Gold\goldprog $(ProjectDir)\ParserGrammar.egt $(ProjectDir)\Template\ParserSymbol.pgt $(ProjectDir)\ParserSymbol.cs</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

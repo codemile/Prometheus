@@ -1,0 +1,24 @@
+﻿##LANGUAGE 'C#'
+##TEMPLATE-NAME 'Parser rules lookup table.'
+##ENGINE-NAME 'Aggregator'
+##SYSTEM-VERSION '5.0'
+##AUTHOR 'ThinkingMedia' 
+##FILE-EXTENSION 'cs'
+##ID-CASE None
+##ID-SEPARATOR '_'
+
+namespace Prometheus
+{
+	/// <summary>
+	/// This enum is generated at compile time by the GOLD template generator.
+	///
+	/// Do not make changes to this file.
+	/// </summary>
+	public enum ParserRule
+	{
+##DELIMITER ','
+##PRODUCTIONS
+		@%ID% = %Value%%Delimiter% %Col:50% // %Description%
+##END-PRODUCTIONS
+	}
+}

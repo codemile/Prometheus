@@ -1,0 +1,148 @@
+"Name"     = 'Aggregator Grammar'
+"Author"   = 'ThinkingMedia'
+"Version"  = '1.0'
+"About"    = 'Scripting language for processing documents.'
+
+"Start Symbol" = <Program>
+
+! ===================================================================
+! Character Sets
+! ===================================================================
+
+{ID Head}      = {Letter} + [_]
+{ID Tail}      = {Alphanumeric} + [_]
+{DoubleString Chars} = {Printable} + {HT} - ["\]
+{SingleString Chars} = {Printable} + {HT} - [''\]
+
+! ===================================================================
+! Terminals
+! ===================================================================
+
+Identifier		= {ID Head}{ID Tail}*
+StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"'
+StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* ['']
+Integer			= [0123456789,]+
+Float			= [0123456789,]+ '.' [0123456789]+
+Boolean			= true | false | on | off | yes | no | always | never
+
+! ===================================================================
+! Comments
+! ===================================================================
+
+Comment Start = '/*'
+Comment End   = '*/'
+Comment Line  = '//'
+
+! ===================================================================
+! Math Expressions
+! ===================================================================
+<Expression>  ::= <Expression> '>'  <AddExpression> 
+			   |  <Expression> '<'  <AddExpression> 
+			   |  <Expression> '<=' <AddExpression> 
+			   |  <Expression> '>=' <AddExpression>
+			   |  <Expression> '==' <AddExpression>    !Equal
+			   |  <Expression> '<>' <AddExpression>    !Not equal
+			   |  <Expression> '!=' <AddExpression>    !Not equal
+			   |  <Expression> '&&' <AddExpression>
+			   |  <Expression> 'and' <AddExpression>
+			   |  <Expression> '||' <AddExpression>
+			   |  <Expression> 'or' <AddExpression>
+			   |  <AddExpression> 
+
+<AddExpression>			::= <AddExpression> '+' <SubExpression>
+						 |  <SubExpression> 
+
+<SubExpression>			::= <SubExpression> '-' <MultiplyExpression>
+						 |  <MultiplyExpression> 
+
+<MultiplyExpression>    ::= <MultiplyExpression> '*' <DivideExpression> 
+						 |  <DivideExpression> 
+
+<DivideExpression>		::= <DivideExpression> '/' <SearchTerm> 
+						 |  <SearchTerm> 
+
+<SearchTerm>			::= 'has' <UnaryOperator>
+						 | 'contains' <UnaryOperator>
+						 | <UnaryOperator>
+
+<UnaryOperator>			::= '-' <Value>
+						 | '+' <Value>
+						 | '!' <Value>
+						 | '~' <Value>
+						 | 'not' <Value>
+						 | <Value>
+
+! ===================================================================
+! Arguments for commands
+! ===================================================================
+
+<Variable>	  ::= Identifier
+
+<Value>       ::= <Variable>
+			   | StringDouble
+			   | StringSingle
+			   | Integer
+			   | Float
+			   | Boolean
+			   | '(' <Expression> ')'
+			  
+! ===================================================================
+! Basic structure of the program.
+! ===================================================================
+<Program> ::= <Statements> | <Block>
+		   
+<Block> ::= '{' <Statements> '}'
+
+<Statements> ::= <Statement>
+				| <Statements>  <Statement>
+
+<IfBlock> ::= if '(' <Expression> ')' <Block>
+
+<IfElseBlock> ::= if '(' <Expression> ')' <Block> else <Block>
+
+! ===================================================================
+! Statements
+! ===================================================================
+<Statement> ::= <SetCommand>
+			 | <UnsetCommand>
+			 | <RejectCommand>
+			 | <AcceptCommand>
+			 | <ScopeCommand>
+			 | <IncludeCommand>
+			 | <AssertCommand>
+			 | <DebugCommand>
+			 | <TraceCommand>
+
+! ===================================================================
+! Variable Commands
+! ===================================================================
+
+<SetCommand> ::= set <Variable> '=' <Expression> ';'
+				 
+<UnsetCommand> ::= unset <Variable> ';'
+
+! ===================================================================
+! Directives
+! ===================================================================
+
+<IncludeCommand> ::= include <Expression> ';'
+
+! ===================================================================
+! Debug Commands
+! ===================================================================
+			   
+<AssertCommand> ::= assert <Expression> <Expression> ';'
+			  
+<DebugCommand> ::= debug <Expression> ';'
+			 
+<TraceCommand> ::= trace <Expression> <Expression> ';'
+
+! ===================================================================
+! Context Commands
+! ===================================================================
+
+<ScopeCommand> ::= scope <Expression> ';'
+
+<RejectCommand> ::= reject <Expression> ';'
+
+<AcceptCommand> ::= accept <Expression> ';'
