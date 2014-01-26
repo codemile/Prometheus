@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusStudio", "Prometh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fire", "Fire\Fire.csproj", "{B234AF3E-1249-4373-B433-91A1B7C29A8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GemsCLI", "..\gems-cli\GemsCLI\GemsCLI.csproj", "{B073533B-E6CF-410E-9FD7-EB0014FA26C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		cgTag - Debug|Any CPU = cgTag - Debug|Any CPU
@@ -69,6 +71,14 @@ Global
 		{B234AF3E-1249-4373-B433-91A1B7C29A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B234AF3E-1249-4373-B433-91A1B7C29A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B234AF3E-1249-4373-B433-91A1B7C29A8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B073533B-E6CF-410E-9FD7-EB0014FA26C6}.cgTag - Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B073533B-E6CF-410E-9FD7-EB0014FA26C6}.cgTag - Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B073533B-E6CF-410E-9FD7-EB0014FA26C6}.cgTag - Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B073533B-E6CF-410E-9FD7-EB0014FA26C6}.cgTag - Release|Any CPU.Build.0 = Release|Any CPU
+		{B073533B-E6CF-410E-9FD7-EB0014FA26C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B073533B-E6CF-410E-9FD7-EB0014FA26C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B073533B-E6CF-410E-9FD7-EB0014FA26C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B073533B-E6CF-410E-9FD7-EB0014FA26C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

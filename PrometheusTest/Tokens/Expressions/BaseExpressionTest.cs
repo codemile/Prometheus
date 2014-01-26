@@ -13,7 +13,7 @@ namespace PrometheusTest.Tokens.Expressions
         /// <summary>
         /// Creates both a bracketed and non-bracketed value.
         /// </summary>
-        public IEnumerable<string> BracketValue(string pValue)
+        private static IEnumerable<string> BracketValue(string pValue)
         {
             List<string> brackets = new List<string>(2);
             // no brackets
@@ -30,19 +30,19 @@ namespace PrometheusTest.Tokens.Expressions
         /// <summary>
         /// Creates a list of possible two value operations for an expression.
         /// </summary>
-        public IEnumerable<string> ValOpVal(char pOperator)
+        private static IEnumerable<string> ValOpVal(char pOperator)
         {
             // create of list of the values with brackets
-            IEnumerable<string> brackets_a = BracketValue("{0}");
-            IEnumerable<string> brackets_b = BracketValue("{1}");
+            IEnumerable<string> bracketsA = BracketValue("{0}");
+            IEnumerable<string> bracketsB = BracketValue("{1}");
 
             List<string> formulas = new List<string>();
-            foreach (string value_a in brackets_a)
+            foreach (string valueA in bracketsA)
             {
-                foreach (string value_b in brackets_b)
+                foreach (string valueB in bracketsB)
                 {
                     // operator with spaces
-                    formulas.Add(string.Format("{0} {1} {2}", value_a, pOperator, value_b));
+                    formulas.Add(string.Format("{0} {1} {2}", valueA, pOperator, valueB));
                 }
             }
 
@@ -56,22 +56,9 @@ namespace PrometheusTest.Tokens.Expressions
         }
 
         /// <summary>
-        /// Creates a list of possible three value operations for an expression.
-        /// </summary>
-        public IEnumerable<string> ValOpValOpVal(char pOperatorA, char pOperatorB)
-        {
-            List<string> formulas = new List<string>();
-            formulas.Add(string.Format("{0} {1} {2} {3} {4}", "{0}", pOperatorA, "{1}", pOperatorB, "{2}"));
-            formulas.Add(string.Format("({0} {1} {2}) {3} {4}", "{0}", pOperatorA, "{1}", pOperatorB, "{2}"));
-            formulas.Add(string.Format("{0} {1} ({2} {3} {4})", "{0}", pOperatorA, "{1}", pOperatorB, "{2}"));
-
-            return formulas;
-        }
-
-        /// <summary>
         /// Executes a x+x test.
         /// </summary>
-        public void ValOpValTest<T>(List<ValOpValData<T>> pData, char pOperator) where T : struct
+        protected static void ValOpValTest<T>(IEnumerable<ValOpValData<T>> pData, char pOperator) where T : struct
         {
             Type parameterType = typeof (T);
 
@@ -81,7 +68,7 @@ namespace PrometheusTest.Tokens.Expressions
                 foreach (string num_format in ValOpVal(pOperator))
                 {
                     string str = string.Format(num_format, x.Left, x.Right);
-                    exp = createAggRef<BaseExpression>(str);
+                    exp = CreateAggRef<BaseExpression>(str);
                     if (parameterType == typeof (int))
                     {
                         Assert.AreEqual(x.Result, exp.getInt());
@@ -101,20 +88,9 @@ namespace PrometheusTest.Tokens.Expressions
         /// <summary>
         /// Test data for a x + x
         /// </summary>
-        public class ValOpValData<T>
+        protected class ValOpValData<T>
         {
             public T Left { get; set; }
-            public T Result { get; set; }
-            public T Right { get; set; }
-        }
-
-        /// <summary>
-        /// Test data for a x + x / x
-        /// </summary>
-        public class ValOpValOpValData<T>
-        {
-            public T Left { get; set; }
-            public T Mid { get; set; }
             public T Result { get; set; }
             public T Right { get; set; }
         }

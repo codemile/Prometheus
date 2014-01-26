@@ -12,6 +12,14 @@ namespace Prometheus.Tokens.Blocks
     public class Block : Statement, IEnumerable<Statement>
     {
         /// <summary>
+        /// The number of statements in the block.
+        /// </summary>
+        public int Count
+        {
+            get { return _statements.Count; }
+        }
+
+        /// <summary>
         /// Index access to statements.
         /// </summary>
         public Statement this[int i]
@@ -23,14 +31,6 @@ namespace Prometheus.Tokens.Blocks
         /// Statements are executed in the order found in the list.
         /// </summary>
         private List<Statement> _statements { get; set; }
-
-        /// <summary>
-        /// The number of statements in the block.
-        /// </summary>
-        public int Count
-        {
-            get { return _statements.Count; }
-        }
 
         /// <summary>
         /// The statements in a block can be iterated.

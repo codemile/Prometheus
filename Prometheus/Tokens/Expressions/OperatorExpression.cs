@@ -9,6 +9,16 @@ namespace Prometheus.Tokens.Expressions
     public abstract class OperatorExpression : BaseExpression
     {
         /// <summary>
+        /// Left side of the operation
+        /// </summary>
+        protected BaseExpression Left { get; private set; }
+
+        /// <summary>
+        /// Right side of the operation
+        /// </summary>
+        protected BaseExpression Right { get; private set; }
+
+        /// <summary>
         /// Returns the child expression when chaining.
         /// </summary>
         private BaseExpression _child
@@ -24,16 +34,6 @@ namespace Prometheus.Tokens.Expressions
         {
             get { return Left != null && Right == null; }
         }
-
-        /// <summary>
-        /// Left side of the operation
-        /// </summary>
-        protected BaseExpression Left { get; private set; }
-
-        /// <summary>
-        /// Right side of the operation
-        /// </summary>
-        protected BaseExpression Right { get; private set; }
 
         /// <summary>
         /// Constructor

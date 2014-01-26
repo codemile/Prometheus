@@ -31,11 +31,6 @@ namespace Prometheus
         private List<Fragment> _fragments;
 
         /// <summary>
-        /// The current document.
-        /// </summary>
-        private iDocument _document { get; set; }
-
-        /// <summary>
         /// The last known exception.
         /// </summary>
         public Exception LastError { get; set; }
@@ -44,6 +39,11 @@ namespace Prometheus
         /// The current status.
         /// </summary>
         public StatusType Status { get; set; }
+
+        /// <summary>
+        /// The current document.
+        /// </summary>
+        private iDocument _document { get; set; }
 
         /// <summary>
         /// Adds a fragment type to the scope of the current search.
@@ -81,6 +81,15 @@ namespace Prometheus
         }
 
         /// <summary>
+        /// Removes a fragment type from the current scope.
+        /// </summary>
+        public void RemoveScope(string pFragmentType)
+        {
+            _scope.Remove(pFragmentType);
+            _fragments = null;
+        }
+
+        /// <summary>
         /// Returns a list of fragments for the current scope.
         /// </summary>
         public IEnumerable<Fragment> getFragments(DocumentCursor pCursor)
@@ -94,15 +103,6 @@ namespace Prometheus
                 }
             }
             return _fragments;
-        }
-
-        /// <summary>
-        /// Removes a fragment type from the current scope.
-        /// </summary>
-        public void RemoveScope(string pFragmentType)
-        {
-            _scope.Remove(pFragmentType);
-            _fragments = null;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace PrometheusTest
         public void Test_Blocks()
         {
             Parser p = new Parser();
-            Context context = createContextString("Hello World", "This is my document.");
+            Context context = CreateContextString("Hello World", "This is my document.");
             Program program = p.Parse(context, "test", "{ set mathew='abcdef'; }");
 
             Assert.IsNotNull(program);
@@ -39,7 +39,7 @@ namespace PrometheusTest
         public void Test_Parse()
         {
             Parser p = new Parser();
-            Context context = createContextString("Hello World", "This is my document.");
+            Context context = CreateContextString("Hello World", "This is my document.");
             Program program = p.Parse(context, "test", "set mathew='abcdef'; set john=mathew; set smith=john;");
 
             Assert.IsNotNull(program);

@@ -9,14 +9,14 @@ namespace Prometheus.Tokens.Arguments
     public class RefVariable : Ref
     {
         /// <summary>
-        /// The scope of the variable.
-        /// </summary>
-        private string _scope { get; set; }
-
-        /// <summary>
         /// The name of the variable.
         /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// The scope of the variable.
+        /// </summary>
+        private string _scope { get; set; }
 
         /// <summary>
         /// Constructor

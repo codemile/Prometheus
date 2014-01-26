@@ -7,6 +7,7 @@ using Prometheus.Tokens.Arguments;
 using Prometheus.Tokens.Blocks;
 using Prometheus.Tokens.Expressions;
 using Prometheus.Tokens.Statements;
+using Token = Prometheus.Tokens.Token;
 
 namespace Prometheus
 {
@@ -94,7 +95,7 @@ namespace Prometheus
         /// </summary>
         private Block CreateBlock(TokenList pTokens)
         {
-            Token second = getTokenByOffset(pTokens, 1, 3);
+            GOLD.Token second = getTokenByOffset(pTokens, 1, 3);
             return CreateBlock((Statement)second.Data);
         }
 
@@ -103,8 +104,8 @@ namespace Prometheus
         /// If the symbol ends with a classifier, then a class name is generated
         /// using that symbol as a string.
         /// </summary>
-        private Tokens.Token CreateBySymbolName(Reduction pReduct, ParserSymbol pSymbol, string pEndsWith,
-                                                string pPackage)
+        private Token CreateBySymbolName(Reduction pReduct, ParserSymbol pSymbol, string pEndsWith,
+                                         string pPackage)
         {
             string symbolName = pSymbol.ToString();
             if (!symbolName.EndsWith(pEndsWith))
@@ -121,7 +122,7 @@ namespace Prometheus
                 }
 
                 object[] arguments = CreateArguments(pReduct.Parent, pReduct);
-                return (Tokens.Token)Activator.CreateInstance(type, arguments);
+                return (Token)Activator.CreateInstance(type, arguments);
             }
             catch (TypeLoadException e)
             {
@@ -138,7 +139,7 @@ namespace Prometheus
         private Program CreateProgram(TokenList pTokens)
         {
             Block block;
-            Token first = getTokenByOffset(pTokens, 0, 1);
+            GOLD.Token first = getTokenByOffset(pTokens, 0, 1);
 
             Block firstBlock = first.Data as Block;
             if (firstBlock != null)
@@ -166,7 +167,7 @@ namespace Prometheus
         /// </summary>
         private Ref CreateValueRef(TokenList pTokens)
         {
-            Token token = pTokens.Count() == 3 ? getTokenByOffset(pTokens, 1, 3) : getTokenByOffset(pTokens, 0, 1);
+            GOLD.Token token = pTokens.Count() == 3 ? getTokenByOffset(pTokens, 1, 3) : getTokenByOffset(pTokens, 0, 1);
 
             Symbol symbol = token.Parent;
             object data = token.Data;
@@ -205,40 +206,6 @@ namespace Prometheus
         }
 
         /// <summary>
-        /// Converts the first token to it's string data. There must be only one token.
-        /// </summary>
-        private string getStringByOffset(TokenList pTokens, int pOffset, int pExpected)
-        {
-            object data = getTokenByOffset(pTokens, pOffset, pExpected).Data;
-            if (data is Tokens.Token)
-            {
-                // it's like this is a programming error. AggToken should not be converted to strings
-                // as part of the parsing process.
-                throw new LexicalException("Invalid conversion to string", _cursor);
-            }
-            return data.ToString();
-        }
-
-        /// <summary>
-        /// Returns a token from the collection. Asserts that the collection has an expected
-        /// size. If the size of the collection does not match the expected size an
-        /// exception is thrown.
-        /// This is used to verify the structure of the token tree while parsing.
-        /// </summary>
-        /// <param name="pTokens">The token collection.</param>
-        /// <param name="pOffset">A zero based offset.</param>
-        /// <param name="pExpected">The expected number of tokens in the collection.</param>
-        private Token getTokenByOffset(TokenList pTokens, int pOffset, int pExpected)
-        {
-            if (pTokens.Count() != pExpected)
-            {
-                throw new CommandFactoryException(
-                    string.Format("{0} token expected, but {1} were found", pExpected, pTokens.Count()), _cursor);
-            }
-            return pTokens[pOffset];
-        }
-
-        /// <summary>
         /// Reduces a tree of statements down to a list of statements.
         /// Discarding AggStatements instances.
         /// </summary>
@@ -262,6 +229,40 @@ namespace Prometheus
         }
 
         /// <summary>
+        /// Converts the first token to it's string data. There must be only one token.
+        /// </summary>
+        private string getStringByOffset(TokenList pTokens, int pOffset, int pExpected)
+        {
+            object data = getTokenByOffset(pTokens, pOffset, pExpected).Data;
+            if (data is Token)
+            {
+                // it's like this is a programming error. AggToken should not be converted to strings
+                // as part of the parsing process.
+                throw new LexicalException("Invalid conversion to string", _cursor);
+            }
+            return data.ToString();
+        }
+
+        /// <summary>
+        /// Returns a token from the collection. Asserts that the collection has an expected
+        /// size. If the size of the collection does not match the expected size an
+        /// exception is thrown.
+        /// This is used to verify the structure of the token tree while parsing.
+        /// </summary>
+        /// <param name="pTokens">The token collection.</param>
+        /// <param name="pOffset">A zero based offset.</param>
+        /// <param name="pExpected">The expected number of tokens in the collection.</param>
+        private GOLD.Token getTokenByOffset(TokenList pTokens, int pOffset, int pExpected)
+        {
+            if (pTokens.Count() != pExpected)
+            {
+                throw new CommandFactoryException(
+                    string.Format("{0} token expected, but {1} were found", pExpected, pTokens.Count()), _cursor);
+            }
+            return pTokens[pOffset];
+        }
+
+        /// <summary>
         /// Attempts to convert a GOLD Reduction object to
         /// AggToken object.
         /// </summary>
@@ -279,7 +280,7 @@ namespace Prometheus
             Production parent = reduct.Parent;
             Symbol head = parent.Head();
             ParserSymbol symbol = (ParserSymbol)head.TableIndex();
-            Tokens.Token token = null;
+            Token token = null;
 
             // create tokens that who's symbol names follow a naming convention of XXXXCommand
             if ((token = CreateBySymbolName(reduct, symbol, "Command", "Commands")) != null)

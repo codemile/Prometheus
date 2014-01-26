@@ -26,7 +26,7 @@ namespace PrometheusTest.Tokens.Expressions
 
             foreach (KeyValuePair<bool, string> pair in data)
             {
-                BaseExpression neg = createAggRef<BaseExpression>(pair.Value);
+                BaseExpression neg = CreateAggRef<BaseExpression>(pair.Value);
                 Assert.AreEqual(pair.Key, neg.getBool());
             }
         }
@@ -41,7 +41,7 @@ namespace PrometheusTest.Tokens.Expressions
                                                      };
             foreach (KeyValuePair<float, string> pair in data)
             {
-                BaseExpression neg = createAggRef<BaseExpression>(pair.Value);
+                BaseExpression neg = CreateAggRef<BaseExpression>(pair.Value);
                 Assert.AreEqual(pair.Key, neg.getPrecise());
             }
         }
@@ -57,7 +57,7 @@ namespace PrometheusTest.Tokens.Expressions
                                                    };
             foreach (KeyValuePair<int, string> pair in data)
             {
-                BaseExpression neg = createAggRef<BaseExpression>(pair.Value);
+                BaseExpression neg = CreateAggRef<BaseExpression>(pair.Value);
                 Assert.AreEqual(pair.Key, neg.getInt());
             }
         }

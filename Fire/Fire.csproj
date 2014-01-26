@@ -41,11 +41,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\gems-cli\GemsCLI\GemsCLI.csproj">
+      <Project>{B073533B-E6CF-410E-9FD7-EB0014FA26C6}</Project>
+      <Name>GemsCLI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\gems-logger\Logging\Logging.csproj">
+      <Project>{501504DE-66C8-4430-B469-E1746BFB2D17}</Project>
+      <Name>Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\gems-markdown\Markdown\Markdown.csproj">
+      <Project>{32E68B04-B736-4732-8049-74E794AA0F32}</Project>
+      <Name>Markdown</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prometheus\Prometheus.csproj">
+      <Project>{0F5574D0-9289-43C3-A86D-04302D7AB9D8}</Project>
+      <Name>Prometheus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -12,10 +12,10 @@ namespace PrometheusTest.Tokens.Arguments
         [TestMethod]
         public void Test_Bool()
         {
-            BaseExpression _ref = createAggRef<BaseExpression>("true");
+            BaseExpression _ref = CreateAggRef<BaseExpression>("true");
             Assert.AreEqual(true, _ref.getBool());
 
-            _ref = createAggRef<BaseExpression>("false");
+            _ref = CreateAggRef<BaseExpression>("false");
             Assert.AreEqual(false, _ref.getBool());
         }
 
@@ -25,16 +25,16 @@ namespace PrometheusTest.Tokens.Arguments
         [TestMethod]
         public void Test_Float()
         {
-            BaseExpression _ref = createAggRef<BaseExpression>("1.234");
+            BaseExpression _ref = CreateAggRef<BaseExpression>("1.234");
             Assert.AreEqual(1.234f, _ref.getPrecise());
 
-            _ref = createAggRef<BaseExpression>("39.47");
+            _ref = CreateAggRef<BaseExpression>("39.47");
             Assert.AreEqual(39.47f, _ref.getPrecise());
 
-            _ref = createAggRef<BaseExpression>("-3,492.39");
+            _ref = CreateAggRef<BaseExpression>("-3,492.39");
             Assert.AreEqual(-3492.39f, _ref.getPrecise());
 
-            _ref = createAggRef<BaseExpression>("0");
+            _ref = CreateAggRef<BaseExpression>("0");
             Assert.AreEqual(0.0f, _ref.getPrecise());
         }
 
@@ -44,16 +44,16 @@ namespace PrometheusTest.Tokens.Arguments
         [TestMethod]
         public void Test_Int()
         {
-            BaseExpression _ref = createAggRef<BaseExpression>("3489.309");
+            BaseExpression _ref = CreateAggRef<BaseExpression>("3489.309");
             Assert.AreEqual(3489, _ref.getInt());
 
-            _ref = createAggRef<BaseExpression>("0.0");
+            _ref = CreateAggRef<BaseExpression>("0.0");
             Assert.AreEqual(0, _ref.getInt());
 
-            _ref = createAggRef<BaseExpression>("38,390.0");
+            _ref = CreateAggRef<BaseExpression>("38,390.0");
             Assert.AreEqual(38390, _ref.getInt());
 
-            _ref = createAggRef<BaseExpression>("-30,204.29");
+            _ref = CreateAggRef<BaseExpression>("-30,204.29");
             Assert.AreEqual(-30204, _ref.getInt());
         }
 
@@ -63,16 +63,16 @@ namespace PrometheusTest.Tokens.Arguments
         [TestMethod]
         public void Test_String_Bool()
         {
-            BaseExpression _ref = createAggRef<BaseExpression>("'$1,129.27'");
+            BaseExpression _ref = CreateAggRef<BaseExpression>("'$1,129.27'");
             Assert.AreEqual(true, _ref.getBool());
 
-            _ref = createAggRef<BaseExpression>("'0.0'");
+            _ref = CreateAggRef<BaseExpression>("'0.0'");
             Assert.AreEqual(false, _ref.getBool());
 
-            _ref = createAggRef<BaseExpression>("'on'");
+            _ref = CreateAggRef<BaseExpression>("'on'");
             Assert.AreEqual(true, _ref.getBool());
 
-            _ref = createAggRef<BaseExpression>("'false'");
+            _ref = CreateAggRef<BaseExpression>("'false'");
             Assert.AreEqual(false, _ref.getBool());
         }
 
@@ -82,7 +82,7 @@ namespace PrometheusTest.Tokens.Arguments
         [TestMethod]
         public void Test_String_DoubleQuotes()
         {
-            BaseExpression _ref = createAggRef<BaseExpression>("\"abcdef\"");
+            BaseExpression _ref = CreateAggRef<BaseExpression>("\"abcdef\"");
             Assert.AreEqual("abcdef", _ref.getString());
         }
 
@@ -92,16 +92,16 @@ namespace PrometheusTest.Tokens.Arguments
         [TestMethod]
         public void Test_String_Float()
         {
-            BaseExpression _ref = createAggRef<BaseExpression>("'1.234'");
+            BaseExpression _ref = CreateAggRef<BaseExpression>("'1.234'");
             Assert.AreEqual(1.234f, _ref.getPrecise());
 
-            _ref = createAggRef<BaseExpression>("'$39.47'");
+            _ref = CreateAggRef<BaseExpression>("'$39.47'");
             Assert.AreEqual(39.47f, _ref.getPrecise());
 
-            _ref = createAggRef<BaseExpression>("'  3,492.39  '");
+            _ref = CreateAggRef<BaseExpression>("'  3,492.39  '");
             Assert.AreEqual(3492.39f, _ref.getPrecise());
 
-            _ref = createAggRef<BaseExpression>("'0'");
+            _ref = CreateAggRef<BaseExpression>("'0'");
             Assert.AreEqual(0.0f, _ref.getPrecise());
         }
 
@@ -111,16 +111,16 @@ namespace PrometheusTest.Tokens.Arguments
         [TestMethod]
         public void Test_String_Int()
         {
-            BaseExpression _ref = createAggRef<BaseExpression>("'3489.309'");
+            BaseExpression _ref = CreateAggRef<BaseExpression>("'3489.309'");
             Assert.AreEqual(3489, _ref.getInt());
 
-            _ref = createAggRef<BaseExpression>("'0.0'");
+            _ref = CreateAggRef<BaseExpression>("'0.0'");
             Assert.AreEqual(0, _ref.getInt());
 
-            _ref = createAggRef<BaseExpression>("'38,390.0'");
+            _ref = CreateAggRef<BaseExpression>("'38,390.0'");
             Assert.AreEqual(38390, _ref.getInt());
 
-            _ref = createAggRef<BaseExpression>("'$-30,204.29'");
+            _ref = CreateAggRef<BaseExpression>("'$-30,204.29'");
             Assert.AreEqual(-30204, _ref.getInt());
         }
 
@@ -130,7 +130,7 @@ namespace PrometheusTest.Tokens.Arguments
         [TestMethod]
         public void Test_String_SingleQuotes()
         {
-            BaseExpression _ref = createAggRef<BaseExpression>("'abcdef'");
+            BaseExpression _ref = CreateAggRef<BaseExpression>("'abcdef'");
             Assert.AreEqual("abcdef", _ref.getString());
         }
     }
