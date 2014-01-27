@@ -19,12 +19,12 @@
         /// <summary>
         /// The source for the source code.
         /// </summary>
-        private string _documentName { get; set; }
+        private string _fileName { get; set; }
 
         /// <summary>
-        /// The line number.
+        /// The row number.
         /// </summary>
-        private int _line { get; set; }
+        private int _row { get; set; }
 
         /// <summary>
         /// Use EMPTY if needed.
@@ -37,10 +37,10 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public DocumentCursor(string pDocumentName, int pLine, int pColumn)
+        public DocumentCursor(string pFileName, int pRow, int pColumn)
         {
-            _documentName = pDocumentName;
-            _line = pLine;
+            _fileName = pFileName;
+            _row = pRow;
             _column = pColumn;
         }
 
@@ -49,9 +49,9 @@
         /// </summary>
         public override string ToString()
         {
-            return _documentName == null
+            return _fileName == null
                 ? "in undefined source."
-                : string.Format("in {0} at: {1}, {2}", _documentName, _line, _column);
+                : string.Format("in {0} at: {1}, {2}", _fileName, _row, _column);
         }
     }
 }

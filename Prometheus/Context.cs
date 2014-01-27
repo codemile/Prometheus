@@ -94,14 +94,17 @@ namespace Prometheus
         /// </summary>
         public IEnumerable<Fragment> getFragments(DocumentCursor pCursor)
         {
-            if (_fragments == null)
+            if (_fragments != null)
             {
-                _fragments = new List<Fragment>();
-                foreach (string scope in _scope)
-                {
-                    _fragments.AddRange(_document.getFragments(scope, pCursor));
-                }
+                return _fragments;
             }
+
+            _fragments = new List<Fragment>();
+            foreach (string scope in _scope)
+            {
+                _fragments.AddRange(_document.getFragments(scope, pCursor));
+            }
+
             return _fragments;
         }
     }
