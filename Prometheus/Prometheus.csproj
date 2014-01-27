@@ -75,6 +75,8 @@
     <Compile Include="Documents\Fragment.cs" />
     <Compile Include="Documents\iDocument.cs" />
     <Compile Include="Exceptions\FragmentNotFoundException.cs" />
+    <Compile Include="Parser\ParserRule.cs" />
+    <Compile Include="Parser\ParserSymbol.cs" />
     <Compile Include="TokenFactory.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Exceptions\CommandFactoryException.cs" />
@@ -88,11 +90,8 @@
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\TypeNotFoundException.cs" />
     <Compile Include="Exceptions\UnsupportedSymbolException.cs" />
-    <Compile Include="Parser.cs" />
-    <Compile Include="ParserRule.cs" />
-    <Compile Include="ParserSymbol.cs" />
+    <Compile Include="Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Result.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\Arguments\Argument.cs" />
     <Compile Include="Tokens\Arguments\Ref.cs" />
@@ -119,10 +118,10 @@
     <Compile Include="TypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ParserGrammar.egt" />
-    <None Include="ParserGrammar.grm" />
-    <None Include="Template\ParserRule.pgt" />
-    <None Include="Template\ParserSymbol.pgt" />
+    <EmbeddedResource Include="Parser\ParserGrammar.egt" />
+    <None Include="Parser\ParserGrammar.grm" />
+    <None Include="Parser\Template\ParserRule.pgt" />
+    <None Include="Parser\Template\ParserSymbol.pgt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\gems-logger\Logging\Logging.csproj">
@@ -132,9 +131,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)Gold\goldbuild $(ProjectDir)\ParserGrammar.grm $(ProjectDir)\ParserGrammar.egt
-$(ProjectDir)Gold\goldprog $(ProjectDir)\ParserGrammar.egt $(ProjectDir)\Template\ParserRule.pgt $(ProjectDir)\ParserRule.cs
-$(ProjectDir)Gold\goldprog $(ProjectDir)\ParserGrammar.egt $(ProjectDir)\Template\ParserSymbol.pgt $(ProjectDir)\ParserSymbol.cs</PreBuildEvent>
+    <PreBuildEvent>$(ProjectDir)Gold\goldbuild $(ProjectDir)\Parser\ParserGrammar.grm $(ProjectDir)\ParserGrammar.egt
+$(ProjectDir)Gold\goldprog $(ProjectDir)\Parser\ParserGrammar.egt $(ProjectDir)\Parser\Template\ParserRule.pgt $(ProjectDir)\Parser\ParserRule.cs
+$(ProjectDir)Gold\goldprog $(ProjectDir)\Parser\ParserGrammar.egt $(ProjectDir)\Parser\Template\ParserSymbol.pgt $(ProjectDir)\Parser\ParserSymbol.cs</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

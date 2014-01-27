@@ -49,7 +49,7 @@ namespace PrometheusTest
         /// </summary>
         protected static Program CreateProgram(Context pContext, string pCode)
         {
-            Parser p = new Parser();
+            Compiler p = new Compiler();
             Program program = p.Parse(pContext, "test", pCode);
             Assert.IsNotNull(program);
             Assert.AreEqual(1, program.Main.Count);
@@ -63,7 +63,7 @@ namespace PrometheusTest
         /// </summary>
         protected static T CreateRef<T>(string pValue) where T : Token
         {
-            Parser p = new Parser();
+            Compiler p = new Compiler();
             Context context = CreateContextString("Hello World", "This is my document.");
             Program program = p.Parse(context, "test", string.Format("set Mathew = {0};", pValue));
             Assert.IsNotNull(program);

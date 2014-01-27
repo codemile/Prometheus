@@ -10,7 +10,7 @@ namespace Prometheus
     /// <summary>
     /// Handles the execution of the source code file.
     /// </summary>
-    public class Parser
+    public class Compiler
     {
         /// <summary>
         /// The GOLD parser.
@@ -80,7 +80,7 @@ namespace Prometheus
         /// <summary>
         /// Constructor
         /// </summary>
-        public Parser()
+        public Compiler()
         {
             _parser = new GOLD.Parser();
 

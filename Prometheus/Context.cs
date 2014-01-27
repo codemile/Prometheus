@@ -70,26 +70,6 @@ namespace Prometheus
         }
 
         /// <summary>
-        /// Clears all fragment types from the current scope.
-        /// If there are not types for the current scope, then nothing
-        /// will match.
-        /// </summary>
-        public void ClearScope()
-        {
-            _scope.Clear();
-            _fragments = null;
-        }
-
-        /// <summary>
-        /// Removes a fragment type from the current scope.
-        /// </summary>
-        public void RemoveScope(string pFragmentType)
-        {
-            _scope.Remove(pFragmentType);
-            _fragments = null;
-        }
-
-        /// <summary>
         /// Returns a list of fragments for the current scope.
         /// </summary>
         public IEnumerable<Fragment> getFragments(DocumentCursor pCursor)

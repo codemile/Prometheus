@@ -7,7 +7,7 @@ using Prometheus.Tokens.Commands;
 namespace PrometheusTest
 {
     [TestClass]
-    public class ParserTest : PrometheusTest
+    public class CompilerTest : PrometheusTest
     {
         /// <summary>
         /// Test basic parsing of a block.
@@ -15,7 +15,7 @@ namespace PrometheusTest
         [TestMethod]
         public void Test_Blocks()
         {
-            Parser p = new Parser();
+            Compiler p = new Compiler();
             Context context = CreateContextString("Hello World", "This is my document.");
             Program program = p.Parse(context, "test", "{ set mathew='abcdef'; }");
 
@@ -29,7 +29,7 @@ namespace PrometheusTest
         [TestMethod]
         public void Test_Loading_Table()
         {
-            Parser p = new Parser();
+            Compiler p = new Compiler();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace PrometheusTest
         [TestMethod]
         public void Test_Parse()
         {
-            Parser p = new Parser();
+            Compiler p = new Compiler();
             Context context = CreateContextString("Hello World", "This is my document.");
             Program program = p.Parse(context, "test", "set mathew='abcdef'; set john=mathew; set smith=john;");
 

@@ -6,7 +6,7 @@ namespace Prometheus
     /// <summary>
     /// A central place to put code that converts between primitive types.
     /// </summary>
-    public class TypeConverter
+    public static class TypeConverter
     {
         /// <summary>
         /// Converts the object to a string.
