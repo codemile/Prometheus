@@ -71,15 +71,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Documents\DocumentCache.cs" />
     <Compile Include="Documents\DocumentCursor.cs" />
-    <Compile Include="Documents\DocumentFactory.cs" />
-    <Compile Include="Documents\DocumentReader.cs" />
     <Compile Include="Documents\Fragment.cs" />
-    <Compile Include="Documents\FragmentException.cs" />
-    <Compile Include="Documents\FragmentNotFoundException.cs" />
     <Compile Include="Documents\iDocument.cs" />
-    <Compile Include="Documents\iFragmentFactory.cs" />
+    <Compile Include="Exceptions\FragmentNotFoundException.cs" />
     <Compile Include="TokenFactory.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Exceptions\CommandFactoryException.cs" />

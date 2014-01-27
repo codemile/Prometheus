@@ -85,14 +85,6 @@
     <Compile Include="Tokens\Commands\AcceptCommandTest.cs" />
     <Compile Include="Tokens\Commands\BaseCommandTest.cs" />
     <Compile Include="Tokens\Commands\RejectCommandTest.cs" />
-    <Compile Include="Tokens\Documents\BaseDocumentTest.cs" />
-    <Compile Include="Tokens\Documents\DocumentFactoryTest.cs" />
-    <Compile Include="Tokens\Expressions\AddExpressionTest.cs" />
-    <Compile Include="Tokens\Expressions\BaseExpressionTest.cs" />
-    <Compile Include="Tokens\Expressions\DivideExpressionTest.cs" />
-    <Compile Include="Tokens\Expressions\MultiplyExpressionTest.cs" />
-    <Compile Include="Tokens\Expressions\SubExpressionTest.cs" />
-    <Compile Include="Tokens\Expressions\UnaryOperatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prometheus\Prometheus.csproj">

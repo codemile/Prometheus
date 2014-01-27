@@ -34,11 +34,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Options.cs" />
@@ -67,10 +62,6 @@
     <ProjectReference Include="..\..\gems-logger\Logging\Logging.csproj">
       <Project>{501504DE-66C8-4430-B469-E1746BFB2D17}</Project>
       <Name>Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prometheus\Prometheus.csproj">
-      <Project>{0F5574D0-9289-43C3-A86D-04302D7AB9D8}</Project>
-      <Name>Prometheus</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
