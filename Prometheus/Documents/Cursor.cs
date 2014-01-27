@@ -1,15 +1,15 @@
 ﻿namespace Prometheus.Documents
 {
     /// <summary>
-    /// Represents a location in the source code. Used
-    /// mostly for error reporting.
+    /// Represents a location in the source code.
+    /// Used mostly for error reporting.
     /// </summary>
-    public class DocumentCursor
+    public class Cursor
     {
         /// <summary>
         /// An empty cursor
         /// </summary>
-        public static readonly DocumentCursor None = new DocumentCursor();
+        public static readonly Cursor None = new Cursor();
 
         /// <summary>
         /// The column number.
@@ -29,7 +29,7 @@
         /// <summary>
         /// Use EMPTY if needed.
         /// </summary>
-        private DocumentCursor()
+        private Cursor()
             : this(null, 0, 0)
         {
         }
@@ -37,7 +37,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public DocumentCursor(string pFileName, int pRow, int pColumn)
+        public Cursor(string pFileName, int pRow, int pColumn)
         {
             _fileName = pFileName;
             _row = pRow;

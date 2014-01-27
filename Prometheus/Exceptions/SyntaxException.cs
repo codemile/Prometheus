@@ -5,7 +5,7 @@ using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
-    public class SyntaxException : ParserException
+    public class SyntaxException : CompilerException
     {
         /// <summary>
         /// Formats the syntax error message.
@@ -40,7 +40,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SyntaxException(DocumentCursor pCursor)
+        public SyntaxException(Cursor pCursor)
             : base(pCursor)
         {
         }
@@ -48,7 +48,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Message constructor
         /// </summary>
-        public SyntaxException(string pMessage, DocumentCursor pCursor)
+        public SyntaxException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }
@@ -56,7 +56,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public SyntaxException(string pMessage, DocumentCursor pCursor, Exception pInnerException)
+        public SyntaxException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -65,7 +65,7 @@ namespace Prometheus.Exceptions
         /// Constructor by parser.
         /// </summary>
         /// <param name="pParser"></param>
-        public SyntaxException(GOLD.Parser pParser, DocumentCursor pCursor)
+        public SyntaxException(GOLD.Parser pParser, Cursor pCursor)
             : base(Message(pParser), pCursor)
         {
         }

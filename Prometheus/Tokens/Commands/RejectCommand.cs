@@ -17,7 +17,7 @@ namespace Prometheus.Tokens.Commands
         /// <summary>
         /// Constructor
         /// </summary>
-        public RejectCommand(Context pContext, DocumentCursor pCursor, BaseExpression pExpression)
+        public RejectCommand(Context pContext, Cursor pCursor, BaseExpression pExpression)
             : base(pContext, pCursor)
         {
             _expression = pExpression;

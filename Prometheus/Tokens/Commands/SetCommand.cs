@@ -23,7 +23,7 @@ namespace Prometheus.Tokens.Commands
         /// <summary>
         /// Constructor
         /// </summary>
-        public SetCommand(Context pContext, DocumentCursor pCursor, RefVariable pVariable, BaseExpression pExpression)
+        public SetCommand(Context pContext, Cursor pCursor, RefVariable pVariable, BaseExpression pExpression)
             : base(pContext, pCursor)
         {
             Variable = pVariable;

@@ -11,7 +11,7 @@ namespace Prometheus.Tokens.Arguments
         /// <summary>
         /// Constructor
         /// </summary>
-        protected Ref(Context pContext, DocumentCursor pCursor)
+        protected Ref(Context pContext, Cursor pCursor)
             : base(pContext, pCursor)
         {
         }

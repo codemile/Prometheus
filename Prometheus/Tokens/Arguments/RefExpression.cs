@@ -16,7 +16,7 @@ namespace Prometheus.Tokens.Arguments
         /// <summary>
         /// Constructor
         /// </summary>
-        public RefExpression(Context pContext, DocumentCursor pCursor, BaseExpression pExpression)
+        public RefExpression(Context pContext, Cursor pCursor, BaseExpression pExpression)
             : base(pContext, pCursor)
         {
             _expression = pExpression;

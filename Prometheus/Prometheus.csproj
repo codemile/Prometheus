@@ -64,20 +64,28 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GOLD Engine 5.0.0">
-      <HintPath>Lib\GOLD Engine 5.0.0.dll</HintPath>
+    <Reference Include="GOLD Engine">
+      <HintPath>Lib\GOLD Engine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Documents\DocumentCursor.cs" />
+    <Compile Include="Data.cs" />
+    <Compile Include="Documents\Cursor.cs" />
     <Compile Include="Documents\Fragment.cs" />
     <Compile Include="Documents\iDocument.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeFactory.cs" />
+    <Compile Include="Properties\Errors.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Errors.resx</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions\FragmentNotFoundException.cs" />
     <Compile Include="Parser\ParserRule.cs" />
     <Compile Include="Parser\ParserSymbol.cs" />
-    <Compile Include="TokenFactory.cs" />
+    <Compile Include="CommandFactory.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Exceptions\CommandFactoryException.cs" />
     <Compile Include="Exceptions\EofException.cs" />
@@ -85,8 +93,7 @@
     <Compile Include="Exceptions\LexicalException.cs" />
     <Compile Include="Exceptions\NotLoadedException.cs" />
     <Compile Include="Exceptions\OperatorException.cs" />
-    <Compile Include="Exceptions\ParserException.cs" />
-    <Compile Include="Exceptions\ResourceNotFoundException.cs" />
+    <Compile Include="Exceptions\CompilerException.cs" />
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\TypeNotFoundException.cs" />
     <Compile Include="Exceptions\UnsupportedSymbolException.cs" />
@@ -118,6 +125,10 @@
     <Compile Include="TypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Errors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Parser\ParserGrammar.egt" />
     <None Include="Parser\ParserGrammar.grm" />
     <None Include="Parser\Template\ParserRule.pgt" />

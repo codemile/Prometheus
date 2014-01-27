@@ -3,12 +3,12 @@ using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
-    public class UnsupportedSymbolException : ParserException
+    public class UnsupportedSymbolException : CompilerException
     {
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public UnsupportedSymbolException(ParserSymbol pSymbol, DocumentCursor pCursor)
+        public UnsupportedSymbolException(ParserSymbol pSymbol, Cursor pCursor)
             : base(string.Format("Symbol {0} is not supported", pSymbol), pCursor)
         {
         }
@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public UnsupportedSymbolException(Symbol pSymbol, DocumentCursor pCursor)
+        public UnsupportedSymbolException(Symbol pSymbol, Cursor pCursor)
             : base(string.Format("Symbol {0} is not supported", ((ParserSymbol)pSymbol.TableIndex())), pCursor)
         {
         }

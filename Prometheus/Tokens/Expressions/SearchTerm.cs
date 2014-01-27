@@ -30,7 +30,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        public SearchTerm(Context pContext, DocumentCursor pCursor, BaseExpression pExpression)
+        public SearchTerm(Context pContext, Cursor pCursor, BaseExpression pExpression)
             : base(pContext, pCursor)
         {
             _expression = pExpression;
@@ -39,7 +39,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        public SearchTerm(Context pContext, DocumentCursor pCursor, string pStatement, BaseExpression pExpression)
+        public SearchTerm(Context pContext, Cursor pCursor, string pStatement, BaseExpression pExpression)
             : base(pContext, pCursor)
         {
             _statement = pStatement;

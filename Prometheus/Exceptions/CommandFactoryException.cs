@@ -3,12 +3,12 @@ using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
-    public class CommandFactoryException : ParserException
+    public class CommandFactoryException : CompilerException
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public CommandFactoryException(DocumentCursor pCursor)
+        public CommandFactoryException(Cursor pCursor)
             : base("Unexpected command factory error", pCursor)
         {
         }
@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public CommandFactoryException(string pMessage, DocumentCursor pCursor, Exception pInnerException)
+        public CommandFactoryException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public CommandFactoryException(string pMessage, DocumentCursor pCursor)
+        public CommandFactoryException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }

@@ -12,7 +12,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        public MultiplyExpression(Context pContext, DocumentCursor pCursor, BaseExpression pChild)
+        public MultiplyExpression(Context pContext, Cursor pCursor, BaseExpression pChild)
             : base(pContext, pCursor, pChild)
         {
         }
@@ -20,7 +20,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        public MultiplyExpression(Context pContext, DocumentCursor pCursor, BaseExpression pLeft, BaseExpression pRight)
+        public MultiplyExpression(Context pContext, Cursor pCursor, BaseExpression pLeft, BaseExpression pRight)
             : base(pContext, pCursor, pLeft, pRight)
         {
         }

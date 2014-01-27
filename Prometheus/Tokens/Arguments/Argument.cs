@@ -10,7 +10,7 @@ namespace Prometheus.Tokens.Arguments
         /// <summary>
         /// Constructor
         /// </summary>
-        protected Argument(Context pContext, DocumentCursor pCursor)
+        protected Argument(Context pContext, Cursor pCursor)
             : base(pContext, pCursor)
         {
         }

@@ -3,12 +3,12 @@ using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
-    public class EofException : ParserException
+    public class EofException : CompilerException
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public EofException(DocumentCursor pCursor)
+        public EofException(Cursor pCursor)
             : base("Unexpected end of file.", pCursor)
         {
         }
@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public EofException(string pMessage, DocumentCursor pCursor, Exception pInnerException)
+        public EofException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public EofException(string pMessage, DocumentCursor pCursor)
+        public EofException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }

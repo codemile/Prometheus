@@ -11,7 +11,7 @@ namespace Prometheus.Tokens.Commands
         /// <summary>
         /// Constructor
         /// </summary>
-        protected Command(Context pContext, DocumentCursor pCursor)
+        protected Command(Context pContext, Cursor pCursor)
             : base(pContext, pCursor)
         {
         }

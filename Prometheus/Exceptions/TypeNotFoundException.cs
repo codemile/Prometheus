@@ -3,7 +3,7 @@ using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
-    public class TypeNotFoundException : ParserException
+    public class TypeNotFoundException : CompilerException
     {
         /// <summary>
         /// Formats the message.
@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public TypeNotFoundException(string pCommand, DocumentCursor pCursor)
+        public TypeNotFoundException(string pCommand, Cursor pCursor)
             : base(Message(pCommand), pCursor)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public TypeNotFoundException(string pCommand, DocumentCursor pCursor, Exception pInnerException)
+        public TypeNotFoundException(string pCommand, Cursor pCursor, Exception pInnerException)
             : base(Message(pCommand), pCursor, pInnerException)
         {
         }

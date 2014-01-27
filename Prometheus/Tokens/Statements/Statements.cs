@@ -17,7 +17,7 @@ namespace Prometheus.Tokens.Statements
         /// <summary>
         /// Constructor
         /// </summary>
-        public Statements(Context pContext, DocumentCursor pCursor, Statement pLeft, Statement pRight)
+        public Statements(Context pContext, Cursor pCursor, Statement pLeft, Statement pRight)
             : base(pContext, pCursor)
         {
             Left = pLeft;

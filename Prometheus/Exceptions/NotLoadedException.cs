@@ -3,12 +3,12 @@ using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
-    public class NotLoadedException : ParserException
+    public class NotLoadedException : CompilerException
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public NotLoadedException(DocumentCursor pCursor)
+        public NotLoadedException(Cursor pCursor)
             : base("Parser table is not loaded.", pCursor)
         {
         }
@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public NotLoadedException(string pMessage, DocumentCursor pCursor, Exception pInnerException)
+        public NotLoadedException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public NotLoadedException(string pMessage, DocumentCursor pCursor)
+        public NotLoadedException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }

@@ -23,7 +23,7 @@ namespace Prometheus
     /// one arrangement of arguments, then you have to check the
     /// available tokens to call the correct constructor.
     /// </summary>
-    public class TokenFactory
+    public class CommandFactory
     {
         /// <summary>
         /// The current context of the program being created.
@@ -33,7 +33,7 @@ namespace Prometheus
         /// <summary>
         /// The current location being processed.
         /// </summary>
-        private DocumentCursor _cursor { get; set; }
+        private Cursor _cursor { get; set; }
 
         /// <summary>
         /// Creates an array of ParserArgument objects using the GOLD parser's tree
@@ -265,21 +265,18 @@ namespace Prometheus
         /// <summary>
         /// Attempts to convert a GOLD Reduction object to a Token object.
         /// </summary>
-        public object Create(Context pContext, object pReference, DocumentCursor pCursor)
+        public object Create(Context pContext, object pReference, Cursor pCursor)
         {
-            Reduction reduction = pReference as Reduction;
-            if (reduction == null)
+            Reduction reduct = pReference as Reduction;
+            if (reduct == null)
             {
                 return pReference;
             }
             _cursor = pCursor;
             _context = pContext;
 
-            Reduction reduct = reduction;
-            Production parent = reduct.Parent;
-            Symbol head = parent.Head();
-            ParserSymbol symbol = (ParserSymbol)head.TableIndex();
-            Token token = null;
+            ParserSymbol symbol = (ParserSymbol)reduct.Parent.Head().TableIndex();
+            Token token;
 
             // create tokens with a symbol name following a naming convention of XXXXCommand
             if ((token = CreateBySymbolName(reduct, symbol, "Command", "Commands")) != null)

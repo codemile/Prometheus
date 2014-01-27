@@ -15,21 +15,21 @@ namespace Prometheus.Tokens
         /// <summary>
         /// The location in the source code.
         /// </summary>
-        protected DocumentCursor Cursor { get; private set; }
+        protected Cursor Cursor { get; private set; }
 
         /// <summary>
         /// Default constructor
         /// </summary>
         protected Token(Context pContext)
         {
-            Cursor = DocumentCursor.None;
+            Cursor = Cursor.None;
             Context = pContext;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        protected Token(Context pContext, DocumentCursor pCursor)
+        protected Token(Context pContext, Cursor pCursor)
         {
             Cursor = pCursor;
             Context = pContext;

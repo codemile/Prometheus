@@ -23,7 +23,7 @@ namespace Prometheus.Tokens.Blocks
         /// <summary>
         /// Constructor
         /// </summary>
-        public Program(Context pContext, DocumentCursor pCursor, Block pBlock)
+        public Program(Context pContext, Cursor pCursor, Block pBlock)
             : base(pContext, pCursor)
         {
             Main = pBlock;
@@ -42,7 +42,7 @@ namespace Prometheus.Tokens.Blocks
             {
                 return Main.Execute();
             }
-            catch (ParserException e)
+            catch (CompilerException e)
             {
                 Context.Status = Context.StatusType.ERROR;
                 Context.LastError = e;

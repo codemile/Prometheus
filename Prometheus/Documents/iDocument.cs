@@ -11,6 +11,6 @@ namespace Prometheus.Documents
         /// Builds a list of text fragments for a specific scope. This method is optimized
         /// to store types in a memory cache for faster retrieval.
         /// </summary>
-        IEnumerable<Fragment> getFragments(string pType, DocumentCursor pCursor);
+        IEnumerable<Fragment> getFragments(string pType, Cursor pCursor);
     }
 }

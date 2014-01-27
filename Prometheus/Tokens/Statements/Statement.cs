@@ -24,7 +24,7 @@ namespace Prometheus.Tokens.Statements
             {
                 Always();
             }
-            catch (ParserException e)
+            catch (CompilerException e)
             {
                 _logger.Error("Always caused exception.");
                 _logger.Exception(e);
@@ -40,7 +40,7 @@ namespace Prometheus.Tokens.Statements
         /// <summary>
         /// Constructor
         /// </summary>
-        protected Statement(Context pContext, DocumentCursor pCursor)
+        protected Statement(Context pContext, Cursor pCursor)
             : base(pContext, pCursor)
         {
         }

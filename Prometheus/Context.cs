@@ -72,7 +72,7 @@ namespace Prometheus
         /// <summary>
         /// Returns a list of fragments for the current scope.
         /// </summary>
-        public IEnumerable<Fragment> getFragments(DocumentCursor pCursor)
+        public IEnumerable<Fragment> getFragments(Cursor pCursor)
         {
             if (_fragments != null)
             {

@@ -38,7 +38,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        protected OperatorExpression(Context pContext, DocumentCursor pCursor, BaseExpression pChild)
+        protected OperatorExpression(Context pContext, Cursor pCursor, BaseExpression pChild)
             : base(pContext, pCursor)
         {
             _child = pChild;
@@ -47,7 +47,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        protected OperatorExpression(Context pContext, DocumentCursor pCursor, BaseExpression pLeft,
+        protected OperatorExpression(Context pContext, Cursor pCursor, BaseExpression pLeft,
                                      BaseExpression pRight)
             : base(pContext, pCursor)
         {

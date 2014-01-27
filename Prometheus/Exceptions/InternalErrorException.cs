@@ -3,12 +3,12 @@ using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
-    public class InternalErrorException : ParserException
+    public class InternalErrorException : CompilerException
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public InternalErrorException(DocumentCursor pCursor)
+        public InternalErrorException(Cursor pCursor)
             : base("Internal error", pCursor)
         {
         }
@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public InternalErrorException(string pMessage, DocumentCursor pCursor, Exception pInnerException)
+        public InternalErrorException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public InternalErrorException(string pMessage, DocumentCursor pCursor)
+        public InternalErrorException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }

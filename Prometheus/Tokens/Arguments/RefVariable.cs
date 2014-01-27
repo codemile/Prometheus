@@ -21,7 +21,7 @@ namespace Prometheus.Tokens.Arguments
         /// <summary>
         /// Constructor
         /// </summary>
-        public RefVariable(Context pContext, DocumentCursor pCursor, string pName)
+        public RefVariable(Context pContext, Cursor pCursor, string pName)
             : base(pContext, pCursor)
         {
             _scope = "GLOBAL";

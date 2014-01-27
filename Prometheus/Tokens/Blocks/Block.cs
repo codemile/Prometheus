@@ -43,7 +43,7 @@ namespace Prometheus.Tokens.Blocks
         /// <summary>
         /// Constructor
         /// </summary>
-        public Block(Context pContext, DocumentCursor pCursor, IEnumerable<Statement> pStatements)
+        public Block(Context pContext, Cursor pCursor, IEnumerable<Statement> pStatements)
             : base(pContext, pCursor)
         {
             _statements = new List<Statement>(pStatements);

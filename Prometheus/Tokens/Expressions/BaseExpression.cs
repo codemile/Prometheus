@@ -11,7 +11,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        protected BaseExpression(Context pContext, DocumentCursor pCursor)
+        protected BaseExpression(Context pContext, Cursor pCursor)
             : base(pContext, pCursor)
         {
         }

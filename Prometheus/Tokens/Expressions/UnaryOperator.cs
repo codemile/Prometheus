@@ -22,7 +22,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        public UnaryOperator(Context pContext, DocumentCursor pCursor, Ref pValue)
+        public UnaryOperator(Context pContext, Cursor pCursor, Ref pValue)
             : base(pContext, pCursor)
         {
             _value = pValue;
@@ -31,7 +31,7 @@ namespace Prometheus.Tokens.Expressions
         /// <summary>
         /// Constructor
         /// </summary>
-        public UnaryOperator(Context pContext, DocumentCursor pCursor, string pOperator, Ref pValue)
+        public UnaryOperator(Context pContext, Cursor pCursor, string pOperator, Ref pValue)
             : base(pContext, pCursor)
         {
             _operator = pOperator;

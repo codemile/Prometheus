@@ -15,7 +15,7 @@ namespace Prometheus.Tokens.Arguments
         /// <summary>
         /// Constructor
         /// </summary>
-        public RefValue(Context pContext, DocumentCursor pCursor, string pValue)
+        public RefValue(Context pContext, Cursor pCursor, string pValue)
             : base(pContext, pCursor)
         {
             _value = pValue;

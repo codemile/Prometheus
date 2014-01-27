@@ -3,12 +3,12 @@ using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
-    public class OperatorException : ParserException
+    public class OperatorException : CompilerException
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public OperatorException(DocumentCursor pCursor)
+        public OperatorException(Cursor pCursor)
             : base("Operator error", pCursor)
         {
         }
@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public OperatorException(string pMessage, DocumentCursor pCursor, Exception pInnerException)
+        public OperatorException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public OperatorException(string pMessage, DocumentCursor pCursor)
+        public OperatorException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }
