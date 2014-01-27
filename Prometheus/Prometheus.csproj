@@ -71,6 +71,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Documents\DocumentCache.cs" />
+    <Compile Include="Documents\DocumentCursor.cs" />
+    <Compile Include="Documents\DocumentFactory.cs" />
+    <Compile Include="Documents\DocumentReader.cs" />
+    <Compile Include="Documents\Fragment.cs" />
+    <Compile Include="Documents\FragmentException.cs" />
+    <Compile Include="Documents\FragmentNotFoundException.cs" />
+    <Compile Include="Documents\iDocument.cs" />
+    <Compile Include="Documents\iFragmentFactory.cs" />
     <Compile Include="TokenFactory.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Exceptions\CommandFactoryException.cs" />
@@ -124,10 +133,6 @@
     <ProjectReference Include="..\..\gems-logger\Logging\Logging.csproj">
       <Project>{501504de-66c8-4430-b469-e1746bfb2d17}</Project>
       <Name>Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\gems-markdown\Markdown\Markdown.csproj">
-      <Project>{32e68b04-b736-4732-8049-74e794aa0f32}</Project>
-      <Name>Markdown</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

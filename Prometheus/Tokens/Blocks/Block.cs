@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Markdown.Documents;
+using Prometheus.Documents;
 using Prometheus.Tokens.Statements;
 
 namespace Prometheus.Tokens.Blocks

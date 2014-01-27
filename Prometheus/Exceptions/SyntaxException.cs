@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using GOLD;
-using Markdown.Documents;
+using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {

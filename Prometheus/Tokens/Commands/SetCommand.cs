@@ -1,5 +1,5 @@
 ﻿using System;
-using Markdown.Documents;
+using Prometheus.Documents;
 using Prometheus.Tokens.Arguments;
 using Prometheus.Tokens.Expressions;
 

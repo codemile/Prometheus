@@ -1,12 +1,8 @@
 ﻿using System;
-using Prometheus.Documents;
 
-namespace Prometheus.Exceptions
+namespace Prometheus.Documents
 {
-    /// <summary>
-    /// The base exception for all parsing errors.
-    /// </summary>
-    public class ParserException : Exception
+    public class FragmentException : Exception
     {
         /// <summary>
         /// Formats the message.
@@ -17,17 +13,9 @@ namespace Prometheus.Exceptions
         }
 
         /// <summary>
-        /// Default constructor
-        /// </summary>
-        public ParserException(DocumentCursor pCursor)
-            : base(Format("Unhandled error", pCursor))
-        {
-        }
-
-        /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public ParserException(string pMessage, DocumentCursor pCursor, Exception pInnerException)
+        public FragmentException(string pMessage, DocumentCursor pCursor, Exception pInnerException)
             : base(Format(pMessage, pCursor), pInnerException)
         {
         }
@@ -35,7 +23,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public ParserException(string pMessage, DocumentCursor pCursor)
+        public FragmentException(string pMessage, DocumentCursor pCursor)
             : base(Format(pMessage, pCursor))
         {
         }

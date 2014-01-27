@@ -1,4 +1,4 @@
-﻿using Markdown.Documents;
+﻿using Prometheus.Documents;
 using Prometheus.Tokens.Commands;
 
 namespace Prometheus

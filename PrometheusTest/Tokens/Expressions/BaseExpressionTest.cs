@@ -68,7 +68,7 @@ namespace PrometheusTest.Tokens.Expressions
                 foreach (string num_format in ValOpVal(pOperator))
                 {
                     string str = string.Format(num_format, x.Left, x.Right);
-                    exp = CreateAggRef<BaseExpression>(str);
+                    exp = CreateRef<BaseExpression>(str);
                     if (parameterType == typeof (int))
                     {
                         Assert.AreEqual(x.Result, exp.getInt());

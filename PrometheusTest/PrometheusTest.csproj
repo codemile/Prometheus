@@ -79,6 +79,7 @@
     <Compile Include="ParserTest.cs" />
     <Compile Include="PrometheusTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
     <Compile Include="Tokens\Arguments\BaseArgumentTest.cs" />
     <Compile Include="Tokens\Arguments\RefValueTest.cs" />
     <Compile Include="Tokens\Commands\AcceptCommandTest.cs" />
@@ -94,14 +95,6 @@
     <Compile Include="Tokens\Expressions\UnaryOperatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\c-sharp\NoSweatBudgets\CommonTest\CommonTest.csproj">
-      <Project>{DDFD3AED-4005-4FA0-97F6-B5F8796A1263}</Project>
-      <Name>CommonTest</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\gems-markdown\Markdown\Markdown.csproj">
-      <Project>{32E68B04-B736-4732-8049-74E794AA0F32}</Project>
-      <Name>Markdown</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Prometheus\Prometheus.csproj">
       <Project>{0F5574D0-9289-43C3-A86D-04302D7AB9D8}</Project>
       <Name>Prometheus</Name>

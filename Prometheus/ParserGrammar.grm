@@ -1,4 +1,4 @@
-"Name"     = 'Aggregator Grammar'
+"Name"     = 'Prometheus Grammar'
 "Author"   = 'ThinkingMedia'
 "Version"  = '1.0'
 "About"    = 'Scripting language for processing documents.'

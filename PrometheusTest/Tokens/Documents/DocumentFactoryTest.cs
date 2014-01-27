@@ -1,5 +1,5 @@
-﻿using Markdown.Documents;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prometheus.Documents;
 
 namespace PrometheusTest.Tokens.Documents
 {

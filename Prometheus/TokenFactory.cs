@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GOLD;
-using Markdown.Documents;
+using Prometheus.Documents;
 using Prometheus.Exceptions;
 using Prometheus.Tokens.Arguments;
 using Prometheus.Tokens.Blocks;
@@ -112,7 +112,7 @@ namespace Prometheus
             {
                 return null;
             }
-            string className = string.Format("Aggregator.Expressions.Tokens.{0}.{1}", pPackage, symbolName);
+            string className = string.Format("Prometheus.Tokens.Expressions.{0}.{1}", pPackage, symbolName);
             try
             {
                 Type type = Type.GetType(className);
@@ -263,8 +263,7 @@ namespace Prometheus
         }
 
         /// <summary>
-        /// Attempts to convert a GOLD Reduction object to
-        /// AggToken object.
+        /// Attempts to convert a GOLD Reduction object to a Token object.
         /// </summary>
         public object Create(Context pContext, object pReference, DocumentCursor pCursor)
         {
@@ -282,7 +281,7 @@ namespace Prometheus
             ParserSymbol symbol = (ParserSymbol)head.TableIndex();
             Token token = null;
 
-            // create tokens that who's symbol names follow a naming convention of XXXXCommand
+            // create tokens with a symbol name following a naming convention of XXXXCommand
             if ((token = CreateBySymbolName(reduct, symbol, "Command", "Commands")) != null)
             {
                 return token;

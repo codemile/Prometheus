@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using GOLD;
-using Markdown.Documents;
+using Prometheus.Documents;
 using Prometheus.Exceptions;
 using Prometheus.Tokens.Blocks;
 
@@ -74,7 +74,7 @@ namespace Prometheus
                 return program;
             }
 
-            throw new InternalErrorException("AggProgram was not created", DocumentCursor.None);
+            throw new InternalErrorException("Program was not created", DocumentCursor.None);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Prometheus
         {
             _parser = new GOLD.Parser();
 
-            const string fullResourceName = "Aggregator.Expressions.ParserGrammar.egt";
+            const string fullResourceName = "Prometheus.ParserGrammar.egt";
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fullResourceName))
             {
                 if (stream == null)
