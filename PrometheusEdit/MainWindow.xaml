@@ -1,11 +1,56 @@
 ﻿<Window x:Class="PrometheusStudio.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
-        Title="MainWindow" Height="353" Width="525">
+        Title="MainWindow" Height="470" Width="701">
 
-    <Grid>
-        <avalonedit:TextEditor  Name="textEditor" FontFamily="Consolas" SyntaxHighlighting="C#" FontSize="10pt"/>
-    </Grid>
-    
+    <DockPanel LastChildFill="True">
+
+        <!-- Top -->
+        <Menu Height="30" VerticalAlignment="Top" HorizontalAlignment="Stretch" DockPanel.Dock="Top"/>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Command="New" Content="New" />
+                <Button Command="Open" Content="Open" />
+                <Button Command="Save" Content="Save" />
+            </ToolBar>
+            <ToolBar>
+                <Button Command="Cut" Content="Cut" />
+                <Button Command="Copy" Content="Copy" />
+                <Button Command="Paste" Content="Paste" />
+            </ToolBar>
+        </ToolBarTray>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <TreeView 
+                Grid.Column="0" 
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch"/>
+
+            <GridSplitter 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Stretch" 
+                Grid.Column="1"
+                ResizeBehavior="PreviousAndNext"
+                Width="5"/>
+
+            <TabControl 
+                Grid.Column="2" 
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch">
+                <TabItem Header="TabItem">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+                <TabItem Header="TabItem">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+    </DockPanel>
 </Window>

@@ -1,0 +1,9 @@
+﻿<Window x:Class="PrometheusStudio.Document"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        Title="Document" Height="300" Width="300">
+    <Grid>
+        <avalonedit:TextEditor  Name="textEditor" FontFamily="Consolas" SyntaxHighlighting="C#" FontSize="10pt"/>
+    </Grid>
+</Window>
