@@ -36,6 +36,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\FireException.cs" />
+    <Compile Include="Exceptions\SourceCodeException.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -44,6 +46,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Sources\Reader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -62,6 +65,10 @@
     <ProjectReference Include="..\..\gems-logger\Logging\Logging.csproj">
       <Project>{501504DE-66C8-4430-B469-E1746BFB2D17}</Project>
       <Name>Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Prometheus\Prometheus.csproj">
+      <Project>{0f5574d0-9289-43c3-a86d-04302d7ab9d8}</Project>
+      <Name>Prometheus</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

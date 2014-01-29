@@ -99,6 +99,8 @@
     <Compile Include="Exceptions\UnsupportedSymbolException.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetCode.cs" />
+    <Compile Include="TargetSource.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\Arguments\Argument.cs" />
     <Compile Include="Tokens\Arguments\Ref.cs" />

@@ -14,17 +14,17 @@
         /// <summary>
         /// The column number.
         /// </summary>
-        private int _column { get; set; }
+        public int Column { get; set; }
 
         /// <summary>
         /// The source for the source code.
         /// </summary>
-        private string _fileName { get; set; }
+        public string FileName { get; set; }
 
         /// <summary>
         /// The row number.
         /// </summary>
-        private int _row { get; set; }
+        public int Row { get; set; }
 
         /// <summary>
         /// Use EMPTY if needed.
@@ -39,9 +39,9 @@
         /// </summary>
         public Cursor(string pFileName, int pRow, int pColumn)
         {
-            _fileName = pFileName;
-            _row = pRow;
-            _column = pColumn;
+            FileName = pFileName;
+            Row = pRow;
+            Column = pColumn;
         }
 
         /// <summary>
@@ -49,9 +49,9 @@
         /// </summary>
         public override string ToString()
         {
-            return _fileName == null
+            return FileName == null
                 ? "in undefined source."
-                : string.Format("in {0} at: {1}, {2}", _fileName, _row, _column);
+                : string.Format("in {0} at: {1}, {2}", FileName, Row, Column);
         }
     }
 }

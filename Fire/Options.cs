@@ -13,6 +13,6 @@ namespace Fire
         /// </summary>
         [CliName(eROLE.PASSED)]
         [CliHelp("Name of the input file.")]
-        public string Filename { get; set; }
+        public string FileName { get; set; }
     }
 }

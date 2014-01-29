@@ -132,11 +132,12 @@ namespace Prometheus
         /// </summary>
         /// <param name="pFileName">The name of the source file.</param>
         /// <param name="pSource">Contents of the source file.</param>
-        public Node Compile(string pFileName, string pSource)
+        public TargetCode Compile(string pFileName, string pSource)
         {
             using (StringReader reader = new StringReader(pSource))
             {
-                return Compile(pFileName, reader);
+                Node root = Compile(pFileName, reader);
+                return new TargetCode(root);
             }
         }
     }

@@ -47,7 +47,7 @@ namespace Prometheus
         {
             ParserSymbol symbol = getSymbol(pReduction);
 
-            Node node = new Node(symbol);
+            Node node = new Node(symbol,0,pCursor.Row, pCursor.Column);
             for (int i = 0; i < pReduction.Count(); i++)
             {
                 Token token = pReduction[i];

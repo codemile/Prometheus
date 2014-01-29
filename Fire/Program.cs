@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using Fire.Exceptions;
 using Fire.Properties;
+using Fire.Sources;
 using GemsCLI;
 using Logging;
+using Prometheus;
 
 namespace Fire
 {
@@ -21,7 +25,22 @@ namespace Fire
         private static void Main(string[] pArgs)
         {
             WriteGreeting();
-            Options options = RequestFactory.Create<Options>(CLIOptions.WindowsStyle, pArgs);
+            Options options = RequestFactory.Create<Options>(CliOptions.WindowsStyle, pArgs);
+            if (options == null)
+            {
+                return;
+            }
+
+            try
+            {
+                string source = Reader.Open(options.FileName);
+                Compiler prometheus = new Compiler();
+                TargetCode code = prometheus.Compile(options.FileName, source);
+            }
+            catch (FireException e)
+            {
+                _logger.Exception(e);
+            }
         }
 
         /// <summary>
