@@ -76,6 +76,9 @@
     <Compile Include="Grammar\GrammarSymbol.cs" />
     <Compile Include="Nodes\Data.cs" />
     <Compile Include="Compile\Cursor.cs" />
+    <Compile Include="Objects\PrometheusExpression.cs" />
+    <Compile Include="Objects\PrometheusStatement.cs" />
+    <Compile Include="Objects\ValueObject.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Tokens\Documents\Fragment.cs" />
     <Compile Include="Tokens\Documents\iDocument.cs" />
@@ -100,7 +103,7 @@
     <Compile Include="Exceptions\UnsupportedSymbolException.cs" />
     <Compile Include="Compile\Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Objects\iPrometheusObject.cs" />
+    <Compile Include="Objects\PrometheusObject.cs" />
     <Compile Include="Objects\PrintCommandObject.cs" />
     <Compile Include="Compile\TargetCode.cs" />
     <Compile Include="Compile\TargetSource.cs" />

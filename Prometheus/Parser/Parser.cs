@@ -1,5 +1,7 @@
 ﻿using Prometheus.Compile;
+using Prometheus.Exceptions;
 using Prometheus.Grammar;
+using Prometheus.Objects;
 
 namespace Prometheus.Parser
 {
@@ -33,7 +35,13 @@ namespace Prometheus.Parser
         /// </summary>
         public void Execute()
         {
-            _objects.Dispatch(_code.Root);
+            PrometheusStatement root = _objects.getObject(_code.Root) as PrometheusStatement;
+            if (root == null)
+            {
+                //TODO: Replace with parser exception.
+                throw new CompilerException("Unexpected null root object.", Cursor.None);
+            }
+            root.Execute(_code.Root);
         }
     }
 }

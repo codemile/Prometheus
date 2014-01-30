@@ -13,15 +13,15 @@ namespace Prometheus.Grammar
 		/// An array of executable Prometheus objects where 
 		/// the index matches the enum for that statement.
 		/// </summary>
-		private readonly iPrometheusObject[] _objects;
+		private readonly PrometheusObject[] _objects;
 
 		/// <summary>
 		/// Creates an instance of a statement class using a string.
 		/// </summary>
-		private static iPrometheusObject Create(string pName)
+		private PrometheusObject Create(string pName)
 		{
 		    Type type = Type.GetType(pName);
-			return (type == null) ? null : (iPrometheusObject)Activator.CreateInstance(type);
+			return (type == null) ? null : (PrometheusObject)Activator.CreateInstance(type,new object[]{this});
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace Prometheus.Grammar
 		/// </summary>
 		public GrammarObject()
 		{
-			_objects = new iPrometheusObject[70];
+			_objects = new PrometheusObject[70];
 
 			_objects[0] = Create(@"Prometheus.Objects.EOFObject");
 			_objects[1] = Create(@"Prometheus.Objects.ErrorObject");
@@ -104,11 +104,11 @@ namespace Prometheus.Grammar
 		}
 
 		/// <summary>
-		/// Executes the statement referred to by this node.
+		/// Finds the object that can be executed as an expression.
 		/// </summary>
-		public void Dispatch(Node pNode)
-		{
-			_objects[(int)pNode.Type].Execute(pNode);
-		}
+	    public PrometheusObject getObject(Node pNode)
+	    {
+	        return _objects[(int)pNode.Type];
+	    }
 	}
 }
