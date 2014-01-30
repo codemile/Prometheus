@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus", "Prometheus\Prometheus.csproj", "{0F5574D0-9289-43C3-A86D-04302D7AB9D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusTest", "PrometheusTest\PrometheusTest.csproj", "{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "..\gems-logger\Logging\Logging.csproj", "{501504DE-66C8-4430-B469-E1746BFB2D17}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fire", "Fire\Fire.csproj", "{B234AF3E-1249-4373-B433-91A1B7C29A8D}"
@@ -23,10 +21,6 @@ Global
 		{0F5574D0-9289-43C3-A86D-04302D7AB9D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F5574D0-9289-43C3-A86D-04302D7AB9D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F5574D0-9289-43C3-A86D-04302D7AB9D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{501504DE-66C8-4430-B469-E1746BFB2D17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{501504DE-66C8-4430-B469-E1746BFB2D17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{501504DE-66C8-4430-B469-E1746BFB2D17}.Release|Any CPU.ActiveCfg = Release|Any CPU
