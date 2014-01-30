@@ -52,9 +52,11 @@
     <Compile Include="Grammar\GrammarSymbol.cs" />
     <Compile Include="Nodes\Data.cs" />
     <Compile Include="Compile\Cursor.cs" />
+    <Compile Include="Nodes\DataFactory.cs" />
     <Compile Include="Runtime\Creators\SymbolHandler.cs" />
     <Compile Include="Runtime\Creators\ObjectRepo.cs" />
     <Compile Include="Runtime\Creators\PrometheusObject.cs" />
+    <Compile Include="Runtime\StringManipulation.cs" />
     <Compile Include="Runtime\ValueObject.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Tokens\Documents\Fragment.cs" />

@@ -89,16 +89,15 @@ Comment Line  = '//'
 ! ===================================================================
 ! Basic structure of the program.
 ! ===================================================================
-<Program> ::= <Statements> | <Block>
+<Program> ::= <Statements>
 		   
-<Block> ::= '{' <Statements> '}'
-
 <Statements> ::= <Statement>
 				| <Statements>  <Statement>
 
-<IfBlock> ::= if '(' <Expression> ')' <Block>
-
-<IfElseBlock> ::= if '(' <Expression> ')' <Block> else <Block>
+<IfControl> ::= IF '(' <Expression> ')' <Statements> END IF
+<IfElseControl> ::= IF '(' <Expression> ')' <Statements> ELSE <Statements> END IF
+<WhileControl> ::= WHILE '(' <Expression> ')' <Statements> END WHILE
+<DoControl> ::= DO <Statements> WHILE '(' <Expression> ')'
 
 ! ===================================================================
 ! Statements
@@ -110,33 +109,42 @@ Comment Line  = '//'
 			 | <ScopeCommand>
 			 | <IncludeCommand>
 			 | <PrintCommand>
+			 | <UpperCommand>
+			 | <LowerCommand>
+			 | <TrimCommand>
+			 | <Expression>
 
 ! ===================================================================
 ! Variable Commands
 ! ===================================================================
 
-<SetCommand> ::= set <Variable> '=' <Expression>
-				 
-<UnsetCommand> ::= unset <Variable>
+<SetCommand>		::= SET <Variable> '=' <Expression>
+<UnsetCommand>		::= UNSET <Variable>
 
 ! ===================================================================
 ! Directives
 ! ===================================================================
 
-<IncludeCommand> ::= include <Expression>
+<IncludeCommand>	::= INCLUDE <Expression>
 
 ! ===================================================================
 ! Output Commands
 ! ===================================================================
 
-<PrintCommand> ::= print <Expression>
+<PrintCommand>		::= PRINT '(' <Statement> ')'
+
+! ===================================================================
+! String Manipulation
+! ===================================================================
+
+<UpperCommand>		::= UPPER '(' <Statement> ')'
+<LowerCommand>		::= LOWER '(' <Statement> ')'
+<TrimCommand>		::= TRIM '(' <Statement> ')'
 
 ! ===================================================================
 ! Context Commands
 ! ===================================================================
 
-<ScopeCommand> ::= scope <Expression>
-
-<RejectCommand> ::= reject <Expression>
-
-<AcceptCommand> ::= accept <Expression>
+<ScopeCommand>		::= SCOPE '(' <Statement> ')'
+<RejectCommand>		::= REJECT '(' <Statement> ')'
+<AcceptCommand>		::= ACCEPT '(' <Statement> ')'

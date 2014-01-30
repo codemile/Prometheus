@@ -17,12 +17,12 @@ namespace Prometheus.Nodes
         /// <summary>
         /// The data type.
         /// </summary>
-        public GrammarSymbol Type;
+        public readonly GrammarSymbol Type;
 
         /// <summary>
         /// The data value
         /// </summary>
-        public string Value;
+        public readonly string Value;
 
         /// <summary>
         /// Constructor

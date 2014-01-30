@@ -46,12 +46,12 @@ namespace Prometheus.Grammar
 		@Value_Boolean = 35,                             // <Value> ::= Boolean
 		@Value_LParen_RParen = 36,                       // <Value> ::= '(' <Expression> ')'
 		@Program = 37,                                   // <Program> ::= <Statements>
-		@Program2 = 38,                                  // <Program> ::= <Block>
-		@Block_LBrace_RBrace = 39,                       // <Block> ::= '{' <Statements> '}'
-		@Statements = 40,                                // <Statements> ::= <Statement>
-		@Statements2 = 41,                               // <Statements> ::= <Statements> <Statement>
-		@IfBlock_if_LParen_RParen = 42,                  // <IfBlock> ::= if '(' <Expression> ')' <Block>
-		@IfElseBlock_if_LParen_RParen_else = 43,         // <IfElseBlock> ::= if '(' <Expression> ')' <Block> else <Block>
+		@Statements = 38,                                // <Statements> ::= <Statement>
+		@Statements2 = 39,                               // <Statements> ::= <Statements> <Statement>
+		@IfControl_IF_LParen_RParen_END_IF = 40,         // <IfControl> ::= IF '(' <Expression> ')' <Statements> END IF
+		@IfElseControl_IF_LParen_RParen_ELSE_END_IF = 41,  // <IfElseControl> ::= IF '(' <Expression> ')' <Statements> ELSE <Statements> END IF
+		@WhileControl_WHILE_LParen_RParen_END_WHILE = 42,  // <WhileControl> ::= WHILE '(' <Expression> ')' <Statements> END WHILE
+		@DoControl_DO_WHILE_LParen_RParen = 43,          // <DoControl> ::= DO <Statements> WHILE '(' <Expression> ')'
 		@Statement = 44,                                 // <Statement> ::= <SetCommand>
 		@Statement2 = 45,                                // <Statement> ::= <UnsetCommand>
 		@Statement3 = 46,                                // <Statement> ::= <RejectCommand>
@@ -59,12 +59,19 @@ namespace Prometheus.Grammar
 		@Statement5 = 48,                                // <Statement> ::= <ScopeCommand>
 		@Statement6 = 49,                                // <Statement> ::= <IncludeCommand>
 		@Statement7 = 50,                                // <Statement> ::= <PrintCommand>
-		@SetCommand_set_Eq = 51,                         // <SetCommand> ::= set <Variable> '=' <Expression>
-		@UnsetCommand_unset = 52,                        // <UnsetCommand> ::= unset <Variable>
-		@IncludeCommand_include = 53,                    // <IncludeCommand> ::= include <Expression>
-		@PrintCommand_print = 54,                        // <PrintCommand> ::= print <Expression>
-		@ScopeCommand_scope = 55,                        // <ScopeCommand> ::= scope <Expression>
-		@RejectCommand_reject = 56,                      // <RejectCommand> ::= reject <Expression>
-		@AcceptCommand_accept = 57                       // <AcceptCommand> ::= accept <Expression>
+		@Statement8 = 51,                                // <Statement> ::= <UpperCommand>
+		@Statement9 = 52,                                // <Statement> ::= <LowerCommand>
+		@Statement10 = 53,                               // <Statement> ::= <TrimCommand>
+		@Statement11 = 54,                               // <Statement> ::= <Expression>
+		@SetCommand_SET_Eq = 55,                         // <SetCommand> ::= SET <Variable> '=' <Expression>
+		@UnsetCommand_UNSET = 56,                        // <UnsetCommand> ::= UNSET <Variable>
+		@IncludeCommand_INCLUDE = 57,                    // <IncludeCommand> ::= INCLUDE <Expression>
+		@PrintCommand_PRINT_LParen_RParen = 58,          // <PrintCommand> ::= PRINT '(' <Statement> ')'
+		@UpperCommand_UPPER_LParen_RParen = 59,          // <UpperCommand> ::= UPPER '(' <Statement> ')'
+		@LowerCommand_LOWER_LParen_RParen = 60,          // <LowerCommand> ::= LOWER '(' <Statement> ')'
+		@TrimCommand_TRIM_LParen_RParen = 61,            // <TrimCommand> ::= TRIM '(' <Statement> ')'
+		@ScopeCommand_SCOPE_LParen_RParen = 62,          // <ScopeCommand> ::= SCOPE '(' <Statement> ')'
+		@RejectCommand_REJECT_LParen_RParen = 63,        // <RejectCommand> ::= REJECT '(' <Statement> ')'
+		@AcceptCommand_ACCEPT_LParen_RParen = 64         // <AcceptCommand> ::= ACCEPT '(' <Statement> ')'
 	}
 }
