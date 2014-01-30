@@ -52,7 +52,7 @@ namespace Prometheus.Nodes
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0} in {1}", Type, _location);
+            return string.Format("'{0}' {1}", Type, _location);
         }
     }
 }

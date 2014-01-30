@@ -8,6 +8,9 @@ namespace Prometheus.Exceptions.Parser
     /// </summary>
     public class RunTimeException : PrometheusException
     {
+        /// <summary>
+        /// Formatting
+        /// </summary>
         private static string Message(string pMessage, Node pNode)
         {
             return string.Format("{0} {1}", pMessage, pNode);
@@ -18,8 +21,8 @@ namespace Prometheus.Exceptions.Parser
         /// </summary>
         /// <param name="pMessage">Exception message</param>
         /// <param name="pNode">The node the error relates to</param>
-        public RunTimeException(string pMessage, Node pNode) 
-            : base(pMessage)
+        protected RunTimeException(string pMessage, Node pNode)
+            : base(Message(pMessage, pNode))
         {
         }
 
@@ -28,7 +31,8 @@ namespace Prometheus.Exceptions.Parser
         /// </summary>
         /// <param name="pMessage">Exception message</param>
         /// <param name="pInner">Inner exception</param>
-        public RunTimeException(string pMessage, Exception pInner) : base(pMessage, pInner)
+        protected RunTimeException(string pMessage, Exception pInner)
+            : base(pMessage, pInner)
         {
         }
     }

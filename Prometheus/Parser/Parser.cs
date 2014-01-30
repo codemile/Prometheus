@@ -42,7 +42,7 @@ namespace Prometheus.Parser
             PrometheusObject proObj = _objects.getObject(pNode);
             if (proObj == null)
             {
-                throw new UnsupportedSymbolException("Symbol is not implement", pNode);
+                throw new UnsupportedSymbolException("Symbol is not implemented", pNode);
             }
 
             int count = pNode.Children.Count;

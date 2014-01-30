@@ -55,7 +55,6 @@
     <Compile Include="Compile\Cursor.cs" />
     <Compile Include="Objects\Attributes\SymbolHandler.cs" />
     <Compile Include="Objects\PrometheusObject.cs" />
-    <Compile Include="Objects\Classifiers\iDataConverter.cs" />
     <Compile Include="Objects\ValueObject.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Tokens\Documents\Fragment.cs" />

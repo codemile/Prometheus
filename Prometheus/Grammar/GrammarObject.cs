@@ -21,7 +21,7 @@ namespace Prometheus.Grammar
 		private PrometheusObject Create(string pName)
 		{
 		    Type type = Type.GetType(pName);
-			return (type == null) ? null : (PrometheusObject)Activator.CreateInstance(type,new object[]{this});
+			return (type == null) ? null : (PrometheusObject)Activator.CreateInstance(type);
 		}
 
 		/// <summary>

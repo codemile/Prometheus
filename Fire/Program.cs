@@ -11,6 +11,7 @@ using Prometheus;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
 using Prometheus.Exceptions.Compiler;
+using Prometheus.Exceptions.Parser;
 using Prometheus.Parser;
 
 namespace Fire
@@ -52,6 +53,10 @@ namespace Fire
                 _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
             }
             catch (CompilerException e)
+            {
+                _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
+            }
+            catch (RunTimeException e)
             {
                 _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
             }
