@@ -9,7 +9,7 @@
         /// <summary>
         /// An empty cursor
         /// </summary>
-        public static readonly Cursor None = new Cursor(null,0,0);
+        public static readonly Cursor None = new Cursor(null, 0, 0);
 
         /// <summary>
         /// The column number.

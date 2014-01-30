@@ -2,10 +2,10 @@
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prometheus.Grammar;
-using Prometheus.Objects;
+using Prometheus.Runtime.Creators;
 using PrometheusTest.Mock;
 
-namespace PrometheusTest.Objects
+namespace PrometheusTest.Runtime.Creators
 {
     [TestClass]
     public class PrometheusObjectTests

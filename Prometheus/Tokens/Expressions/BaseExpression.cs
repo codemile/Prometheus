@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Prometheus.Compile;
-using Prometheus.Tokens.Arguments;
 
 namespace Prometheus.Tokens.Expressions
 {

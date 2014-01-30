@@ -5,7 +5,7 @@ using System.Reflection;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 
-namespace Prometheus.Objects.Attributes
+namespace Prometheus.Runtime.Creators
 {
     /// <summary>
     /// Defines a method that executes code for a Grammar Symbol.
@@ -41,7 +41,8 @@ namespace Prometheus.Objects.Attributes
                                                   !method.IsConstructor &&
                                                   !method.ContainsGenericParameters &&
                                                   method.GetCustomAttributes(true).Any(pObj=>pObj is SymbolHandler) &&
-                                                  method.GetParameters().All(pParam => pParam.ParameterType == typeof(Data)) &&
+                                                  method.GetParameters()
+                                                      .All(pParam=>pParam.ParameterType == typeof (Data)) &&
                                                   method.ReturnType == typeof (Data)
                                               select method;
             return methods;

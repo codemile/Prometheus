@@ -68,10 +68,7 @@ namespace Fire
         private static void WriteGreeting()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            string version = fvi.FileVersion;
-
-            Debug.WriteLine(Resource.Greeting_Version, version);
+            Debug.WriteLine(Resource.Greeting_Version, assembly.GetName().Version);
             Debug.WriteLine(Resource.Greeting_License);
             Debug.WriteLine(Resource.Greeting_Contact);
             Debug.WriteLine("");

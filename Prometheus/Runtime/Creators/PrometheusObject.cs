@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Objects.Attributes;
 
-namespace Prometheus.Objects
+namespace Prometheus.Runtime.Creators
 {
     /// <summary>
     /// All executable objects
@@ -47,6 +47,21 @@ namespace Prometheus.Objects
                 lookup[symbolAttr.Symbol].Add(info.GetParameters().Length, info);
             }
             return lookup;
+        }
+
+        /// <summary>
+        /// Gets a list of symbols a type implements.
+        /// </summary>
+        /// <param name="pType">The type to check</param>
+        /// <returns>A list of symbols.</returns>
+        public static IEnumerable<GrammarSymbol> getSupportedSymbols(Type pType)
+        {
+            IEnumerable<MethodInfo> methods = SymbolHandler.SelectSymbolHandlers(pType);
+            List<GrammarSymbol> symbols = new List<GrammarSymbol>();
+
+            return (from method in methods
+                    let symbolAttr = SymbolHandler.getSymbolHandler(method)
+                    select symbolAttr.Symbol).Distinct();
         }
 
         /// <summary>

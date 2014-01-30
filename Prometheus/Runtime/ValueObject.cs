@@ -1,8 +1,8 @@
 ﻿using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Objects.Attributes;
+using Prometheus.Runtime.Creators;
 
-namespace Prometheus.Objects
+namespace Prometheus.Runtime
 {
     /// <summary>
     /// Holds a static value
@@ -15,9 +15,9 @@ namespace Prometheus.Objects
         /// </summary>
         /// <returns></returns>
         [SymbolHandler(GrammarSymbol.Value)]
-        public Data Value()
+        public Data Value(Data pValue)
         {
-            return Data.Undefined;
+            return pValue;
         }
     }
 }

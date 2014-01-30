@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Objects.Attributes;
+using Prometheus.Runtime.Creators;
 
-namespace Prometheus.Objects
+namespace Prometheus.Runtime
 {
     /// <summary>
     /// Prints a string to the output.

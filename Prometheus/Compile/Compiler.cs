@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
 using GOLD;
-using Prometheus.Exceptions;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
