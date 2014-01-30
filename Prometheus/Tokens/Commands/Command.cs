@@ -1,4 +1,4 @@
-﻿using Prometheus.Documents;
+﻿using Prometheus.Compile;
 using Prometheus.Tokens.Statements;
 
 namespace Prometheus.Tokens.Commands

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Prometheus.Documents;
+using Prometheus.Compile;
+using Prometheus.Tokens.Documents;
 
-namespace Prometheus
+namespace Prometheus.Tokens
 {
     /// <summary>
     /// Defines the state of the current program.

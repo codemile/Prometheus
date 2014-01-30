@@ -1,4 +1,4 @@
-﻿namespace Prometheus.Documents
+﻿namespace Prometheus.Compile
 {
     /// <summary>
     /// Represents a location in the source code.

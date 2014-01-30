@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Reflection;
 using GOLD;
-using Prometheus.Documents;
 using Prometheus.Exceptions;
+using Prometheus.Nodes;
+using Prometheus.Parser;
 using Prometheus.Properties;
-using Prometheus.Tokens.Blocks;
 
-namespace Prometheus
+namespace Prometheus.Compile
 {
     /// <summary>
     /// Handles the execution of the source code file.
@@ -16,7 +16,7 @@ namespace Prometheus
         /// <summary>
         /// The GOLD parser.
         /// </summary>
-        private readonly Parser _parser;
+        private readonly GOLD.Parser _parser;
 
         /// <summary>
         /// Used to create nodes.
@@ -101,7 +101,7 @@ namespace Prometheus
         /// </summary>
         public Compiler()
         {
-            _parser = new Parser();
+            _parser = new GOLD.Parser();
 
             _factory = new NodeFactory();
             _factory.DataType(ParserSymbol.Identifier);

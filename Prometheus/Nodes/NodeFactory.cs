@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using GOLD;
-using Prometheus.Documents;
+using Prometheus.Compile;
+using Prometheus.Parser;
 
-namespace Prometheus
+namespace Prometheus.Nodes
 {
     /// <summary>
     /// Handles converting the upside down tree of data from

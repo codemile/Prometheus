@@ -1,4 +1,4 @@
-﻿namespace Prometheus.Documents
+﻿namespace Prometheus.Tokens.Documents
 {
     /// <summary>
     /// Defines a fragment of text.

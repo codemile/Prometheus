@@ -1,5 +1,5 @@
 ﻿
-namespace Prometheus
+namespace Prometheus.Parser
 {
 	/// <summary>
 	/// This enum is generated at compile time by the GOLD template generator.

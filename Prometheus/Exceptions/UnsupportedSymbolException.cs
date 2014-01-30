@@ -1,5 +1,6 @@
 ﻿using GOLD;
-using Prometheus.Documents;
+using Prometheus.Compile;
+using Prometheus.Parser;
 
 namespace Prometheus.Exceptions
 {

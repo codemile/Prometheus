@@ -1,5 +1,5 @@
 ﻿using System;
-using Prometheus.Documents;
+using Prometheus.Compile;
 
 namespace Prometheus.Exceptions
 {

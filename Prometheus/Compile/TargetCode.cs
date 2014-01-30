@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Prometheus.Nodes;
 
-namespace Prometheus
+namespace Prometheus.Compile
 {
     /// <summary>
     /// The output produced by the compiler.

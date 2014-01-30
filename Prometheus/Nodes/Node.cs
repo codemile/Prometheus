@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using Prometheus.Parser;
 
-namespace Prometheus
+namespace Prometheus.Nodes
 {
     /// <summary>
     /// Node in the tree of code.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Prometheus
+namespace Prometheus.Tokens.Expressions
 {
     /// <summary>
     /// A central place to put code that converts between primitive types.

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Prometheus
+namespace Prometheus.Compile
 {
     /// <summary>
     /// Defines a source code file.

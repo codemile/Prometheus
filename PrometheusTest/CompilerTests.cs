@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prometheus;
+using Prometheus.Compile;
+using Prometheus.Parser;
 
 namespace PrometheusTest
 {

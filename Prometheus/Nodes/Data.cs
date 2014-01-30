@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
+using Prometheus.Parser;
 
-namespace Prometheus
+namespace Prometheus.Nodes
 {
     /// <summary>
     /// The data for a node.

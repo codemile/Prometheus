@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Prometheus.Compile;
 
-namespace Prometheus.Documents
+namespace Prometheus.Tokens.Documents
 {
     /// <summary>
     /// Interface for documents that can generate fragments by fragment types.

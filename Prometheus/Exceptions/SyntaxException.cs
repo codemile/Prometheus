@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using GOLD;
-using Prometheus.Documents;
+using Prometheus.Compile;
 
 namespace Prometheus.Exceptions
 {
@@ -12,7 +12,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Formats the syntax error message.
         /// </summary>
-        private static string Message(Parser pParser)
+        private static string Message(GOLD.Parser pParser)
         {
             string found = pParser.CurrentToken() != null ? pParser.CurrentToken().Data.ToString() : "null";
 

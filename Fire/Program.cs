@@ -8,6 +8,7 @@ using Fire.Sources;
 using GemsCLI;
 using Logging;
 using Prometheus;
+using Prometheus.Compile;
 using Prometheus.Exceptions;
 
 namespace Fire

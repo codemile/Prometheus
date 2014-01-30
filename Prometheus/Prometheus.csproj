@@ -71,12 +71,12 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data.cs" />
-    <Compile Include="Documents\Cursor.cs" />
-    <Compile Include="Documents\Fragment.cs" />
-    <Compile Include="Documents\iDocument.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="NodeFactory.cs" />
+    <Compile Include="Nodes\Data.cs" />
+    <Compile Include="Compile\Cursor.cs" />
+    <Compile Include="Tokens\Documents\Fragment.cs" />
+    <Compile Include="Tokens\Documents\iDocument.cs" />
+    <Compile Include="Nodes\Node.cs" />
+    <Compile Include="Nodes\NodeFactory.cs" />
     <Compile Include="Properties\Errors.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -85,8 +85,7 @@
     <Compile Include="Exceptions\FragmentNotFoundException.cs" />
     <Compile Include="Parser\ParserRule.cs" />
     <Compile Include="Parser\ParserSymbol.cs" />
-    <Compile Include="CommandFactory.cs" />
-    <Compile Include="Context.cs" />
+    <Compile Include="Tokens\Context.cs" />
     <Compile Include="Exceptions\CommandFactoryException.cs" />
     <Compile Include="Exceptions\EofException.cs" />
     <Compile Include="Exceptions\InternalErrorException.cs" />
@@ -97,10 +96,12 @@
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\TypeNotFoundException.cs" />
     <Compile Include="Exceptions\UnsupportedSymbolException.cs" />
-    <Compile Include="Compiler.cs" />
+    <Compile Include="Compile\Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TargetCode.cs" />
-    <Compile Include="TargetSource.cs" />
+    <Compile Include="Statements\iStatement.cs" />
+    <Compile Include="Statements\PrintCommand.cs" />
+    <Compile Include="Compile\TargetCode.cs" />
+    <Compile Include="Compile\TargetSource.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\Arguments\Argument.cs" />
     <Compile Include="Tokens\Arguments\Ref.cs" />
@@ -124,7 +125,7 @@
     <Compile Include="Tokens\Expressions\UnaryOperator.cs" />
     <Compile Include="Tokens\Statements\Statement.cs" />
     <Compile Include="Tokens\Statements\Statements.cs" />
-    <Compile Include="TypeConverter.cs" />
+    <Compile Include="Tokens\Expressions\TypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Errors.resx">
