@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GemsCLI", "..\gems-cli\Gems
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FireTest", "FireTest\FireTest.csproj", "{10CAADC8-9B3E-4D54-880C-92D26B99F5C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrometheusTests", "PrometheusTests\PrometheusTests.csproj", "{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{10CAADC8-9B3E-4D54-880C-92D26B99F5C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10CAADC8-9B3E-4D54-880C-92D26B99F5C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10CAADC8-9B3E-4D54-880C-92D26B99F5C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93DD7D7C-A273-42EC-9127-ED71B75DF0F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
