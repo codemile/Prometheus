@@ -10,6 +10,11 @@ namespace Prometheus.Nodes
     public class Data
     {
         /// <summary>
+        /// Represents an undefined data type.
+        /// </summary>
+        public static readonly Data Undefined = new Data((GrammarSymbol)(-1), null);
+
+        /// <summary>
         /// The data type.
         /// </summary>
         public GrammarSymbol Type;

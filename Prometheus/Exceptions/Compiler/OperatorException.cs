@@ -1,22 +1,22 @@
 ﻿using System;
 using Prometheus.Compile;
 
-namespace Prometheus.Exceptions
+namespace Prometheus.Exceptions.Compiler
 {
-    public class NotLoadedException : CompilerException
+    public class OperatorException : CompilerException
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public NotLoadedException(Cursor pCursor)
-            : base("Parser table is not loaded.", pCursor)
+        public OperatorException(Cursor pCursor)
+            : base("Operator error", pCursor)
         {
         }
 
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public NotLoadedException(string pMessage, Cursor pCursor, Exception pInnerException)
+        public OperatorException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public NotLoadedException(string pMessage, Cursor pCursor)
+        public OperatorException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }

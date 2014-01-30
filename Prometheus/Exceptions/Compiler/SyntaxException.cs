@@ -2,7 +2,7 @@
 using GOLD;
 using Prometheus.Compile;
 
-namespace Prometheus.Exceptions
+namespace Prometheus.Exceptions.Compiler
 {
     /// <summary>
     /// 

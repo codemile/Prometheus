@@ -1,58 +1,78 @@
 ﻿using System;
-using Prometheus.Compile;
-using Prometheus.Exceptions;
+using System.Collections.Generic;
+using System.Reflection;
+using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Objects.Attributes;
 
 namespace Prometheus.Objects
 {
     /// <summary>
-    /// Interface for all commands.
+    /// All executable objects
     /// </summary>
     public abstract class PrometheusObject
     {
         /// <summary>
-        /// The container of executable objects.
+        /// A lookup table for a method. Grouped by symbol and argument count.
         /// </summary>
-        private readonly GrammarObject _objects;
+        private readonly Dictionary<GrammarSymbol, Dictionary<int, MethodInfo>> _methods;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="pObjects">The grammar objects</param>
-        protected PrometheusObject(GrammarObject pObjects)
+        protected PrometheusObject()
         {
-            _objects = pObjects;
+            _methods = CreateMethodLookup(GetType());
         }
 
         /// <summary>
-        /// 
+        /// Creates a lookup table for symbols and methods.
         /// </summary>
-        /// <param name="pNode"></param>
-        /// <returns></returns>
-        protected PrometheusExpression getExpression(Node pNode)
+        /// <param name="pType">The class to inspect</param>
+        /// <returns>The lookup table</returns>
+        public static Dictionary<GrammarSymbol, Dictionary<int, MethodInfo>> CreateMethodLookup(Type pType)
         {
-            PrometheusExpression expression = _objects.getObject(pNode) as PrometheusExpression;
-            if (expression == null)
+            Dictionary<GrammarSymbol, Dictionary<int, MethodInfo>> lookup =
+                new Dictionary<GrammarSymbol, Dictionary<int, MethodInfo>>();
+
+            IEnumerable<MethodInfo> methods = SymbolHandler.SelectSymbolHandlers(pType);
+            foreach (MethodInfo info in methods)
             {
-                throw new CompilerException("Could not create expression object.", Cursor.None);
+                SymbolHandler symbolAttr = SymbolHandler.getSymbolHandler(info);
+                if (!lookup.ContainsKey(symbolAttr.Symbol))
+                {
+                    lookup.Add(symbolAttr.Symbol, new Dictionary<int, MethodInfo>());
+                }
+                lookup[symbolAttr.Symbol].Add(info.GetParameters().Length, info);
             }
-            return expression;
+            return lookup;
         }
 
         /// <summary>
-        /// 
+        /// Executes a method on this object that matches the argument types.
         /// </summary>
         /// <param name="pNode"></param>
-        /// <returns></returns>
-        protected PrometheusStatement getStatement(Node pNode)
+        /// <param name="pValues">The argument values.</param>
+        /// <returns>The return value, or null if no return value.</returns>
+        public Data Execute(Node pNode, object[] pValues)
         {
-            PrometheusStatement statement = _objects.getObject(pNode) as PrometheusStatement;
-            if (statement == null)
+#if DEBUG
+            if (!_methods.ContainsKey(pNode.Type))
             {
-                throw new CompilerException("Could not create statement object.", Cursor.None);
+                throw new InvalidArgumentException(
+                    string.Format("{0} does not implement {1}", GetType().Name, pNode.Type),
+                    pNode);
             }
-            return statement;
+            if (!_methods[pNode.Type].ContainsKey(pValues.Length))
+            {
+                throw new InvalidArgumentException(
+                    string.Format("{0} does not have {1} argument method for {2}", GetType().Name, pValues.Length,
+                        pNode.Type),
+                    pNode);
+            }
+#endif
+            return (Data)_methods[pNode.Type][pValues.Length].Invoke(this, pValues);
         }
     }
 }

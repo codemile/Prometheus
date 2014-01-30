@@ -48,7 +48,7 @@ namespace Prometheus.Nodes
         {
             GrammarSymbol symbol = getSymbol(pReduction);
 
-            Node node = new Node(symbol, 0, pCursor.Row, pCursor.Column);
+            Node node = new Node(symbol, pCursor);
             for (int i = 0; i < pReduction.Count(); i++)
             {
                 Token token = pReduction[i];

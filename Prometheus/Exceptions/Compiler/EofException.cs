@@ -1,22 +1,22 @@
 ﻿using System;
 using Prometheus.Compile;
 
-namespace Prometheus.Exceptions
+namespace Prometheus.Exceptions.Compiler
 {
-    public class InternalErrorException : CompilerException
+    public class EofException : CompilerException
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public InternalErrorException(Cursor pCursor)
-            : base("Internal error", pCursor)
+        public EofException(Cursor pCursor)
+            : base("Unexpected end of file.", pCursor)
         {
         }
 
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public InternalErrorException(string pMessage, Cursor pCursor, Exception pInnerException)
+        public EofException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public InternalErrorException(string pMessage, Cursor pCursor)
+        public EofException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }

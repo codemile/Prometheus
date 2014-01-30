@@ -1,6 +1,7 @@
 ﻿using System;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
+using Prometheus.Exceptions.Compiler;
 
 namespace Prometheus.Tokens.Expressions
 {

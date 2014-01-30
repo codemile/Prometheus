@@ -1,6 +1,9 @@
-﻿using Prometheus.Compile;
-using Prometheus.Exceptions;
+﻿using System;
+using Prometheus.Compile;
+using Prometheus.Exceptions.Compiler;
+using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Objects;
 
 namespace Prometheus.Parser
@@ -16,9 +19,41 @@ namespace Prometheus.Parser
         private readonly TargetCode _code;
 
         /// <summary>
+        /// No arguments
+        /// </summary>
+        private readonly object[] _noArgs = new object[0];
+
+        /// <summary>
+        /// No types
+        /// </summary>
+        private readonly Type[] _noTypes = new Type[0];
+
+        /// <summary>
         /// The executable objects.
         /// </summary>
         private readonly GrammarObject _objects;
+
+        /// <summary>
+        /// Executes an object as a statement
+        /// </summary>
+        /// <param name="pNode">The node being executed</param>
+        private Data Execute(Node pNode)
+        {
+            PrometheusObject proObj = _objects.getObject(pNode);
+            if (proObj == null)
+            {
+                throw new UnsupportedSymbolException("Symbol is not implement", pNode);
+            }
+
+            int count = pNode.Children.Count;
+            Data[] values = new Data[count];
+            for (int i = 0; i < count; i++)
+            {
+                values[i] = Execute(pNode.Children[i]);
+            }
+
+            return proObj.Execute(pNode, values);
+        }
 
         /// <summary>
         /// Constructor
@@ -31,17 +66,11 @@ namespace Prometheus.Parser
         }
 
         /// <summary>
-        /// Executes the code
+        /// Runs the code
         /// </summary>
-        public void Execute()
+        public void Run()
         {
-            PrometheusStatement root = _objects.getObject(_code.Root) as PrometheusStatement;
-            if (root == null)
-            {
-                //TODO: Replace with parser exception.
-                throw new CompilerException("Unexpected null root object.", Cursor.None);
-            }
-            root.Execute(_code.Root);
+            Execute(_code.Root);
         }
     }
 }

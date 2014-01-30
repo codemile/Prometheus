@@ -10,6 +10,7 @@ using Logging;
 using Prometheus;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
+using Prometheus.Exceptions.Compiler;
 using Prometheus.Parser;
 
 namespace Fire
@@ -44,7 +45,7 @@ namespace Fire
                 TargetCode code = prometheus.Compile(filename, source);
 
                 Parser parser = new Parser(code);
-                parser.Execute();
+                parser.Run();
             }
             catch (FireException e)
             {

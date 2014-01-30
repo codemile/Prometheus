@@ -1,12 +1,12 @@
 ﻿using System;
 using Prometheus.Compile;
 
-namespace Prometheus.Exceptions
+namespace Prometheus.Exceptions.Compiler
 {
     /// <summary>
-    /// The base exception for all parsing errors.
+    /// The base exception for all compiler time errors.
     /// </summary>
-    public class CompilerException : Exception
+    public class CompilerException : PrometheusException
     {
         /// <summary>
         /// Formats the message.

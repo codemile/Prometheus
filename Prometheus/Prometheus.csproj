@@ -12,6 +12,7 @@
     <AssemblyName>Prometheus</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Prometheus.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,38 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'cgTag - Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\cgTag - Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Debug\Prometheus.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'cgTag - Release|AnyCPU'">
-    <OutputPath>bin\cgTag - Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>none</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Release\Prometheus.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GOLD Engine">
@@ -71,13 +42,20 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compile\iSourceRef.cs" />
+    <Compile Include="Exceptions\Parser\InvalidArgumentException.cs" />
+    <Compile Include="Exceptions\Parser\RunTimeException.cs" />
+    <Compile Include="Exceptions\Parser\UnexpectedErrorException.cs" />
+    <Compile Include="Exceptions\Parser\UnsupportedSymbolException.cs" />
+    <Compile Include="Exceptions\PrometheusException.cs" />
     <Compile Include="Grammar\GrammarObject.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
     <Compile Include="Grammar\GrammarSymbol.cs" />
     <Compile Include="Nodes\Data.cs" />
     <Compile Include="Compile\Cursor.cs" />
-    <Compile Include="Objects\PrometheusExpression.cs" />
-    <Compile Include="Objects\PrometheusStatement.cs" />
+    <Compile Include="Objects\Attributes\SymbolHandler.cs" />
+    <Compile Include="Objects\PrometheusObject.cs" />
+    <Compile Include="Objects\Classifiers\iDataConverter.cs" />
     <Compile Include="Objects\ValueObject.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Tokens\Documents\Fragment.cs" />
@@ -89,22 +67,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
-    <Compile Include="Exceptions\FragmentNotFoundException.cs" />
     <Compile Include="Tokens\Context.cs" />
-    <Compile Include="Exceptions\CommandFactoryException.cs" />
-    <Compile Include="Exceptions\EofException.cs" />
-    <Compile Include="Exceptions\InternalErrorException.cs" />
-    <Compile Include="Exceptions\LexicalException.cs" />
-    <Compile Include="Exceptions\NotLoadedException.cs" />
-    <Compile Include="Exceptions\OperatorException.cs" />
-    <Compile Include="Exceptions\CompilerException.cs" />
-    <Compile Include="Exceptions\SyntaxException.cs" />
-    <Compile Include="Exceptions\TypeNotFoundException.cs" />
-    <Compile Include="Exceptions\UnsupportedSymbolException.cs" />
+    <Compile Include="Exceptions\Compiler\CommandFactoryException.cs" />
+    <Compile Include="Exceptions\Compiler\EofException.cs" />
+    <Compile Include="Exceptions\Compiler\InternalErrorException.cs" />
+    <Compile Include="Exceptions\Compiler\LexicalException.cs" />
+    <Compile Include="Exceptions\Compiler\NotLoadedException.cs" />
+    <Compile Include="Exceptions\Compiler\OperatorException.cs" />
+    <Compile Include="Exceptions\Compiler\CompilerException.cs" />
+    <Compile Include="Exceptions\Compiler\SyntaxException.cs" />
     <Compile Include="Compile\Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Objects\PrometheusObject.cs" />
-    <Compile Include="Objects\PrintCommandObject.cs" />
+    <Compile Include="Objects\PrintCommand.cs" />
     <Compile Include="Compile\TargetCode.cs" />
     <Compile Include="Compile\TargetSource.cs" />
     <Compile Include="Tokens\Token.cs" />

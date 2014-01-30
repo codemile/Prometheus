@@ -1,22 +1,22 @@
 ﻿using System;
 using Prometheus.Compile;
 
-namespace Prometheus.Exceptions
+namespace Prometheus.Exceptions.Compiler
 {
-    public class OperatorException : CompilerException
+    public class CommandFactoryException : CompilerException
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public OperatorException(Cursor pCursor)
-            : base("Operator error", pCursor)
+        public CommandFactoryException(Cursor pCursor)
+            : base("Unexpected command factory error", pCursor)
         {
         }
 
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public OperatorException(string pMessage, Cursor pCursor, Exception pInnerException)
+        public CommandFactoryException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(pMessage, pCursor, pInnerException)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public OperatorException(string pMessage, Cursor pCursor)
+        public CommandFactoryException(string pMessage, Cursor pCursor)
             : base(pMessage, pCursor)
         {
         }

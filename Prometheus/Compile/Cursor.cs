@@ -9,39 +9,32 @@
         /// <summary>
         /// An empty cursor
         /// </summary>
-        public static readonly Cursor None = new Cursor();
+        public static readonly Cursor None = new Cursor(null,0,0);
 
         /// <summary>
         /// The column number.
         /// </summary>
-        public int Column { get; set; }
+        private readonly int _column;
 
         /// <summary>
         /// The source for the source code.
         /// </summary>
-        public string FileName { get; set; }
+        private readonly string _fileName;
 
         /// <summary>
         /// The row number.
         /// </summary>
-        public int Row { get; set; }
-
-        /// <summary>
-        /// Use EMPTY if needed.
-        /// </summary>
-        private Cursor()
-            : this(null, 0, 0)
-        {
-        }
+        private readonly int _row;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public Cursor(string pFileName, int pRow, int pColumn)
         {
-            FileName = pFileName;
-            Row = pRow;
-            Column = pColumn;
+            _fileName = pFileName;
+
+            _row = pRow;
+            _column = pColumn;
         }
 
         /// <summary>
@@ -49,9 +42,9 @@
         /// </summary>
         public override string ToString()
         {
-            return FileName == null
+            return _fileName == null
                 ? "in undefined source."
-                : string.Format("in {0} at: {1}, {2}", FileName, Row, Column);
+                : string.Format("in {0} at: {1}, {2}", _fileName, _row, _column);
         }
     }
 }

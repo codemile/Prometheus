@@ -1,5 +1,6 @@
 ﻿using Prometheus.Compile;
 using Prometheus.Exceptions;
+using Prometheus.Exceptions.Compiler;
 using Prometheus.Tokens.Arguments;
 
 namespace Prometheus.Tokens.Expressions

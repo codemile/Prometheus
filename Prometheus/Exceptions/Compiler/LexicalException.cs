@@ -1,6 +1,6 @@
 ﻿using Prometheus.Compile;
 
-namespace Prometheus.Exceptions
+namespace Prometheus.Exceptions.Compiler
 {
     internal class LexicalException : CompilerException
     {
