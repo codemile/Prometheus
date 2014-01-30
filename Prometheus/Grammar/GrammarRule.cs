@@ -1,12 +1,12 @@
 ﻿
-namespace Prometheus.Parser
+namespace Prometheus.Grammar
 {
 	/// <summary>
 	/// This enum is generated at compile time by the GOLD template generator.
 	///
 	/// Do not make changes to this file.
 	/// </summary>
-	public enum ParserRule
+	public enum GrammarRule
 	{
 		@Expression_Gt = 0,                              // <Expression> ::= <Expression> '>' <AddExpression>
 		@Expression_Lt = 1,                              // <Expression> ::= <Expression> '<' <AddExpression>

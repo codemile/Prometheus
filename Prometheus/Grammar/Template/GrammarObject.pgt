@@ -1,0 +1,58 @@
+﻿##LANGUAGE 'C#'
+##TEMPLATE-NAME 'Parser symbols lookup table.'
+##ENGINE-NAME 'Aggregator'
+##SYSTEM-VERSION '5.0'
+##AUTHOR 'ThinkingMedia' 
+##FILE-EXTENSION 'cs'
+##ID-CASE None
+##ID-SEPARATOR '_'
+using System;
+using Prometheus.Nodes;
+using Prometheus.Objects;
+
+namespace Prometheus.Grammar
+{
+	/// <summary>
+	///
+	/// </summary>
+	public class GrammarObject
+	{
+		/// <summary>
+		/// An array of executable Prometheus objects where 
+		/// the index matches the enum for that statement.
+		/// </summary>
+		private readonly iPrometheusObject[] _objects;
+
+		/// <summary>
+		/// Creates an instance of a statement class using a string.
+		/// </summary>
+		private static iPrometheusObject Create(string pName)
+		{
+		    Type type = Type.GetType(pName);
+			return (type == null) ? null : (iPrometheusObject)Activator.CreateInstance(type);
+		}
+
+##SYMBOL-TABLE
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public GrammarObject()
+		{
+			_objects = new iPrometheusObject[%Count%];
+
+##DELIMITER ','
+##SYMBOLS
+			_objects[%Value%] = Create(@"Prometheus.Objects.%ID%Object");
+##END-SYMBOLS
+##END-SYMBOL-TABLE
+		}
+
+		/// <summary>
+		/// Executes the statement referred to by this node.
+		/// </summary>
+		public void Dispatch(Node pNode)
+		{
+			_objects[(int)pNode.Type].Execute(pNode);
+		}
+	}
+}

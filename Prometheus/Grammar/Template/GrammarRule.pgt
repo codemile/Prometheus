@@ -7,14 +7,14 @@
 ##ID-CASE None
 ##ID-SEPARATOR '_'
 
-namespace Prometheus.Parser
+namespace Prometheus.Grammar
 {
 	/// <summary>
 	/// This enum is generated at compile time by the GOLD template generator.
 	///
 	/// Do not make changes to this file.
 	/// </summary>
-	public enum ParserRule
+	public enum GrammarRule
 	{
 ##DELIMITER ','
 ##PRODUCTIONS

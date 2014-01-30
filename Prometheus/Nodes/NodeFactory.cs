@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using GOLD;
 using Prometheus.Compile;
-using Prometheus.Parser;
+using Prometheus.Grammar;
 
 namespace Prometheus.Nodes
 {
@@ -16,18 +16,18 @@ namespace Prometheus.Nodes
         /// A list of symbols that can be attached to
         /// nodes as data.
         /// </summary>
-        private readonly List<ParserSymbol> _dataTypes;
+        private readonly List<GrammarSymbol> _dataTypes;
 
         /// <summary>
         /// Gets the grammar symbol.
         /// </summary>
         /// <param name="pReduction">The node being reduced.</param>
         /// <returns>The symbol</returns>
-        private static ParserSymbol getSymbol(Reduction pReduction)
+        private static GrammarSymbol getSymbol(Reduction pReduction)
         {
             Production parent = pReduction.Parent;
             Symbol symbol = parent.Head();
-            ParserSymbol parserSymbol = (ParserSymbol)symbol.TableIndex();
+            GrammarSymbol parserSymbol = (GrammarSymbol)symbol.TableIndex();
             return parserSymbol;
         }
 
@@ -36,7 +36,7 @@ namespace Prometheus.Nodes
         /// </summary>
         public NodeFactory()
         {
-            _dataTypes = new List<ParserSymbol>();
+            _dataTypes = new List<GrammarSymbol>();
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace Prometheus.Nodes
         /// <returns></returns>
         public Node Create(Reduction pReduction, Cursor pCursor)
         {
-            ParserSymbol symbol = getSymbol(pReduction);
+            GrammarSymbol symbol = getSymbol(pReduction);
 
-            Node node = new Node(symbol,0,pCursor.Row, pCursor.Column);
+            Node node = new Node(symbol, 0, pCursor.Row, pCursor.Column);
             for (int i = 0; i < pReduction.Count(); i++)
             {
                 Token token = pReduction[i];
@@ -66,7 +66,7 @@ namespace Prometheus.Nodes
                 }
 
                 Symbol parent = token.Parent;
-                ParserSymbol dataType = (ParserSymbol)parent.TableIndex();
+                GrammarSymbol dataType = (GrammarSymbol)parent.TableIndex();
                 if (!_dataTypes.Contains(dataType))
                 {
                     continue;
@@ -83,7 +83,7 @@ namespace Prometheus.Nodes
         /// to be attached to nodes as data.
         /// </summary>
         /// <param name="pParserSymbol">The symbol that defines a data type.</param>
-        public void DataType(ParserSymbol pParserSymbol)
+        public void DataType(GrammarSymbol pParserSymbol)
         {
             _dataTypes.Add(pParserSymbol);
         }

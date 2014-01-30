@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using Prometheus.Parser;
+using Prometheus.Grammar;
 
 namespace Prometheus.Nodes
 {
@@ -11,14 +11,9 @@ namespace Prometheus.Nodes
     public class Node
     {
         /// <summary>
-        /// Reference to the source file.
+        /// The children of this node.
         /// </summary>
-        public readonly int Source;
-
-        /// <summary>
-        /// The line position
-        /// </summary>
-        public readonly int Row;
+        public readonly List<Node> Children;
 
         /// <summary>
         /// The column position
@@ -26,19 +21,24 @@ namespace Prometheus.Nodes
         public readonly int Column;
 
         /// <summary>
-        /// The type of node.
-        /// </summary>
-        public readonly ParserSymbol Type;
-
-        /// <summary>
         /// The data for this node.
         /// </summary>
         public readonly List<Data> Data;
 
         /// <summary>
-        /// The children of this node.
+        /// The line position
         /// </summary>
-        public readonly List<Node> Children;
+        public readonly int Row;
+
+        /// <summary>
+        /// Reference to the source file.
+        /// </summary>
+        public readonly int Source;
+
+        /// <summary>
+        /// The type of node.
+        /// </summary>
+        public readonly GrammarSymbol Type;
 
         /// <summary>
         /// Initializes a node.
@@ -47,7 +47,7 @@ namespace Prometheus.Nodes
         /// <param name="pSource">The source file.</param>
         /// <param name="pRow">The line number</param>
         /// <param name="pColumn">The column position</param>
-        public Node(ParserSymbol pType, int pSource, int pRow, int pColumn)
+        public Node(GrammarSymbol pType, int pSource, int pRow, int pColumn)
         {
             Type = pType;
             Source = pSource;

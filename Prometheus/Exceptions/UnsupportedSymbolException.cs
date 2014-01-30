@@ -1,6 +1,6 @@
 ﻿using GOLD;
 using Prometheus.Compile;
-using Prometheus.Parser;
+using Prometheus.Grammar;
 
 namespace Prometheus.Exceptions
 {
@@ -9,7 +9,7 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public UnsupportedSymbolException(ParserSymbol pSymbol, Cursor pCursor)
+        public UnsupportedSymbolException(GrammarSymbol pSymbol, Cursor pCursor)
             : base(string.Format("Symbol {0} is not supported", pSymbol), pCursor)
         {
         }
@@ -18,7 +18,7 @@ namespace Prometheus.Exceptions
         /// Throw a message.
         /// </summary>
         public UnsupportedSymbolException(Symbol pSymbol, Cursor pCursor)
-            : base(string.Format("Symbol {0} is not supported", ((ParserSymbol)pSymbol.TableIndex())), pCursor)
+            : base(string.Format("Symbol {0} is not supported", ((GrammarSymbol)pSymbol.TableIndex())), pCursor)
         {
         }
     }

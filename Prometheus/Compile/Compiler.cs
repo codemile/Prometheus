@@ -2,8 +2,8 @@
 using System.Reflection;
 using GOLD;
 using Prometheus.Exceptions;
+using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Parser;
 using Prometheus.Properties;
 
 namespace Prometheus.Compile
@@ -14,14 +14,14 @@ namespace Prometheus.Compile
     public class Compiler
     {
         /// <summary>
-        /// The GOLD parser.
-        /// </summary>
-        private readonly GOLD.Parser _parser;
-
-        /// <summary>
         /// Used to create nodes.
         /// </summary>
         private readonly NodeFactory _factory;
+
+        /// <summary>
+        /// The GOLD parser.
+        /// </summary>
+        private readonly GOLD.Parser _parser;
 
         /// <summary>
         /// Calculates the command tree from the source code and returns the root node.
@@ -104,15 +104,15 @@ namespace Prometheus.Compile
             _parser = new GOLD.Parser();
 
             _factory = new NodeFactory();
-            _factory.DataType(ParserSymbol.Identifier);
-            _factory.DataType(ParserSymbol.StringDouble);
-            _factory.DataType(ParserSymbol.StringSingle);
-            _factory.DataType(ParserSymbol.Integer);
-            _factory.DataType(ParserSymbol.Float);
-            _factory.DataType(ParserSymbol.Boolean);
-            _factory.DataType(ParserSymbol.Integer);
+            _factory.DataType(GrammarSymbol.Identifier);
+            _factory.DataType(GrammarSymbol.StringDouble);
+            _factory.DataType(GrammarSymbol.StringSingle);
+            _factory.DataType(GrammarSymbol.Integer);
+            _factory.DataType(GrammarSymbol.Float);
+            _factory.DataType(GrammarSymbol.Boolean);
+            _factory.DataType(GrammarSymbol.Integer);
 
-            const string fullResourceName = "Prometheus.Parser.ParserGrammar.egt";
+            const string fullResourceName = "Prometheus.Grammar.Grammar.egt";
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fullResourceName))
             {
                 if (stream == null)

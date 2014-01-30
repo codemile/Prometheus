@@ -10,6 +10,7 @@ using Logging;
 using Prometheus;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
+using Prometheus.Parser;
 
 namespace Fire
 {
@@ -38,8 +39,12 @@ namespace Fire
             {
                 string filename = Reader.getFileNameWithExtension(options.FileName, "fire");
                 string source = Reader.Open(filename);
+
                 Compiler prometheus = new Compiler();
                 TargetCode code = prometheus.Compile(filename, source);
+
+                Parser parser = new Parser(code);
+                parser.Execute();
             }
             catch (FireException e)
             {

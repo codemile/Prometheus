@@ -1,14 +1,23 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prometheus;
 using Prometheus.Compile;
-using Prometheus.Parser;
+using Prometheus.Grammar;
 
 namespace PrometheusTest
 {
     [TestClass]
     public class CompilerTests
     {
+        [TestMethod]
+        public void Compile()
+        {
+            Compiler compiler = new Compiler();
+            TargetCode target = compiler.Compile("test.txt", "set mathew=3");
+            Assert.IsNotNull(target.Root);
+            Assert.AreEqual(GrammarSymbol.SetCommand, target.Root.Type);
+            Assert.AreEqual(2, target.Root.Children.Count);
+        }
+
         [TestMethod]
         public void Compiler()
         {
@@ -20,16 +29,6 @@ namespace PrometheusTest
             {
                 Assert.Fail(e.Message);
             }
-        }
-
-        [TestMethod]
-        public void Compile()
-        {
-            Compiler compiler = new Compiler();
-            TargetCode target = compiler.Compile("test.txt", "set mathew=3");
-            Assert.IsNotNull(target.Root);
-            Assert.AreEqual(ParserSymbol.SetCommand, target.Root.Type);
-            Assert.AreEqual(2, target.Root.Children.Count);
         }
     }
 }

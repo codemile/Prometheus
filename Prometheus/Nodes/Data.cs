@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Prometheus.Parser;
+using Prometheus.Grammar;
 
 namespace Prometheus.Nodes
 {
@@ -12,7 +12,7 @@ namespace Prometheus.Nodes
         /// <summary>
         /// The data type.
         /// </summary>
-        public ParserSymbol Type;
+        public GrammarSymbol Type;
 
         /// <summary>
         /// The data value
@@ -24,7 +24,7 @@ namespace Prometheus.Nodes
         /// </summary>
         /// <param name="pType">The type</param>
         /// <param name="pValue">The value</param>
-        public Data(ParserSymbol pType, string pValue)
+        public Data(GrammarSymbol pType, string pValue)
         {
             Type = pType;
             Value = pValue;
