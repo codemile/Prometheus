@@ -109,40 +109,34 @@ Comment Line  = '//'
 			 | <AcceptCommand>
 			 | <ScopeCommand>
 			 | <IncludeCommand>
-			 | <AssertCommand>
-			 | <DebugCommand>
-			 | <TraceCommand>
+			 | <PrintCommand>
 
 ! ===================================================================
 ! Variable Commands
 ! ===================================================================
 
-<SetCommand> ::= set <Variable> '=' <Expression> ';'
+<SetCommand> ::= set <Variable> '=' <Expression>
 				 
-<UnsetCommand> ::= unset <Variable> ';'
+<UnsetCommand> ::= unset <Variable>
 
 ! ===================================================================
 ! Directives
 ! ===================================================================
 
-<IncludeCommand> ::= include <Expression> ';'
+<IncludeCommand> ::= include <Expression>
 
 ! ===================================================================
-! Debug Commands
+! Output Commands
 ! ===================================================================
-			   
-<AssertCommand> ::= assert <Expression> <Expression> ';'
-			  
-<DebugCommand> ::= debug <Expression> ';'
-			 
-<TraceCommand> ::= trace <Expression> <Expression> ';'
+
+<PrintCommand> ::= print <Expression>
 
 ! ===================================================================
 ! Context Commands
 ! ===================================================================
 
-<ScopeCommand> ::= scope <Expression> ';'
+<ScopeCommand> ::= scope <Expression>
 
-<RejectCommand> ::= reject <Expression> ';'
+<RejectCommand> ::= reject <Expression>
 
-<AcceptCommand> ::= accept <Expression> ';'
+<AcceptCommand> ::= accept <Expression>

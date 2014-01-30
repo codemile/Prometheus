@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Fire")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Prometheus Compiler")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("ThinkingMedia")]
 [assembly: AssemblyProduct("Fire")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]

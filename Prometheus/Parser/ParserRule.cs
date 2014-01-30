@@ -58,17 +58,13 @@ namespace Prometheus
 		@Statement4 = 47,                                // <Statement> ::= <AcceptCommand>
 		@Statement5 = 48,                                // <Statement> ::= <ScopeCommand>
 		@Statement6 = 49,                                // <Statement> ::= <IncludeCommand>
-		@Statement7 = 50,                                // <Statement> ::= <AssertCommand>
-		@Statement8 = 51,                                // <Statement> ::= <DebugCommand>
-		@Statement9 = 52,                                // <Statement> ::= <TraceCommand>
-		@SetCommand_set_Eq_Semi = 53,                    // <SetCommand> ::= set <Variable> '=' <Expression> ';'
-		@UnsetCommand_unset_Semi = 54,                   // <UnsetCommand> ::= unset <Variable> ';'
-		@IncludeCommand_include_Semi = 55,               // <IncludeCommand> ::= include <Expression> ';'
-		@AssertCommand_assert_Semi = 56,                 // <AssertCommand> ::= assert <Expression> <Expression> ';'
-		@DebugCommand_debug_Semi = 57,                   // <DebugCommand> ::= debug <Expression> ';'
-		@TraceCommand_trace_Semi = 58,                   // <TraceCommand> ::= trace <Expression> <Expression> ';'
-		@ScopeCommand_scope_Semi = 59,                   // <ScopeCommand> ::= scope <Expression> ';'
-		@RejectCommand_reject_Semi = 60,                 // <RejectCommand> ::= reject <Expression> ';'
-		@AcceptCommand_accept_Semi = 61                  // <AcceptCommand> ::= accept <Expression> ';'
+		@Statement7 = 50,                                // <Statement> ::= <PrintCommand>
+		@SetCommand_set_Eq = 51,                         // <SetCommand> ::= set <Variable> '=' <Expression>
+		@UnsetCommand_unset = 52,                        // <UnsetCommand> ::= unset <Variable>
+		@IncludeCommand_include = 53,                    // <IncludeCommand> ::= include <Expression>
+		@PrintCommand_print = 54,                        // <PrintCommand> ::= print <Expression>
+		@ScopeCommand_scope = 55,                        // <ScopeCommand> ::= scope <Expression>
+		@RejectCommand_reject = 56,                      // <RejectCommand> ::= reject <Expression>
+		@AcceptCommand_accept = 57                       // <AcceptCommand> ::= accept <Expression>
 	}
 }

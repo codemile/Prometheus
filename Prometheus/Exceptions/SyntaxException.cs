@@ -1,16 +1,18 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using GOLD;
 using Prometheus.Documents;
 
 namespace Prometheus.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SyntaxException : CompilerException
     {
         /// <summary>
         /// Formats the syntax error message.
         /// </summary>
-        private static string Message(GOLD.Parser pParser)
+        private static string Message(Parser pParser)
         {
             string found = pParser.CurrentToken() != null ? pParser.CurrentToken().Data.ToString() : "null";
 
@@ -38,14 +40,6 @@ namespace Prometheus.Exceptions
         }
 
         /// <summary>
-        /// Default constructor
-        /// </summary>
-        public SyntaxException(Cursor pCursor)
-            : base(pCursor)
-        {
-        }
-
-        /// <summary>
         /// Message constructor
         /// </summary>
         public SyntaxException(string pMessage, Cursor pCursor)
@@ -54,17 +48,10 @@ namespace Prometheus.Exceptions
         }
 
         /// <summary>
-        /// Wraps around another exception.
-        /// </summary>
-        public SyntaxException(string pMessage, Cursor pCursor, Exception pInnerException)
-            : base(pMessage, pCursor, pInnerException)
-        {
-        }
-
-        /// <summary>
         /// Constructor by parser.
         /// </summary>
         /// <param name="pParser"></param>
+        /// <param name="pCursor"></param>
         public SyntaxException(GOLD.Parser pParser, Cursor pCursor)
             : base(Message(pParser), pCursor)
         {

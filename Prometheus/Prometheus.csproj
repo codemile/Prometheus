@@ -144,7 +144,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)Gold\goldbuild $(ProjectDir)\Parser\ParserGrammar.grm $(ProjectDir)\ParserGrammar.egt
+    <PreBuildEvent>$(ProjectDir)Gold\goldbuild $(ProjectDir)\Parser\ParserGrammar.grm $(ProjectDir)\Parser\ParserGrammar.egt
 $(ProjectDir)Gold\goldprog $(ProjectDir)\Parser\ParserGrammar.egt $(ProjectDir)\Parser\Template\ParserRule.pgt $(ProjectDir)\Parser\ParserRule.cs
 $(ProjectDir)Gold\goldprog $(ProjectDir)\Parser\ParserGrammar.egt $(ProjectDir)\Parser\Template\ParserSymbol.pgt $(ProjectDir)\Parser\ParserSymbol.cs</PreBuildEvent>
   </PropertyGroup>

@@ -17,17 +17,9 @@ namespace Prometheus.Exceptions
         }
 
         /// <summary>
-        /// Default constructor
-        /// </summary>
-        public CompilerException(Cursor pCursor)
-            : base(Format("Unhandled error", pCursor))
-        {
-        }
-
-        /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public CompilerException(string pMessage, Cursor pCursor, Exception pInnerException)
+        protected CompilerException(string pMessage, Cursor pCursor, Exception pInnerException)
             : base(Format(pMessage, pCursor), pInnerException)
         {
         }

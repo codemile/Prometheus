@@ -11,7 +11,7 @@ namespace Fire.Sources
         /// <param name="pFileName">The filename</param>
         /// <param name="pExtension">The file extension</param>
         /// <returns>The filename with extension added.</returns>
-        private static string getFileNameWithExtension(string pFileName, string pExtension)
+        public static string getFileNameWithExtension(string pFileName, string pExtension)
         {
             string ext = string.Format(".{0}", pExtension.ToLower());
 
@@ -29,14 +29,12 @@ namespace Fire.Sources
         /// <returns>The contents of the file.</returns>
         public static string Open(string pFileName)
         {
-            string target = getFileNameWithExtension(pFileName, "fire");
-
-            if (!File.Exists(target))
+            if (!File.Exists(pFileName))
             {
-                throw new SourceCodeException("Could not open file: {0}", target);
+                throw new SourceCodeException("Could not open file: {0}", pFileName);
             }
 
-            using (StreamReader reader = new StreamReader(target))
+            using (StreamReader reader = new StreamReader(pFileName))
             {
                 try
                 {
@@ -44,7 +42,7 @@ namespace Fire.Sources
                 }
                 catch (IOException)
                 {
-                    throw new SourceCodeException("Unable to read file: {0}", target);
+                    throw new SourceCodeException("Unable to read file: {0}", pFileName);
                 }
             }
         }

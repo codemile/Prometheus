@@ -8,6 +8,7 @@ using Fire.Sources;
 using GemsCLI;
 using Logging;
 using Prometheus;
+using Prometheus.Exceptions;
 
 namespace Fire
 {
@@ -25,6 +26,7 @@ namespace Fire
         private static void Main(string[] pArgs)
         {
             WriteGreeting();
+
             Options options = RequestFactory.Create<Options>(CliOptions.WindowsStyle, pArgs);
             if (options == null)
             {
@@ -33,13 +35,18 @@ namespace Fire
 
             try
             {
-                string source = Reader.Open(options.FileName);
+                string filename = Reader.getFileNameWithExtension(options.FileName, "fire");
+                string source = Reader.Open(filename);
                 Compiler prometheus = new Compiler();
-                TargetCode code = prometheus.Compile(options.FileName, source);
+                TargetCode code = prometheus.Compile(filename, source);
             }
             catch (FireException e)
             {
-                _logger.Exception(e);
+                _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
+            }
+            catch (CompilerException e)
+            {
+                _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
             }
         }
 
@@ -52,10 +59,10 @@ namespace Fire
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.FileVersion;
 
-            Console.WriteLine(Resource.Greeting_Version, version);
-            Console.WriteLine(Resource.Greeting_License);
-            Console.WriteLine(Resource.Greeting_Contact);
-            Console.WriteLine("");
+            Debug.WriteLine(Resource.Greeting_Version, version);
+            Debug.WriteLine(Resource.Greeting_License);
+            Debug.WriteLine(Resource.Greeting_Contact);
+            Debug.WriteLine("");
         }
     }
 }
