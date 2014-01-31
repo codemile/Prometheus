@@ -27,13 +27,16 @@ namespace Prometheus.Parser
         /// <param name="pNode">The node being executed</param>
         private Data Execute(Node pNode)
         {
-            if (pNode.Type == GrammarSymbol.Statements)
+            switch (pNode.Type)
             {
-                for (int i = 0, c = pNode.Children.Count; i < c; i++)
-                {
-                    Execute(pNode.Children[i]);
-                }
-                return Data.Undefined;
+                case GrammarSymbol.Statements:
+                    for (int i = 0, c = pNode.Children.Count; i < c; i++)
+                    {
+                        Execute(pNode.Children[i]);
+                    }
+                    return Data.Undefined;
+                case GrammarSymbol.Statement:
+                    return Execute(pNode.Children[0]);
             }
 
 #if DEBUG

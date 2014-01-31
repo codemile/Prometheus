@@ -61,8 +61,10 @@ Comment Line  = '//'
 <DivideExpression>		::= <DivideExpression> '/' <SearchTerm> 
 						 |  <SearchTerm> 
 
-<SearchTerm>			::= 'has' <UnaryOperator>
-						 | 'contains' <UnaryOperator>
+<SearchTerm>			::= HAS <UnaryOperator>
+						 | CONTAINS <UnaryOperator>
+						 | STARTS WITH <UnaryOperator>
+						 | ENDS WITH <UnaryOperator>
 						 | <UnaryOperator>
 
 <UnaryOperator>			::= '-' <Value>
@@ -76,16 +78,16 @@ Comment Line  = '//'
 ! Arguments for commands
 ! ===================================================================
 
-<Variable>	  ::= Identifier
+<Variable>		::= Identifier
 
-<Value>       ::= <Variable>
-			   | StringDouble
-			   | StringSingle
-			   | Integer
-			   | Float
-			   | Boolean
-			   | '(' <Expression> ')'
-			  
+<Value>			::= <Variable>
+				| StringDouble
+				| StringSingle
+				| Integer
+				| Float
+				| Boolean
+				| '(' <Expression> ')'
+
 ! ===================================================================
 ! Basic structure of the program.
 ! ===================================================================
@@ -94,15 +96,16 @@ Comment Line  = '//'
 <Statements> ::= <Statement>
 				| <Statements>  <Statement>
 
-<IfControl> ::= IF '(' <Expression> ')' <Statements> END IF
-<IfElseControl> ::= IF '(' <Expression> ')' <Statements> ELSE <Statements> END IF
-<WhileControl> ::= WHILE '(' <Expression> ')' <Statements> END WHILE
+<IfControl> ::= IF '(' <Expression> ')' <Statements> END
+<IfElseControl> ::= IF '(' <Expression> ')' <Statements> ELSE <Statements> END
+<WhileControl> ::= WHILE '(' <Expression> ')' <Statements> ENDWHILE
 <DoControl> ::= DO <Statements> WHILE '(' <Expression> ')'
 
 ! ===================================================================
 ! Statements
 ! ===================================================================
-<Statement> ::= <SetCommand>
+<Statement> ::= '(' <Statement> ')'
+			 | <SetCommand>
 			 | <UnsetCommand>
 			 | <RejectCommand>
 			 | <AcceptCommand>
@@ -131,20 +134,20 @@ Comment Line  = '//'
 ! Output Commands
 ! ===================================================================
 
-<PrintCommand>		::= PRINT '(' <Statement> ')'
+<PrintCommand>		::= PRINT <Statement>
 
 ! ===================================================================
 ! String Manipulation
 ! ===================================================================
 
-<UpperCommand>		::= UPPER '(' <Statement> ')'
-<LowerCommand>		::= LOWER '(' <Statement> ')'
-<TrimCommand>		::= TRIM '(' <Statement> ')'
+<UpperCommand>		::= UPPER <Statement>
+<LowerCommand>		::= LOWER <Statement>
+<TrimCommand>		::= TRIM <Statement>
 
 ! ===================================================================
 ! Context Commands
 ! ===================================================================
 
-<ScopeCommand>		::= SCOPE '(' <Statement> ')'
-<RejectCommand>		::= REJECT '(' <Statement> ')'
-<AcceptCommand>		::= ACCEPT '(' <Statement> ')'
+<ScopeCommand>		::= SCOPE <Variable>
+<RejectCommand>		::= REJECT <Expression>
+<AcceptCommand>		::= ACCEPT <Expression>

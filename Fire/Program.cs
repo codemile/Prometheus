@@ -29,7 +29,7 @@ namespace Fire
         /// <param name="pArgs">Command line arguments</param>
         private static void Main(string[] pArgs)
         {
-            WriteGreeting();
+            //WriteGreeting();
 
             Options options = RequestFactory.Create<Options>(CliOptions.WindowsStyle, pArgs);
             if (options == null)
