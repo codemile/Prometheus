@@ -43,30 +43,22 @@ Comment Line  = '//'
 ! ===================================================================
 ! Math Expressions
 ! ===================================================================
-<Expression>  ::= <Expression> '>'  <AddExpression> 
-			   |  <Expression> '<'  <AddExpression> 
-			   |  <Expression> '<=' <AddExpression> 
-			   |  <Expression> '>=' <AddExpression>
-			   |  <Expression> '==' <AddExpression>    !Equal
-			   |  <Expression> '<>' <AddExpression>    !Not equal
-			   |  <Expression> '!=' <AddExpression>    !Not equal
-			   |  <Expression> '&&' <AddExpression>
-			   |  <Expression> '||' <AddExpression>
-			   |  <Expression> AND <AddExpression>
-			   |  <Expression> OR <AddExpression>
-			   |  <AddExpression> 
+<Expression>  ::= <GtOperator>
 
-<AddExpression>			::= <AddExpression> '+' <SubExpression>
-						 |  <SubExpression> 
+<GtOperator>			::= <GtOperator> '>' <LtOperator> | <LtOperator>
+<LtOperator>			::= <LtOperator> '<' <GteOperator> | <GteOperator>
+<GteOperator>			::= <GteOperator> '>=' <LteOperator> | <LteOperator>
+<LteOperator>			::= <LteOperator> '<=' <EqualOperator> | <EqualOperator>
 
-<SubExpression>			::= <SubExpression> '-' <MultiplyExpression>
-						 |  <MultiplyExpression> 
+<EqualOperator>			::= <EqualOperator> '==' <NotEqualOperator> | <NotEqualOperator>
+<NotEqualOperator>		::= <NotEqualOperator> '!=' <AndOperator> | <NotEqualOperator> '<>' <AndOperator> | <AndOperator>
+<AndOperator>			::= <AndOperator> AND <OrOperator> | <AndOperator> '&&' <OrOperator> | <OrOperator>
+<OrOperator>			::= <OrOperator> OR <AddExpression> | <OrOperator> '||' <AddExpression> | <AddExpression>
 
-<MultiplyExpression>    ::= <MultiplyExpression> '*' <DivideExpression> 
-						 |  <DivideExpression> 
-
-<DivideExpression>		::= <DivideExpression> '/' <UnaryOperator> 
-						 |  <UnaryOperator> 
+<AddExpression>			::= <AddExpression> '+' <SubExpression> | <SubExpression> 
+<SubExpression>			::= <SubExpression> '-' <MultiplyExpression> | <MultiplyExpression> 
+<MultiplyExpression>    ::= <MultiplyExpression> '*' <DivideExpression>  | <DivideExpression> 
+<DivideExpression>		::= <DivideExpression> '/' <UnaryOperator>  | <UnaryOperator> 
 
 <UnaryOperator>			::= '--' <Variable>
 						 | '++' <Variable>
@@ -87,6 +79,7 @@ Comment Line  = '//'
 				| StringSingle
 				| Number
 				| Decimal
+				| Boolean
 				| <Variable>
 				| <Function>
 				| '(' <Expression> ')'

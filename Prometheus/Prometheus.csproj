@@ -60,6 +60,7 @@
     <Compile Include="Runtime\Creators\ObjectRepo.cs" />
     <Compile Include="Runtime\Creators\PrometheusObject.cs" />
     <Compile Include="Runtime\MathOperators.cs" />
+    <Compile Include="Runtime\RelationalOperators.cs" />
     <Compile Include="Runtime\StringManipulation.cs" />
     <Compile Include="Runtime\ValueObject.cs" />
     <Compile Include="Parser\Parser.cs" />
