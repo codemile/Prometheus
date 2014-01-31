@@ -16,9 +16,9 @@ namespace Prometheus.Grammar
 		@Expression_LtGt = 5,                            // <Expression> ::= <Expression> '<>' <AddExpression>
 		@Expression_ExclamEq = 6,                        // <Expression> ::= <Expression> '!=' <AddExpression>
 		@Expression_AmpAmp = 7,                          // <Expression> ::= <Expression> '&&' <AddExpression>
-		@Expression_and = 8,                             // <Expression> ::= <Expression> and <AddExpression>
-		@Expression_PipePipe = 9,                        // <Expression> ::= <Expression> '||' <AddExpression>
-		@Expression_or = 10,                             // <Expression> ::= <Expression> or <AddExpression>
+		@Expression_PipePipe = 8,                        // <Expression> ::= <Expression> '||' <AddExpression>
+		@Expression_AND = 9,                             // <Expression> ::= <Expression> AND <AddExpression>
+		@Expression_OR = 10,                             // <Expression> ::= <Expression> OR <AddExpression>
 		@Expression = 11,                                // <Expression> ::= <AddExpression>
 		@AddExpression_Plus = 12,                        // <AddExpression> ::= <AddExpression> '+' <SubExpression>
 		@AddExpression = 13,                             // <AddExpression> ::= <SubExpression>
@@ -34,25 +34,25 @@ namespace Prometheus.Grammar
 		@UnaryOperator_Plus = 23,                        // <UnaryOperator> ::= '+' <Value>
 		@UnaryOperator_Exclam = 24,                      // <UnaryOperator> ::= '!' <Value>
 		@UnaryOperator_Tilde = 25,                       // <UnaryOperator> ::= '~' <Value>
-		@UnaryOperator_not = 26,                         // <UnaryOperator> ::= not <Value>
+		@UnaryOperator_NOT = 26,                         // <UnaryOperator> ::= NOT <Value>
 		@UnaryOperator = 27,                             // <UnaryOperator> ::= <Value>
 		@Variable_Identifier = 28,                       // <Variable> ::= Identifier
-		@Value = 29,                                     // <Value> ::= <Variable>
-		@Value_StringDouble = 30,                        // <Value> ::= StringDouble
-		@Value_StringSingle = 31,                        // <Value> ::= StringSingle
-		@Value_Integer = 32,                             // <Value> ::= Integer
-		@Value_Float = 33,                               // <Value> ::= Float
-		@Value_Boolean = 34,                             // <Value> ::= Boolean
-		@Value2 = 35,                                    // <Value> ::= <Function>
-		@Value_LParen_RParen = 36,                       // <Value> ::= '(' <Expression> ')'
-		@Program = 37,                                   // <Program> ::= <Statements>
-		@Statements = 38,                                // <Statements> ::= <Statement>
-		@Statements2 = 39,                               // <Statements> ::= <Statements> <Statement>
-		@Statement = 40,                                 // <Statement> ::= <Assignment>
-		@Statement2 = 41,                                // <Statement> ::= <Procedure>
-		@Statement3 = 42,                                // <Statement> ::= <Function>
-		@Statement4 = 43,                                // <Statement> ::= <Increment>
-		@Statement5 = 44,                                // <Statement> ::= <Decrement>
+		@Value_StringDouble = 29,                        // <Value> ::= StringDouble
+		@Value_StringSingle = 30,                        // <Value> ::= StringSingle
+		@Value_Number = 31,                              // <Value> ::= Number
+		@Value_Decimal = 32,                             // <Value> ::= Decimal
+		@Value = 33,                                     // <Value> ::= <Variable>
+		@Value2 = 34,                                    // <Value> ::= <Function>
+		@Value_LParen_RParen = 35,                       // <Value> ::= '(' <Expression> ')'
+		@Program = 36,                                   // <Program> ::= <Statements>
+		@Statements = 37,                                // <Statements> ::= <Statement>
+		@Statements2 = 38,                               // <Statements> ::= <Statements> <Statement>
+		@Statement_NewLine = 39,                         // <Statement> ::= <Assignment> NewLine
+		@Statement_NewLine2 = 40,                        // <Statement> ::= <Procedure> NewLine
+		@Statement_NewLine3 = 41,                        // <Statement> ::= <Function> NewLine
+		@Statement_NewLine4 = 42,                        // <Statement> ::= <Increment> NewLine
+		@Statement_NewLine5 = 43,                        // <Statement> ::= <Decrement> NewLine
+		@Statement_NewLine6 = 44,                        // <Statement> ::= NewLine
 		@Function = 45,                                  // <Function> ::= <UpperFunc>
 		@Function2 = 46,                                 // <Function> ::= <LowerFunc>
 		@Function3 = 47,                                 // <Function> ::= <TrimFunc>
@@ -62,21 +62,21 @@ namespace Prometheus.Grammar
 		@Procedure4 = 51,                                // <Procedure> ::= <ScopeProc>
 		@Procedure5 = 52,                                // <Procedure> ::= <IncludeProc>
 		@Procedure6 = 53,                                // <Procedure> ::= <PrintProc>
-		@IfControl_IF_LParen_RParen_END = 54,            // <IfControl> ::= IF '(' <Value> ')' <Statements> END
-		@IfElseControl_IF_LParen_RParen_ELSE_END = 55,   // <IfElseControl> ::= IF '(' <Value> ')' <Statements> ELSE <Statements> END
-		@WhileControl_WHILE_LParen_RParen_ENDWHILE = 56,  // <WhileControl> ::= WHILE '(' <Value> ')' <Statements> ENDWHILE
-		@DoControl_DO_WHILE_LParen_RParen = 57,          // <DoControl> ::= DO <Statements> WHILE '(' <Value> ')'
-		@Assignment_Identifier_Eq = 58,                  // <Assignment> ::= Identifier '=' <Value>
+		@IfControl_IF_NewLine_NewLine_END_NewLine = 54,  // <IfControl> ::= IF <Expression> NewLine <Statements> NewLine END NewLine
+		@IfElseControl_IF_NewLine_NewLine_ELSE_NewLine_END_NewLine = 55,  // <IfElseControl> ::= IF <Expression> NewLine <Statements> NewLine ELSE NewLine <Statements> END NewLine
+		@WhileControl_WHILE_NewLine_NewLine_END_NewLine = 56,  // <WhileControl> ::= WHILE <Expression> NewLine <Statements> NewLine END NewLine
+		@DoControl_DO_NewLine_NewLine_WHILE_NewLine = 57,  // <DoControl> ::= DO NewLine <Statements> NewLine WHILE <Expression> NewLine
+		@Assignment_VAR_Identifier_Eq = 58,              // <Assignment> ::= VAR Identifier '=' <Expression>
 		@Increment_Identifier_PlusPlus = 59,             // <Increment> ::= Identifier '++'
 		@Decrement_Identifier_MinusMinus = 60,           // <Decrement> ::= Identifier '--'
 		@UnsetProc_UNSET_Identifier = 61,                // <UnsetProc> ::= UNSET Identifier
-		@IncludeProc_INCLUDE = 62,                       // <IncludeProc> ::= INCLUDE <Value>
-		@PrintProc_PRINT = 63,                           // <PrintProc> ::= PRINT <Value>
-		@ScopeProc_SCOPE = 64,                           // <ScopeProc> ::= SCOPE <Variable>
-		@RejectProc_REJECT = 65,                         // <RejectProc> ::= REJECT <Value>
-		@AcceptProc_ACCEPT = 66,                         // <AcceptProc> ::= ACCEPT <Value>
-		@UpperFunc_UPPER = 67,                           // <UpperFunc> ::= UPPER <Value>
-		@LowerFunc_LOWER = 68,                           // <LowerFunc> ::= LOWER <Value>
-		@TrimFunc_TRIM = 69                              // <TrimFunc> ::= TRIM <Value>
+		@IncludeProc_INCLUDE = 62,                       // <IncludeProc> ::= INCLUDE <Expression>
+		@PrintProc_PRINT = 63,                           // <PrintProc> ::= PRINT <Expression>
+		@ScopeProc_SCOPE = 64,                           // <ScopeProc> ::= SCOPE <Expression>
+		@RejectProc_REJECT = 65,                         // <RejectProc> ::= REJECT <Expression>
+		@AcceptProc_ACCEPT = 66,                         // <AcceptProc> ::= ACCEPT <Expression>
+		@UpperFunc_UPPER_LParen_RParen = 67,             // <UpperFunc> ::= UPPER '(' <Expression> ')'
+		@LowerFunc_LOWER_LParen_RParen = 68,             // <LowerFunc> ::= LOWER '(' <Expression> ')'
+		@TrimFunc_TRIM_LParen_RParen = 69                // <TrimFunc> ::= TRIM '(' <Expression> ')'
 	}
 }

@@ -32,13 +32,14 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.Assignment)]
         public Data Assignment(Data pIdentifier, Data pValue)
         {
-            if (!_variables.ContainsKey(pIdentifier.Value))
+            Identifier id = pIdentifier.getIdentifier();
+            if (!_variables.ContainsKey(id.Name))
             {
-                _variables.Add(pIdentifier.Value, pValue);
+                _variables.Add(id.Name, pValue);
             }
             else
             {
-                _variables[pIdentifier.Value] = pValue;
+                _variables[id.Name] = pValue;
             }
             return pValue;
         }
@@ -51,7 +52,8 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.Variable)]
         public Data Variable(Data pIdentifier)
         {
-            return !_variables.ContainsKey(pIdentifier.Value) ? Data.Undefined : _variables[pIdentifier.Value];
+            Identifier id = pIdentifier.getIdentifier();
+            return !_variables.ContainsKey(id.Name) ? Data.Undefined : _variables[id.Name];
         }
     }
 }

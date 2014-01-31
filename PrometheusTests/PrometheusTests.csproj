@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="CompilerTests.cs" />
     <Compile Include="Mock\MockCommand.cs" />
+    <Compile Include="Nodes\DataConverterTests.cs" />
     <Compile Include="Runtime\Creators\SymbolHandlerTests.cs" />
     <Compile Include="Runtime\Creators\PrometheusObjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

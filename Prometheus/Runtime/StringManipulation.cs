@@ -15,7 +15,7 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.UpperFunc)]
         public Data ToUpper(Data pValue)
         {
-            return new Data(GrammarSymbol.StringDouble, pValue.Value.ToUpper());
+            return new Data(pValue.Get<string>().ToUpper());
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.LowerFunc)]
         public Data ToLower(Data pValue)
         {
-            return new Data(GrammarSymbol.StringDouble, pValue.Value.ToLower());
+            return new Data(pValue.Get<string>().ToLower());
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.TrimFunc)]
         public Data Trim(Data pValue)
         {
-            return new Data(GrammarSymbol.StringDouble, pValue.Value.Trim());
+            return new Data(pValue.Get<string>().Trim());
         }
     }
 }

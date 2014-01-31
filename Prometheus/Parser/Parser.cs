@@ -36,7 +36,15 @@ namespace Prometheus.Parser
                     }
                     return Data.Undefined;
                 case GrammarSymbol.Statement:
-                    return Execute(pNode.Children[0]);
+                    if (pNode.Children.Count == 1)
+                    {
+                        return Execute(pNode.Children[0]);
+                    }
+                    if (pNode.Children.Count == 0)
+                    {
+                        return Data.Undefined;
+                    }
+                    throw new UnexpectedErrorException("Statement with many child", pNode);
             }
 
 #if DEBUG

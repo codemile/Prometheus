@@ -107,10 +107,9 @@ namespace Prometheus.Compile
             _factory.DataType(GrammarSymbol.Identifier);
             _factory.DataType(GrammarSymbol.StringDouble);
             _factory.DataType(GrammarSymbol.StringSingle);
-            _factory.DataType(GrammarSymbol.Integer);
-            _factory.DataType(GrammarSymbol.Float);
+            _factory.DataType(GrammarSymbol.Decimal);
+            _factory.DataType(GrammarSymbol.Number);
             _factory.DataType(GrammarSymbol.Boolean);
-            _factory.DataType(GrammarSymbol.Integer);
 
             const string fullResourceName = "Prometheus.Grammar.Grammar.egt";
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fullResourceName))

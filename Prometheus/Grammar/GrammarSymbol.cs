@@ -11,52 +11,52 @@ namespace Prometheus.Grammar
 		@EOF = 0,                                        // 3 (EOF)
 		@Error = 1,                                      // 7 (Error)
 		@Comment = 2,                                    // 2 Comment
-		@NewLine = 3,                                    // 2 NewLine
-		@Whitespace = 4,                                 // 2 Whitespace
-		@TimesDiv = 5,                                   // 5 '*/'
-		@DivTimes = 6,                                   // 4 '/*'
-		@DivDiv = 7,                                     // 6 '//'
-		@Exclam = 8,                                     // 1 '!'
-		@ExclamEq = 9,                                   // 1 '!='
-		@AmpAmp = 10,                                    // 1 '&&'
-		@LParen = 11,                                    // 1 '('
-		@RParen = 12,                                    // 1 ')'
-		@Times = 13,                                     // 1 '*'
-		@Plus = 14,                                      // 1 '+'
-		@PlusPlus = 15,                                  // 1 '++'
-		@Minus = 16,                                     // 1 '-'
-		@MinusMinus = 17,                                // 1 '--'
-		@Div = 18,                                       // 1 '/'
-		@Lt = 19,                                        // 1 '<'
-		@LtEq = 20,                                      // 1 '<='
-		@LtGt = 21,                                      // 1 '<>'
-		@Eq = 22,                                        // 1 '='
-		@EqEq = 23,                                      // 1 '=='
-		@Gt = 24,                                        // 1 '>'
-		@GtEq = 25,                                      // 1 '>='
-		@ACCEPT = 26,                                    // 1 ACCEPT
-		@and = 27,                                       // 1 and
-		@Boolean = 28,                                   // 1 Boolean
+		@Whitespace = 3,                                 // 2 Whitespace
+		@TimesDiv = 4,                                   // 5 '*/'
+		@DivTimes = 5,                                   // 4 '/*'
+		@DivDiv = 6,                                     // 6 '//'
+		@Exclam = 7,                                     // 1 '!'
+		@ExclamEq = 8,                                   // 1 '!='
+		@AmpAmp = 9,                                     // 1 '&&'
+		@LParen = 10,                                    // 1 '('
+		@RParen = 11,                                    // 1 ')'
+		@Times = 12,                                     // 1 '*'
+		@Plus = 13,                                      // 1 '+'
+		@PlusPlus = 14,                                  // 1 '++'
+		@Minus = 15,                                     // 1 '-'
+		@MinusMinus = 16,                                // 1 '--'
+		@Div = 17,                                       // 1 '/'
+		@Lt = 18,                                        // 1 '<'
+		@LtEq = 19,                                      // 1 '<='
+		@LtGt = 20,                                      // 1 '<>'
+		@Eq = 21,                                        // 1 '='
+		@EqEq = 22,                                      // 1 '=='
+		@Gt = 23,                                        // 1 '>'
+		@GtEq = 24,                                      // 1 '>='
+		@ACCEPT = 25,                                    // 1 ACCEPT
+		@AND = 26,                                       // 1 AND
+		@Boolean = 27,                                   // 1 Boolean
+		@Decimal = 28,                                   // 1 Decimal
 		@DO = 29,                                        // 1 DO
 		@ELSE = 30,                                      // 1 ELSE
 		@END = 31,                                       // 1 END
-		@ENDWHILE = 32,                                  // 1 ENDWHILE
-		@Float = 33,                                     // 1 Float
-		@Identifier = 34,                                // 1 Identifier
-		@IF = 35,                                        // 1 IF
-		@INCLUDE = 36,                                   // 1 INCLUDE
-		@Integer = 37,                                   // 1 Integer
-		@LOWER = 38,                                     // 1 LOWER
-		@not = 39,                                       // 1 not
-		@or = 40,                                        // 1 or
-		@PRINT = 41,                                     // 1 PRINT
-		@REJECT = 42,                                    // 1 REJECT
-		@SCOPE = 43,                                     // 1 SCOPE
-		@StringDouble = 44,                              // 1 StringDouble
-		@StringSingle = 45,                              // 1 StringSingle
-		@TRIM = 46,                                      // 1 TRIM
-		@UNSET = 47,                                     // 1 UNSET
-		@UPPER = 48,                                     // 1 UPPER
+		@Identifier = 32,                                // 1 Identifier
+		@IF = 33,                                        // 1 IF
+		@INCLUDE = 34,                                   // 1 INCLUDE
+		@LOWER = 35,                                     // 1 LOWER
+		@NewLine = 36,                                   // 1 NewLine
+		@NOT = 37,                                       // 1 NOT
+		@Number = 38,                                    // 1 Number
+		@OR = 39,                                        // 1 OR
+		@PRINT = 40,                                     // 1 PRINT
+		@REJECT = 41,                                    // 1 REJECT
+		@SCOPE = 42,                                     // 1 SCOPE
+		@StringDouble = 43,                              // 1 StringDouble
+		@StringSingle = 44,                              // 1 StringSingle
+		@TRIM = 45,                                      // 1 TRIM
+		@UNSET = 46,                                     // 1 UNSET
+		@UPPER = 47,                                     // 1 UPPER
+		@VAR = 48,                                       // 1 VAR
 		@WHILE = 49,                                     // 1 WHILE
 		@PipePipe = 50,                                  // 1 '||'
 		@Tilde = 51,                                     // 1 '~'

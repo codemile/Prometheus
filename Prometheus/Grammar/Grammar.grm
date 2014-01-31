@@ -2,8 +2,15 @@
 "Author"   = 'ThinkingMedia'
 "Version"  = '1.0'
 "About"    = 'Scripting language for processing documents.'
-
+"Case Sensitive" = 'False'
 "Start Symbol" = <Program>
+
+! ===================================================================
+! Change NewLine to a terminal
+! ===================================================================
+{WS} = {Whitespace} - {CR} - {LF}
+Whitespace = {WS}+
+NewLine = {CR}{LF}|{CR}
 
 ! ===================================================================
 ! Character Sets
@@ -21,8 +28,8 @@
 Identifier		= {ID Head}{ID Tail}*
 StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"'
 StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* ['']
-Integer			= [0123456789,]+
-Float			= [0123456789,]+ '.' [0123456789]+
+Number			= [0123456789,]+
+Decimal			= [0123456789,]+ '.' [0123456789]+
 Boolean			= true | false | on | off | yes | no | always | never
 
 ! ===================================================================
@@ -44,9 +51,9 @@ Comment Line  = '//'
 			   |  <Expression> '<>' <AddExpression>    !Not equal
 			   |  <Expression> '!=' <AddExpression>    !Not equal
 			   |  <Expression> '&&' <AddExpression>
-			   |  <Expression> 'and' <AddExpression>
 			   |  <Expression> '||' <AddExpression>
-			   |  <Expression> 'or' <AddExpression>
+			   |  <Expression> AND <AddExpression>
+			   |  <Expression> OR <AddExpression>
 			   |  <AddExpression> 
 
 <AddExpression>			::= <AddExpression> '+' <SubExpression>
@@ -67,7 +74,7 @@ Comment Line  = '//'
 						 | '+' <Value>
 						 | '!' <Value>
 						 | '~' <Value>
-						 | 'not' <Value>
+						 | NOT <Value>
 						 | <Value>
 
 ! ===================================================================
@@ -76,12 +83,11 @@ Comment Line  = '//'
 
 <Variable>		::= Identifier
 
-<Value>			::= <Variable>
-				| StringDouble
+<Value>			::= StringDouble
 				| StringSingle
-				| Integer
-				| Float
-				| Boolean
+				| Number
+				| Decimal
+				| <Variable>
 				| <Function>
 				| '(' <Expression> ')'
 
@@ -93,11 +99,12 @@ Comment Line  = '//'
 <Statements> ::= <Statement>
 				| <Statements>  <Statement>
 
-<Statement> ::= <Assignment>
-			 | <Procedure>
-			 | <Function>
-			 | <Increment>
-			 | <Decrement>
+<Statement> ::= <Assignment> NewLine
+			 | <Procedure> NewLine
+			 | <Function> NewLine
+			 | <Increment> NewLine
+			 | <Decrement> NewLine
+			 | NewLine
 
 <Function>	::= <UpperFunc>
 			 | <LowerFunc>
@@ -114,16 +121,16 @@ Comment Line  = '//'
 ! Flow control
 ! ===================================================================
 
-<IfControl> ::= IF '(' <Value> ')' <Statements> END
-<IfElseControl> ::= IF '(' <Value> ')' <Statements> ELSE <Statements> END
-<WhileControl> ::= WHILE '(' <Value> ')' <Statements> ENDWHILE
-<DoControl> ::= DO <Statements> WHILE '(' <Value> ')'
+<IfControl> ::= IF <Expression> NewLine <Statements> NewLine END NewLine
+<IfElseControl> ::= IF <Expression> NewLine <Statements> NewLine ELSE NewLine <Statements> END NewLine
+<WhileControl> ::= WHILE <Expression> NewLine <Statements> NewLine END NewLine
+<DoControl> ::= DO NewLine <Statements> NewLine WHILE <Expression> NewLine
 
 ! ===================================================================
 ! Variable Commands
 ! ===================================================================
 
-<Assignment>		::= Identifier '=' <Value>
+<Assignment>		::= VAR Identifier '=' <Expression>
 <Increment>			::= Identifier '++'
 <Decrement>			::= Identifier '--'
 
@@ -132,17 +139,17 @@ Comment Line  = '//'
 ! ===================================================================
 
 <UnsetProc>			::= UNSET Identifier
-<IncludeProc>		::= INCLUDE <Value>
-<PrintProc>			::= PRINT <Value>
-<ScopeProc>			::= SCOPE <Variable>
-<RejectProc>		::= REJECT <Value>
-<AcceptProc>		::= ACCEPT <Value>
+<IncludeProc>		::= INCLUDE <Expression>
+<PrintProc>			::= PRINT <Expression>
+<ScopeProc>			::= SCOPE <Expression>
+<RejectProc>		::= REJECT <Expression>
+<AcceptProc>		::= ACCEPT <Expression>
 
 ! ===================================================================
 ! Functions
 ! ===================================================================
 
-<UpperFunc>			::= UPPER <Value>
-<LowerFunc>			::= LOWER <Value>
-<TrimFunc>			::= TRIM <Value>
+<UpperFunc>			::= UPPER '(' <Expression> ')'
+<LowerFunc>			::= LOWER '(' <Expression> ')'
+<TrimFunc>			::= TRIM '(' <Expression> ')'
 

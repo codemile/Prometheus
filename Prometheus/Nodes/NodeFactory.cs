@@ -73,7 +73,7 @@ namespace Prometheus.Nodes
                 }
 
                 string str = (string)token.Data;
-                node.Data.Add(DataFactory.Create(dataType, str));
+                node.Data.Add(DataFactory.Create(pCursor, dataType, str));
             }
             return node;
         }

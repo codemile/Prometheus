@@ -17,7 +17,7 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.PrintProc)]
         public Data Print(Data pValue)
         {
-            Debug.WriteLine(pValue.Value);
+            Debug.WriteLine(pValue.Get<string>());
 
             return Data.Undefined;
         }
