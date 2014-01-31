@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compile\iSourceRef.cs" />
+    <Compile Include="Compile\Optomizer\DropByCount.cs" />
+    <Compile Include="Compile\Optomizer\iNodeOptimizer.cs" />
+    <Compile Include="Compile\Optomizer\Optimizer.cs" />
     <Compile Include="Exceptions\Parser\InvalidArgumentException.cs" />
     <Compile Include="Exceptions\Parser\RunTimeException.cs" />
     <Compile Include="Exceptions\Parser\UnexpectedErrorException.cs" />

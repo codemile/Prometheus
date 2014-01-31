@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using GOLD;
+using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -136,6 +137,10 @@ namespace Prometheus.Compile
             using (StringReader reader = new StringReader(pSource))
             {
                 Node root = Compile(pFileName, reader);
+
+                Optimizer optimizer = new Optimizer();
+                root = optimizer.Optimize(root);
+
                 return new TargetCode(root);
             }
         }

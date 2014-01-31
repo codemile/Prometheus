@@ -1,9 +1,12 @@
-﻿namespace Prometheus.Compile
+﻿using System.Diagnostics;
+
+namespace Prometheus.Compile
 {
     /// <summary>
     /// Represents a location in the source code.
     /// Used mostly for error reporting.
     /// </summary>
+    [DebuggerDisplay("{_fileName} {_row}:{_column}")]
     public class Cursor
     {
         /// <summary>
