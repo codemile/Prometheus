@@ -22,8 +22,8 @@ namespace PrometheusTest.Runtime.Creators
         [TestMethod]
         public void SymbolHandler_0()
         {
-            SymbolHandler h = new SymbolHandler(GrammarSymbol.PrintCommand);
-            Assert.AreEqual(GrammarSymbol.PrintCommand, h.Symbol);
+            SymbolHandler h = new SymbolHandler(GrammarSymbol.PrintProc);
+            Assert.AreEqual(GrammarSymbol.PrintProc, h.Symbol);
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace PrometheusTest.Runtime.Creators
 
             SymbolHandler handler = SymbolHandler.getSymbolHandler(method);
             Assert.IsNotNull(handler);
-            Assert.AreEqual(handler.Symbol, GrammarSymbol.PrintCommand);
+            Assert.AreEqual(handler.Symbol, GrammarSymbol.PrintProc);
         }
     }
 }

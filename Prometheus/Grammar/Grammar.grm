@@ -9,10 +9,10 @@
 ! Character Sets
 ! ===================================================================
 
-{ID Head}      = {Letter} + [_]
-{ID Tail}      = {Alphanumeric} + [_]
-{DoubleString Chars} = {Printable} + {HT} - ["\]
-{SingleString Chars} = {Printable} + {HT} - [''\]
+{ID Head}				= {Letter} + [_]
+{ID Tail}				= {Alphanumeric} + [_]
+{DoubleString Chars}	= {Printable} + {HT} - ["\]
+{SingleString Chars}	= {Printable} + {HT} - [''\]
 
 ! ===================================================================
 ! Terminals
@@ -58,16 +58,12 @@ Comment Line  = '//'
 <MultiplyExpression>    ::= <MultiplyExpression> '*' <DivideExpression> 
 						 |  <DivideExpression> 
 
-<DivideExpression>		::= <DivideExpression> '/' <SearchTerm> 
-						 |  <SearchTerm> 
+<DivideExpression>		::= <DivideExpression> '/' <UnaryOperator> 
+						 |  <UnaryOperator> 
 
-<SearchTerm>			::= HAS <UnaryOperator>
-						 | CONTAINS <UnaryOperator>
-						 | STARTS WITH <UnaryOperator>
-						 | ENDS WITH <UnaryOperator>
-						 | <UnaryOperator>
-
-<UnaryOperator>			::= '-' <Value>
+<UnaryOperator>			::= '--' <Variable>
+						 | '++' <Variable>
+						 | '-' <Value>
 						 | '+' <Value>
 						 | '!' <Value>
 						 | '~' <Value>
@@ -75,7 +71,7 @@ Comment Line  = '//'
 						 | <Value>
 
 ! ===================================================================
-! Arguments for commands
+! Variables And Primitives
 ! ===================================================================
 
 <Variable>		::= Identifier
@@ -86,68 +82,67 @@ Comment Line  = '//'
 				| Integer
 				| Float
 				| Boolean
+				| <Function>
 				| '(' <Expression> ')'
-
-! ===================================================================
-! Basic structure of the program.
-! ===================================================================
-<Program> ::= <Statements>
-		   
-<Statements> ::= <Statement>
-				| <Statements>  <Statement>
-
-<IfControl> ::= IF '(' <Expression> ')' <Statements> END
-<IfElseControl> ::= IF '(' <Expression> ')' <Statements> ELSE <Statements> END
-<WhileControl> ::= WHILE '(' <Expression> ')' <Statements> ENDWHILE
-<DoControl> ::= DO <Statements> WHILE '(' <Expression> ')'
 
 ! ===================================================================
 ! Statements
 ! ===================================================================
-<Statement> ::= '(' <Statement> ')'
-			 | <SetCommand>
-			 | <UnsetCommand>
-			 | <RejectCommand>
-			 | <AcceptCommand>
-			 | <ScopeCommand>
-			 | <IncludeCommand>
-			 | <PrintCommand>
-			 | <UpperCommand>
-			 | <LowerCommand>
-			 | <TrimCommand>
-			 | <Expression>
+<Program> ::= <Statements>
+
+<Statements> ::= <Statement>
+				| <Statements>  <Statement>
+
+<Statement> ::= <Assignment>
+			 | <Procedure>
+			 | <Function>
+			 | <Increment>
+			 | <Decrement>
+
+<Function>	::= <UpperFunc>
+			 | <LowerFunc>
+			 | <TrimFunc>
+
+<Procedure>	::= <UnsetProc>
+			 | <RejectProc>
+			 | <AcceptProc>
+			 | <ScopeProc>
+			 | <IncludeProc>
+			 | <PrintProc>
+
+! ===================================================================
+! Flow control
+! ===================================================================
+
+<IfControl> ::= IF '(' <Value> ')' <Statements> END
+<IfElseControl> ::= IF '(' <Value> ')' <Statements> ELSE <Statements> END
+<WhileControl> ::= WHILE '(' <Value> ')' <Statements> ENDWHILE
+<DoControl> ::= DO <Statements> WHILE '(' <Value> ')'
 
 ! ===================================================================
 ! Variable Commands
 ! ===================================================================
 
-<SetCommand>		::= SET <Variable> '=' <Expression>
-<UnsetCommand>		::= UNSET <Variable>
+<Assignment>		::= <Variable> '=' <Value>
+<Increment>			::= <Variable> '++'
+<Decrement>			::= <Variable> '--'
 
 ! ===================================================================
-! Directives
+! Procedures
 ! ===================================================================
 
-<IncludeCommand>	::= INCLUDE <Expression>
+<UnsetProc>			::= UNSET <Variable>
+<IncludeProc>		::= INCLUDE <Value>
+<PrintProc>			::= PRINT <Value>
+<ScopeProc>			::= SCOPE <Variable>
+<RejectProc>		::= REJECT <Value>
+<AcceptProc>		::= ACCEPT <Value>
 
 ! ===================================================================
-! Output Commands
+! Functions
 ! ===================================================================
 
-<PrintCommand>		::= PRINT <Statement>
+<UpperFunc>			::= UPPER <Value>
+<LowerFunc>			::= LOWER <Value>
+<TrimFunc>			::= TRIM <Value>
 
-! ===================================================================
-! String Manipulation
-! ===================================================================
-
-<UpperCommand>		::= UPPER <Statement>
-<LowerCommand>		::= LOWER <Statement>
-<TrimCommand>		::= TRIM <Statement>
-
-! ===================================================================
-! Context Commands
-! ===================================================================
-
-<ScopeCommand>		::= SCOPE <Variable>
-<RejectCommand>		::= REJECT <Expression>
-<AcceptCommand>		::= ACCEPT <Expression>

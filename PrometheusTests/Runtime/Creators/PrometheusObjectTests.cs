@@ -15,9 +15,9 @@ namespace PrometheusTest.Runtime.Creators
         {
             Dictionary<GrammarSymbol, Dictionary<int, MethodInfo>> lookup = PrometheusObject.CreateMethodLookup(typeof(MockCommand));
 
-            Assert.IsTrue(lookup.ContainsKey(GrammarSymbol.PrintCommand));
-            Assert.IsTrue(lookup[GrammarSymbol.PrintCommand].ContainsKey(1));
-            Assert.IsNotNull(lookup[GrammarSymbol.PrintCommand][1]);
+            Assert.IsTrue(lookup.ContainsKey(GrammarSymbol.PrintProc));
+            Assert.IsTrue(lookup[GrammarSymbol.PrintProc].ContainsKey(1));
+            Assert.IsNotNull(lookup[GrammarSymbol.PrintProc][1]);
         }
 
         [TestMethod]

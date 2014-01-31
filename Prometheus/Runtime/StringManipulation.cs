@@ -12,7 +12,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Converts to upper case.
         /// </summary>
-        [SymbolHandler(GrammarSymbol.UpperCommand)]
+        [SymbolHandler(GrammarSymbol.UpperFunc)]
         public Data ToUpper(Data pValue)
         {
             return new Data(GrammarSymbol.StringDouble, pValue.Value.ToUpper());
@@ -21,7 +21,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Converts to lower case.
         /// </summary>
-        [SymbolHandler(GrammarSymbol.LowerCommand)]
+        [SymbolHandler(GrammarSymbol.LowerFunc)]
         public Data ToLower(Data pValue)
         {
             return new Data(GrammarSymbol.StringDouble, pValue.Value.ToLower());
@@ -30,7 +30,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Converts to trims spaces
         /// </summary>
-        [SymbolHandler(GrammarSymbol.TrimCommand)]
+        [SymbolHandler(GrammarSymbol.TrimFunc)]
         public Data Trim(Data pValue)
         {
             return new Data(GrammarSymbol.StringDouble, pValue.Value.Trim());

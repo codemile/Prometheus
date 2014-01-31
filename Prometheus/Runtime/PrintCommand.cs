@@ -14,7 +14,7 @@ namespace Prometheus.Runtime
         /// Prints a string to the output.
         /// </summary>
         /// <param name="pValue">The message to print.</param>
-        [SymbolHandler(GrammarSymbol.PrintCommand)]
+        [SymbolHandler(GrammarSymbol.PrintProc)]
         public Data Print(Data pValue)
         {
             Debug.WriteLine(pValue.Value);

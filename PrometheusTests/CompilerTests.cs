@@ -14,7 +14,7 @@ namespace PrometheusTest
             Compiler compiler = new Compiler();
             TargetCode target = compiler.Compile("test.txt", "set mathew=3");
             Assert.IsNotNull(target.Root);
-            Assert.AreEqual(GrammarSymbol.SetCommand, target.Root.Type);
+            Assert.AreEqual(GrammarSymbol.Assignment, target.Root.Type);
             Assert.AreEqual(2, target.Root.Children.Count);
         }
 
