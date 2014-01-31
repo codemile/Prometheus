@@ -123,15 +123,15 @@ Comment Line  = '//'
 ! Variable Commands
 ! ===================================================================
 
-<Assignment>		::= <Variable> '=' <Value>
-<Increment>			::= <Variable> '++'
-<Decrement>			::= <Variable> '--'
+<Assignment>		::= Identifier '=' <Value>
+<Increment>			::= Identifier '++'
+<Decrement>			::= Identifier '--'
 
 ! ===================================================================
 ! Procedures
 ! ===================================================================
 
-<UnsetProc>			::= UNSET <Variable>
+<UnsetProc>			::= UNSET Identifier
 <IncludeProc>		::= INCLUDE <Value>
 <PrintProc>			::= PRINT <Value>
 <ScopeProc>			::= SCOPE <Variable>

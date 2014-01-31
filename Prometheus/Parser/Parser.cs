@@ -45,26 +45,15 @@ namespace Prometheus.Parser
 
             PrometheusObject proObj = _repo.Objects[pNode.Type];
 
-            object[] values;
-            if (pNode.Children.Count != 0)
+            int dCount = pNode.Data.Count;
+            object[] values = new object[pNode.Children.Count + dCount];
+            for (int i = 0, c = dCount; i < c; i++)
             {
-                values = new object[pNode.Children.Count];
-                for (int i = 0, c = pNode.Children.Count; i < c; i++)
-                {
-                    values[i] = Execute(pNode.Children[i]);
-                }
+                values[i] = pNode.Data[i];
             }
-            else if (pNode.Data.Count != 0)
+            for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
-                values = new object[pNode.Data.Count];
-                for (int i = 0, c = pNode.Data.Count; i < c; i++)
-                {
-                    values[i] = pNode.Data[i];
-                }
-            }
-            else
-            {
-                values = new object[0];
+                values[i + dCount] = Execute(pNode.Children[i]);
             }
 
             return proObj.Execute(pNode, values);
@@ -81,10 +70,12 @@ namespace Prometheus.Parser
             {
                 throw new UnsupportedSymbolException("Symbol is not implemented", pNode);
             }
+/*
             if (pNode.Children.Count != 0 && pNode.Data.Count != 0)
             {
                 throw new UnexpectedErrorException("Node can not have children and data at same time", pNode);
             }
+*/
         }
 #endif
 

@@ -59,6 +59,7 @@
     <Compile Include="Runtime\StringManipulation.cs" />
     <Compile Include="Runtime\ValueObject.cs" />
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Runtime\Variables.cs" />
     <Compile Include="Tokens\Documents\Fragment.cs" />
     <Compile Include="Tokens\Documents\iDocument.cs" />
     <Compile Include="Nodes\Node.cs" />

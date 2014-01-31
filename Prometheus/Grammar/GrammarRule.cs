@@ -66,10 +66,10 @@ namespace Prometheus.Grammar
 		@IfElseControl_IF_LParen_RParen_ELSE_END = 55,   // <IfElseControl> ::= IF '(' <Value> ')' <Statements> ELSE <Statements> END
 		@WhileControl_WHILE_LParen_RParen_ENDWHILE = 56,  // <WhileControl> ::= WHILE '(' <Value> ')' <Statements> ENDWHILE
 		@DoControl_DO_WHILE_LParen_RParen = 57,          // <DoControl> ::= DO <Statements> WHILE '(' <Value> ')'
-		@Assignment_Eq = 58,                             // <Assignment> ::= <Variable> '=' <Value>
-		@Increment_PlusPlus = 59,                        // <Increment> ::= <Variable> '++'
-		@Decrement_MinusMinus = 60,                      // <Decrement> ::= <Variable> '--'
-		@UnsetProc_UNSET = 61,                           // <UnsetProc> ::= UNSET <Variable>
+		@Assignment_Identifier_Eq = 58,                  // <Assignment> ::= Identifier '=' <Value>
+		@Increment_Identifier_PlusPlus = 59,             // <Increment> ::= Identifier '++'
+		@Decrement_Identifier_MinusMinus = 60,           // <Decrement> ::= Identifier '--'
+		@UnsetProc_UNSET_Identifier = 61,                // <UnsetProc> ::= UNSET Identifier
 		@IncludeProc_INCLUDE = 62,                       // <IncludeProc> ::= INCLUDE <Value>
 		@PrintProc_PRINT = 63,                           // <PrintProc> ::= PRINT <Value>
 		@ScopeProc_SCOPE = 64,                           // <ScopeProc> ::= SCOPE <Variable>
