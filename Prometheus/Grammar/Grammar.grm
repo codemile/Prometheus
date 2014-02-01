@@ -90,10 +90,9 @@ Comment Line  = '//'
 <Program> ::= <Statements>
 
 <Statements> ::= <Statement>
-				| <Statements>  <Statement>
+				| <Statements> <Statement>
 
-<Statement> ::= <IfControl> NewLine
-			 | <IfElseControl> NewLine
+<Statement> ::= <FlowControl> NewLine
 			 | <Assignment> NewLine
 			 | <Procedure> NewLine
 			 | <Function> NewLine
@@ -116,9 +115,16 @@ Comment Line  = '//'
 ! Flow control
 ! ===================================================================
 
-<IfControl> ::= IF <Expression> THEN NewLine <Statements> END IF
-<IfElseControl> ::= IF <Expression> THEN NewLine <Statements> ELSE NewLine <Statements> END IF
-<WhileControl> ::= WHILE <Expression> NewLine <Statements> END
+<FlowControl>		::= <IfControl>
+					| <WhileControl>
+
+<IfControl>			::= IF <Expression> THEN NewLine <Statements> <EndIfControl>
+<EndIfControl>		::= END IF 
+					| ELSE NewLine <Statements> END IF
+					| ELSEIF <Expression> THEN NewLine <Statements> <EndIfControl>
+
+<WhileControl> ::= WHILE <Expression> NewLine <Statements> END WHILE
+
 <DoControl> ::= DO NewLine <Statements> WHILE <Expression>
 
 ! ===================================================================

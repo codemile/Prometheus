@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Runtime.Creators;
@@ -21,6 +22,16 @@ namespace Prometheus.Runtime
         public Variables()
         {
             _variables = new Dictionary<string, Data>();
+        }
+
+        private Identifier AssertIdentifier(Data pIdentifier)
+        {
+            Identifier id = pIdentifier.getIdentifier();
+            if (_variables.ContainsKey(id.Name))
+            {
+                return id;
+            }
+            throw new UndefinedException(id.Name);
         }
 
         /// <summary>
@@ -52,8 +63,35 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.Variable)]
         public Data Variable(Data pIdentifier)
         {
-            Identifier id = pIdentifier.getIdentifier();
-            return !_variables.ContainsKey(id.Name) ? Data.Undefined : _variables[id.Name];
+            Identifier id = AssertIdentifier(pIdentifier);
+            return _variables[id.Name];
         }
+
+        /// <summary>
+        /// Increment
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.Increment)]
+        public Data Inc(Data pIdentifier)
+        {
+            Identifier id = AssertIdentifier(pIdentifier);
+            Data d = _variables[id.Name];
+            return d.Type == typeof(double)
+                ? _variables[id.Name] = new Data(d.Get<double>() + 1)
+                : _variables[id.Name] = new Data(d.Get<long>() + 1);
+        }
+
+        /// <summary>
+        /// Decrement
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.Decrement)]
+        public Data Dec(Data pIdentifier)
+        {
+            Identifier id = AssertIdentifier(pIdentifier);
+            Data d = _variables[id.Name];
+            return d.Type == typeof (double)
+                ? _variables[id.Name] = new Data(d.Get<double>() - 1)
+                : _variables[id.Name] = new Data(d.Get<long>() - 1);
+        }
+
     }
 }

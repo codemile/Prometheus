@@ -56,38 +56,41 @@ namespace Prometheus.Grammar
 		@Program = 45,                                   // <Program> ::= <Statements>
 		@Statements = 46,                                // <Statements> ::= <Statement>
 		@Statements2 = 47,                               // <Statements> ::= <Statements> <Statement>
-		@Statement_NewLine = 48,                         // <Statement> ::= <IfControl> NewLine
-		@Statement_NewLine2 = 49,                        // <Statement> ::= <IfElseControl> NewLine
-		@Statement_NewLine3 = 50,                        // <Statement> ::= <Assignment> NewLine
-		@Statement_NewLine4 = 51,                        // <Statement> ::= <Procedure> NewLine
-		@Statement_NewLine5 = 52,                        // <Statement> ::= <Function> NewLine
-		@Statement_NewLine6 = 53,                        // <Statement> ::= <Increment> NewLine
-		@Statement_NewLine7 = 54,                        // <Statement> ::= <Decrement> NewLine
-		@Statement_NewLine8 = 55,                        // <Statement> ::= NewLine
-		@Function = 56,                                  // <Function> ::= <UpperFunc>
-		@Function2 = 57,                                 // <Function> ::= <LowerFunc>
-		@Function3 = 58,                                 // <Function> ::= <TrimFunc>
-		@Procedure = 59,                                 // <Procedure> ::= <UnsetProc>
-		@Procedure2 = 60,                                // <Procedure> ::= <RejectProc>
-		@Procedure3 = 61,                                // <Procedure> ::= <AcceptProc>
-		@Procedure4 = 62,                                // <Procedure> ::= <ScopeProc>
-		@Procedure5 = 63,                                // <Procedure> ::= <IncludeProc>
-		@Procedure6 = 64,                                // <Procedure> ::= <PrintProc>
-		@IfControl_IF_THEN_NewLine_END_IF = 65,          // <IfControl> ::= IF <Expression> THEN NewLine <Statements> END IF
-		@IfElseControl_IF_THEN_NewLine_ELSE_NewLine_END_IF = 66,  // <IfElseControl> ::= IF <Expression> THEN NewLine <Statements> ELSE NewLine <Statements> END IF
-		@WhileControl_WHILE_NewLine_END = 67,            // <WhileControl> ::= WHILE <Expression> NewLine <Statements> END
-		@DoControl_DO_NewLine_WHILE = 68,                // <DoControl> ::= DO NewLine <Statements> WHILE <Expression>
-		@Assignment_VAR_Identifier_Eq = 69,              // <Assignment> ::= VAR Identifier '=' <Expression>
-		@Increment_Identifier_PlusPlus = 70,             // <Increment> ::= Identifier '++'
-		@Decrement_Identifier_MinusMinus = 71,           // <Decrement> ::= Identifier '--'
-		@UnsetProc_UNSET_Identifier = 72,                // <UnsetProc> ::= UNSET Identifier
-		@IncludeProc_INCLUDE = 73,                       // <IncludeProc> ::= INCLUDE <Expression>
-		@PrintProc_PRINT = 74,                           // <PrintProc> ::= PRINT <Expression>
-		@ScopeProc_SCOPE = 75,                           // <ScopeProc> ::= SCOPE <Expression>
-		@RejectProc_REJECT = 76,                         // <RejectProc> ::= REJECT <Expression>
-		@AcceptProc_ACCEPT = 77,                         // <AcceptProc> ::= ACCEPT <Expression>
-		@UpperFunc_UPPER_LParen_RParen = 78,             // <UpperFunc> ::= UPPER '(' <Expression> ')'
-		@LowerFunc_LOWER_LParen_RParen = 79,             // <LowerFunc> ::= LOWER '(' <Expression> ')'
-		@TrimFunc_TRIM_LParen_RParen = 80                // <TrimFunc> ::= TRIM '(' <Expression> ')'
+		@Statement_NewLine = 48,                         // <Statement> ::= <FlowControl> NewLine
+		@Statement_NewLine2 = 49,                        // <Statement> ::= <Assignment> NewLine
+		@Statement_NewLine3 = 50,                        // <Statement> ::= <Procedure> NewLine
+		@Statement_NewLine4 = 51,                        // <Statement> ::= <Function> NewLine
+		@Statement_NewLine5 = 52,                        // <Statement> ::= <Increment> NewLine
+		@Statement_NewLine6 = 53,                        // <Statement> ::= <Decrement> NewLine
+		@Statement_NewLine7 = 54,                        // <Statement> ::= NewLine
+		@Function = 55,                                  // <Function> ::= <UpperFunc>
+		@Function2 = 56,                                 // <Function> ::= <LowerFunc>
+		@Function3 = 57,                                 // <Function> ::= <TrimFunc>
+		@Procedure = 58,                                 // <Procedure> ::= <UnsetProc>
+		@Procedure2 = 59,                                // <Procedure> ::= <RejectProc>
+		@Procedure3 = 60,                                // <Procedure> ::= <AcceptProc>
+		@Procedure4 = 61,                                // <Procedure> ::= <ScopeProc>
+		@Procedure5 = 62,                                // <Procedure> ::= <IncludeProc>
+		@Procedure6 = 63,                                // <Procedure> ::= <PrintProc>
+		@FlowControl = 64,                               // <FlowControl> ::= <IfControl>
+		@FlowControl2 = 65,                              // <FlowControl> ::= <WhileControl>
+		@IfControl_IF_THEN_NewLine = 66,                 // <IfControl> ::= IF <Expression> THEN NewLine <Statements> <EndIfControl>
+		@EndIfControl_END_IF = 67,                       // <EndIfControl> ::= END IF
+		@EndIfControl_ELSE_NewLine_END_IF = 68,          // <EndIfControl> ::= ELSE NewLine <Statements> END IF
+		@EndIfControl_ELSEIF_THEN_NewLine = 69,          // <EndIfControl> ::= ELSEIF <Expression> THEN NewLine <Statements> <EndIfControl>
+		@WhileControl_WHILE_NewLine_END_WHILE = 70,      // <WhileControl> ::= WHILE <Expression> NewLine <Statements> END WHILE
+		@DoControl_DO_NewLine_WHILE = 71,                // <DoControl> ::= DO NewLine <Statements> WHILE <Expression>
+		@Assignment_VAR_Identifier_Eq = 72,              // <Assignment> ::= VAR Identifier '=' <Expression>
+		@Increment_Identifier_PlusPlus = 73,             // <Increment> ::= Identifier '++'
+		@Decrement_Identifier_MinusMinus = 74,           // <Decrement> ::= Identifier '--'
+		@UnsetProc_UNSET_Identifier = 75,                // <UnsetProc> ::= UNSET Identifier
+		@IncludeProc_INCLUDE = 76,                       // <IncludeProc> ::= INCLUDE <Expression>
+		@PrintProc_PRINT = 77,                           // <PrintProc> ::= PRINT <Expression>
+		@ScopeProc_SCOPE = 78,                           // <ScopeProc> ::= SCOPE <Expression>
+		@RejectProc_REJECT = 79,                         // <RejectProc> ::= REJECT <Expression>
+		@AcceptProc_ACCEPT = 80,                         // <AcceptProc> ::= ACCEPT <Expression>
+		@UpperFunc_UPPER_LParen_RParen = 81,             // <UpperFunc> ::= UPPER '(' <Expression> ')'
+		@LowerFunc_LOWER_LParen_RParen = 82,             // <LowerFunc> ::= LOWER '(' <Expression> ')'
+		@TrimFunc_TRIM_LParen_RParen = 83                // <TrimFunc> ::= TRIM '(' <Expression> ')'
 	}
 }

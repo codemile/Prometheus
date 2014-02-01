@@ -87,7 +87,18 @@ namespace Prometheus.Runtime.Creators
                     pNode);
             }
 #endif
-            return (Data)_methods[pNode.Type][pValues.Length].Invoke(this, pValues);
+            try
+            {
+                return (Data)_methods[pNode.Type][pValues.Length].Invoke(this, pValues);
+            }
+            catch (TargetInvocationException e)
+            {
+                if (e.InnerException is RunTimeException)
+                {
+                    throw e.InnerException;
+                }
+                throw e;
+            }
         }
     }
 }

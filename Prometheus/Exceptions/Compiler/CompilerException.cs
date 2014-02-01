@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Prometheus.Compile;
 
 namespace Prometheus.Exceptions.Compiler
@@ -13,7 +14,15 @@ namespace Prometheus.Exceptions.Compiler
         /// </summary>
         private static string Format(string pMessage, Cursor pCursor)
         {
-            return string.Format("{0} {1}", pMessage, pCursor);
+            List<string> message = new List<string>
+                                   {
+                                       string.Format("{0} {1}", pMessage, pCursor),
+                                       "",
+                                       pCursor.Line,
+                                       "^".PadLeft(pCursor.Column)
+                                   };
+
+            return string.Join(Environment.NewLine, message);
         }
 
         /// <summary>

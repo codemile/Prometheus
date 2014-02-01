@@ -28,7 +28,8 @@ namespace Prometheus.Compile.Optomizer
             // promote a single child up the tree if the current node does no work
             if ((pNode.Type == GrammarSymbol.Statements ||
                  pNode.Type == GrammarSymbol.Statement || 
-                 pNode.Type == GrammarSymbol.Value
+                 pNode.Type == GrammarSymbol.Value ||
+                 pNode.Type == GrammarSymbol.EndIfControl
                  ) && pNode.Children.Count == 1 &&
                 pNode.Data.Count == 0)
             {
@@ -36,8 +37,9 @@ namespace Prometheus.Compile.Optomizer
             }
 
             // drop an empty statement
-            if (pNode.Type == GrammarSymbol.Statement &&
-                pNode.Children.Count == 0 &&
+            if ((pNode.Type == GrammarSymbol.Statement || 
+                pNode.Type == GrammarSymbol.EndIfControl
+                ) && pNode.Children.Count == 0 &&
                 pNode.Data.Count == 0)
             {
                 return null;

@@ -1,4 +1,5 @@
-﻿using Prometheus.Compile;
+﻿using System;
+using Prometheus.Compile;
 using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -38,20 +39,29 @@ namespace Prometheus.Parser
                     return Data.Undefined;
                 }
                 case GrammarSymbol.IfControl:
+                case GrammarSymbol.EndIfControl:
                 {
-#if DEBUG
-                    AssertChildren(pNode, 2);
-#endif
-                    Data _if = Execute(pNode.Children[0]);
-                    return _if.Get<bool>() ? Execute(pNode.Children[1]) : Data.Undefined;
+                    if (pNode.Children.Count == 2)
+                    {
+                        Data _if = Execute(pNode.Children[0]);
+                        return _if.Get<bool>() ? Execute(pNode.Children[1]) : Data.Undefined;
+                    }
+                    if (pNode.Children.Count == 3)
+                    {
+                        Data _if = Execute(pNode.Children[0]);
+                        return Execute(_if.Get<bool>() ? pNode.Children[1] : pNode.Children[2]);
+                    }
+                    throw new AssertionException(
+                        string.Format("Invalid child count. Expected (2 or 3) Found <{0}>", pNode.Children.Count),
+                        pNode);
                 }
-                case GrammarSymbol.IfElseControl:
+                case GrammarSymbol.WhileControl:
                 {
 #if DEBUG
-                    AssertChildren(pNode, 3);
+                    AssertChildren(pNode,2);
+                    Data _while = Execute(pNode.Children[0]);
+                    return _while.Get<bool>() ? Execute(pNode.Children[1]) : Data.Undefined;
 #endif
-                    Data _if = Execute(pNode.Children[0]);
-                    return Execute(_if.Get<bool>() ? pNode.Children[1] : pNode.Children[2]);
                 }
             }
 
@@ -72,7 +82,14 @@ namespace Prometheus.Parser
                 values[i + dCount] = Execute(pNode.Children[i]);
             }
 
-            return proObj.Execute(pNode, values);
+            try
+            {
+                return proObj.Execute(pNode, values);
+            }
+            catch (UndefinedException e)
+            {
+                throw new UndefinedException(e.Identifier, pNode);
+            }
         }
 
 #if DEBUG

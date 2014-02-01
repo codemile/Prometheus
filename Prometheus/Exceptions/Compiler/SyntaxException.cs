@@ -14,7 +14,7 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Formats the syntax error message.
         /// </summary>
-        private static string Message(GOLD.Parser pParser, Cursor pCursor)
+        private static string Message(GOLD.Parser pParser)
         {
             string found = pParser.CurrentToken() != null ? pParser.CurrentToken().Data.ToString() : "null";
             found = string.IsNullOrWhiteSpace(found) ? "end of line" : found;
@@ -67,13 +67,7 @@ namespace Prometheus.Exceptions.Compiler
                 }
             }
 
-            message.Add(string.Format("Syntax error: Was expecting {0} but found '{1}' instead {2}",
-                string.Join(", or ", expecting), found, pCursor));
-            message.Add("");
-            message.Add(pCursor.Line);
-            message.Add("^".PadLeft(pCursor.Column));
-
-            return string.Join(Environment.NewLine, message);
+            return string.Format("Syntax error: Was expecting {0} but found '{1}' instead", string.Join(", or ", expecting), found);
         }
 
         /// <summary>
@@ -95,7 +89,7 @@ namespace Prometheus.Exceptions.Compiler
         /// <param name="pParser"></param>
         /// <param name="pCursor"></param>
         public SyntaxException(GOLD.Parser pParser, Cursor pCursor)
-            : base(Message(pParser, pCursor))
+            : base(Message(pParser), pCursor)
         {
         }
     }
