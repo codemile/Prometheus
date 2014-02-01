@@ -47,6 +47,8 @@
     <Compile Include="Compile\Optomizer\iNodeOptimizer.cs" />
     <Compile Include="Compile\Optomizer\Optimizer.cs" />
     <Compile Include="Compile\SourceReader.cs" />
+    <Compile Include="Exceptions\Parser\BreakException.cs" />
+    <Compile Include="Exceptions\Parser\ContinueException.cs" />
     <Compile Include="Exceptions\Parser\InvalidArgumentException.cs" />
     <Compile Include="Exceptions\Parser\RunTimeException.cs" />
     <Compile Include="Exceptions\Parser\IdentifierException.cs" />

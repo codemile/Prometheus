@@ -41,7 +41,8 @@ namespace Prometheus.Runtime
                                GrammarSymbol.GtOperator,
                                GrammarSymbol.LtOperator,
                                GrammarSymbol.GteOperator,
-                               GrammarSymbol.LteOperator
+                               GrammarSymbol.LteOperator,
+                               GrammarSymbol.EqualOperator
                            };
         }
 
@@ -94,6 +95,18 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Equal
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.EqualOperator)]
+        public Data Equal(Data pValue1, Data pValue2)
+        {
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == typeof(long)
+                ? new Data(pValue1.Get<long>() == pValue2.Get<long>())
+                : new Data(Math.Abs(pValue1.Get<double>() - pValue2.Get<double>()) < double.Epsilon);
+        }
+
+        /// <summary>
         /// Inspect a node
         /// </summary>
         /// <param name="pNode">The node to check</param>
@@ -126,6 +139,9 @@ namespace Prometheus.Runtime
                     break;
                 case GrammarSymbol.LteOperator:
                     reduced.Data.Add(LessThanEqual(valueA, valueB));
+                    break;
+                case GrammarSymbol.EqualOperator:
+                    reduced.Data.Add(Equal(valueA, valueB));
                     break;
             }
 

@@ -55,14 +55,62 @@ namespace Prometheus.Parser
                         string.Format("Invalid child count. Expected (2 or 3) Found <{0}>", pNode.Children.Count),
                         pNode);
                 }
-                case GrammarSymbol.WhileControl:
+                case GrammarSymbol.DoWhileControl:
+                case GrammarSymbol.DoUntilControl:
                 {
 #if DEBUG
-                    AssertChildren(pNode,2);
-                    Data _while = Execute(pNode.Children[0]);
-                    return _while.Get<bool>() ? Execute(pNode.Children[1]) : Data.Undefined;
+                    AssertChildren(pNode, 2);
 #endif
+                    try
+                    {
+                        while (pNode.Type == GrammarSymbol.DoWhileControl
+                            ? Execute(pNode.Children[0]).Get<bool>() :
+                            !Execute(pNode.Children[0]).Get<bool>())
+                        {
+                            try
+                            {
+                                Execute(pNode.Children[1]);
+                            }
+                            catch (ContinueException)
+                            {
+                            }
+                        }
+                    }
+                    catch (BreakException)
+                    {
+                    }
+                    return Data.Undefined;
                 }
+                case GrammarSymbol.LoopWhileControl:
+                case GrammarSymbol.LoopUntilControl:
+                {
+#if DEBUG
+                    AssertChildren(pNode, 2);
+#endif
+                    try
+                    {
+                        do
+                        {
+                            try
+                            {
+                                Execute(pNode.Children[0]);
+                            }
+                            catch (ContinueException)
+                            {
+                            }
+                        } while (pNode.Type == GrammarSymbol.LoopWhileControl
+                            ? Execute(pNode.Children[1]).Get<bool>()
+                            : !Execute(pNode.Children[1]).Get<bool>());
+                    }
+                    catch (BreakException)
+                    {
+                    }
+                    return Data.Undefined;
+                }
+                case GrammarSymbol.BreakControl:
+                    throw new BreakException();
+                case GrammarSymbol.ContinueControl:
+                    throw new ContinueException();
             }
 
 #if DEBUG
@@ -132,7 +180,7 @@ namespace Prometheus.Parser
         {
             if (!_repo.Objects.ContainsKey(pNode.Type))
             {
-                throw new AssertionException("Symbol is not implemented", pNode);
+                throw new AssertionException(string.Format("Symbol <{0}> is not implemented", pNode.Type), pNode);
             }
         }
 #endif

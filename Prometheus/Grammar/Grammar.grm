@@ -103,16 +103,27 @@ Comment Line  = '//'
 ! ===================================================================
 
 <FlowControl>		::= <IfControl>
-					| <WhileControl>
+					| <DoWhileControl>
+					| <DoUntilControl>
+					| <LoopWhileControl>
+					| <LoopUntilControl>
+					| <BreakControl>
+					| <ContinueControl>
 
 <IfControl>			::= IF <Expression> THEN NewLine <Statements> <EndIfControl>
 <EndIfControl>		::= END IF 
 					| ELSE NewLine <Statements> END IF
 					| ELSEIF <Expression> THEN NewLine <Statements> <EndIfControl>
 
-<WhileControl> ::= WHILE <Expression> NewLine <Statements> END WHILE
+<DoWhileControl>	::= DO WHILE <Expression> NewLine <Statements> LOOP
+					| WHILE <Expression> NewLine <Statements> END WHILE
+<DoUntilControl>	::= DO UNTIL <Expression> NewLine <Statements> LOOP
+					| UNTIL <Expression> NewLine <Statements> END UNTIL
+<LoopWhileControl>	::= DO NewLine <Statements> LOOP WHILE <Expression>
+<LoopUntilControl>	::= DO NewLine <Statements> LOOP UNTIL <Expression>
 
-<DoControl> ::= DO NewLine <Statements> WHILE <Expression>
+<BreakControl>		::= BREAK
+<ContinueControl>	::= CONTINUE
 
 ! ===================================================================
 ! Variable Commands
