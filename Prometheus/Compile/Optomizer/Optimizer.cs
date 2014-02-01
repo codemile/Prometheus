@@ -2,6 +2,7 @@
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Runtime;
+using Prometheus.Tokens.Statements;
 
 namespace Prometheus.Compile.Optomizer
 {
@@ -25,19 +26,35 @@ namespace Prometheus.Compile.Optomizer
         private Node OptimizeNode(Node pNode)
         {
             // promote a single child up the tree if the current node does no work
-            if ((pNode.Type == GrammarSymbol.Statement || pNode.Type == GrammarSymbol.Value) &&
-                pNode.Children.Count == 1 &&
+            if ((pNode.Type == GrammarSymbol.Statements ||
+                 pNode.Type == GrammarSymbol.Statement || 
+                 pNode.Type == GrammarSymbol.Value
+                 ) && pNode.Children.Count == 1 &&
                 pNode.Data.Count == 0)
             {
                 return pNode.Children[0];
             }
 
-            // drop empty statements
+            // drop an empty statement
             if (pNode.Type == GrammarSymbol.Statement &&
                 pNode.Children.Count == 0 &&
                 pNode.Data.Count == 0)
             {
                 return null;
+            }
+
+            // statements that contains 2 child, and one is another statements node
+            // can be merged into just 1 statements
+            if (pNode.Type == GrammarSymbol.Statements &&
+                pNode.Children.Count == 2 &&
+                pNode.Data.Count == 0)
+            {
+                if (pNode.Children[0].Type == GrammarSymbol.Statements &&
+                    pNode.Children[1].Type != GrammarSymbol.Statements)
+                {
+                    pNode.Children[0].Children.Add(pNode.Children[1]);
+                    return pNode.Children[0];
+                }
             }
 
             // run optimizers on the node

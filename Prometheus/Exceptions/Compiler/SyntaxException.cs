@@ -17,6 +17,8 @@ namespace Prometheus.Exceptions.Compiler
         private static string Message(GOLD.Parser pParser, Cursor pCursor)
         {
             string found = pParser.CurrentToken() != null ? pParser.CurrentToken().Data.ToString() : "null";
+            found = string.IsNullOrWhiteSpace(found) ? "end of line" : found;
+
 
             SymbolList symbolList = pParser.ExpectedSymbols();
             if (symbolList == null)
@@ -27,33 +29,41 @@ namespace Prometheus.Exceptions.Compiler
             List<string> message = new List<string>();
 
             List<string> expecting = new List<string>();
-            IEnumerable<SymbolType> types = CollectTypes(symbolList).Distinct();
-            foreach (SymbolType type in types)
+
+            if (symbolList.Count() <= 3)
             {
-                switch (type)
+                expecting.Add(symbolList.Text(", or", true));
+            }
+            else
+            {
+                IEnumerable<SymbolType> types = CollectTypes(symbolList).Distinct();
+                foreach (SymbolType type in types)
                 {
-                    case SymbolType.Nonterminal:
-                        expecting.Add("value");
-                        break;
-                    case SymbolType.Noise:
-                        expecting.Add("whitespace");
-                        break;
-                    case SymbolType.GroupStart:
-                        expecting.Add("start of group");
-                        break;
-                    case SymbolType.GroupEnd:
-                        expecting.Add("end of group");
-                        break;
-                    case SymbolType.Error:
-                        // TODO: Can this type be a syntax error?
-                        expecting.Add("error");
-                        break;
-                    case SymbolType.End:
-                        expecting.Add("end of file");
-                        break;
-                    case SymbolType.Content:
-                        expecting.Add("statement");
-                        break;
+                    switch (type)
+                    {
+                        case SymbolType.Nonterminal:
+                            expecting.Add("value");
+                            break;
+                        case SymbolType.Noise:
+                            expecting.Add("whitespace");
+                            break;
+                        case SymbolType.GroupStart:
+                            expecting.Add("start of group");
+                            break;
+                        case SymbolType.GroupEnd:
+                            expecting.Add("end of group");
+                            break;
+                        case SymbolType.Error:
+                            // TODO: Can this type be a syntax error?
+                            expecting.Add("error");
+                            break;
+                        case SymbolType.End:
+                            expecting.Add("end of file");
+                            break;
+                        case SymbolType.Content:
+                            expecting.Add("statement");
+                            break;
+                    }
                 }
             }
 

@@ -116,8 +116,8 @@ Comment Line  = '//'
 ! Flow control
 ! ===================================================================
 
-<IfControl> ::= IF <Expression> THEN NewLine <Statements> END
-<IfElseControl> ::= IF <Expression> THEN NewLine <Statements> ELSE NewLine <Statements> END
+<IfControl> ::= IF <Expression> THEN NewLine <Statements> END IF
+<IfElseControl> ::= IF <Expression> THEN NewLine <Statements> ELSE NewLine <Statements> END IF
 <WhileControl> ::= WHILE <Expression> NewLine <Statements> END
 <DoControl> ::= DO NewLine <Statements> WHILE <Expression>
 

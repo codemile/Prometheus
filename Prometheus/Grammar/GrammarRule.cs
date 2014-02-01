@@ -73,8 +73,8 @@ namespace Prometheus.Grammar
 		@Procedure4 = 62,                                // <Procedure> ::= <ScopeProc>
 		@Procedure5 = 63,                                // <Procedure> ::= <IncludeProc>
 		@Procedure6 = 64,                                // <Procedure> ::= <PrintProc>
-		@IfControl_IF_THEN_NewLine_END = 65,             // <IfControl> ::= IF <Expression> THEN NewLine <Statements> END
-		@IfElseControl_IF_THEN_NewLine_ELSE_NewLine_END = 66,  // <IfElseControl> ::= IF <Expression> THEN NewLine <Statements> ELSE NewLine <Statements> END
+		@IfControl_IF_THEN_NewLine_END_IF = 65,          // <IfControl> ::= IF <Expression> THEN NewLine <Statements> END IF
+		@IfElseControl_IF_THEN_NewLine_ELSE_NewLine_END_IF = 66,  // <IfElseControl> ::= IF <Expression> THEN NewLine <Statements> ELSE NewLine <Statements> END IF
 		@WhileControl_WHILE_NewLine_END = 67,            // <WhileControl> ::= WHILE <Expression> NewLine <Statements> END
 		@DoControl_DO_NewLine_WHILE = 68,                // <DoControl> ::= DO NewLine <Statements> WHILE <Expression>
 		@Assignment_VAR_Identifier_Eq = 69,              // <Assignment> ::= VAR Identifier '=' <Expression>
