@@ -86,10 +86,12 @@ namespace Prometheus.Parser
             {
                 return proObj.Execute(pNode, values);
             }
-            catch (UndefinedException e)
+            catch (IdentifierException e)
             {
-                throw new UndefinedException(e.Identifier, pNode);
+                IdentifierException.Rethrow(e, pNode);
             }
+
+            return Data.Undefined;
         }
 
 #if DEBUG

@@ -97,7 +97,7 @@ namespace Prometheus.Runtime.Creators
                 {
                     throw e.InnerException;
                 }
-                throw e;
+                throw;
             }
         }
     }

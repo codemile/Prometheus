@@ -13,15 +13,13 @@ namespace Prometheus.Exceptions.Parser
         /// </summary>
         private static string Message(string pMessage, Node pNode)
         {
-            return string.Format("{0} {1}", pMessage, pNode);
+            return string.Format("{0} {1}", pMessage, pNode.Location);
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="pMessage">Exception message</param>
-        protected RunTimeException(string pMessage)
-            : base(pMessage)
+        protected RunTimeException()
         {
         }
 

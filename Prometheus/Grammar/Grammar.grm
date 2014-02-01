@@ -87,29 +87,16 @@ Comment Line  = '//'
 ! ===================================================================
 ! Statements
 ! ===================================================================
-<Program> ::= <Statements>
+<Program>		::= <Statements>
 
-<Statements> ::= <Statement>
+<Statements>	::= <Statement>
 				| <Statements> <Statement>
 
-<Statement> ::= <FlowControl> NewLine
-			 | <Assignment> NewLine
-			 | <Procedure> NewLine
-			 | <Function> NewLine
-			 | <Increment> NewLine
-			 | <Decrement> NewLine
-			 | NewLine
-
-<Function>	::= <UpperFunc>
-			 | <LowerFunc>
-			 | <TrimFunc>
-
-<Procedure>	::= <UnsetProc>
-			 | <RejectProc>
-			 | <AcceptProc>
-			 | <ScopeProc>
-			 | <IncludeProc>
-			 | <PrintProc>
+<Statement>		::= <FlowControl> NewLine
+				| <Variables> NewLine
+				| <Procedure> NewLine
+				| <Function> NewLine
+				| NewLine
 
 ! ===================================================================
 ! Flow control
@@ -131,13 +118,29 @@ Comment Line  = '//'
 ! Variable Commands
 ! ===================================================================
 
-<Assignment>		::= VAR Identifier '=' <Expression>
+<Variables>			::= <Declare>
+					| <ListVars>
+					| <Increment>
+					| <Decrement>
+
+<Declare>			::= VAR Identifier
+					| VAR Identifier '=' <Expression>
+
+<ListVars>			::= VARS
+
 <Increment>			::= Identifier '++'
 <Decrement>			::= Identifier '--'
 
 ! ===================================================================
 ! Procedures
 ! ===================================================================
+
+<Procedure>	::= <UnsetProc>
+			 | <RejectProc>
+			 | <AcceptProc>
+			 | <ScopeProc>
+			 | <IncludeProc>
+			 | <PrintProc>
 
 <UnsetProc>			::= UNSET Identifier
 <IncludeProc>		::= INCLUDE <Expression>
@@ -149,6 +152,10 @@ Comment Line  = '//'
 ! ===================================================================
 ! Functions
 ! ===================================================================
+
+<Function>	::= <UpperFunc>
+			 | <LowerFunc>
+			 | <TrimFunc>
 
 <UpperFunc>			::= UPPER '(' <Expression> ')'
 <LowerFunc>			::= LOWER '(' <Expression> ')'

@@ -49,7 +49,7 @@
     <Compile Include="Compile\SourceReader.cs" />
     <Compile Include="Exceptions\Parser\InvalidArgumentException.cs" />
     <Compile Include="Exceptions\Parser\RunTimeException.cs" />
-    <Compile Include="Exceptions\Parser\UndefinedException.cs" />
+    <Compile Include="Exceptions\Parser\IdentifierException.cs" />
     <Compile Include="Exceptions\Parser\UnexpectedErrorException.cs" />
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Parser\AssertionException.cs" />

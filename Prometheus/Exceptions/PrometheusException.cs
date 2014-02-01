@@ -10,6 +10,13 @@ namespace Prometheus.Exceptions
         /// <summary>
         /// Constructor
         /// </summary>
+        protected PrometheusException()
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         /// <param name="pMessage">Exception message</param>
         protected PrometheusException(string pMessage)
             : base(pMessage)
