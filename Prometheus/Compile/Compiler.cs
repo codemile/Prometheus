@@ -25,6 +25,11 @@ namespace Prometheus.Compile
         private readonly GOLD.Parser _parser;
 
         /// <summary>
+        /// The lines of source code.
+        /// </summary>
+        private string[] _lines;
+
+        /// <summary>
         /// Calculates the command tree from the source code and returns the root node.
         /// </summary>
         /// <param name="pFileName">The name of the source file.</param>
@@ -46,7 +51,7 @@ namespace Prometheus.Compile
             {
                 int x = _parser.CurrentPosition().Line + 1;
                 int y = _parser.CurrentPosition().Column + 1;
-                Cursor cursor = new Cursor(pFileName, x, y);
+                Cursor cursor = new Cursor(pFileName, _lines[x-1].Trim(), x, y);
 
                 if (!CreateNode(response, cursor))
                 {
@@ -134,6 +139,8 @@ namespace Prometheus.Compile
         /// <param name="pSource">Contents of the source file.</param>
         public TargetCode Compile(string pFileName, string pSource)
         {
+            _lines = pSource.Split('\n');
+
             using (StringReader reader = new StringReader(pSource))
             {
                 Node root = Compile(pFileName, reader);

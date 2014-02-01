@@ -92,7 +92,9 @@ Comment Line  = '//'
 <Statements> ::= <Statement>
 				| <Statements>  <Statement>
 
-<Statement> ::= <Assignment> NewLine
+<Statement> ::= <IfControl> NewLine
+			 | <IfElseControl> NewLine
+			 | <Assignment> NewLine
 			 | <Procedure> NewLine
 			 | <Function> NewLine
 			 | <Increment> NewLine
@@ -114,10 +116,10 @@ Comment Line  = '//'
 ! Flow control
 ! ===================================================================
 
-<IfControl> ::= IF <Expression> NewLine <Statements> NewLine END NewLine
-<IfElseControl> ::= IF <Expression> NewLine <Statements> NewLine ELSE NewLine <Statements> END NewLine
-<WhileControl> ::= WHILE <Expression> NewLine <Statements> NewLine END NewLine
-<DoControl> ::= DO NewLine <Statements> NewLine WHILE <Expression> NewLine
+<IfControl> ::= IF <Expression> THEN NewLine <Statements> END
+<IfElseControl> ::= IF <Expression> THEN NewLine <Statements> ELSE NewLine <Statements> END
+<WhileControl> ::= WHILE <Expression> NewLine <Statements> END
+<DoControl> ::= DO NewLine <Statements> WHILE <Expression>
 
 ! ===================================================================
 ! Variable Commands

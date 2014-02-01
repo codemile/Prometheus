@@ -46,11 +46,12 @@
     <Compile Include="Compile\Optomizer\DropByCount.cs" />
     <Compile Include="Compile\Optomizer\iNodeOptimizer.cs" />
     <Compile Include="Compile\Optomizer\Optimizer.cs" />
+    <Compile Include="Compile\SourceReader.cs" />
     <Compile Include="Exceptions\Parser\InvalidArgumentException.cs" />
     <Compile Include="Exceptions\Parser\RunTimeException.cs" />
     <Compile Include="Exceptions\Parser\UnexpectedErrorException.cs" />
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
-    <Compile Include="Exceptions\Parser\UnsupportedSymbolException.cs" />
+    <Compile Include="Exceptions\Parser\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
     <Compile Include="Grammar\GrammarSymbol.cs" />

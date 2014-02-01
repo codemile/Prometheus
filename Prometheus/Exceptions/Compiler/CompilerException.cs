@@ -31,5 +31,13 @@ namespace Prometheus.Exceptions.Compiler
             : base(Format(pMessage, pCursor))
         {
         }
+
+        /// <summary>
+        /// Throw a message.
+        /// </summary>
+        public CompilerException(string pMessage)
+            : base(pMessage)
+        {
+        }
     }
 }

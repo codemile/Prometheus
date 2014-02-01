@@ -30,21 +30,29 @@ namespace Prometheus.Parser
             switch (pNode.Type)
             {
                 case GrammarSymbol.Statements:
+                {
                     for (int i = 0, c = pNode.Children.Count; i < c; i++)
                     {
                         Execute(pNode.Children[i]);
                     }
                     return Data.Undefined;
-                case GrammarSymbol.Statement:
-                    if (pNode.Children.Count == 1)
-                    {
-                        return Execute(pNode.Children[0]);
-                    }
-                    if (pNode.Children.Count == 0)
-                    {
-                        return Data.Undefined;
-                    }
-                    throw new UnexpectedErrorException("Statement with many child", pNode);
+                }
+                case GrammarSymbol.IfControl:
+                {
+#if DEBUG
+                    AssertChildren(pNode, 2);
+#endif
+                    Data _if = Execute(pNode.Children[0]);
+                    return _if.Get<bool>() ? Execute(pNode.Children[1]) : Data.Undefined;
+                }
+                case GrammarSymbol.IfElseControl:
+                {
+#if DEBUG
+                    AssertChildren(pNode, 3);
+#endif
+                    Data _if = Execute(pNode.Children[0]);
+                    return Execute(_if.Get<bool>() ? pNode.Children[1] : pNode.Children[2]);
+                }
             }
 
 #if DEBUG
@@ -69,6 +77,35 @@ namespace Prometheus.Parser
 
 #if DEBUG
         /// <summary>
+        /// Checks that a node has the required number of children.
+        /// </summary>
+        /// <param name="pNode">The node to check.</param>
+        /// <param name="pChildCount">The expected number of children.</param>
+        private static void AssertChildren(Node pNode, int pChildCount)
+        {
+            if (pNode.Children.Count != pChildCount)
+            {
+                throw new AssertionException(
+                    string.Format("Invalid child count. Expected <{0}> Found <{1}>", pChildCount, pNode.Children.Count),
+                    pNode);
+            }
+        }
+
+        /// <summary>
+        /// Checks that a node has the required number of data elements.
+        /// </summary>
+        /// <param name="pNode">The node to check.</param>
+        /// <param name="pDataCount">The expected number of children.</param>
+        private static void AssertData(Node pNode, int pDataCount)
+        {
+            if (pNode.Data.Count != pDataCount)
+            {
+                throw new AssertionException(
+                    string.Format("Invalid data count. Expected <{0}> Found <{1}>", pDataCount, pNode.Data.Count), pNode);
+            }
+        }
+
+        /// <summary>
         /// Validates that the node is structured as expected.
         /// </summary>
         /// <param name="pNode">The node to validate</param>
@@ -76,14 +113,8 @@ namespace Prometheus.Parser
         {
             if (!_repo.Objects.ContainsKey(pNode.Type))
             {
-                throw new UnsupportedSymbolException("Symbol is not implemented", pNode);
+                throw new AssertionException("Symbol is not implemented", pNode);
             }
-/*
-            if (pNode.Children.Count != 0 && pNode.Data.Count != 0)
-            {
-                throw new UnexpectedErrorException("Node can not have children and data at same time", pNode);
-            }
-*/
         }
 #endif
 

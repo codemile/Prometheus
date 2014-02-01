@@ -6,38 +6,44 @@ namespace Prometheus.Compile
     /// Represents a location in the source code.
     /// Used mostly for error reporting.
     /// </summary>
-    [DebuggerDisplay("{_fileName} {_row}:{_column}")]
+    [DebuggerDisplay("{FileName} {Row}:{Column}")]
     public class Cursor
     {
         /// <summary>
         /// An empty cursor
         /// </summary>
-        public static readonly Cursor None = new Cursor(null, 0, 0);
+        public static readonly Cursor None = new Cursor(null, "", 0, 0);
 
         /// <summary>
         /// The column number.
         /// </summary>
-        private readonly int _column;
+        public readonly int Column;
 
         /// <summary>
         /// The source for the source code.
         /// </summary>
-        private readonly string _fileName;
+        public readonly string FileName;
+
+        /// <summary>
+        /// A copy of the current line from the source file.
+        /// </summary>
+        public readonly string Line;
 
         /// <summary>
         /// The row number.
         /// </summary>
-        private readonly int _row;
+        public readonly int Row;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Cursor(string pFileName, int pRow, int pColumn)
+        public Cursor(string pFileName, string pLine, int pRow, int pColumn)
         {
-            _fileName = pFileName;
+            FileName = pFileName ?? "";
+            Line = pLine ?? "";
 
-            _row = pRow;
-            _column = pColumn;
+            Row = pRow;
+            Column = pColumn;
         }
 
         /// <summary>
@@ -45,9 +51,9 @@ namespace Prometheus.Compile
         /// </summary>
         public override string ToString()
         {
-            return _fileName == null
+            return FileName == null
                 ? "in undefined source."
-                : string.Format("in {0} at: {1}, {2}", _fileName, _row, _column);
+                : string.Format("in {0} at: {1}, {2}", FileName, Row, Column);
         }
     }
 }
