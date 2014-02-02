@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
@@ -10,6 +11,14 @@ namespace Prometheus.Runtime
     /// </summary>
     public class PrintCommand : PrometheusObject
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public PrintCommand(Cursor pCursor) 
+            : base(pCursor)
+        {
+        }
+
         /// <summary>
         /// Prints a string to the output.
         /// </summary>

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using GOLD;
 using Prometheus.Compile.Optomizer;
@@ -51,23 +52,23 @@ namespace Prometheus.Compile
             {
                 int x = _parser.CurrentPosition().Line + 1;
                 int y = _parser.CurrentPosition().Column + 1;
-                Cursor cursor = new Cursor(pFileName, _lines[x-1].Trim(), x, y);
+                Location location = new Location(pFileName, _lines[x-1].Trim(), x, y);
 
-                if (!CreateNode(response, cursor))
+                if (!CreateNode(response, location))
                 {
                     continue;
                 }
 
                 Reduction reduction = _parser.CurrentReduction as Reduction;
                 _parser.CurrentReduction = (reduction != null)
-                    ? _factory.Create(reduction, cursor)
+                    ? _factory.Create(reduction, location)
                     : _parser.CurrentReduction;
             }
 
             Node node = _parser.CurrentReduction as Node;
             if (node == null)
             {
-                throw new InternalErrorException(Errors.ProgramMissing, Cursor.None);
+                throw new InternalErrorException(Errors.ProgramMissing, Location.None);
             }
             return node;
         }
@@ -77,26 +78,26 @@ namespace Prometheus.Compile
         /// create a new node.
         /// </summary>
         /// <param name="pResponse">The current response</param>
-        /// <param name="pCursor">Location</param>
+        /// <param name="pLocation">Location</param>
         /// <returns>True if a reduction</returns>
-        private bool CreateNode(ParseMessage pResponse, Cursor pCursor)
+        private bool CreateNode(ParseMessage pResponse, Location pLocation)
         {
             switch (pResponse)
             {
                 case ParseMessage.LexicalError:
-                    throw new LexicalException(_parser, pCursor);
+                    throw new LexicalException(_parser, pLocation);
 
                 case ParseMessage.SyntaxError:
-                    throw new SyntaxException(_parser, pCursor);
+                    throw new SyntaxException(_parser, pLocation);
 
                 case ParseMessage.InternalError:
-                    throw new InternalErrorException(pCursor);
+                    throw new InternalErrorException(pLocation);
 
                 case ParseMessage.NotLoadedError:
-                    throw new NotLoadedException(pCursor);
+                    throw new NotLoadedException(pLocation);
 
                 case ParseMessage.GroupError:
-                    throw new EofException(pCursor);
+                    throw new EofException(pLocation);
             }
 
             return pResponse == ParseMessage.Reduction;
@@ -122,7 +123,7 @@ namespace Prometheus.Compile
             {
                 if (stream == null)
                 {
-                    throw new CompilerException(string.Format(Errors.MissingResource, fullResourceName), Cursor.None);
+                    throw new CompilerException(string.Format(Errors.MissingResource, fullResourceName), Location.None);
                 }
 
                 using (BinaryReader reader = new BinaryReader(stream))
@@ -145,11 +146,42 @@ namespace Prometheus.Compile
             {
                 Node root = Compile(pFileName, reader);
 
+#if DEBUG
+                TraceCode("Before Optimizer", root);
+#endif
                 Optimizer optimizer = new Optimizer();
                 root = optimizer.Optimize(root);
-
+#if DEBUG
+                TraceCode("After Optimizer", root);
+#endif
                 return new TargetCode(root);
             }
         }
+
+#if DEBUG
+        /// <summary>
+        /// Dumps a trace of the code tree to the console.
+        /// </summary>
+        private static void TraceCode(string pMessage, Node pRoot)
+        {
+            Debug.WriteLine(pMessage);
+            Debug.WriteLine("Root");
+            PrintCode(pRoot);
+            Debug.WriteLine("");
+        }
+
+        /// <summary>
+        /// Walks the tree of nodes displaying details about each node.
+        /// </summary>
+        private static void PrintCode(Node pNode, int pIndent = 0)
+        {
+            Debug.WriteLine("{0} {1} {2}", " ".PadLeft(pIndent * 2), pNode.Type, string.Join(" ", pNode.Data));
+
+            foreach (Node child in pNode.Children)
+            {
+                PrintCode(child, pIndent+1);
+            }
+        }
+#endif
     }
 }

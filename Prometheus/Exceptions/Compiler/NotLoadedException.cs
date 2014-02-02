@@ -8,24 +8,24 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Default constructor
         /// </summary>
-        public NotLoadedException(Cursor pCursor)
-            : base("Parser table is not loaded.", pCursor)
+        public NotLoadedException(Location pLocation)
+            : base("Parser table is not loaded.", pLocation)
         {
         }
 
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public NotLoadedException(string pMessage, Cursor pCursor, Exception pInnerException)
-            : base(pMessage, pCursor, pInnerException)
+        public NotLoadedException(string pMessage, Location pLocation, Exception pInnerException)
+            : base(pMessage, pLocation, pInnerException)
         {
         }
 
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public NotLoadedException(string pMessage, Cursor pCursor)
-            : base(pMessage, pCursor)
+        public NotLoadedException(string pMessage, Location pLocation)
+            : base(pMessage, pLocation)
         {
         }
     }

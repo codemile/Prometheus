@@ -30,14 +30,14 @@ namespace Prometheus.Nodes
         /// <summary>
         /// Where in the source code this node came from.
         /// </summary>
-        public readonly Cursor Location;
+        public readonly Location Location;
 
         /// <summary>
         /// Initializes a node.
         /// </summary>
         /// <param name="pType">The node's type.</param>
         /// <param name="pLocation">Location in the source code</param>
-        public Node(GrammarSymbol pType, Cursor pLocation)
+        public Node(GrammarSymbol pType, Location pLocation)
         {
             Type = pType;
             Location = pLocation;

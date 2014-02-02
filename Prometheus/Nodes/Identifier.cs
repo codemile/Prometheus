@@ -1,8 +1,11 @@
-﻿namespace Prometheus.Nodes
+﻿using System.Diagnostics;
+
+namespace Prometheus.Nodes
 {
     /// <summary>
     /// Holds the name of a reference, such as a variable name.
     /// </summary>
+    [DebuggerDisplay("Name")]
     public class Identifier
     {
         /// <summary>
@@ -16,6 +19,14 @@
         public Identifier(string pName)
         {
             Name = pName.ToLower();
+        }
+
+        /// <summary>
+        /// The identifier name
+        /// </summary>
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

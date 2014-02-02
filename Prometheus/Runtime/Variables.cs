@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using Prometheus.Exceptions.Parser;
-using Prometheus.Grammar;
+﻿using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
@@ -13,48 +11,25 @@ namespace Prometheus.Runtime
     public class Variables : PrometheusObject
     {
         /// <summary>
-        /// Storage of variable values.
-        /// </summary>
-        private readonly Dictionary<string, Data> _variables;
-
-        /// <summary>
         /// Constructor
         /// </summary>
-        public Variables()
+        public Variables(Cursor pCursor) 
+            : base(pCursor)
         {
-            _variables = new Dictionary<string, Data>();
         }
 
         /// <summary>
-        /// Returns the identifier for a reference, and throws an exception
-        /// if it does not exist.
+        /// Decrement
         /// </summary>
-        /// <param name="pIdentifier">The data</param>
-        /// <returns>The identifier</returns>
-        private string AssertExists(Data pIdentifier)
+        [SymbolHandler(GrammarSymbol.Decrement)]
+        public Data Dec(Data pIdentifier)
         {
-            Identifier id = pIdentifier.getIdentifier();
-            if (_variables.ContainsKey(id.Name))
-            {
-                return id.Name;
-            }
-            throw new IdentifierException("Reference error: {0} is not defined",id.Name);
-        }
-
-        /// <summary>
-        /// Returns the identifier for a reference, and throws an exception
-        /// if it already exists.
-        /// </summary>
-        /// <param name="pIdentifier">The data</param>
-        /// <returns>The identifier</returns>
-        private string AssertUndefined(Data pIdentifier)
-        {
-            Identifier id = pIdentifier.getIdentifier();
-            if (_variables.ContainsKey(id.Name))
-            {
-                throw new IdentifierException("Reference error: {0} already defined", id.Name);
-            }
-            return id.Name;
+            Data d = Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
+            d = d.Type == typeof (double)
+                ? new Data(d.Get<double>() - 1)
+                : new Data(d.Get<long>() - 1);
+            Cursor.Scope.Set(pIdentifier.getIdentifier().Name, d);
+            return d;
         }
 
         /// <summary>
@@ -66,8 +41,7 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.Declare)]
         public Data Declare(Data pIdentifier, Data pValue)
         {
-            string id = AssertUndefined(pIdentifier);
-            _variables.Add(id, pValue);
+            Cursor.Scope.Create(pIdentifier.getIdentifier().Name, pValue);
             return pValue;
         }
 
@@ -79,8 +53,31 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.Declare)]
         public Data Declare(Data pIdentifier)
         {
-            string id = AssertUndefined(pIdentifier);
-            _variables.Add(id, Data.Undefined);
+            return Declare(pIdentifier, Data.Undefined);
+        }
+
+        /// <summary>
+        /// Increment
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.Increment)]
+        public Data Inc(Data pIdentifier)
+        {
+            // TODO: Has to walk scope parents again to set.
+            Data d = Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
+            d = d.Type == typeof (double)
+                ? new Data(d.Get<double>() + 1)
+                : new Data(d.Get<long>() + 1);
+            Cursor.Scope.Set(pIdentifier.getIdentifier().Name, d);
+            return d;
+        }
+
+        /// <summary>
+        /// Decrement
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.ListVars)]
+        public Data ListVars()
+        {
+            Cursor.Scope.Print();
             return Data.Undefined;
         }
 
@@ -92,53 +89,19 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.Variable)]
         public Data Variable(Data pIdentifier)
         {
-            string id = AssertExists(pIdentifier);
-            return _variables[id];
+            return Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
         }
 
         /// <summary>
-        /// Increment
+        /// Assigns a value to an Identifier
         /// </summary>
-        [SymbolHandler(GrammarSymbol.Increment)]
-        public Data Inc(Data pIdentifier)
+        /// <param name="pIdentifier">The variable name</param>
+        /// <param name="pValue">The value to assign</param>
+        [SymbolHandler(GrammarSymbol.Assignment)]
+        public Data Assignment(Data pIdentifier, Data pValue)
         {
-            string id = AssertExists(pIdentifier);
-            Data d = _variables[id];
-            return d.Type == typeof(double)
-                ? _variables[id] = new Data(d.Get<double>() + 1)
-                : _variables[id] = new Data(d.Get<long>() + 1);
+            Cursor.Scope.Set(pIdentifier.getIdentifier().Name, pValue);
+            return pValue;
         }
-
-        /// <summary>
-        /// Decrement
-        /// </summary>
-        [SymbolHandler(GrammarSymbol.Decrement)]
-        public Data Dec(Data pIdentifier)
-        {
-            string id = AssertExists(pIdentifier);
-            Data d = _variables[id];
-            return d.Type == typeof (double)
-                ? _variables[id] = new Data(d.Get<double>() - 1)
-                : _variables[id] = new Data(d.Get<long>() - 1);
-        }
-
-        /// <summary>
-        /// Decrement
-        /// </summary>
-        [SymbolHandler(GrammarSymbol.ListVars)]
-        public Data ListVars()
-        {
-            foreach (KeyValuePair<string, Data> var in _variables)
-            {
-                if (var.Value.Type == typeof (string))
-                {
-                    Debug.WriteLine("{0} = \"{1}\"", var.Key, var.Value.Get<string>());
-                    continue;
-                }
-                Debug.WriteLine("{0} = {1}", var.Key, var.Value.Get<string>() ?? "undefined");
-            }
-            return Data.Undefined;
-        }
-
     }
 }

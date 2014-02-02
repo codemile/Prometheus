@@ -8,24 +8,24 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Default constructor
         /// </summary>
-        public InternalErrorException(Cursor pCursor)
-            : base("Internal error", pCursor)
+        public InternalErrorException(Location pLocation)
+            : base("Internal error", pLocation)
         {
         }
 
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public InternalErrorException(string pMessage, Cursor pCursor, Exception pInnerException)
-            : base(pMessage, pCursor, pInnerException)
+        public InternalErrorException(string pMessage, Location pLocation, Exception pInnerException)
+            : base(pMessage, pLocation, pInnerException)
         {
         }
 
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public InternalErrorException(string pMessage, Cursor pCursor)
-            : base(pMessage, pCursor)
+        public InternalErrorException(string pMessage, Location pLocation)
+            : base(pMessage, pLocation)
         {
         }
     }

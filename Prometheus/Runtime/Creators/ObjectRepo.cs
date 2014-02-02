@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Prometheus.Grammar;
+using Prometheus.Parser;
 
 namespace Prometheus.Runtime.Creators
 {
@@ -19,7 +21,7 @@ namespace Prometheus.Runtime.Creators
         /// <summary>
         /// Constructor
         /// </summary>
-        public ObjectRepo()
+        public ObjectRepo(Cursor pCursor)
         {
             Objects = new Dictionary<GrammarSymbol, PrometheusObject>();
 
@@ -32,13 +34,19 @@ namespace Prometheus.Runtime.Creators
                                 !type.IsAbstract
                             select type).ToArray(); // for debugging
 
+            object[] constructorParameters = {pCursor};
+
             foreach (Type type in types)
             {
                 IEnumerable<GrammarSymbol> symbols = PrometheusObject.getSupportedSymbols(type);
-                PrometheusObject proObj = (PrometheusObject)Activator.CreateInstance(type);
+                PrometheusObject proObj = (PrometheusObject)Activator.CreateInstance(type, constructorParameters);
                 foreach (GrammarSymbol symbol in symbols)
                 {
                     Objects.Add(symbol, proObj);
+
+#if DEBUG
+                    Debug.WriteLine("Symbol: <{0}> => {1}", symbol, proObj.GetType().FullName);
+#endif
                 }
             }
         }

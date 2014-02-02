@@ -8,24 +8,24 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Default constructor
         /// </summary>
-        public OperatorException(Cursor pCursor)
-            : base("Operator error", pCursor)
+        public OperatorException(Location pLocation)
+            : base("Operator error", pLocation)
         {
         }
 
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public OperatorException(string pMessage, Cursor pCursor, Exception pInnerException)
-            : base(pMessage, pCursor, pInnerException)
+        public OperatorException(string pMessage, Location pLocation, Exception pInnerException)
+            : base(pMessage, pLocation, pInnerException)
         {
         }
 
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public OperatorException(string pMessage, Cursor pCursor)
-            : base(pMessage, pCursor)
+        public OperatorException(string pMessage, Location pLocation)
+            : base(pMessage, pLocation)
         {
         }
     }

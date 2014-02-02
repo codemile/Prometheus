@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compile\iSourceRef.cs" />
-    <Compile Include="Compile\Optomizer\DropByCount.cs" />
     <Compile Include="Compile\Optomizer\iNodeOptimizer.cs" />
     <Compile Include="Compile\Optomizer\Optimizer.cs" />
     <Compile Include="Compile\SourceReader.cs" />
@@ -59,10 +58,12 @@
     <Compile Include="Grammar\GrammarRule.cs" />
     <Compile Include="Grammar\GrammarSymbol.cs" />
     <Compile Include="Nodes\Data.cs" />
-    <Compile Include="Compile\Cursor.cs" />
+    <Compile Include="Compile\Location.cs" />
     <Compile Include="Nodes\DataConverter.cs" />
     <Compile Include="Nodes\DataFactory.cs" />
     <Compile Include="Nodes\Identifier.cs" />
+    <Compile Include="Parser\Cursor.cs" />
+    <Compile Include="Parser\VariableScope.cs" />
     <Compile Include="Runtime\Creators\SymbolHandler.cs" />
     <Compile Include="Runtime\Creators\ObjectRepo.cs" />
     <Compile Include="Runtime\Creators\PrometheusObject.cs" />
@@ -72,8 +73,6 @@
     <Compile Include="Runtime\ValueObject.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Runtime\Variables.cs" />
-    <Compile Include="Tokens\Documents\Fragment.cs" />
-    <Compile Include="Tokens\Documents\iDocument.cs" />
     <Compile Include="Nodes\Node.cs" />
     <Compile Include="Nodes\NodeFactory.cs" />
     <Compile Include="Properties\Errors.Designer.cs">
@@ -81,7 +80,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
-    <Compile Include="Tokens\Context.cs" />
     <Compile Include="Exceptions\Compiler\CommandFactoryException.cs" />
     <Compile Include="Exceptions\Compiler\EofException.cs" />
     <Compile Include="Exceptions\Compiler\InternalErrorException.cs" />
@@ -95,30 +93,6 @@
     <Compile Include="Runtime\PrintCommand.cs" />
     <Compile Include="Compile\TargetCode.cs" />
     <Compile Include="Compile\TargetSource.cs" />
-    <Compile Include="Tokens\Token.cs" />
-    <Compile Include="Tokens\Arguments\Argument.cs" />
-    <Compile Include="Tokens\Arguments\Ref.cs" />
-    <Compile Include="Tokens\Arguments\RefExpression.cs" />
-    <Compile Include="Tokens\Arguments\RefValue.cs" />
-    <Compile Include="Tokens\Arguments\RefVariable.cs" />
-    <Compile Include="Tokens\Blocks\Block.cs" />
-    <Compile Include="Tokens\Blocks\Program.cs" />
-    <Compile Include="Tokens\Commands\AcceptCommand.cs" />
-    <Compile Include="Tokens\Commands\Command.cs" />
-    <Compile Include="Tokens\Commands\RejectCommand.cs" />
-    <Compile Include="Tokens\Commands\SetCommand.cs" />
-    <Compile Include="Tokens\Expressions\AddExpression.cs" />
-    <Compile Include="Tokens\Expressions\BaseExpression.cs" />
-    <Compile Include="Tokens\Expressions\DivideExpression.cs" />
-    <Compile Include="Tokens\Expressions\Expression.cs" />
-    <Compile Include="Tokens\Expressions\MultiplyExpression.cs" />
-    <Compile Include="Tokens\Expressions\OperatorExpression.cs" />
-    <Compile Include="Tokens\Expressions\SearchTerm.cs" />
-    <Compile Include="Tokens\Expressions\SubExpression.cs" />
-    <Compile Include="Tokens\Expressions\UnaryOperator.cs" />
-    <Compile Include="Tokens\Statements\Statement.cs" />
-    <Compile Include="Tokens\Statements\Statements.cs" />
-    <Compile Include="Tokens\Expressions\TypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Errors.resx">

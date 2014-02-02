@@ -7,12 +7,12 @@ namespace Prometheus.Compile
     /// Used mostly for error reporting.
     /// </summary>
     [DebuggerDisplay("{FileName} {Row}:{Column}")]
-    public class Cursor
+    public class Location
     {
         /// <summary>
         /// An empty cursor
         /// </summary>
-        public static readonly Cursor None = new Cursor(null, "", 0, 0);
+        public static readonly Location None = new Location(null, "", 0, 0);
 
         /// <summary>
         /// The column number.
@@ -37,7 +37,7 @@ namespace Prometheus.Compile
         /// <summary>
         /// Constructor
         /// </summary>
-        public Cursor(string pFileName, string pLine, int pRow, int pColumn)
+        public Location(string pFileName, string pLine, int pRow, int pColumn)
         {
             FileName = pFileName ?? "";
             Line = pLine ?? "";

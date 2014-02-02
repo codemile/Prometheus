@@ -42,13 +42,13 @@ namespace Prometheus.Nodes
         /// <summary>
         /// </summary>
         /// <param name="pReduction"></param>
-        /// <param name="pCursor"></param>
+        /// <param name="pLocation"></param>
         /// <returns></returns>
-        public Node Create(Reduction pReduction, Cursor pCursor)
+        public Node Create(Reduction pReduction, Location pLocation)
         {
             GrammarSymbol symbol = getSymbol(pReduction);
 
-            Node node = new Node(symbol, pCursor);
+            Node node = new Node(symbol, pLocation);
             for (int i = 0; i < pReduction.Count(); i++)
             {
                 Token token = pReduction[i];
@@ -73,7 +73,7 @@ namespace Prometheus.Nodes
                 }
 
                 string str = (string)token.Data;
-                node.Data.Add(DataFactory.Create(pCursor, dataType, str));
+                node.Data.Add(DataFactory.Create(pLocation, dataType, str));
             }
             return node;
         }

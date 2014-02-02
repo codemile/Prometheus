@@ -11,15 +11,15 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        protected UnsupportedDataTypeException(string pMessage, Cursor pCursor, Exception pInnerException)
-            : base(pMessage, pCursor, pInnerException)
+        protected UnsupportedDataTypeException(string pMessage, Location pLocation, Exception pInnerException)
+            : base(pMessage, pLocation, pInnerException)
         {
         }
 
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public UnsupportedDataTypeException(string pMessage, Cursor pCursor) : base(pMessage, pCursor)
+        public UnsupportedDataTypeException(string pMessage, Location pLocation) : base(pMessage, pLocation)
         {
         }
     }

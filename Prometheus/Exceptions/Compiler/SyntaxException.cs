@@ -87,9 +87,9 @@ namespace Prometheus.Exceptions.Compiler
         /// Constructor by parser.
         /// </summary>
         /// <param name="pParser"></param>
-        /// <param name="pCursor"></param>
-        public SyntaxException(GOLD.Parser pParser, Cursor pCursor)
-            : base(Message(pParser), pCursor)
+        /// <param name="pLocation"></param>
+        public SyntaxException(GOLD.Parser pParser, Location pLocation)
+            : base(Message(pParser), pLocation)
         {
         }
     }

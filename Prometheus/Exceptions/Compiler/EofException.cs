@@ -8,24 +8,24 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Default constructor
         /// </summary>
-        public EofException(Cursor pCursor)
-            : base("Unexpected end of file.", pCursor)
+        public EofException(Location pLocation)
+            : base("Unexpected end of file.", pLocation)
         {
         }
 
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public EofException(string pMessage, Cursor pCursor, Exception pInnerException)
-            : base(pMessage, pCursor, pInnerException)
+        public EofException(string pMessage, Location pLocation, Exception pInnerException)
+            : base(pMessage, pLocation, pInnerException)
         {
         }
 
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public EofException(string pMessage, Cursor pCursor)
-            : base(pMessage, pCursor)
+        public EofException(string pMessage, Location pLocation)
+            : base(pMessage, pLocation)
         {
         }
     }

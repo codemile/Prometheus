@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
@@ -32,7 +33,8 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public MathOperators()
+        public MathOperators(Cursor pCursor)
+            : base(pCursor)
         {
             _mathSymbols = new HashSet<GrammarSymbol>
                            {

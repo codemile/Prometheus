@@ -5,6 +5,7 @@ using System.Text;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
@@ -34,7 +35,8 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public RelationalOperators()
+        public RelationalOperators(Cursor pCursor) 
+            : base(pCursor)
         {
             _compareSymbols = new HashSet<GrammarSymbol>
                            {

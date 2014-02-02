@@ -80,6 +80,7 @@ namespace Prometheus.Nodes
         public Data(bool pValue)
         {
             Value = pValue;
+            Type = typeof (bool);
         }
 
         /// <summary>
@@ -100,6 +101,14 @@ namespace Prometheus.Nodes
         public Identifier getIdentifier()
         {
             return (Identifier)Value;
+        }
+
+        /// <summary>
+        /// Converts the data to a debug message.
+        /// </summary>
+        public override string ToString()
+        {
+            return string.Format("{0}:{1}", Type.Name, Value);
         }
     }
 }

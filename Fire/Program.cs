@@ -45,8 +45,8 @@ namespace Fire
                 Compiler prometheus = new Compiler();
                 TargetCode code = prometheus.Compile(filename, source);
 
-                Parser parser = new Parser(code);
-                parser.Run();
+                Parser parser = new Parser();
+                parser.Run(code);
             }
             catch (FireException e)
             {

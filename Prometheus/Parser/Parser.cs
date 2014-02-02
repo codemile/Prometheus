@@ -1,5 +1,4 @@
-﻿using System;
-using Prometheus.Compile;
+﻿using Prometheus.Compile;
 using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -13,19 +12,18 @@ namespace Prometheus.Parser
     public class Parser
     {
         /// <summary>
-        /// The compiled code
+        /// The current cursor
         /// </summary>
-        private readonly TargetCode _code;
+        private Cursor _cursor;
 
         /// <summary>
         /// Repository of objects.
         /// </summary>
-        private readonly ObjectRepo _repo;
+        private ObjectRepo _repo;
 
         /// <summary>
         /// Executes an object as a statement
         /// </summary>
-        /// <param name="pNode">The node being executed</param>
         private Data Execute(Node pNode)
         {
             switch (pNode.Type)
@@ -39,17 +37,34 @@ namespace Prometheus.Parser
                     return Data.Undefined;
                 }
                 case GrammarSymbol.IfControl:
-                case GrammarSymbol.EndIfControl:
+                case GrammarSymbol.ElseIfControl:
                 {
                     if (pNode.Children.Count == 2)
                     {
-                        Data _if = Execute(pNode.Children[0]);
-                        return _if.Get<bool>() ? Execute(pNode.Children[1]) : Data.Undefined;
+                        Data exp = Execute(pNode.Children[0]);
+                        if (!exp.Get<bool>())
+                        {
+                            return Data.Undefined;
+                        }
+                        using (_cursor.Scope = new VariableScope(_cursor))
+                        {
+                            return Execute(pNode.Children[1]);
+                        }
                     }
                     if (pNode.Children.Count == 3)
                     {
                         Data _if = Execute(pNode.Children[0]);
-                        return Execute(_if.Get<bool>() ? pNode.Children[1] : pNode.Children[2]);
+                        if (_if.Get<bool>())
+                        {
+                            using (_cursor.Scope = new VariableScope(_cursor))
+                            {
+                                return Execute(pNode.Children[1]);
+                            }
+                        }
+                        using (_cursor.Scope = new VariableScope(_cursor))
+                        {
+                            return Execute(pNode.Children[2]);
+                        }
                     }
                     throw new AssertionException(
                         string.Format("Invalid child count. Expected (2 or 3) Found <{0}>", pNode.Children.Count),
@@ -64,8 +79,8 @@ namespace Prometheus.Parser
                     try
                     {
                         while (pNode.Type == GrammarSymbol.DoWhileControl
-                            ? Execute(pNode.Children[0]).Get<bool>() :
-                            !Execute(pNode.Children[0]).Get<bool>())
+                            ? Execute(pNode.Children[0]).Get<bool>()
+                            : !Execute(pNode.Children[0]).Get<bool>())
                         {
                             try
                             {
@@ -107,6 +122,15 @@ namespace Prometheus.Parser
                     }
                     return Data.Undefined;
                 }
+                case GrammarSymbol.ForControl:
+                case GrammarSymbol.ForStepControl:
+                {
+#if DEBUG
+                    AssertChildren(pNode, (pNode.Type == GrammarSymbol.ForControl) ? 3 : 4);
+                    AssertData(pNode, 1);
+#endif
+                    return Data.Undefined;
+                }
                 case GrammarSymbol.BreakControl:
                     throw new BreakException();
                 case GrammarSymbol.ContinueControl:
@@ -125,14 +149,15 @@ namespace Prometheus.Parser
             {
                 values[i] = pNode.Data[i];
             }
-            for (int i = 0, c = pNode.Children.Count; i < c; i++)
+            for (int i = 0, j = dCount, c = pNode.Children.Count; i < c; i++, j++)
             {
-                values[i + dCount] = Execute(pNode.Children[i]);
+                values[j] = Execute(pNode.Children[i]);
             }
 
             try
             {
-                return proObj.Execute(pNode, values);
+                _cursor.Node = pNode;
+                return proObj.Execute(values);
             }
             catch (IdentifierException e)
             {
@@ -186,21 +211,17 @@ namespace Prometheus.Parser
 #endif
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="pCode">The compiled code to parse.</param>
-        public Parser(TargetCode pCode)
-        {
-            _code = pCode;
-            _repo = new ObjectRepo();
-        }
-
-        /// <summary>
         /// Runs the code
         /// </summary>
-        public void Run()
+        public void Run(TargetCode pCode)
         {
-            Execute(_code.Root);
+            _cursor = new Cursor(pCode.Root);
+            _repo = new ObjectRepo(_cursor);
+
+            using (_cursor.Scope = new VariableScope(_cursor))
+            {
+                Execute(_cursor.Node);
+            }
         }
     }
 }

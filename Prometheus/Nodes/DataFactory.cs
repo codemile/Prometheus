@@ -13,7 +13,7 @@ namespace Prometheus.Nodes
         /// <summary>
         /// Creates a data object and adjusts the value is needed.
         /// </summary>
-        public static Data Create(Cursor pCursor, GrammarSymbol pSymbol, string pValue)
+        public static Data Create(Location pLocation, GrammarSymbol pSymbol, string pValue)
         {
             switch (pSymbol)
             {
@@ -49,7 +49,7 @@ namespace Prometheus.Nodes
                     return new Data(new Identifier(pValue));
             }
 
-            throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol), pCursor);
+            throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol), pLocation);
         }
     }
 }

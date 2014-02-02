@@ -5,6 +5,7 @@ using System.Reflection;
 using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Parser;
 
 namespace Prometheus.Runtime.Creators
 {
@@ -14,6 +15,12 @@ namespace Prometheus.Runtime.Creators
     public abstract class PrometheusObject
     {
         /// <summary>
+        /// Reference to the cursor used by the parser. Always points to the
+        /// current node being evaluated.
+        /// </summary>
+        protected readonly Cursor Cursor;
+
+        /// <summary>
         /// A lookup table for a method. Grouped by symbol and argument count.
         /// </summary>
         private readonly Dictionary<GrammarSymbol, Dictionary<int, MethodInfo>> _methods;
@@ -21,9 +28,10 @@ namespace Prometheus.Runtime.Creators
         /// <summary>
         /// Constructor
         /// </summary>
-        protected PrometheusObject()
+        protected PrometheusObject(Cursor pCursor)
         {
             _methods = CreateMethodLookup(GetType());
+            Cursor = pCursor;
         }
 
         /// <summary>
@@ -57,8 +65,6 @@ namespace Prometheus.Runtime.Creators
         public static IEnumerable<GrammarSymbol> getSupportedSymbols(Type pType)
         {
             IEnumerable<MethodInfo> methods = SymbolHandler.SelectSymbolHandlers(pType);
-            List<GrammarSymbol> symbols = new List<GrammarSymbol>();
-
             return (from method in methods
                     let symbolAttr = SymbolHandler.getSymbolHandler(method)
                     select symbolAttr.Symbol).Distinct();
@@ -67,29 +73,26 @@ namespace Prometheus.Runtime.Creators
         /// <summary>
         /// Executes a method on this object that matches the argument types.
         /// </summary>
-        /// <param name="pNode"></param>
         /// <param name="pValues">The argument values.</param>
         /// <returns>The return value, or null if no return value.</returns>
-        public Data Execute(Node pNode, object[] pValues)
+        public Data Execute(object[] pValues)
         {
 #if DEBUG
-            if (!_methods.ContainsKey(pNode.Type))
+            GrammarSymbol type = Cursor.Node.Type;
+            if (!_methods.ContainsKey(type))
             {
                 throw new InvalidArgumentException(
-                    string.Format("{0} does not implement {1}", GetType().Name, pNode.Type),
-                    pNode);
+                    string.Format("{0} does not implement <{1}>", GetType().FullName, type),Cursor.Node);
             }
-            if (!_methods[pNode.Type].ContainsKey(pValues.Length))
+            if (!_methods[type].ContainsKey(pValues.Length))
             {
                 throw new InvalidArgumentException(
-                    string.Format("{0} does not have {1} argument method for {2}", GetType().Name, pValues.Length,
-                        pNode.Type),
-                    pNode);
+                    string.Format("{0} does not have {1} argument method for <{2}>", GetType().FullName, pValues.Length,type),Cursor.Node);
             }
 #endif
             try
             {
-                return (Data)_methods[pNode.Type][pValues.Length].Invoke(this, pValues);
+                return (Data)_methods[Cursor.Node.Type][pValues.Length].Invoke(this, pValues);
             }
             catch (TargetInvocationException e)
             {

@@ -107,13 +107,15 @@ Comment Line  = '//'
 					| <DoUntilControl>
 					| <LoopWhileControl>
 					| <LoopUntilControl>
+					| <ForControl>
+					| <ForStepControl>
 					| <BreakControl>
 					| <ContinueControl>
 
-<IfControl>			::= IF <Expression> THEN NewLine <Statements> <EndIfControl>
-<EndIfControl>		::= END IF 
+<IfControl>			::= IF <Expression> THEN NewLine <Statements> <ElseIfControl>
+<ElseIfControl>		::= END IF 
 					| ELSE NewLine <Statements> END IF
-					| ELSEIF <Expression> THEN NewLine <Statements> <EndIfControl>
+					| ELSEIF <Expression> THEN NewLine <Statements> <ElseIfControl>
 
 <DoWhileControl>	::= DO WHILE <Expression> NewLine <Statements> LOOP
 					| WHILE <Expression> NewLine <Statements> END WHILE
@@ -121,6 +123,9 @@ Comment Line  = '//'
 					| UNTIL <Expression> NewLine <Statements> END UNTIL
 <LoopWhileControl>	::= DO NewLine <Statements> LOOP WHILE <Expression>
 <LoopUntilControl>	::= DO NewLine <Statements> LOOP UNTIL <Expression>
+
+<ForControl>		::= FOR Identifier '=' <Expression> TO <Expression> NewLine <Statements> END FOR
+<ForStepControl>	::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> NewLine <Statements> END FOR
 
 <BreakControl>		::= BREAK
 <ContinueControl>	::= CONTINUE
@@ -130,12 +135,15 @@ Comment Line  = '//'
 ! ===================================================================
 
 <Variables>			::= <Declare>
+					| <Assignment>
 					| <ListVars>
 					| <Increment>
 					| <Decrement>
 
 <Declare>			::= VAR Identifier
 					| VAR Identifier '=' <Expression>
+
+<Assignment>		::= Identifier '=' <Expression>
 
 <ListVars>			::= VARS
 

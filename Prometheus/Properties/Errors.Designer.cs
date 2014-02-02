@@ -61,6 +61,24 @@ namespace Prometheus.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reference error: {0} already defined.
+        /// </summary>
+        internal static string IdentifierAlreadyDefined {
+            get {
+                return ResourceManager.GetString("IdentifierAlreadyDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reference error: {0} is not defined.
+        /// </summary>
+        internal static string IdentifierNotDefined {
+            get {
+                return ResourceManager.GetString("IdentifierNotDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resource was not found: {0}.
         /// </summary>
         internal static string MissingResource {

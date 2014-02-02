@@ -8,24 +8,24 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Default constructor
         /// </summary>
-        public CommandFactoryException(Cursor pCursor)
-            : base("Unexpected command factory error", pCursor)
+        public CommandFactoryException(Location pLocation)
+            : base("Unexpected command factory error", pLocation)
         {
         }
 
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public CommandFactoryException(string pMessage, Cursor pCursor, Exception pInnerException)
-            : base(pMessage, pCursor, pInnerException)
+        public CommandFactoryException(string pMessage, Location pLocation, Exception pInnerException)
+            : base(pMessage, pLocation, pInnerException)
         {
         }
 
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public CommandFactoryException(string pMessage, Cursor pCursor)
-            : base(pMessage, pCursor)
+        public CommandFactoryException(string pMessage, Location pLocation)
+            : base(pMessage, pLocation)
         {
         }
     }

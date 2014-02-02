@@ -1,5 +1,6 @@
 ﻿using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
@@ -9,6 +10,14 @@ namespace Prometheus.Runtime
     /// </summary>
     public class StringManipulation : PrometheusObject
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public StringManipulation(Cursor pCursor) 
+            : base(pCursor)
+        {
+        }
+
         /// <summary>
         /// Converts to upper case.
         /// </summary>
