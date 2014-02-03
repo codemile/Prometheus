@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -67,7 +68,21 @@ namespace Prometheus.Runtime
             try
             {
                 Node node = pIndentifier.getNode();
-                return Executor.Execute(node.Children[0], new Dictionary<string, Data>());
+                int argCount = node.Data.Count;
+
+                ArgumentList list = pArguments.getArgumentList();
+                if (list.Count < argCount)
+                {
+                    list.AddRange(Enumerable.Repeat(Data.Undefined, argCount - list.Count));
+                }
+
+                Dictionary<string, Data> variables = new Dictionary<string, Data>(node.Data.Count);
+                for (int i = 0; i < argCount; i++)
+                {
+                    variables.Add(node.Data[i].getIdentifier().Name, list[i]);
+                }
+
+                return Executor.Execute(node.Children[0], variables);
             }
             catch (ReturnException returnData)
             {

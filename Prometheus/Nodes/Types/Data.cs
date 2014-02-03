@@ -178,6 +178,19 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Accesses the data as a list of arguments.
+        /// </summary>
+        /// <returns>An argument collection</returns>
+        public ArgumentList getArgumentList()
+        {
+            if (Type == typeof (ArgumentList))
+            {
+                return (ArgumentList)_value;
+            }
+            return new ArgumentList {this};
+        }
+
+        /// <summary>
         /// Access the value as an identifier.
         /// </summary>
         /// <returns>The identifier</returns>
