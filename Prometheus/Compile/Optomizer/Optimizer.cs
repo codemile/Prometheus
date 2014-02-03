@@ -12,6 +12,31 @@ namespace Prometheus.Compile.Optomizer
     public class Optimizer
     {
         /// <summary>
+        /// These symbols can be dropped from the tree, if they have no child and no data.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _drop = new HashSet<GrammarSymbol>
+                                                               {
+                                                                   GrammarSymbol.Block,
+                                                                   GrammarSymbol.Statement,
+                                                                   GrammarSymbol.Statements,
+                                                               };
+
+        /// <summary>
+        /// These symbols can have their child promoted, if it's only one child.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _promote = new HashSet<GrammarSymbol>
+                                                                  {
+                                                                      GrammarSymbol.Statements,
+                                                                      GrammarSymbol.Statement,
+                                                                      GrammarSymbol.Value
+                                                                  };
+
+        /// <summary>
+        /// The current position while walking the tree
+        /// </summary>
+        private Cursor _cursor;
+
+        /// <summary>
         /// Was the node tree modified
         /// </summary>
         private bool _modified;
@@ -21,8 +46,6 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         private List<iNodeOptimizer> _nodeOptimizers;
 
-        private Cursor _cursor;
-
         /// <summary>
         /// Performs optimization of a single node.
         /// </summary>
@@ -31,26 +54,26 @@ namespace Prometheus.Compile.Optomizer
         private Node OptimizeNode(Node pNode)
         {
             // promote a single child up the tree if the current node does no work
-            if ((pNode.Type == GrammarSymbol.Statements ||
-                 pNode.Type == GrammarSymbol.Statement ||
-                 pNode.Type == GrammarSymbol.Value ||
-                 pNode.Type == GrammarSymbol.ElseIfControl
-                ) && pNode.Children.Count == 1 &&
+            if (_promote.Contains(pNode.Type) &&
+                pNode.Children.Count == 1 &&
                 pNode.Data.Count == 0)
             {
                 return pNode.Children[0];
             }
 
             // drop an empty statement
-            if ((pNode.Type == GrammarSymbol.Statement ||
-                 pNode.Type == GrammarSymbol.ElseIfControl
-                ) && pNode.Children.Count == 0 &&
+            if (_drop.Contains(pNode.Type) &&
+                pNode.Children.Count == 0 &&
                 pNode.Data.Count == 0)
             {
                 return null;
             }
 
-            // statements that contains 2 child, and one is another statements node
+            // TODO: I think this can be improved. 
+            // TODO: <Statements> should not have a <Statement> or <Statements> as children. 
+            // TODO: Those children can be moved up as long as operations continue to run in the correct order.
+
+            // statements that contain 2 child, and one is another statements node
             // can be merged into just 1 statements
             if (pNode.Type == GrammarSymbol.Statements &&
                 pNode.Children.Count == 2 &&

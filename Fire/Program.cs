@@ -1,17 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using Fire.Exceptions;
 using Fire.Properties;
 using Fire.Sources;
 using GemsCLI;
 using Logging;
-using Prometheus;
+using Logging.Writers;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
-using Prometheus.Exceptions.Compiler;
-using Prometheus.Exceptions.Parser;
 using Prometheus.Parser;
 
 namespace Fire
@@ -29,12 +24,19 @@ namespace Fire
         /// <param name="pArgs">Command line arguments</param>
         private static void Main(string[] pArgs)
         {
-            //WriteGreeting();
 
             Options options = RequestFactory.Create<Options>(CliOptions.WindowsStyle, pArgs);
             if (options == null)
             {
                 return;
+            }
+
+            Logger.Add(new ConsoleWriter(options.Debug));
+            Logger.Add(new VisualStudioWriter());
+
+            if (string.IsNullOrWhiteSpace(options.FileName))
+            {
+                WriteGreeting();
             }
 
             try
@@ -52,11 +54,7 @@ namespace Fire
             {
                 _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
             }
-            catch (CompilerException e)
-            {
-                _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
-            }
-            catch (RunTimeException e)
+            catch (PrometheusException e)
             {
                 _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
             }
@@ -68,10 +66,10 @@ namespace Fire
         private static void WriteGreeting()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            Debug.WriteLine(Resource.Greeting_Version, assembly.GetName().Version);
-            Debug.WriteLine(Resource.Greeting_License);
-            Debug.WriteLine(Resource.Greeting_Contact);
-            Debug.WriteLine("");
+            _logger.Fine(Resource.Greeting_Version, assembly.GetName().Version);
+            _logger.Fine(Resource.Greeting_License);
+            _logger.Fine(Resource.Greeting_Contact);
+            _logger.Fine("");
         }
     }
 }

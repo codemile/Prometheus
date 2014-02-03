@@ -1,16 +1,16 @@
+! ----------------------------------------------------------------------------
+! Prometheus
+!
+! This is the grammar rules for the Prometheus programming language.
+!
+! ----------------------------------------------------------------------------
+
 "Name"     = 'Prometheus Grammar'
 "Author"   = 'ThinkingMedia'
 "Version"  = '1.0'
 "About"    = 'Scripting language for processing documents.'
 "Case Sensitive" = 'False'
 "Start Symbol" = <Program>
-
-! ===================================================================
-! Change NewLine to a terminal
-! ===================================================================
-{WS} = {Whitespace} - {CR} - {LF}
-Whitespace = {WS}+
-NewLine = {CR}{LF}|{CR}
 
 ! ===================================================================
 ! Character Sets
@@ -20,6 +20,8 @@ NewLine = {CR}{LF}|{CR}
 {ID Tail}				= {Alphanumeric} + [_]
 {DoubleString Chars}	= {Printable} + {HT} - ["\]
 {SingleString Chars}	= {Printable} + {HT} - [''\]
+{Non Terminator}		= {DoubleString Chars} - {CR} - {LF}
+{RegExp Chars}			= {Letter}+{Digit}+['^']+['$']+['*']+['+']+['?']+['{']+['}']+['|']+['-']+['.']+[',']+['#']+['[']+[']']+['_']+['<']+['>']
 
 ! ===================================================================
 ! Terminals
@@ -31,6 +33,7 @@ StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* ['']
 Number			= [0123456789,]+
 Decimal			= [0123456789,]+ '.' [0123456789]+
 Boolean			= true | false | on | off | yes | no | always | never
+RegExp			= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' ( 'g' | 'i' | 'm' )*
 
 ! ===================================================================
 ! Comments
@@ -88,15 +91,22 @@ Comment Line  = '//'
 ! Statements
 ! ===================================================================
 <Program>		::= <Statements>
+				| !Nothing
+
+<Block>			::= '{' <Statements> '}'
+				|  '{' '}'
+
+<Statement or Block>	::= <Statement>
+						| <Block>
 
 <Statements>	::= <Statement>
 				| <Statements> <Statement>
+				| <Block>
 
-<Statement>		::= <FlowControl> NewLine
-				| <Variables> NewLine
-				| <Procedure> NewLine
-				| <Function> NewLine
-				| NewLine
+<Statement>		::= <FlowControl>
+				| <Variables> ';'
+				| <Procedure> ';'
+				| <Function> ';'
 
 ! ===================================================================
 ! Flow control
@@ -112,20 +122,16 @@ Comment Line  = '//'
 					| <BreakControl>
 					| <ContinueControl>
 
-<IfControl>			::= IF <Expression> THEN NewLine <Statements> <ElseIfControl>
-<ElseIfControl>		::= END IF 
-					| ELSE NewLine <Statements> END IF
-					| ELSEIF <Expression> THEN NewLine <Statements> <ElseIfControl>
+<IfControl>			::= IF '(' <Expression> ')' <Statement or Block> 
+					| IF '(' <Expression> ')' <Statement or Block> ELSE <Statement or Block>
 
-<DoWhileControl>	::= DO WHILE <Expression> NewLine <Statements> LOOP
-					| WHILE <Expression> NewLine <Statements> END WHILE
-<DoUntilControl>	::= DO UNTIL <Expression> NewLine <Statements> LOOP
-					| UNTIL <Expression> NewLine <Statements> END UNTIL
-<LoopWhileControl>	::= DO NewLine <Statements> LOOP WHILE <Expression>
-<LoopUntilControl>	::= DO NewLine <Statements> LOOP UNTIL <Expression>
+<DoWhileControl>	::= WHILE '(' <Expression> ')' <Statement or Block>
+<DoUntilControl>	::= UNTIL '(' <Expression> ')' <Statement or Block>
+<LoopWhileControl>	::= DO <Statement or Block> WHILE '(' <Expression> ')'
+<LoopUntilControl>	::= DO <Statement or Block> UNTIL '(' <Expression> ')'
 
-<ForControl>		::= FOR Identifier '=' <Expression> TO <Expression> NewLine <Statements> END FOR
-<ForStepControl>	::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> NewLine <Statements> END FOR
+<ForControl>		::= FOR Identifier '=' <Expression> TO <Expression> <Statement or Block>
+<ForStepControl>	::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Statement or Block>
 
 <BreakControl>		::= BREAK
 <ContinueControl>	::= CONTINUE

@@ -49,7 +49,8 @@ namespace Prometheus.Nodes
                     return new Data(new Identifier(pValue));
             }
 
-            throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol), pLocation);
+            throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol),
+                pLocation);
         }
     }
 }

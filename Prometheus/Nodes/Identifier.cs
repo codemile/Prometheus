@@ -5,7 +5,7 @@ namespace Prometheus.Nodes
     /// <summary>
     /// Holds the name of a reference, such as a variable name.
     /// </summary>
-    [DebuggerDisplay("Name")]
+    [DebuggerDisplay("{Name}")]
     public class Identifier
     {
         /// <summary>

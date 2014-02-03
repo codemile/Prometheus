@@ -62,6 +62,7 @@
     <Compile Include="Nodes\DataConverter.cs" />
     <Compile Include="Nodes\DataFactory.cs" />
     <Compile Include="Nodes\Identifier.cs" />
+    <Compile Include="Nodes\Undefined.cs" />
     <Compile Include="Parser\Cursor.cs" />
     <Compile Include="Parser\VariableScope.cs" />
     <Compile Include="Runtime\Creators\SymbolHandler.cs" />

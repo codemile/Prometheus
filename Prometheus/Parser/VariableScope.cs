@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using Logging;
 using Prometheus.Exceptions.Parser;
 using Prometheus.Nodes;
+using Prometheus.Properties;
 
 namespace Prometheus.Parser
 {
@@ -12,6 +13,16 @@ namespace Prometheus.Parser
     /// </summary>
     public class VariableScope : IDisposable
     {
+        /// <summary>
+        /// Logging
+        /// </summary>
+        private static readonly Logger _logger = Logger.Create(typeof (VariableScope));
+
+        /// <summary>
+        /// Storage of variable values.
+        /// </summary>
+        private readonly Dictionary<string, Data> _variables;
+
         /// <summary>
         /// The parser's cursor
         /// </summary>
@@ -23,11 +34,6 @@ namespace Prometheus.Parser
         private VariableScope _parent;
 
         /// <summary>
-        /// Storage of variable values.
-        /// </summary>
-        private readonly Dictionary<string, Data> _variables;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public VariableScope(Cursor pCursor)
@@ -37,6 +43,34 @@ namespace Prometheus.Parser
             _parent = _cursor.Scope;
 
             _variables = new Dictionary<string, Data>();
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _cursor.Scope = _parent;
+
+            _cursor = null;
+            _parent = null;
+
+            _variables.Clear();
+        }
+
+        /// <summary>
+        /// Creates a new variable in the current scope.
+        /// </summary>
+        /// <param name="pIdentifier">The identifier to create</param>
+        /// <param name="pData">The data to assign</param>
+        public void Create(string pIdentifier, Data pData)
+        {
+            // only check the current scope
+            if (_variables.ContainsKey(pIdentifier))
+            {
+                throw new IdentifierException(Errors.IdentifierAlreadyDefined, pIdentifier);
+            }
+            _variables.Add(pIdentifier, pData);
         }
 
         /// <summary>
@@ -55,7 +89,28 @@ namespace Prometheus.Parser
             {
                 return _parent.Get(pIdentifier);
             }
-            throw new IdentifierException(Properties.Errors.IdentifierNotDefined, pIdentifier);
+            throw new IdentifierException(Errors.IdentifierNotDefined, pIdentifier);
+        }
+
+        /// <summary>
+        /// Prints a list of all variables.
+        /// </summary>
+        public void Print(int pIndent = 0)
+        {
+            if (_parent != null)
+            {
+                _parent.Print(pIndent + 1);
+            }
+            string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
+            foreach (KeyValuePair<string, Data> var in _variables)
+            {
+                if (var.Value.Type == typeof (string))
+                {
+                    _logger.Fine("{0}{1} = \"{2}\"", indent, var.Key, var.Value.GetString());
+                    continue;
+                }
+                _logger.Fine("{0}{1} = {2}", indent, var.Key, var.Value.GetString() ?? "undefined");
+            }
         }
 
         /// <summary>
@@ -74,59 +129,10 @@ namespace Prometheus.Parser
 
             if (_parent == null)
             {
-                throw new IdentifierException(Properties.Errors.IdentifierNotDefined, pIdentifier);
+                throw new IdentifierException(Errors.IdentifierNotDefined, pIdentifier);
             }
 
             _parent.Set(pIdentifier, pData);
-        }
-
-        /// <summary>
-        /// Creates a new variable in the current scope.
-        /// </summary>
-        /// <param name="pIdentifier">The identifier to create</param>
-        /// <param name="pData">The data to assign</param>
-        public void Create(string pIdentifier, Data pData)
-        {
-            // only check the current scope
-            if (_variables.ContainsKey(pIdentifier))
-            {
-                throw new IdentifierException(Properties.Errors.IdentifierAlreadyDefined, pIdentifier);
-            }
-            _variables.Add(pIdentifier, pData);
-        }
-
-        /// <summary>
-        /// Prints a list of all variables.
-        /// </summary>
-        public void Print(int pIndent = 0)
-        {
-            if (_parent != null)
-            {
-                _parent.Print(pIndent+1);
-            }
-            string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
-            foreach (KeyValuePair<string, Data> var in _variables)
-            {
-                if (var.Value.Type == typeof(string))
-                {
-                    Debug.WriteLine("{0}{1} = \"{2}\"", indent, var.Key, var.Value.Get<string>());
-                    continue;
-                }
-                Debug.WriteLine("{0}{1} = {2}", indent, var.Key, var.Value.Get<string>() ?? "undefined");
-            }
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            _cursor.Scope = _parent;
-
-            _cursor = null;
-            _parent = null;
-
-            _variables.Clear();
         }
     }
 }

@@ -8,14 +8,14 @@ namespace Prometheus.Parser
     public class Cursor
     {
         /// <summary>
-        /// The current scope for variables.
-        /// </summary>
-        public VariableScope Scope;
-
-        /// <summary>
         /// The current node being executed.
         /// </summary>
         public Node Node;
+
+        /// <summary>
+        /// The current scope for variables.
+        /// </summary>
+        public VariableScope Scope;
 
         /// <summary>
         /// Constructor

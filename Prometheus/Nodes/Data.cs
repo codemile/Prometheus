@@ -10,14 +10,24 @@ namespace Prometheus.Nodes
     public class Data
     {
         /// <summary>
+        /// The non-decimal type for the engine.
+        /// </summary>
+        public static readonly Type Integer = typeof (long);
+
+        /// <summary>
+        /// The floating point type for the engine.
+        /// </summary>
+        public static readonly Type Precise = typeof (double);
+
+        /// <summary>
+        /// The floating point degree of error.
+        /// </summary>
+        public static readonly double PreciseEpsilon = double.Epsilon;
+
+        /// <summary>
         /// Represents an undefined data type.
         /// </summary>
         public static readonly Data Undefined = new Data();
-
-        /// <summary>
-        /// The data value
-        /// </summary>
-        public readonly object Value;
 
         /// <summary>
         /// The data type.
@@ -25,12 +35,30 @@ namespace Prometheus.Nodes
         public readonly Type Type;
 
         /// <summary>
+        /// The data value
+        /// </summary>
+        private readonly object _value;
+
+        /// <summary>
+        /// Access the value by a given type. The type will be converted
+        /// if conversion is possible.
+        /// </summary>
+        /// <typeparam name="T">The required type.</typeparam>
+        /// <returns>The converted value.</returns>
+        private T Get<T>()
+        {
+            return (_value is T)
+                ? (T)_value
+                : (T)Convert.ChangeType(_value, typeof (T));
+        }
+
+        /// <summary>
         /// Undefined constructor
         /// </summary>
         private Data()
         {
-            Value = null;
-            Type = null;
+            _value = new Undefined();
+            Type = typeof (Undefined);
         }
 
         /// <summary>
@@ -39,7 +67,7 @@ namespace Prometheus.Nodes
         /// <param name="pIdentifier"></param>
         public Data(Identifier pIdentifier)
         {
-            Value = pIdentifier;
+            _value = pIdentifier;
             Type = typeof (Identifier);
         }
 
@@ -49,7 +77,7 @@ namespace Prometheus.Nodes
         /// <param name="pValue">The value</param>
         public Data(string pValue)
         {
-            Value = pValue;
+            _value = pValue;
             Type = typeof (string);
         }
 
@@ -59,7 +87,7 @@ namespace Prometheus.Nodes
         /// <param name="pValue">The value</param>
         public Data(long pValue)
         {
-            Value = pValue;
+            _value = pValue;
             Type = typeof (long);
         }
 
@@ -69,7 +97,7 @@ namespace Prometheus.Nodes
         /// <param name="pValue">The value</param>
         public Data(double pValue)
         {
-            Value = pValue;
+            _value = pValue;
             Type = typeof (double);
         }
 
@@ -79,19 +107,56 @@ namespace Prometheus.Nodes
         /// <param name="pValue">The value</param>
         public Data(bool pValue)
         {
-            Value = pValue;
+            _value = pValue;
             Type = typeof (bool);
         }
 
         /// <summary>
-        /// Access the value by a given type. The type will be converted
-        /// if conversion is possible.
+        /// Converts the data to a debug message.
         /// </summary>
-        /// <typeparam name="T">The required type.</typeparam>
-        /// <returns>The converted value.</returns>
-        public T Get<T>()
+        public override string ToString()
         {
-            return (Value is T) ? (T)Value : (T)Convert.ChangeType(Value, typeof (T));
+            return string.Format("{0}:{1}", Type.Name, _value);
+        }
+
+        /// <summary>
+        /// Access the data as a boolean
+        /// </summary>
+        /// <returns>The converted value.</returns>
+        public bool GetBool()
+        {
+            return Get<bool>();
+        }
+
+        /// <summary>
+        /// Access the data as an integer value.
+        /// </summary>
+        /// <returns>The converted value.</returns>
+        public long GetInteger()
+        {
+            return (Type == Integer)
+                ? (long)_value
+                : Get<long>();
+        }
+
+        /// <summary>
+        /// Access the data as a floating point value.
+        /// </summary>
+        /// <returns>The converted value.</returns>
+        public double GetPrecise()
+        {
+            return (Type == Precise)
+                ? (double)_value
+                : Get<double>();
+        }
+
+        /// <summary>
+        /// Access the data as a string.
+        /// </summary>
+        /// <returns>The converted value.</returns>
+        public string GetString()
+        {
+            return Get<string>();
         }
 
         /// <summary>
@@ -100,15 +165,7 @@ namespace Prometheus.Nodes
         /// <returns>The identifier</returns>
         public Identifier getIdentifier()
         {
-            return (Identifier)Value;
-        }
-
-        /// <summary>
-        /// Converts the data to a debug message.
-        /// </summary>
-        public override string ToString()
-        {
-            return string.Format("{0}:{1}", Type.Name, Value);
+            return (Identifier)_value;
         }
     }
 }

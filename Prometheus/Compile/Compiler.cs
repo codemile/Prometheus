@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using GOLD;
+using Logging;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
@@ -15,6 +16,11 @@ namespace Prometheus.Compile
     /// </summary>
     public class Compiler
     {
+        /// <summary>
+        /// Logging
+        /// </summary>
+        private static readonly Logger _logger = Logger.Create(typeof (Compiler));
+
         /// <summary>
         /// Used to create nodes.
         /// </summary>
@@ -52,7 +58,7 @@ namespace Prometheus.Compile
             {
                 int x = _parser.CurrentPosition().Line + 1;
                 int y = _parser.CurrentPosition().Column + 1;
-                Location location = new Location(pFileName, _lines[x-1].Trim(), x, y);
+                Location location = new Location(pFileName, _lines[x - 1].Trim(), x, y);
 
                 if (!CreateNode(response, location))
                 {
@@ -140,6 +146,7 @@ namespace Prometheus.Compile
         /// <param name="pSource">Contents of the source file.</param>
         public TargetCode Compile(string pFileName, string pSource)
         {
+            pSource = pSource + Environment.NewLine;
             _lines = pSource.Split('\n');
 
             using (StringReader reader = new StringReader(pSource))
@@ -164,10 +171,10 @@ namespace Prometheus.Compile
         /// </summary>
         private static void TraceCode(string pMessage, Node pRoot)
         {
-            Debug.WriteLine(pMessage);
-            Debug.WriteLine("Root");
+            _logger.Debug(pMessage);
+            _logger.Debug("Root");
             PrintCode(pRoot);
-            Debug.WriteLine("");
+            _logger.Debug("");
         }
 
         /// <summary>
@@ -175,11 +182,11 @@ namespace Prometheus.Compile
         /// </summary>
         private static void PrintCode(Node pNode, int pIndent = 0)
         {
-            Debug.WriteLine("{0} {1} {2}", " ".PadLeft(pIndent * 2), pNode.Type, string.Join(" ", pNode.Data));
+            _logger.Debug("{0} {1} {2}", " ".PadLeft(pIndent * 2), pNode.Type, string.Join(" ", pNode.Data));
 
             foreach (Node child in pNode.Children)
             {
-                PrintCode(child, pIndent+1);
+                PrintCode(child, pIndent + 1);
             }
         }
 #endif

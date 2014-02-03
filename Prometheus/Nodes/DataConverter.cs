@@ -19,24 +19,29 @@ namespace Prometheus.Nodes
         /// <returns>The best numeric type</returns>
         public static Type BestNumericType(Type pType1, Type pType2)
         {
-            pType1 = (pType1 == typeof (double) || pType1 == typeof (long)) ? pType1 : typeof (long);
-            if (pType1 == pType2)
+            Type t1 = (pType1 == typeof (Undefined)) ? Data.Precise : pType1;
+            Type t2 = (pType2 == typeof (Undefined)) ? Data.Precise : pType2;
+
+            t1 = (t1 == Data.Precise || t1 == Data.Integer) ? t1 : Data.Integer;
+
+            if (t1 == t2)
             {
-                return pType1;
+                return t1;
             }
 
-            pType2 = (pType2 == typeof (double) || pType2 == typeof (long)) ? pType2 : typeof (long);
-            if (pType1 == pType2)
+            t2 = (t2 == Data.Precise || t2 == Data.Integer) ? t2 : Data.Integer;
+
+            if (t1 == t2)
             {
-                return pType1;
+                return t1;
             }
 
-            if (pType1 == typeof (double) || pType2 == typeof (double))
+            if (t1 == Data.Precise || t2 == Data.Precise)
             {
-                return typeof (double);
+                return Data.Precise;
             }
 
-            return typeof (long);
+            return Data.Integer;
         }
     }
 }

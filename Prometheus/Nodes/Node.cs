@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Prometheus.Compile;
 using Prometheus.Grammar;
 
@@ -23,14 +22,14 @@ namespace Prometheus.Nodes
         public readonly List<Data> Data;
 
         /// <summary>
-        /// The type of node.
-        /// </summary>
-        public readonly GrammarSymbol Type;
-
-        /// <summary>
         /// Where in the source code this node came from.
         /// </summary>
         public readonly Location Location;
+
+        /// <summary>
+        /// The type of node.
+        /// </summary>
+        public readonly GrammarSymbol Type;
 
         /// <summary>
         /// Initializes a node.
@@ -46,16 +45,6 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
-        /// Call after removing any data or children by setting their
-        /// entry in the list to null. This will remove those items.
-        /// </summary>
-        public void Reduce()
-        {
-            Children.RemoveAll(pChild=>pChild == null);
-            Data.RemoveAll(pData=>pData == null);
-        }
-
-        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>
@@ -64,6 +53,16 @@ namespace Prometheus.Nodes
         public override string ToString()
         {
             return string.Format("'{0}' {1}", Type, Location);
+        }
+
+        /// <summary>
+        /// Call after removing any data or children by setting their
+        /// entry in the list to null. This will remove those items.
+        /// </summary>
+        public void Reduce()
+        {
+            Children.RemoveAll(pChild=>pChild == null);
+            Data.RemoveAll(pData=>pData == null);
         }
     }
 }

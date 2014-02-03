@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -35,77 +33,17 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public RelationalOperators(Cursor pCursor) 
+        public RelationalOperators(Cursor pCursor)
             : base(pCursor)
         {
             _compareSymbols = new HashSet<GrammarSymbol>
-                           {
-                               GrammarSymbol.GtOperator,
-                               GrammarSymbol.LtOperator,
-                               GrammarSymbol.GteOperator,
-                               GrammarSymbol.LteOperator,
-                               GrammarSymbol.EqualOperator
-                           };
-        }
-
-        /// <summary>
-        /// Greater Than
-        /// </summary>
-        [SymbolHandler(GrammarSymbol.GtOperator)]
-        public Data GreaterThan(Data pValue1, Data pValue2)
-        {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == typeof(long)
-                ? new Data(pValue1.Get<long>() > pValue2.Get<long>())
-                : new Data(pValue1.Get<double>() > pValue2.Get<double>());
-        }
-
-        /// <summary>
-        /// Greater Than
-        /// </summary>
-        [SymbolHandler(GrammarSymbol.LtOperator)]
-        public Data LessThan(Data pValue1, Data pValue2)
-        {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == typeof(long)
-                ? new Data(pValue1.Get<long>() < pValue2.Get<long>())
-                : new Data(pValue1.Get<double>() < pValue2.Get<double>());
-        }
-
-        /// <summary>
-        /// Greater Than
-        /// </summary>
-        [SymbolHandler(GrammarSymbol.GteOperator)]
-        public Data GreaterThanEqual(Data pValue1, Data pValue2)
-        {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == typeof(long)
-                ? new Data(pValue1.Get<long>() >= pValue2.Get<long>())
-                : new Data(pValue1.Get<double>() >= pValue2.Get<double>());
-        }
-
-        /// <summary>
-        /// Greater Than
-        /// </summary>
-        [SymbolHandler(GrammarSymbol.LteOperator)]
-        public Data LessThanEqual(Data pValue1, Data pValue2)
-        {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == typeof(long)
-                ? new Data(pValue1.Get<long>() <= pValue2.Get<long>())
-                : new Data(pValue1.Get<double>() <= pValue2.Get<double>());
-        }
-
-        /// <summary>
-        /// Equal
-        /// </summary>
-        [SymbolHandler(GrammarSymbol.EqualOperator)]
-        public Data Equal(Data pValue1, Data pValue2)
-        {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == typeof(long)
-                ? new Data(pValue1.Get<long>() == pValue2.Get<long>())
-                : new Data(Math.Abs(pValue1.Get<double>() - pValue2.Get<double>()) < double.Epsilon);
+                              {
+                                  GrammarSymbol.GtOperator,
+                                  GrammarSymbol.LtOperator,
+                                  GrammarSymbol.GteOperator,
+                                  GrammarSymbol.LteOperator,
+                                  GrammarSymbol.EqualOperator
+                              };
         }
 
         /// <summary>
@@ -148,6 +86,66 @@ namespace Prometheus.Runtime
             }
 
             return reduced;
+        }
+
+        /// <summary>
+        /// Equal
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.EqualOperator)]
+        public Data Equal(Data pValue1, Data pValue2)
+        {
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.GetInteger() == pValue2.GetInteger())
+                : new Data(Math.Abs(pValue1.GetPrecise() - pValue2.GetPrecise()) < Data.PreciseEpsilon);
+        }
+
+        /// <summary>
+        /// Greater Than
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.GtOperator)]
+        public Data GreaterThan(Data pValue1, Data pValue2)
+        {
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.GetInteger() > pValue2.GetInteger())
+                : new Data(pValue1.GetPrecise() > pValue2.GetPrecise());
+        }
+
+        /// <summary>
+        /// Greater Than
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.GteOperator)]
+        public Data GreaterThanEqual(Data pValue1, Data pValue2)
+        {
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.GetInteger() >= pValue2.GetInteger())
+                : new Data(pValue1.GetPrecise() >= pValue2.GetPrecise());
+        }
+
+        /// <summary>
+        /// Greater Than
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.LtOperator)]
+        public Data LessThan(Data pValue1, Data pValue2)
+        {
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.GetInteger() < pValue2.GetInteger())
+                : new Data(pValue1.GetPrecise() < pValue2.GetPrecise());
+        }
+
+        /// <summary>
+        /// Greater Than
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.LteOperator)]
+        public Data LessThanEqual(Data pValue1, Data pValue2)
+        {
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.GetInteger() <= pValue2.GetInteger())
+                : new Data(pValue1.GetPrecise() <= pValue2.GetPrecise());
         }
     }
 }

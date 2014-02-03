@@ -13,18 +13,9 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public StringManipulation(Cursor pCursor) 
+        public StringManipulation(Cursor pCursor)
             : base(pCursor)
         {
-        }
-
-        /// <summary>
-        /// Converts to upper case.
-        /// </summary>
-        [SymbolHandler(GrammarSymbol.UpperFunc)]
-        public Data ToUpper(Data pValue)
-        {
-            return new Data(pValue.Get<string>().ToUpper());
         }
 
         /// <summary>
@@ -33,7 +24,16 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.LowerFunc)]
         public Data ToLower(Data pValue)
         {
-            return new Data(pValue.Get<string>().ToLower());
+            return new Data(pValue.GetString().ToLower());
+        }
+
+        /// <summary>
+        /// Converts to upper case.
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.UpperFunc)]
+        public Data ToUpper(Data pValue)
+        {
+            return new Data(pValue.GetString().ToUpper());
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.TrimFunc)]
         public Data Trim(Data pValue)
         {
-            return new Data(pValue.Get<string>().Trim());
+            return new Data(pValue.GetString().Trim());
         }
     }
 }

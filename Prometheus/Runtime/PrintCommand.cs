@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using Logging;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Parser;
@@ -12,9 +12,14 @@ namespace Prometheus.Runtime
     public class PrintCommand : PrometheusObject
     {
         /// <summary>
+        /// Logging
+        /// </summary>
+        private static readonly Logger _logger = Logger.Create(typeof (PrintCommand));
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public PrintCommand(Cursor pCursor) 
+        public PrintCommand(Cursor pCursor)
             : base(pCursor)
         {
         }
@@ -26,7 +31,7 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.PrintProc)]
         public Data Print(Data pValue)
         {
-            Debug.WriteLine(pValue.Get<string>());
+            _logger.Fine(pValue.GetString());
 
             return Data.Undefined;
         }

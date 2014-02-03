@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Logging;
 using Prometheus.Grammar;
 using Prometheus.Parser;
 
@@ -13,6 +13,13 @@ namespace Prometheus.Runtime.Creators
     /// </summary>
     public sealed class ObjectRepo
     {
+#if DEBUG
+        /// <summary>
+        /// Logging
+        /// </summary>
+        private static readonly Logger _logger = Logger.Create(typeof (ObjectRepo));
+#endif
+
         /// <summary>
         /// Maps a symbol to an object instance.
         /// </summary>
@@ -45,7 +52,7 @@ namespace Prometheus.Runtime.Creators
                     Objects.Add(symbol, proObj);
 
 #if DEBUG
-                    Debug.WriteLine("Symbol: <{0}> => {1}", symbol, proObj.GetType().FullName);
+                    _logger.Debug("Symbol: <{0}> => {1}", symbol, proObj.GetType().FullName);
 #endif
                 }
             }

@@ -14,7 +14,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public ValueObject(Cursor pCursor) 
+        public ValueObject(Cursor pCursor)
             : base(pCursor)
         {
         }

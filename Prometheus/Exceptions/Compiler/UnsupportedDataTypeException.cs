@@ -4,7 +4,6 @@ using Prometheus.Compile;
 namespace Prometheus.Exceptions.Compiler
 {
     /// <summary>
-    /// 
     /// </summary>
     public class UnsupportedDataTypeException : CompilerException
     {

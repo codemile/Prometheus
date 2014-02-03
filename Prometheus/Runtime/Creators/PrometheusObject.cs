@@ -82,12 +82,13 @@ namespace Prometheus.Runtime.Creators
             if (!_methods.ContainsKey(type))
             {
                 throw new InvalidArgumentException(
-                    string.Format("{0} does not implement <{1}>", GetType().FullName, type),Cursor.Node);
+                    string.Format("{0} does not implement <{1}>", GetType().FullName, type), Cursor.Node);
             }
             if (!_methods[type].ContainsKey(pValues.Length))
             {
                 throw new InvalidArgumentException(
-                    string.Format("{0} does not have {1} argument method for <{2}>", GetType().FullName, pValues.Length,type),Cursor.Node);
+                    string.Format("{0} does not have {1} argument method for <{2}>", GetType().FullName, pValues.Length,
+                        type), Cursor.Node);
             }
 #endif
             try

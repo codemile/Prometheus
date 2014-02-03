@@ -28,6 +28,8 @@ namespace Prometheus.Parser
         {
             switch (pNode.Type)
             {
+                case GrammarSymbol.Program:
+                case GrammarSymbol.Block:
                 case GrammarSymbol.Statements:
                 {
                     for (int i = 0, c = pNode.Children.Count; i < c; i++)
@@ -37,12 +39,11 @@ namespace Prometheus.Parser
                     return Data.Undefined;
                 }
                 case GrammarSymbol.IfControl:
-                case GrammarSymbol.ElseIfControl:
                 {
                     if (pNode.Children.Count == 2)
                     {
                         Data exp = Execute(pNode.Children[0]);
-                        if (!exp.Get<bool>())
+                        if (!exp.GetBool())
                         {
                             return Data.Undefined;
                         }
@@ -54,7 +55,7 @@ namespace Prometheus.Parser
                     if (pNode.Children.Count == 3)
                     {
                         Data _if = Execute(pNode.Children[0]);
-                        if (_if.Get<bool>())
+                        if (_if.GetBool())
                         {
                             using (_cursor.Scope = new VariableScope(_cursor))
                             {
@@ -79,8 +80,8 @@ namespace Prometheus.Parser
                     try
                     {
                         while (pNode.Type == GrammarSymbol.DoWhileControl
-                            ? Execute(pNode.Children[0]).Get<bool>()
-                            : !Execute(pNode.Children[0]).Get<bool>())
+                            ? Execute(pNode.Children[0]).GetBool()
+                            : !Execute(pNode.Children[0]).GetBool())
                         {
                             try
                             {
@@ -114,8 +115,8 @@ namespace Prometheus.Parser
                             {
                             }
                         } while (pNode.Type == GrammarSymbol.LoopWhileControl
-                            ? Execute(pNode.Children[1]).Get<bool>()
-                            : !Execute(pNode.Children[1]).Get<bool>());
+                            ? Execute(pNode.Children[1]).GetBool()
+                            : !Execute(pNode.Children[1]).GetBool());
                     }
                     catch (BreakException)
                     {

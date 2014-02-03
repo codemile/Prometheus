@@ -13,9 +13,21 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public Variables(Cursor pCursor) 
+        public Variables(Cursor pCursor)
             : base(pCursor)
         {
+        }
+
+        /// <summary>
+        /// Assigns a value to an Identifier
+        /// </summary>
+        /// <param name="pIdentifier">The variable name</param>
+        /// <param name="pValue">The value to assign</param>
+        [SymbolHandler(GrammarSymbol.Assignment)]
+        public Data Assignment(Data pIdentifier, Data pValue)
+        {
+            Cursor.Scope.Set(pIdentifier.getIdentifier().Name, pValue);
+            return pValue;
         }
 
         /// <summary>
@@ -26,8 +38,8 @@ namespace Prometheus.Runtime
         {
             Data d = Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
             d = d.Type == typeof (double)
-                ? new Data(d.Get<double>() - 1)
-                : new Data(d.Get<long>() - 1);
+                ? new Data(d.GetPrecise() - 1)
+                : new Data(d.GetInteger() - 1);
             Cursor.Scope.Set(pIdentifier.getIdentifier().Name, d);
             return d;
         }
@@ -65,8 +77,8 @@ namespace Prometheus.Runtime
             // TODO: Has to walk scope parents again to set.
             Data d = Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
             d = d.Type == typeof (double)
-                ? new Data(d.Get<double>() + 1)
-                : new Data(d.Get<long>() + 1);
+                ? new Data(d.GetPrecise() + 1)
+                : new Data(d.GetInteger() + 1);
             Cursor.Scope.Set(pIdentifier.getIdentifier().Name, d);
             return d;
         }
@@ -90,18 +102,6 @@ namespace Prometheus.Runtime
         public Data Variable(Data pIdentifier)
         {
             return Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
-        }
-
-        /// <summary>
-        /// Assigns a value to an Identifier
-        /// </summary>
-        /// <param name="pIdentifier">The variable name</param>
-        /// <param name="pValue">The value to assign</param>
-        [SymbolHandler(GrammarSymbol.Assignment)]
-        public Data Assignment(Data pIdentifier, Data pValue)
-        {
-            Cursor.Scope.Set(pIdentifier.getIdentifier().Name, pValue);
-            return pValue;
         }
     }
 }

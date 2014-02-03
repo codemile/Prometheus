@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using GOLD;
 using Prometheus.Compile;
 
@@ -12,13 +10,25 @@ namespace Prometheus.Exceptions.Compiler
     public class SyntaxException : CompilerException
     {
         /// <summary>
+        /// Converts a symbol list into a collection.
+        /// </summary>
+        /// <param name="pSymbols">The symbols</param>
+        /// <returns>The new collection</returns>
+        private static IEnumerable<SymbolType> CollectTypes(SymbolList pSymbols)
+        {
+            for (int i = 0, c = pSymbols.Count(); i < c; i++)
+            {
+                yield return pSymbols[i].Type;
+            }
+        }
+
+        /// <summary>
         /// Formats the syntax error message.
         /// </summary>
         private static string Message(GOLD.Parser pParser)
         {
             string found = pParser.CurrentToken() != null ? pParser.CurrentToken().Data.ToString() : "null";
             found = string.IsNullOrWhiteSpace(found) ? "end of line" : found;
-
 
             SymbolList symbolList = pParser.ExpectedSymbols();
             if (symbolList == null)
@@ -67,20 +77,8 @@ namespace Prometheus.Exceptions.Compiler
                 }
             }
 
-            return string.Format("Syntax error: Was expecting {0} but found '{1}' instead", string.Join(", or ", expecting), found);
-        }
-
-        /// <summary>
-        /// Converts a symbol list into a collection.
-        /// </summary>
-        /// <param name="pSymbols">The symbols</param>
-        /// <returns>The new collection</returns>
-        private static IEnumerable<SymbolType> CollectTypes(SymbolList pSymbols)
-        {
-            for (int i = 0, c = pSymbols.Count(); i < c; i++)
-            {
-                yield return pSymbols[i].Type;
-            }
+            return string.Format("Syntax error: Was expecting {0} but found '{1}' instead",
+                string.Join(", or ", expecting), found);
         }
 
         /// <summary>

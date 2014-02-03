@@ -94,13 +94,13 @@ namespace Prometheus.Runtime
             Type t2 = pValue2.Type;
             if (t1 == typeof (string) || t2 == typeof (string))
             {
-                return new Data(string.Concat(pValue1.Get<string>(), pValue2.Get<string>()));
+                return new Data(string.Concat(pValue1.GetString(), pValue2.GetString()));
             }
 
             Type type = DataConverter.BestNumericType(t1, t2);
-            return type == typeof (long)
-                ? new Data(pValue1.Get<long>() + pValue2.Get<long>())
-                : new Data(pValue1.Get<double>() + pValue2.Get<double>());
+            return type == Data.Integer
+                ? new Data(pValue1.GetInteger() + pValue2.GetInteger())
+                : new Data(pValue1.GetPrecise() + pValue2.GetPrecise());
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Prometheus.Runtime
         [SymbolHandler(GrammarSymbol.DivideExpression)]
         public Data Div(Data pValue1, Data pValue2)
         {
-            return new Data(pValue1.Get<double>() / pValue2.Get<double>());
+            return new Data(pValue1.GetPrecise() / pValue2.GetPrecise());
         }
 
         /// <summary>
@@ -119,9 +119,9 @@ namespace Prometheus.Runtime
         public Data Mul(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == typeof (long)
-                ? new Data(pValue1.Get<long>() * pValue2.Get<long>())
-                : new Data(pValue1.Get<double>() * pValue2.Get<double>());
+            return type == Data.Integer
+                ? new Data(pValue1.GetInteger() * pValue2.GetInteger())
+                : new Data(pValue1.GetPrecise() * pValue2.GetPrecise());
         }
 
         /// <summary>
@@ -131,9 +131,9 @@ namespace Prometheus.Runtime
         public Data Sub(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == typeof (long)
-                ? new Data(pValue1.Get<long>() - pValue2.Get<long>())
-                : new Data(pValue1.Get<double>() - pValue2.Get<double>());
+            return type == Data.Integer
+                ? new Data(pValue1.GetInteger() - pValue2.GetInteger())
+                : new Data(pValue1.GetPrecise() - pValue2.GetPrecise());
         }
     }
 }
