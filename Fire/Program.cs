@@ -31,6 +31,10 @@ namespace Fire
                 return;
             }
 
+#if DEBUG
+            Logger.LogDebug = true;
+#endif
+
             Logger.Add(new ConsoleWriter(options.Debug));
             Logger.Add(new VisualStudioWriter());
 

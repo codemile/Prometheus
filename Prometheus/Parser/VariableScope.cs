@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Logging;
 using Prometheus.Exceptions.Parser;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Properties;
 
 namespace Prometheus.Parser

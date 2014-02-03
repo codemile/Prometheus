@@ -3,7 +3,7 @@ using Prometheus.Compile;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
 
-namespace Prometheus.Nodes
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Handles create data objects during compile time.

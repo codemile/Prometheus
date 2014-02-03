@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Prometheus.Compile;
 using Prometheus.Grammar;
+using Prometheus.Nodes.Types;
 
 namespace Prometheus.Nodes
 {

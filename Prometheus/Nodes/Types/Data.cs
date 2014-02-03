@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Prometheus.Nodes
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// The data for a node.
     /// </summary>
-    [DebuggerDisplay("{Type}:{Value}")]
+    [DebuggerDisplay("{Type}:{_value}")]
     public class Data
     {
+        /// <summary>
+        /// The floating point degree of error.
+        /// </summary>
+        public const double PRECISE_EPSILON = double.Epsilon;
+
         /// <summary>
         /// The non-decimal type for the engine.
         /// </summary>
@@ -18,11 +23,6 @@ namespace Prometheus.Nodes
         /// The floating point type for the engine.
         /// </summary>
         public static readonly Type Precise = typeof (double);
-
-        /// <summary>
-        /// The floating point degree of error.
-        /// </summary>
-        public static readonly double PreciseEpsilon = double.Epsilon;
 
         /// <summary>
         /// Represents an undefined data type.
@@ -59,6 +59,24 @@ namespace Prometheus.Nodes
         {
             _value = new Undefined();
             Type = typeof (Undefined);
+        }
+
+        /// <summary>
+        /// Function expression
+        /// </summary>
+        public Data(Node pNode)
+        {
+            _value = pNode;
+            Type = typeof (Node);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Data(ArgumentList pArguments)
+        {
+            _value = pArguments;
+            Type = typeof (ArgumentList);
         }
 
         /// <summary>
@@ -125,7 +143,7 @@ namespace Prometheus.Nodes
         /// <returns>The converted value.</returns>
         public bool GetBool()
         {
-            return Get<bool>();
+            return Type == typeof (Node) || Get<bool>();
         }
 
         /// <summary>
@@ -156,7 +174,7 @@ namespace Prometheus.Nodes
         /// <returns>The converted value.</returns>
         public string GetString()
         {
-            return Get<string>();
+            return Type == typeof (Node) ? "function" : Get<string>();
         }
 
         /// <summary>

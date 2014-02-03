@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Prometheus.Nodes
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Holds the name of a reference, such as a variable name.

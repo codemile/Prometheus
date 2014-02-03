@@ -5,6 +5,7 @@ using System.Reflection;
 using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Parser;
 
 namespace Prometheus.Runtime.Creators

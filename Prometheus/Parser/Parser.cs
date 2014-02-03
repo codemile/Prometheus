@@ -2,6 +2,7 @@
 using Prometheus.Exceptions.Parser;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Parser
@@ -28,6 +29,9 @@ namespace Prometheus.Parser
         {
             switch (pNode.Type)
             {
+                case GrammarSymbol.FunctionExpression:
+                    return new Data(pNode);
+
                 case GrammarSymbol.Program:
                 case GrammarSymbol.Block:
                 case GrammarSymbol.Statements:
@@ -38,6 +42,7 @@ namespace Prometheus.Parser
                     }
                     return Data.Undefined;
                 }
+
                 case GrammarSymbol.IfControl:
                 {
                     if (pNode.Children.Count == 2)
@@ -71,6 +76,7 @@ namespace Prometheus.Parser
                         string.Format("Invalid child count. Expected (2 or 3) Found <{0}>", pNode.Children.Count),
                         pNode);
                 }
+
                 case GrammarSymbol.DoWhileControl:
                 case GrammarSymbol.DoUntilControl:
                 {
@@ -97,6 +103,7 @@ namespace Prometheus.Parser
                     }
                     return Data.Undefined;
                 }
+
                 case GrammarSymbol.LoopWhileControl:
                 case GrammarSymbol.LoopUntilControl:
                 {
@@ -123,6 +130,7 @@ namespace Prometheus.Parser
                     }
                     return Data.Undefined;
                 }
+
                 case GrammarSymbol.ForControl:
                 case GrammarSymbol.ForStepControl:
                 {
@@ -132,8 +140,10 @@ namespace Prometheus.Parser
 #endif
                     return Data.Undefined;
                 }
+
                 case GrammarSymbol.BreakControl:
                     throw new BreakException();
+
                 case GrammarSymbol.ContinueControl:
                     throw new ContinueException();
             }

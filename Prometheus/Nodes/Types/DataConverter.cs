@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Prometheus.Nodes
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Handles type juggling at run-time. The engine only supports two types of

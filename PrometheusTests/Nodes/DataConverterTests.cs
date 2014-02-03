@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 
 namespace PrometheusTest.Nodes
 {

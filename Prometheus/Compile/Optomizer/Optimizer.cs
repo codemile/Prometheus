@@ -12,24 +12,35 @@ namespace Prometheus.Compile.Optomizer
     public class Optimizer
     {
         /// <summary>
-        /// These symbols can be dropped from the tree, if they have no child and no data.
+        /// These nodes can be dropped from the tree, if they have no child and no data.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _drop = new HashSet<GrammarSymbol>
                                                                {
                                                                    GrammarSymbol.Block,
                                                                    GrammarSymbol.Statement,
                                                                    GrammarSymbol.Statements,
+                                                                   GrammarSymbol.FormalParameterList
                                                                };
 
         /// <summary>
-        /// These symbols can have their child promoted, if it's only one child.
+        /// These nodes can have their child promoted, if it's only one child.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _promote = new HashSet<GrammarSymbol>
                                                                   {
+                                                                      GrammarSymbol.Block,
                                                                       GrammarSymbol.Statements,
                                                                       GrammarSymbol.Statement,
-                                                                      GrammarSymbol.Value
+                                                                      GrammarSymbol.Value,
+                                                                      GrammarSymbol.Arguments
                                                                   };
+
+        /// <summary>
+        /// These nodes have their data moved to their parents.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
+                                                                    {
+                                                                        GrammarSymbol.FormalParameterList
+                                                                    };
 
         /// <summary>
         /// The current position while walking the tree
@@ -45,6 +56,22 @@ namespace Prometheus.Compile.Optomizer
         /// A list of optimizers
         /// </summary>
         private List<iNodeOptimizer> _nodeOptimizers;
+
+        /// <summary>
+        /// Moves the data from the child to the parent.
+        /// </summary>
+        /// <param name="pParent">The parent node</param>
+        /// <param name="pChild">The child node</param>
+        private static void ShiftData(Node pParent, Node pChild)
+        {
+            for (int i = 0, c = pChild.Data.Count; i < c; i++)
+            {
+                // this reverses the order so that the data is is the same order
+                // as the original parameters in the source code
+                pParent.Data.Insert(0,pChild.Data[i]);
+            }
+            pChild.Data.Clear();
+        }
 
         /// <summary>
         /// Performs optimization of a single node.
@@ -111,10 +138,18 @@ namespace Prometheus.Compile.Optomizer
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
                 Node child = pNode.Children[i];
+
+                if (_shiftData.Contains(child.Type))
+                {
+                    ShiftData(pNode, child);
+                }
+
                 pNode.Children[i] = WalkBranch(child);
                 _modified |= pNode.Children[i] != child;
             }
+
             pNode.Reduce();
+
             return OptimizeNode(pNode);
         }
 

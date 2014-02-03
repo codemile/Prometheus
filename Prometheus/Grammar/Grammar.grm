@@ -77,6 +77,7 @@ Comment Line  = '//'
 ! ===================================================================
 
 <Variable>		::= Identifier
+				| 'this'
 
 <Value>			::= StringDouble
 				| StringSingle
@@ -84,8 +85,9 @@ Comment Line  = '//'
 				| Decimal
 				| Boolean
 				| <Variable>
-				| <Function>
+				| <Function Expression>
 				| '(' <Expression> ')'
+				| <Call Expression>
 
 ! ===================================================================
 ! Statements
@@ -106,7 +108,33 @@ Comment Line  = '//'
 <Statement>		::= <FlowControl>
 				| <Variables> ';'
 				| <Procedure> ';'
-				| <Function> ';'
+				| <Call Expression> ';'
+
+! ===================================================================
+! Functions
+! ===================================================================
+
+<Function Declaration>	::= 'function' Identifier '(' <Formal Parameter List> ')' <Block>
+						| 'function' Identifier '(' ')' <Block>
+
+<Function Expression>	::= 'function' '(' ')' <Block>
+						| 'function' '(' <Formal Parameter List> ')' <Block>
+
+<Formal Parameter List> ::= Identifier
+						| <Formal Parameter List> ',' Identifier
+
+! ===================================================================
+! Formal Expressions
+! ===================================================================
+
+<Call Expression>		::= <Variable> <Arguments>
+						| <Call Expression> <Arguments>			! chaining
+
+<Arguments>				::= '(' ')'
+						| '(' <Argument List> ')'
+
+<Argument List>			::= <Expression>
+						| <Argument List> ',' <Expression>
 
 ! ===================================================================
 ! Flow control
@@ -166,23 +194,19 @@ Comment Line  = '//'
 			 | <ScopeProc>
 			 | <IncludeProc>
 			 | <PrintProc>
-
-<UnsetProc>			::= UNSET Identifier
-<IncludeProc>		::= INCLUDE <Expression>
-<PrintProc>			::= PRINT <Expression>
-<ScopeProc>			::= SCOPE <Expression>
-<RejectProc>		::= REJECT <Expression>
-<AcceptProc>		::= ACCEPT <Expression>
-
-! ===================================================================
-! Functions
-! ===================================================================
-
-<Function>	::= <UpperFunc>
+			 | <ReturnProc>
+			 | <UpperFunc>
 			 | <LowerFunc>
 			 | <TrimFunc>
+
+<UnsetProc>			::= UNSET Identifier
+<RejectProc>		::= REJECT <Expression>
+<AcceptProc>		::= ACCEPT <Expression>
+<ScopeProc>			::= SCOPE <Expression>
+<IncludeProc>		::= INCLUDE <Expression>
+<PrintProc>			::= PRINT <Expression>
+<ReturnProc>		::= RETURN <Expression>
 
 <UpperFunc>			::= UPPER '(' <Expression> ')'
 <LowerFunc>			::= LOWER '(' <Expression> ')'
 <TrimFunc>			::= TRIM '(' <Expression> ')'
-

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
 
@@ -97,7 +98,7 @@ namespace Prometheus.Runtime
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
             return type == Data.Integer
                 ? new Data(pValue1.GetInteger() == pValue2.GetInteger())
-                : new Data(Math.Abs(pValue1.GetPrecise() - pValue2.GetPrecise()) < Data.PreciseEpsilon);
+                : new Data(Math.Abs(pValue1.GetPrecise() - pValue2.GetPrecise()) < Data.PRECISE_EPSILON);
         }
 
         /// <summary>
