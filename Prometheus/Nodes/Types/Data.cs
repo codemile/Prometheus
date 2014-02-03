@@ -185,5 +185,14 @@ namespace Prometheus.Nodes.Types
         {
             return (Identifier)_value;
         }
+
+        /// <summary>
+        /// Access the value as an executable node.
+        /// </summary>
+        /// <returns>The node</returns>
+        public Node getNode()
+        {
+            return (Node)_value;
+        }
     }
 }

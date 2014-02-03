@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Prometheus.Exceptions.Parser;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Parser;
 
@@ -16,10 +15,9 @@ namespace Prometheus.Runtime.Creators
     public abstract class PrometheusObject
     {
         /// <summary>
-        /// Reference to the cursor used by the parser. Always points to the
-        /// current node being evaluated.
+        /// The executor can be used to run child nodes.
         /// </summary>
-        protected readonly Cursor Cursor;
+        protected readonly Executor Executor;
 
         /// <summary>
         /// A lookup table for a method. Grouped by symbol and argument count.
@@ -29,10 +27,10 @@ namespace Prometheus.Runtime.Creators
         /// <summary>
         /// Constructor
         /// </summary>
-        protected PrometheusObject(Cursor pCursor)
+        protected PrometheusObject(Executor pExecutor)
         {
+            Executor = pExecutor;
             _methods = CreateMethodLookup(GetType());
-            Cursor = pCursor;
         }
 
         /// <summary>
@@ -79,22 +77,22 @@ namespace Prometheus.Runtime.Creators
         public Data Execute(object[] pValues)
         {
 #if DEBUG
-            GrammarSymbol type = Cursor.Node.Type;
+            GrammarSymbol type = Executor.Cursor.Node.Type;
             if (!_methods.ContainsKey(type))
             {
                 throw new InvalidArgumentException(
-                    string.Format("{0} does not implement <{1}>", GetType().FullName, type), Cursor.Node);
+                    string.Format("{0} does not implement <{1}>", GetType().FullName, type), Executor.Cursor.Node);
             }
             if (!_methods[type].ContainsKey(pValues.Length))
             {
                 throw new InvalidArgumentException(
                     string.Format("{0} does not have {1} argument method for <{2}>", GetType().FullName, pValues.Length,
-                        type), Cursor.Node);
+                        type), Executor.Cursor.Node);
             }
 #endif
             try
             {
-                return (Data)_methods[Cursor.Node.Type][pValues.Length].Invoke(this, pValues);
+                return (Data)_methods[Executor.Cursor.Node.Type][pValues.Length].Invoke(this, pValues);
             }
             catch (TargetInvocationException e)
             {

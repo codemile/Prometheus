@@ -34,8 +34,8 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public RelationalOperators(Cursor pCursor)
-            : base(pCursor)
+        public RelationalOperators(Executor pExecutor)
+            : base(pExecutor)
         {
             _compareSymbols = new HashSet<GrammarSymbol>
                               {

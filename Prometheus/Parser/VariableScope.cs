@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Logging;
-using Prometheus.Exceptions.Parser;
-using Prometheus.Nodes;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
 using Prometheus.Properties;
 
@@ -38,12 +37,18 @@ namespace Prometheus.Parser
         /// Constructor
         /// </summary>
         public VariableScope(Cursor pCursor)
+            : this(pCursor, new Dictionary<string, Data>())
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public VariableScope(Cursor pCursor, Dictionary<string, Data> pVariables)
         {
             _cursor = pCursor;
-
             _parent = _cursor.Scope;
-
-            _variables = new Dictionary<string, Data>();
+            _variables = pVariables;
         }
 
         /// <summary>

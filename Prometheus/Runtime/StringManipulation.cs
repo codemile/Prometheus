@@ -1,5 +1,4 @@
 ﻿using Prometheus.Grammar;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
@@ -14,8 +13,8 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public StringManipulation(Cursor pCursor)
-            : base(pCursor)
+        public StringManipulation(Executor pExecutor)
+            : base(pExecutor)
         {
         }
 

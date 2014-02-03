@@ -34,8 +34,8 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public MathOperators(Cursor pCursor)
-            : base(pCursor)
+        public MathOperators(Executor pExecutor)
+            : base(pExecutor)
         {
             _mathSymbols = new HashSet<GrammarSymbol>
                            {
@@ -94,7 +94,7 @@ namespace Prometheus.Runtime
             Type t1 = pValue1.Type;
             Type t2 = pValue2.Type;
             if (t1 == typeof (string) || t2 == typeof (string) ||
-                t1 == typeof(Node) || t2 == typeof(Node))
+                t1 == typeof (Node) || t2 == typeof (Node))
             {
                 return new Data(string.Concat(pValue1.GetString(), pValue2.GetString()));
             }

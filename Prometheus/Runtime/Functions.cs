@@ -1,4 +1,7 @@
-﻿using Prometheus.Grammar;
+﻿using System.Collections.Generic;
+using Prometheus.Exceptions.Executor;
+using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
@@ -12,19 +15,9 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public Functions(Cursor pCursor)
-            : base(pCursor)
+        public Functions(Executor pExecutor)
+            : base(pExecutor)
         {
-        }
-
-        /// <summary>
-        /// Executes an identify as a function.
-        /// </summary>
-        /// <returns></returns>
-        [SymbolHandler(GrammarSymbol.CallExpression)]
-        public Data Call(Data pIndentifier, Data pArguments)
-        {
-            return new Data("called " + pIndentifier.getIdentifier().Name);
         }
 
         /// <summary>
@@ -54,5 +47,50 @@ namespace Prometheus.Runtime
             return new Data(new ArgumentList {pArg1, pArg2});
         }
 
+        /// <summary>
+        /// Executes an identify as a function.
+        /// </summary>
+        /// <returns></returns>
+        [SymbolHandler(GrammarSymbol.CallExpression)]
+        public Data Call(Data pIndentifier)
+        {
+            return Call(pIndentifier, Data.Undefined);
+        }
+
+        /// <summary>
+        /// Executes an identify as a function.
+        /// </summary>
+        /// <returns></returns>
+        [SymbolHandler(GrammarSymbol.CallExpression)]
+        public Data Call(Data pIndentifier, Data pArguments)
+        {
+            try
+            {
+                Node node = pIndentifier.getNode();
+                return Executor.Execute(node.Children[0], new Dictionary<string, Data>());
+            }
+            catch (ReturnException returnData)
+            {
+                return returnData.Value;
+            }
+        }
+
+        /// <summary>
+        /// Performs a return exception to break out of the function.
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.ReturnProc)]
+        public Data Return()
+        {
+            throw new ReturnException(Data.Undefined);
+        }
+
+        /// <summary>
+        /// Performs a return exception to break out of the function.
+        /// </summary>
+        [SymbolHandler(GrammarSymbol.ReturnProc)]
+        public Data Return(Data pData)
+        {
+            throw new ReturnException(pData);
+        }
     }
 }

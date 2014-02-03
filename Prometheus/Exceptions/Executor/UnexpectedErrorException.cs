@@ -1,16 +1,19 @@
 ﻿using System;
 using Prometheus.Nodes;
 
-namespace Prometheus.Exceptions.Parser
+namespace Prometheus.Exceptions.Executor
 {
-    public class InvalidArgumentException : RunTimeException
+    /// <summary>
+    /// Something in the parser was unexpected.
+    /// </summary>
+    public class UnexpectedErrorException : RunTimeException
     {
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="pMessage">Exception message</param>
         /// <param name="pNode">The node the error relates to</param>
-        public InvalidArgumentException(string pMessage, Node pNode) : base(pMessage, pNode)
+        public UnexpectedErrorException(string pMessage, Node pNode) : base(pMessage, pNode)
         {
         }
 
@@ -19,7 +22,7 @@ namespace Prometheus.Exceptions.Parser
         /// </summary>
         /// <param name="pMessage">Exception message</param>
         /// <param name="pInner">Inner exception</param>
-        public InvalidArgumentException(string pMessage, Exception pInner) : base(pMessage, pInner)
+        public UnexpectedErrorException(string pMessage, Exception pInner) : base(pMessage, pInner)
         {
         }
     }

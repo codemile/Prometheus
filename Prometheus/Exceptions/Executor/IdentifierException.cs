@@ -1,6 +1,6 @@
 ﻿using Prometheus.Nodes;
 
-namespace Prometheus.Exceptions.Parser
+namespace Prometheus.Exceptions.Executor
 {
     /// <summary>
     /// A rethrowable exception related to an identifier.

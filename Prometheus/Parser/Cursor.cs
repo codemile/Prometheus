@@ -20,10 +20,10 @@ namespace Prometheus.Parser
         /// <summary>
         /// Constructor
         /// </summary>
-        public Cursor(Node pNode)
+        public Cursor()
         {
             Scope = null;
-            Node = pNode;
+            Node = null;
         }
     }
 }

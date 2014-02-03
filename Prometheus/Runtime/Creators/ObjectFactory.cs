@@ -4,33 +4,28 @@ using System.Linq;
 using System.Reflection;
 using Logging;
 using Prometheus.Grammar;
-using Prometheus.Parser;
 
 namespace Prometheus.Runtime.Creators
 {
     /// <summary>
     /// Contains a list of all the objects that extend PrometheusObject.
     /// </summary>
-    public sealed class ObjectRepo
+    public static class ObjectFactory
     {
 #if DEBUG
         /// <summary>
         /// Logging
         /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof (ObjectRepo));
+        private static readonly Logger _logger = Logger.Create(typeof (ObjectFactory));
 #endif
-
-        /// <summary>
-        /// Maps a symbol to an object instance.
-        /// </summary>
-        public readonly Dictionary<GrammarSymbol, PrometheusObject> Objects;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ObjectRepo(Cursor pCursor)
+        /// <param name="pArguments">The arguments to pass to the object constructor.</param>
+        public static Dictionary<GrammarSymbol, PrometheusObject> Create(object[] pArguments)
         {
-            Objects = new Dictionary<GrammarSymbol, PrometheusObject>();
+            Dictionary<GrammarSymbol, PrometheusObject> objects = new Dictionary<GrammarSymbol, PrometheusObject>();
 
             Assembly assembly = Assembly.Load("Prometheus");
             Type objType = typeof (PrometheusObject);
@@ -41,21 +36,21 @@ namespace Prometheus.Runtime.Creators
                                 !type.IsAbstract
                             select type).ToArray(); // for debugging
 
-            object[] constructorParameters = {pCursor};
-
             foreach (Type type in types)
             {
                 IEnumerable<GrammarSymbol> symbols = PrometheusObject.getSupportedSymbols(type);
-                PrometheusObject proObj = (PrometheusObject)Activator.CreateInstance(type, constructorParameters);
+                PrometheusObject proObj = (PrometheusObject)Activator.CreateInstance(type, pArguments);
                 foreach (GrammarSymbol symbol in symbols)
                 {
-                    Objects.Add(symbol, proObj);
+                    objects.Add(symbol, proObj);
 
 #if DEBUG
                     _logger.Debug("Symbol: <{0}> => {1}", symbol, proObj.GetType().FullName);
 #endif
                 }
             }
+
+            return objects;
         }
     }
 }

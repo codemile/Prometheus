@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Prometheus.Grammar;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 
 namespace Prometheus.Runtime.Creators

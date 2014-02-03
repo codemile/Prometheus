@@ -1,7 +1,7 @@
 ﻿using System;
 using Prometheus.Nodes;
 
-namespace Prometheus.Exceptions.Parser
+namespace Prometheus.Exceptions.Executor
 {
     /// <summary>
     /// Base exception for all run time errors.

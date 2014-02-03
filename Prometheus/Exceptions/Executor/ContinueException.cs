@@ -1,4 +1,4 @@
-﻿namespace Prometheus.Exceptions.Parser
+﻿namespace Prometheus.Exceptions.Executor
 {
     /// <summary>
     /// Used to continue loops

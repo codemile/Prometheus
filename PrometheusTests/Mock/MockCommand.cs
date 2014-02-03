@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Prometheus.Grammar;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Parser;
 using Prometheus.Runtime.Creators;
@@ -12,8 +11,8 @@ namespace PrometheusTest.Mock
         /// <summary>
         /// Constructor
         /// </summary>
-        public MockCommand(Cursor pCursor) 
-            : base(pCursor)
+        public MockCommand(Executor pExecutor)
+            : base(pExecutor)
         {
         }
 

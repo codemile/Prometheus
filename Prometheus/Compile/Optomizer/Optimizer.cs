@@ -2,7 +2,6 @@
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Parser;
-using Prometheus.Runtime;
 
 namespace Prometheus.Compile.Optomizer
 {
@@ -19,7 +18,8 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.Block,
                                                                    GrammarSymbol.Statement,
                                                                    GrammarSymbol.Statements,
-                                                                   GrammarSymbol.FormalParameterList
+                                                                   GrammarSymbol.FormalParameterList,
+                                                                   GrammarSymbol.Arguments
                                                                };
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace Prometheus.Compile.Optomizer
                                                                     };
 
         /// <summary>
-        /// The current position while walking the tree
+        /// Used to perform optimization
         /// </summary>
-        private Cursor _cursor;
+        private Executor _executor;
 
         /// <summary>
         /// Was the node tree modified
@@ -68,7 +68,7 @@ namespace Prometheus.Compile.Optomizer
             {
                 // this reverses the order so that the data is is the same order
                 // as the original parameters in the source code
-                pParent.Data.Insert(0,pChild.Data[i]);
+                pParent.Data.Insert(0, pChild.Data[i]);
             }
             pChild.Data.Clear();
         }
@@ -114,18 +114,7 @@ namespace Prometheus.Compile.Optomizer
                 }
             }
 
-            // run optimizers on the node
-            _cursor.Node = pNode;
-            foreach (iNodeOptimizer nodeOp in _nodeOptimizers)
-            {
-                pNode = nodeOp.Optomize(pNode);
-                if (pNode == null)
-                {
-                    break;
-                }
-            }
-
-            return pNode;
+            return _executor.Optimize(pNode);
         }
 
         /// <summary>
@@ -160,13 +149,8 @@ namespace Prometheus.Compile.Optomizer
         /// <returns>A node to used as the new root node.</returns>
         public Node Optimize(Node pRoot)
         {
-            _cursor = new Cursor(pRoot);
-
-            _nodeOptimizers = new List<iNodeOptimizer>
-                              {
-                                  new MathOperators(_cursor),
-                                  new RelationalOperators(_cursor)
-                              };
+            _executor = new Executor();
+            _nodeOptimizers = _executor.getOptimizers();
 
             do
             {

@@ -22,13 +22,12 @@ namespace Fire
         /// Main entry point
         /// </summary>
         /// <param name="pArgs">Command line arguments</param>
-        private static void Main(string[] pArgs)
+        private static int Main(string[] pArgs)
         {
-
             Options options = RequestFactory.Create<Options>(CliOptions.WindowsStyle, pArgs);
             if (options == null)
             {
-                return;
+                return -1;
             }
 
 #if DEBUG
@@ -52,7 +51,7 @@ namespace Fire
                 TargetCode code = prometheus.Compile(filename, source);
 
                 Parser parser = new Parser();
-                parser.Run(code);
+                return Parser.Run(code);
             }
             catch (FireException e)
             {
@@ -62,6 +61,8 @@ namespace Fire
             {
                 _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
             }
+
+            return -1;
         }
 
         /// <summary>
