@@ -130,6 +130,9 @@ Comment Line  = '//'
 <Call Expression>		::= <Variable> <Arguments>
 						| <Call Expression> <Arguments>			! chaining
 
+! This is not used by the grammar. The compiler uses to mark calls to internal methods.
+<CallInternal>			::= ! matches nothing
+
 <Arguments>				::= '(' ')'
 						| '(' <Argument List> ')'
 
@@ -195,9 +198,6 @@ Comment Line  = '//'
 			 | <IncludeProc>
 			 | <PrintProc>
 			 | <ReturnProc>
-			 | <UpperFunc>
-			 | <LowerFunc>
-			 | <TrimFunc>
 
 <UnsetProc>			::= UNSET Identifier
 <RejectProc>		::= REJECT <Expression>
@@ -206,7 +206,3 @@ Comment Line  = '//'
 <IncludeProc>		::= INCLUDE <Expression>
 <PrintProc>			::= PRINT <Expression>
 <ReturnProc>		::= RETURN <Expression>
-
-<UpperFunc>			::= UPPER '(' <Expression> ')'
-<LowerFunc>			::= LOWER '(' <Expression> ')'
-<TrimFunc>			::= TRIM '(' <Expression> ')'

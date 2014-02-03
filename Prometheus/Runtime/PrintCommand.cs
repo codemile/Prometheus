@@ -1,15 +1,15 @@
 ﻿using Logging;
+using Prometheus.Executors;
+using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
-using Prometheus.Parser;
-using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
 {
     /// <summary>
     /// Prints a string to the output.
     /// </summary>
-    public class PrintCommand : PrometheusObject
+    public class PrintCommand : ExecutorGrammar
     {
         /// <summary>
         /// Logging
@@ -28,7 +28,7 @@ namespace Prometheus.Runtime
         /// Prints a string to the output.
         /// </summary>
         /// <param name="pValue">The message to print.</param>
-        [SymbolHandler(GrammarSymbol.PrintProc)]
+        [ExecuteSymbol(GrammarSymbol.PrintProc)]
         public Data Print(Data pValue)
         {
             _logger.Fine(pValue.GetString());

@@ -1,7 +1,7 @@
-﻿using Prometheus.Grammar;
+﻿using Prometheus.Executors;
+using Prometheus.Executors.Attributes;
+using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
-using Prometheus.Parser;
-using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
 {
@@ -9,7 +9,7 @@ namespace Prometheus.Runtime
     /// Holds a static value
     /// </summary>
     // ReSharper disable UnusedMember.Global
-    public class ValueObject : PrometheusObject
+    public class ValueObject : ExecutorGrammar
     {
         /// <summary>
         /// Constructor
@@ -22,7 +22,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Returns the value of data stored in the source code.
         /// </summary>
-        [SymbolHandler(GrammarSymbol.Value)]
+        [ExecuteSymbol(GrammarSymbol.Value)]
         public Data Value(Data pValue)
         {
             return pValue;

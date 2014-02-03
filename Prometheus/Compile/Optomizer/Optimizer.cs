@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Prometheus.Executors;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Parser;
+using Prometheus.Nodes.Types;
 
 namespace Prometheus.Compile.Optomizer
 {
@@ -47,15 +49,12 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         private Executor _executor;
 
+        private HashSet<string> _internalIds;
+
         /// <summary>
         /// Was the node tree modified
         /// </summary>
         private bool _modified;
-
-        /// <summary>
-        /// A list of optimizers
-        /// </summary>
-        private List<iNodeOptimizer> _nodeOptimizers;
 
         /// <summary>
         /// Moves the data from the child to the parent.
@@ -71,6 +70,34 @@ namespace Prometheus.Compile.Optomizer
                 pParent.Data.Insert(0, pChild.Data[i]);
             }
             pChild.Data.Clear();
+        }
+
+        /// <summary>
+        /// Replaces a call to a user function with a call to an internal function.
+        /// </summary>
+        /// <param name="pNode">The node to inspect</param>
+        /// <returns>The node</returns>
+        private Node CallInternal(Node pNode)
+        {
+            if (pNode.Children.Count == 0 ||
+                pNode.Children[0].Type != GrammarSymbol.Variable)
+            {
+                return pNode;
+            }
+
+            Data id = pNode.Children[0].Data[0];
+            if (!_internalIds.Contains(id.getIdentifier().Name))
+            {
+                return pNode;
+            }
+
+            Data identifier = pNode.Children[0].Data[0];
+
+            Node callInternal = new Node(GrammarSymbol.CallInternal, pNode.Location);
+            callInternal.Data.Add(identifier);
+            callInternal.Children.AddRange(pNode.Children.Skip(1));
+
+            return callInternal;
         }
 
         /// <summary>
@@ -114,6 +141,12 @@ namespace Prometheus.Compile.Optomizer
                 }
             }
 
+            // check if a function call is to an internal method
+            if (pNode.Type == GrammarSymbol.CallExpression)
+            {
+                pNode = CallInternal(pNode);
+            }
+
             return _executor.Optimize(pNode);
         }
 
@@ -150,7 +183,7 @@ namespace Prometheus.Compile.Optomizer
         public Node Optimize(Node pRoot)
         {
             _executor = new Executor();
-            _nodeOptimizers = _executor.getOptimizers();
+            _internalIds = new HashSet<string>(_executor.GetInternalIds());
 
             do
             {

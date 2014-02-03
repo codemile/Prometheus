@@ -56,6 +56,7 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
+    <Compile Include="Executors\Attributes\ExecuteAttribute.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
     <Compile Include="Grammar\GrammarSymbol.cs" />
     <Compile Include="Nodes\Types\ArgumentList.cs" />
@@ -66,11 +67,15 @@
     <Compile Include="Nodes\Types\Identifier.cs" />
     <Compile Include="Nodes\Types\Undefined.cs" />
     <Compile Include="Parser\Cursor.cs" />
-    <Compile Include="Parser\Executor.cs" />
+    <Compile Include="Executors\Executor.cs" />
     <Compile Include="Parser\VariableScope.cs" />
-    <Compile Include="Runtime\Creators\SymbolHandler.cs" />
-    <Compile Include="Runtime\Creators\ObjectFactory.cs" />
-    <Compile Include="Runtime\Creators\PrometheusObject.cs" />
+    <Compile Include="Executors\Attributes\ExecuteInternal.cs" />
+    <Compile Include="Executors\Attributes\ExecuteSymbol.cs" />
+    <Compile Include="Executors\ExecutorBase.cs" />
+    <Compile Include="Executors\ExecutorReflector.cs" />
+    <Compile Include="Executors\ObjectFactory.cs" />
+    <Compile Include="Executors\ExecutorInternal.cs" />
+    <Compile Include="Executors\ExecutorGrammar.cs" />
     <Compile Include="Runtime\Functions.cs" />
     <Compile Include="Runtime\MathOperators.cs" />
     <Compile Include="Runtime\RelationalOperators.cs" />

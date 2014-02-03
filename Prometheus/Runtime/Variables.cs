@@ -1,14 +1,14 @@
-﻿using Prometheus.Grammar;
+﻿using Prometheus.Executors;
+using Prometheus.Executors.Attributes;
+using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
-using Prometheus.Parser;
-using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
 {
     /// <summary>
     /// Handles symbols related to variable management
     /// </summary>
-    public class Variables : PrometheusObject
+    public class Variables : ExecutorGrammar
     {
         /// <summary>
         /// Constructor
@@ -23,7 +23,7 @@ namespace Prometheus.Runtime
         /// </summary>
         /// <param name="pIdentifier">The variable name</param>
         /// <param name="pValue">The value to assign</param>
-        [SymbolHandler(GrammarSymbol.Assignment)]
+        [ExecuteSymbol(GrammarSymbol.Assignment)]
         public Data Assignment(Data pIdentifier, Data pValue)
         {
             Executor.Cursor.Scope.Set(pIdentifier.getIdentifier().Name, pValue);
@@ -33,7 +33,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Decrement
         /// </summary>
-        [SymbolHandler(GrammarSymbol.Decrement)]
+        [ExecuteSymbol(GrammarSymbol.Decrement)]
         public Data Dec(Data pIdentifier)
         {
             Data d = Executor.Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
@@ -50,7 +50,7 @@ namespace Prometheus.Runtime
         /// <param name="pIdentifier">Name of the variable</param>
         /// <param name="pValue">The value</param>
         /// <returns>The value assigned</returns>
-        [SymbolHandler(GrammarSymbol.Declare)]
+        [ExecuteSymbol(GrammarSymbol.Declare)]
         public Data Declare(Data pIdentifier, Data pValue)
         {
             Executor.Cursor.Scope.Create(pIdentifier.getIdentifier().Name, pValue);
@@ -62,7 +62,7 @@ namespace Prometheus.Runtime
         /// </summary>
         /// <param name="pIdentifier">Name of the variable</param>
         /// <returns>The value assigned</returns>
-        [SymbolHandler(GrammarSymbol.Declare)]
+        [ExecuteSymbol(GrammarSymbol.Declare)]
         public Data Declare(Data pIdentifier)
         {
             return Declare(pIdentifier, Data.Undefined);
@@ -71,7 +71,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Increment
         /// </summary>
-        [SymbolHandler(GrammarSymbol.Increment)]
+        [ExecuteSymbol(GrammarSymbol.Increment)]
         public Data Inc(Data pIdentifier)
         {
             // TODO: Has to walk scope parents again to set.
@@ -86,7 +86,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Decrement
         /// </summary>
-        [SymbolHandler(GrammarSymbol.ListVars)]
+        [ExecuteSymbol(GrammarSymbol.ListVars)]
         public Data ListVars()
         {
             Executor.Cursor.Scope.Print();
@@ -98,7 +98,7 @@ namespace Prometheus.Runtime
         /// </summary>
         /// <param name="pIdentifier">The variable name</param>
         /// <returns>The value or undefined.</returns>
-        [SymbolHandler(GrammarSymbol.Variable)]
+        [ExecuteSymbol(GrammarSymbol.Variable)]
         public Data Variable(Data pIdentifier)
         {
             return Executor.Cursor.Scope.Get(pIdentifier.getIdentifier().Name);

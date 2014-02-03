@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
+using Prometheus.Executors;
+using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
 using Prometheus.Parser;
-using Prometheus.Runtime.Creators;
 
 namespace PrometheusTest.Mock
 {
-    public class MockCommand : PrometheusObject
+    public class MockCommand : ExecutorGrammar
     {
         /// <summary>
         /// Constructor
@@ -20,7 +21,7 @@ namespace PrometheusTest.Mock
         /// Prints a string to the output.
         /// </summary>
         /// <param name="pValue">The message to print.</param>
-        [SymbolHandler(GrammarSymbol.PrintProc)]
+        [ExecuteSymbol(GrammarSymbol.PrintProc)]
         public Data Print(Data pValue)
         {
             Debug.WriteLine(pValue.GetString());

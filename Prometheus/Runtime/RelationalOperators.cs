@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
+using Prometheus.Executors;
+using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Parser;
-using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
 {
     /// <summary>
     /// Implements the operators for greater than and less than.
     /// </summary>
-    public class RelationalOperators : PrometheusObject, iNodeOptimizer
+    public class RelationalOperators : ExecutorGrammar, iNodeOptimizer
     {
         /// <summary>
         /// A list of relational operators
@@ -92,7 +92,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Equal
         /// </summary>
-        [SymbolHandler(GrammarSymbol.EqualOperator)]
+        [ExecuteSymbol(GrammarSymbol.EqualOperator)]
         public Data Equal(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
@@ -104,7 +104,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Greater Than
         /// </summary>
-        [SymbolHandler(GrammarSymbol.GtOperator)]
+        [ExecuteSymbol(GrammarSymbol.GtOperator)]
         public Data GreaterThan(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
@@ -116,7 +116,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Greater Than
         /// </summary>
-        [SymbolHandler(GrammarSymbol.GteOperator)]
+        [ExecuteSymbol(GrammarSymbol.GteOperator)]
         public Data GreaterThanEqual(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
@@ -128,7 +128,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Greater Than
         /// </summary>
-        [SymbolHandler(GrammarSymbol.LtOperator)]
+        [ExecuteSymbol(GrammarSymbol.LtOperator)]
         public Data LessThan(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
@@ -140,7 +140,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Greater Than
         /// </summary>
-        [SymbolHandler(GrammarSymbol.LteOperator)]
+        [ExecuteSymbol(GrammarSymbol.LteOperator)]
         public Data LessThanEqual(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);

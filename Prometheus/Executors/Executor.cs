@@ -2,13 +2,17 @@
 using System.Linq;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Executor;
+using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Runtime.Creators;
+using Prometheus.Parser;
 
-namespace Prometheus.Parser
+namespace Prometheus.Executors
 {
+    /// <summary>
+    /// Handles execution of a node in the tree.
+    /// </summary>
     public class Executor
     {
         /// <summary>
@@ -19,7 +23,12 @@ namespace Prometheus.Parser
         /// <summary>
         /// All the objects that implement symbol methods.
         /// </summary>
-        private readonly Dictionary<GrammarSymbol, PrometheusObject> _prometheusObjects;
+        private readonly Dictionary<GrammarSymbol, ExecutorGrammar> _grammarLookup;
+
+        /// <summary>
+        /// All the objects that implement symbol methods.
+        /// </summary>
+        private readonly Dictionary<string, ExecutorInternal> _internalLookup;
 
         /// <summary>
         /// Constructor
@@ -27,19 +36,40 @@ namespace Prometheus.Parser
         public Executor()
         {
             Cursor = new Cursor();
-            _prometheusObjects = ObjectFactory.Create(new object[] {this});
+
+            _grammarLookup =
+                ObjectFactory.CreateLookupTable<GrammarSymbol, ExecutorGrammar, ExecuteSymbol>(new object[] {this});
+            _internalLookup =
+                ObjectFactory.CreateLookupTable<string, ExecutorInternal, ExecuteInternal>(new object[] {this});
         }
 
         /// <summary>
-        /// Collects all the objects that implement optimizers.
+        /// Executes an internal API function.
         /// </summary>
-        /// <returns>A collection of optimizers</returns>
-        public List<iNodeOptimizer> getOptimizers()
+        /// <param name="pInternal">Name of the API to call</param>
+        /// <param name="pArguments">The arguments</param>
+        /// <returns>The resulting data</returns>
+        public Data Execute(string pInternal, List<Data> pArguments)
         {
-            return (from pair in _prometheusObjects
-                    let node = pair.Value as iNodeOptimizer
-                    where node != null
-                    select node).Distinct().ToList();
+            object[] values = new object[pArguments.Count];
+            for (int i = 0, c = pArguments.Count; i < c; i++)
+            {
+                values[i] = pArguments[i];
+            }
+
+            /*
+                        try
+                        {
+            */
+            return _internalLookup[pInternal].Execute(values);
+            /*
+                        }
+                        catch (IdentifierException e)
+                        {
+                            IdentifierException.Rethrow(e, pParent);
+                        }
+                        return Data.Undefined;
+            */
         }
 
         /// <summary>
@@ -185,8 +215,6 @@ namespace Prometheus.Parser
             AssertNode(pParent);
 #endif
 
-            PrometheusObject proObj = _prometheusObjects[pParent.Type];
-
             int dCount = pParent.Data.Count;
             object[] values = new object[pParent.Children.Count + dCount];
             for (int i = 0, c = dCount; i < c; i++)
@@ -201,11 +229,45 @@ namespace Prometheus.Parser
             try
             {
                 Cursor.Node = pParent;
-                return proObj.Execute(values);
+                return _grammarLookup[pParent.Type].Execute(values);
             }
             catch (IdentifierException e)
             {
                 IdentifierException.Rethrow(e, pParent);
+            }
+
+            return Data.Undefined;
+        }
+
+        /// <summary>
+        /// Executes the base implementation of the node. This is where the parser
+        /// transitions from walking the node tree to executing C# code for a grammar
+        /// command.
+        /// </summary>
+        /// <param name="pNode">The node to execute</param>
+        /// <param name="pBase">The object that implements the node</param>
+        /// <returns>The returning data</returns>
+        private Data ExecuteBase(Node pNode, ExecutorBase pBase)
+        {
+            int dCount = pNode.Data.Count;
+            object[] values = new object[pNode.Children.Count + dCount];
+            for (int i = 0, c = dCount; i < c; i++)
+            {
+                values[i] = pNode.Data[i];
+            }
+            for (int i = 0, j = dCount, c = pNode.Children.Count; i < c; i++, j++)
+            {
+                values[j] = WalkDownChildren(pNode.Children[i]);
+            }
+
+            try
+            {
+                Cursor.Node = pNode;
+                return pBase.Execute(values);
+            }
+            catch (IdentifierException e)
+            {
+                IdentifierException.Rethrow(e, pNode);
             }
 
             return Data.Undefined;
@@ -247,7 +309,7 @@ namespace Prometheus.Parser
         /// <param name="pNode">The node to validate</param>
         private void AssertNode(Node pNode)
         {
-            if (!_prometheusObjects.ContainsKey(pNode.Type))
+            if (!_grammarLookup.ContainsKey(pNode.Type))
             {
                 throw new AssertionException(string.Format("Symbol <{0}> is not implemented", pNode.Type), pNode);
             }
@@ -263,7 +325,7 @@ namespace Prometheus.Parser
         {
             // run optimizers on the node
             Cursor.Node = pNode;
-            foreach (iNodeOptimizer nodeOp in from pair in _prometheusObjects
+            foreach (iNodeOptimizer nodeOp in from pair in _grammarLookup
                                               let node = pair.Value as iNodeOptimizer
                                               where node != null
                                               select node)
@@ -276,6 +338,15 @@ namespace Prometheus.Parser
             }
 
             return pNode;
+        }
+
+        /// <summary>
+        /// Returns a list of internal API functions that are reserved words.
+        /// </summary>
+        /// <returns>A collection of internal names.</returns>
+        public List<string> GetInternalIds()
+        {
+            return _internalLookup.Keys.ToList();
         }
     }
 }

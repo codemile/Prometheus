@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
+using Prometheus.Executors;
+using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Parser;
-using Prometheus.Runtime.Creators;
 
 namespace Prometheus.Runtime
 {
     /// <summary>
     /// Handles basic math operations.
     /// </summary>
-    public class MathOperators : PrometheusObject, iNodeOptimizer
+    public class MathOperators : ExecutorGrammar, iNodeOptimizer
     {
         /// <summary>
         /// A list of math operations
@@ -88,7 +88,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Addition
         /// </summary>
-        [SymbolHandler(GrammarSymbol.AddExpression)]
+        [ExecuteSymbol(GrammarSymbol.AddExpression)]
         public Data Add(Data pValue1, Data pValue2)
         {
             Type t1 = pValue1.Type;
@@ -108,7 +108,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Division
         /// </summary>
-        [SymbolHandler(GrammarSymbol.DivideExpression)]
+        [ExecuteSymbol(GrammarSymbol.DivideExpression)]
         public Data Div(Data pValue1, Data pValue2)
         {
             return new Data(pValue1.GetPrecise() / pValue2.GetPrecise());
@@ -117,7 +117,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Multiplication
         /// </summary>
-        [SymbolHandler(GrammarSymbol.MultiplyExpression)]
+        [ExecuteSymbol(GrammarSymbol.MultiplyExpression)]
         public Data Mul(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
@@ -129,7 +129,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Subtraction
         /// </summary>
-        [SymbolHandler(GrammarSymbol.SubExpression)]
+        [ExecuteSymbol(GrammarSymbol.SubExpression)]
         public Data Sub(Data pValue1, Data pValue2)
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);

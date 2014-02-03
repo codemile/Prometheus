@@ -48,8 +48,6 @@
     <Compile Include="CompilerTests.cs" />
     <Compile Include="Mock\MockCommand.cs" />
     <Compile Include="Nodes\DataConverterTests.cs" />
-    <Compile Include="Runtime\Creators\SymbolHandlerTests.cs" />
-    <Compile Include="Runtime\Creators\PrometheusObjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +55,9 @@
       <Project>{0F5574D0-9289-43C3-A86D-04302D7AB9D8}</Project>
       <Name>Prometheus</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Runtime\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
