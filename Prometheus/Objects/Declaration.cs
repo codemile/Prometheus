@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 
@@ -28,11 +29,13 @@ namespace Prometheus.Objects
         /// <summary>
         /// Constructor
         /// </summary>
-        public Declaration(Declaration pBase, Identifier pName, Node pConstructor)
+        public Declaration(Declaration pBase, Identifier pName, Node pObjDecl)
         {
             Base = pBase;
             Name = pName;
-            Constructor = pConstructor;
+
+            Constructor = new Node(GrammarSymbol.Statements, pObjDecl.Location);
+            Constructor.Children.AddRange(pObjDecl.Children);
         }
 
         /// <summary>

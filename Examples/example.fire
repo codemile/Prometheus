@@ -1,16 +1,5 @@
-/**
- * This is a basic hello world example.
- */
 object Example {
 	print "Hello World";
 };
 
 var x = new Example();
-
-print "Declared object types.";
-objects;
-
-print "Variables in memory";
-vars;
-
-print x;
