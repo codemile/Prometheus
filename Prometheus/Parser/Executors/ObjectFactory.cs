@@ -14,7 +14,7 @@ namespace Prometheus.Parser.Executors
     /// </summary>
     public static class ObjectFactory
     {
-#if DEBUG
+#if LOG_GRAMMAR
         /// <summary>
         /// Logging
         /// </summary>
@@ -65,7 +65,7 @@ namespace Prometheus.Parser.Executors
                         continue;
                     }
                     table.Add(key, obj);
-#if DEBUG
+#if LOG_GRAMMAR
                     _logger.Debug("{0}: <{1}> => {2}", typeof (TKey).Name, obj.GetType().FullName, key);
 #endif
                 }

@@ -105,8 +105,8 @@ Comment Line  = '//'
 ! ===================================================================
 ! Statements
 ! ===================================================================
-<Program>		::= <Object Decl>
-				| <Object Decl> <Statements>
+<Program>		::= <Object Decls>
+				| <Object Decls> <Statements>
 				| <Statements>
 				| !Nothing
 
@@ -130,6 +130,9 @@ Comment Line  = '//'
 ! ===================================================================
 ! Objects
 ! ===================================================================
+
+<Object Decls>	::= <Object Decl>
+				| <Object Decls> <Object Decl>
 
 <Object Decl>	::= <Base Class> Identifier <Block>
 				| <Base Class> Identifier '(' ')' <Block>
@@ -203,7 +206,6 @@ Comment Line  = '//'
 
 <Variables>			::= <Declare>
 					| <Assignment>
-					| <ListVars>
 					| <Increment>
 					| <Decrement>
 
@@ -213,8 +215,6 @@ Comment Line  = '//'
 
 <Assignment>		::= Identifier '=' <Expression>
 
-<ListVars>			::= VARS
-
 <Increment>			::= Identifier '++'
 <Decrement>			::= Identifier '--'
 
@@ -222,13 +222,15 @@ Comment Line  = '//'
 ! Procedures
 ! ===================================================================
 
-<Procedure>	::= <UnsetProc>
-			 | <RejectProc>
-			 | <AcceptProc>
-			 | <ScopeProc>
-			 | <IncludeProc>
-			 | <PrintProc>
-			 | <ReturnProc>
+<Procedure>			::= <UnsetProc>
+					| <RejectProc>
+					| <AcceptProc>
+					| <ScopeProc>
+					| <IncludeProc>
+					| <PrintProc>
+					| <ReturnProc>
+					| <ListVars>
+					| <ListObjects>
 
 <UnsetProc>			::= UNSET Identifier
 <RejectProc>		::= REJECT <Expression>
@@ -237,3 +239,5 @@ Comment Line  = '//'
 <IncludeProc>		::= INCLUDE <Expression>
 <PrintProc>			::= PRINT <Expression>
 <ReturnProc>		::= RETURN <Expression>
+<ListVars>			::= VARS
+<ListObjects>		::= OBJECTS

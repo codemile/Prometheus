@@ -8,7 +8,9 @@ using Prometheus.Parser.Executors;
 namespace Prometheus.Compile.Optomizer
 {
     /// <summary>
-    /// Optimizes a compiled node tree.
+    /// Optimizes a compiled node tree. This code is constantly modified to as grammar rules are changed in the parser, but the
+    /// general idea for optimizing is two things. First, to reduce the number of nodes in the tree. Second, to change nodes
+    /// to make work for the parser easier.
     /// </summary>
     public class Optimizer
     {
@@ -21,6 +23,7 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.Block,
                                                                    GrammarSymbol.Statement,
                                                                    GrammarSymbol.Statements,
+                                                                   GrammarSymbol.ObjectDecls,
                                                                    GrammarSymbol.FormalParameterList,
                                                                    GrammarSymbol.Arguments,
                                                                    GrammarSymbol.BaseClass
@@ -34,6 +37,7 @@ namespace Prometheus.Compile.Optomizer
                                                                       GrammarSymbol.Block,
                                                                       GrammarSymbol.Statements,
                                                                       GrammarSymbol.Statement,
+                                                                      GrammarSymbol.ObjectDecls,
                                                                       GrammarSymbol.Value,
                                                                       GrammarSymbol.Arguments
                                                                   };
@@ -46,6 +50,17 @@ namespace Prometheus.Compile.Optomizer
                                                                         GrammarSymbol.FormalParameterList,
                                                                         GrammarSymbol.BaseClass
                                                                     };
+
+        /// <summary>
+        /// Defines which symbols are used to only collection child symbols. The goal is to prevent the chaining
+        /// of collections that could be reduced to a single collection.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _arrays = new HashSet<GrammarSymbol>
+                                                                                   {
+                                                                                       GrammarSymbol.Statements,
+                                                                                       GrammarSymbol.ObjectDecls,
+                                                                                       GrammarSymbol.Program
+                                                                                   };
 
         /// <summary>
         /// Used to perform optimization
@@ -118,30 +133,33 @@ namespace Prometheus.Compile.Optomizer
                 return pNode.Children[0];
             }
 
-            // drop an empty statement
-            if (_drop.Contains(pNode.Type) &&
+            // drop an empty node
+            if ((_drop.Contains(pNode.Type) || _arrays.Contains(pNode.Type)) &&
                 pNode.Children.Count == 0 &&
                 pNode.Data.Count == 0)
             {
                 return null;
             }
 
-            // TODO: I think this can be improved. 
-            // TODO: <Statements> should not have a <Statement> or <Statements> as children. 
-            // TODO: Those children can be moved up as long as operations continue to run in the correct order.
-
-            // statements that contain 2 child, and one is another statements node
-            // can be merged into just 1 statements
-            if (pNode.Type == GrammarSymbol.Statements &&
-                pNode.Children.Count == 2 &&
-                pNode.Data.Count == 0)
+            // bring up children from inner array nodes
+            if (_arrays.Contains(pNode.Type))
             {
-                if (pNode.Children[0].Type == GrammarSymbol.Statements &&
-                    pNode.Children[1].Type != GrammarSymbol.Statements)
+                List<Node> newChildren = new List<Node>();
+                for (int i = 0, c = pNode.Children.Count; i < c; i++)
                 {
-                    pNode.Children[0].Children.Add(pNode.Children[1]);
-                    return pNode.Children[0];
+                    if (_arrays.Contains(pNode.Children[i].Type))
+                    {
+                        newChildren.AddRange(pNode.Children[i].Children);
+                        pNode.Children[i].Children.Clear();
+                        _modified = true;
+                    }
+                    else
+                    {
+                        newChildren.Add(pNode.Children[i]);
+                    }
                 }
+                pNode.Children.Clear();
+                pNode.Children.AddRange(newChildren);
             }
 
             // check if a function call is to an internal method
@@ -185,16 +203,18 @@ namespace Prometheus.Compile.Optomizer
         /// <returns>A node to used as the new root node.</returns>
         public Node Optimize(Node pRoot)
         {
-            _executor = new Executor();
-            _internalIds = new HashSet<string>(_executor.GetInternalIds());
-
-            do
+            using (_executor = new Executor())
             {
-                _modified = false;
-                pRoot = WalkBranch(pRoot);
-            } while (_modified);
+                _internalIds = new HashSet<string>(_executor.GetInternalIds());
 
-            return pRoot;
+                do
+                {
+                    _modified = false;
+                    pRoot = WalkBranch(pRoot);
+                } while (_modified);
+
+                return pRoot;
+            }
         }
     }
 }

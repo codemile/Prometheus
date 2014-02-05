@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Executor;
@@ -13,7 +14,7 @@ namespace Prometheus.Parser.Executors
     /// <summary>
     /// Handles execution of a node in the tree.
     /// </summary>
-    public class Executor
+    public class Executor : IDisposable
     {
         /// <summary>
         /// The current cursor
@@ -65,7 +66,7 @@ namespace Prometheus.Parser.Executors
         /// </summary>
         public Data Execute(Node pNode, Dictionary<string, Data> pVariables)
         {
-            using (Cursor.Scope = new StackSpace(Cursor, pVariables))
+            using (Cursor.Stack = new StackSpace(Cursor, pVariables))
             {
                 return WalkDownChildren(pNode);
             }
@@ -99,11 +100,11 @@ namespace Prometheus.Parser.Executors
                     if (pParent.Children.Count == 2)
                     {
                         Data exp = WalkDownChildren(pParent.Children[0]);
-                        if (!exp.GetBool())
+                        if (!exp.getBool())
                         {
                             return Data.Undefined;
                         }
-                        using (Cursor.Scope = new StackSpace(Cursor))
+                        using (Cursor.Stack = new StackSpace(Cursor))
                         {
                             return WalkDownChildren(pParent.Children[1]);
                         }
@@ -111,14 +112,14 @@ namespace Prometheus.Parser.Executors
                     if (pParent.Children.Count == 3)
                     {
                         Data _if = WalkDownChildren(pParent.Children[0]);
-                        if (_if.GetBool())
+                        if (_if.getBool())
                         {
-                            using (Cursor.Scope = new StackSpace(Cursor))
+                            using (Cursor.Stack = new StackSpace(Cursor))
                             {
                                 return WalkDownChildren(pParent.Children[1]);
                             }
                         }
-                        using (Cursor.Scope = new StackSpace(Cursor))
+                        using (Cursor.Stack = new StackSpace(Cursor))
                         {
                             return WalkDownChildren(pParent.Children[2]);
                         }
@@ -137,8 +138,8 @@ namespace Prometheus.Parser.Executors
                     try
                     {
                         while (pParent.Type == GrammarSymbol.DoWhileControl
-                            ? WalkDownChildren(pParent.Children[0]).GetBool()
-                            : !WalkDownChildren(pParent.Children[0]).GetBool())
+                            ? WalkDownChildren(pParent.Children[0]).getBool()
+                            : !WalkDownChildren(pParent.Children[0]).getBool())
                         {
                             try
                             {
@@ -173,8 +174,8 @@ namespace Prometheus.Parser.Executors
                             {
                             }
                         } while (pParent.Type == GrammarSymbol.LoopWhileControl
-                            ? WalkDownChildren(pParent.Children[1]).GetBool()
-                            : !WalkDownChildren(pParent.Children[1]).GetBool());
+                            ? WalkDownChildren(pParent.Children[1]).getBool()
+                            : !WalkDownChildren(pParent.Children[1]).getBool());
                     }
                     catch (BreakException)
                     {
@@ -336,9 +337,17 @@ namespace Prometheus.Parser.Executors
         /// Returns a list of internal API functions that are reserved words.
         /// </summary>
         /// <returns>A collection of internal names.</returns>
-        public List<string> GetInternalIds()
+        public IEnumerable<string> GetInternalIds()
         {
             return _internalLookup.Keys.ToList();
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Cursor.Dispose();
         }
     }
 }

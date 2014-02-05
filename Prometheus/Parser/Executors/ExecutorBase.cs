@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
@@ -52,6 +53,12 @@ namespace Prometheus.Parser.Executors
             }
         }
 
+        /// <summary>
+        /// Executes a grammar method on this object.
+        /// </summary>
+        /// <param name="pValues">The arguments</param>
+        /// <returns>The output data</returns>
+        /// <exception cref="RunTimeException">Throws runtime exceptions from inner grammar objects.</exception>
         public Data Execute(List<Data> pValues)
         {
             try

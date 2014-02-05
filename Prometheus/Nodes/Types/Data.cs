@@ -21,7 +21,8 @@ namespace Prometheus.Nodes.Types
                                                                typeof (bool),
                                                                typeof (Identifier),
                                                                typeof (Node),
-                                                               typeof (StaticType)
+                                                               typeof (StaticType),
+                                                               typeof (Alias)
                                                            };
 #endif
 
@@ -118,7 +119,7 @@ namespace Prometheus.Nodes.Types
         /// Access the data as a boolean
         /// </summary>
         /// <returns>The converted value.</returns>
-        public bool GetBool()
+        public bool getBool()
         {
             return Type == typeof (Node) || Get<bool>();
         }
@@ -127,7 +128,7 @@ namespace Prometheus.Nodes.Types
         /// Access the data as an integer value.
         /// </summary>
         /// <returns>The converted value.</returns>
-        public long GetInteger()
+        public long getInteger()
         {
             return (Type == Integer)
                 ? (long)_value
@@ -138,7 +139,7 @@ namespace Prometheus.Nodes.Types
         /// Access the data as a floating point value.
         /// </summary>
         /// <returns>The converted value.</returns>
-        public double GetPrecise()
+        public double getPrecise()
         {
             return (Type == Precise)
                 ? (double)_value
@@ -149,9 +150,13 @@ namespace Prometheus.Nodes.Types
         /// Access the data as a string.
         /// </summary>
         /// <returns>The converted value.</returns>
-        public string GetString()
+        public string getString()
         {
-            return Type == typeof (Node) ? "function" : Get<string>();
+            if (Type == typeof (Node))
+            {
+                return "function";
+            }
+            return Type == typeof (Alias) ? "object" : Get<string>();
         }
 
         /// <summary>

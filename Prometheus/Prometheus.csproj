@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Prometheus.XML</DocumentationFile>
@@ -56,7 +56,12 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
+    <Compile Include="Nodes\Types\Alias.cs" />
     <Compile Include="Nodes\Types\StaticType.cs" />
+    <Compile Include="Objects\Declaration.cs" />
+    <Compile Include="Objects\Instance.cs" />
+    <Compile Include="Objects\Reference.cs" />
+    <Compile Include="Storage\NameSpace.cs" />
     <Compile Include="Parser\Executors\Attributes\ExecuteAttribute.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
     <Compile Include="Grammar\GrammarSymbol.cs" />
@@ -82,7 +87,7 @@
     <Compile Include="Runtime\Arguments.cs" />
     <Compile Include="Runtime\Functions.cs" />
     <Compile Include="Runtime\MathOperators.cs" />
-    <Compile Include="Runtime\Objects.cs" />
+    <Compile Include="Objects\ObjectGrammar.cs" />
     <Compile Include="Runtime\RelationalOperators.cs" />
     <Compile Include="Runtime\StringManipulation.cs" />
     <Compile Include="Parser\Parser.cs" />

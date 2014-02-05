@@ -20,7 +20,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Storage of variable values.
         /// </summary>
-        private readonly Dictionary<string, Data> _storage;
+        public Dictionary<string, Data> Storage { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -35,7 +35,7 @@ namespace Prometheus.Storage
         /// </summary>
         protected MemorySpace(Dictionary<string, Data> pStorage)
         {
-            _storage = pStorage;
+            Storage = pStorage;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Prometheus.Storage
         /// </summary>
         public virtual void Dispose()
         {
-            _storage.Clear();
+            Storage.Clear();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Prometheus.Storage
         /// <returns>The data</returns>
         public virtual Data Get(string pIdentifier)
         {
-            return _storage.ContainsKey(pIdentifier) ? _storage[pIdentifier] : null;
+            return Storage.ContainsKey(pIdentifier) ? Storage[pIdentifier] : null;
         }
 
         /// <summary>
@@ -63,14 +63,14 @@ namespace Prometheus.Storage
         public virtual void Print(int pIndent = 0)
         {
             string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
-            foreach (KeyValuePair<string, Data> var in _storage)
+            foreach (KeyValuePair<string, Data> var in Storage)
             {
                 if (var.Value.Type == typeof (string))
                 {
-                    _logger.Fine("{0}{1} = \"{2}\"", indent, var.Key, var.Value.GetString());
+                    _logger.Fine("{0}{1} = \"{2}\"", indent, var.Key, var.Value.getString());
                     continue;
                 }
-                _logger.Fine("{0}{1} = {2}", indent, var.Key, var.Value.GetString() ?? "undefined");
+                _logger.Fine("{0}{1} = {2}", indent, var.Key, var.Value.getString() ?? "undefined");
             }
         }
 
@@ -82,11 +82,11 @@ namespace Prometheus.Storage
         /// <returns>True if identifier exists</returns>
         public virtual bool Set(string pIdentifier, Data pData)
         {
-            if (!_storage.ContainsKey(pIdentifier))
+            if (!Storage.ContainsKey(pIdentifier))
             {
                 return false;
             }
-            _storage[pIdentifier] = pData;
+            Storage[pIdentifier] = pData;
             return true;
         }
 
@@ -98,11 +98,11 @@ namespace Prometheus.Storage
         public void Create(string pIdentifier, Data pData)
         {
             // only check the current scope
-            if (_storage.ContainsKey(pIdentifier))
+            if (Storage.ContainsKey(pIdentifier))
             {
                 throw new IdentifierException(Errors.IdentifierAlreadyDefined, pIdentifier);
             }
-            _storage.Add(pIdentifier, pData);
+            Storage.Add(pIdentifier, pData);
         }
     }
 }

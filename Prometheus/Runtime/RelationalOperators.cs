@@ -97,8 +97,8 @@ namespace Prometheus.Runtime
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
             return type == Data.Integer
-                ? new Data(pValue1.GetInteger() == pValue2.GetInteger())
-                : new Data(Math.Abs(pValue1.GetPrecise() - pValue2.GetPrecise()) < Data.PRECISE_EPSILON);
+                ? new Data(pValue1.getInteger() == pValue2.getInteger())
+                : new Data(Math.Abs(pValue1.getPrecise() - pValue2.getPrecise()) < Data.PRECISE_EPSILON);
         }
 
         /// <summary>
@@ -109,8 +109,8 @@ namespace Prometheus.Runtime
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
             return type == Data.Integer
-                ? new Data(pValue1.GetInteger() > pValue2.GetInteger())
-                : new Data(pValue1.GetPrecise() > pValue2.GetPrecise());
+                ? new Data(pValue1.getInteger() > pValue2.getInteger())
+                : new Data(pValue1.getPrecise() > pValue2.getPrecise());
         }
 
         /// <summary>
@@ -121,8 +121,8 @@ namespace Prometheus.Runtime
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
             return type == Data.Integer
-                ? new Data(pValue1.GetInteger() >= pValue2.GetInteger())
-                : new Data(pValue1.GetPrecise() >= pValue2.GetPrecise());
+                ? new Data(pValue1.getInteger() >= pValue2.getInteger())
+                : new Data(pValue1.getPrecise() >= pValue2.getPrecise());
         }
 
         /// <summary>
@@ -133,8 +133,8 @@ namespace Prometheus.Runtime
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
             return type == Data.Integer
-                ? new Data(pValue1.GetInteger() < pValue2.GetInteger())
-                : new Data(pValue1.GetPrecise() < pValue2.GetPrecise());
+                ? new Data(pValue1.getInteger() < pValue2.getInteger())
+                : new Data(pValue1.getPrecise() < pValue2.getPrecise());
         }
 
         /// <summary>
@@ -145,8 +145,8 @@ namespace Prometheus.Runtime
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
             return type == Data.Integer
-                ? new Data(pValue1.GetInteger() <= pValue2.GetInteger())
-                : new Data(pValue1.GetPrecise() <= pValue2.GetPrecise());
+                ? new Data(pValue1.getInteger() <= pValue2.getInteger())
+                : new Data(pValue1.getPrecise() <= pValue2.getPrecise());
         }
     }
 }

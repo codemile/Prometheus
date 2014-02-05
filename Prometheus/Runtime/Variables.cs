@@ -26,7 +26,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Assignment)]
         public Data Assignment(Data pIdentifier, Data pValue)
         {
-            Executor.Cursor.Scope.Set(pIdentifier.getIdentifier().Name, pValue);
+            Executor.Cursor.Stack.Set(pIdentifier.getIdentifier().Name, pValue);
             return pValue;
         }
 
@@ -36,11 +36,11 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Decrement)]
         public Data Dec(Data pIdentifier)
         {
-            Data d = Executor.Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
+            Data d = Executor.Cursor.Stack.Get(pIdentifier.getIdentifier().Name);
             d = d.Type == typeof (double)
-                ? new Data(d.GetPrecise() - 1)
-                : new Data(d.GetInteger() - 1);
-            Executor.Cursor.Scope.Set(pIdentifier.getIdentifier().Name, d);
+                ? new Data(d.getPrecise() - 1)
+                : new Data(d.getInteger() - 1);
+            Executor.Cursor.Stack.Set(pIdentifier.getIdentifier().Name, d);
             return d;
         }
 
@@ -53,7 +53,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Declare)]
         public Data Declare(Data pIdentifier, Data pValue)
         {
-            Executor.Cursor.Scope.Create(pIdentifier.getIdentifier().Name, pValue);
+            Executor.Cursor.Stack.Create(pIdentifier.getIdentifier().Name, pValue);
             return pValue;
         }
 
@@ -75,11 +75,11 @@ namespace Prometheus.Runtime
         public Data Inc(Data pIdentifier)
         {
             // TODO: Has to walk scope parents again to set.
-            Data d = Executor.Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
+            Data d = Executor.Cursor.Stack.Get(pIdentifier.getIdentifier().Name);
             d = d.Type == typeof (double)
-                ? new Data(d.GetPrecise() + 1)
-                : new Data(d.GetInteger() + 1);
-            Executor.Cursor.Scope.Set(pIdentifier.getIdentifier().Name, d);
+                ? new Data(d.getPrecise() + 1)
+                : new Data(d.getInteger() + 1);
+            Executor.Cursor.Stack.Set(pIdentifier.getIdentifier().Name, d);
             return d;
         }
 
@@ -89,7 +89,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ListVars)]
         public Data ListVars()
         {
-            Executor.Cursor.Scope.Print();
+            Executor.Cursor.Stack.Print();
             return Data.Undefined;
         }
 
@@ -110,7 +110,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Variable)]
         public Data Variable(Data pIdentifier)
         {
-            return Executor.Cursor.Scope.Get(pIdentifier.getIdentifier().Name);
+            return Executor.Cursor.Stack.Get(pIdentifier.getIdentifier().Name);
         }
     }
 }

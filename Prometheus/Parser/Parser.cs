@@ -15,12 +15,14 @@ namespace Prometheus.Parser
         /// </summary>
         public static int Run(TargetCode pCode)
         {
-            Executor executor = new Executor();
-            Data value = executor.Execute(pCode.Root, new Dictionary<string, Data>()) ?? new Data(-1);
+            using (Executor executor = new Executor())
+            {
+                Data value = executor.Execute(pCode.Root, new Dictionary<string, Data>()) ?? new Data(-1);
 
-            return (value.Type == typeof (Undefined))
-                ? 0
-                : (int)value.GetInteger();
+                return (value.Type == typeof(Undefined))
+                    ? 0
+                    : (int)value.getInteger();
+            }
         }
     }
 }

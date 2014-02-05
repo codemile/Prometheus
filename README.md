@@ -15,7 +15,7 @@ To declare an object use the `object` syntax. All objects are defined using a co
 		};
 	}
 
-To create a new object, use the `new` statement to instantiate an `object`:
+To create a new object, use the `new` keyword to instantiate an `object`:
 
 	var f = new Foo("The title");
 	f.DoStuff();

@@ -24,7 +24,7 @@ namespace PrometheusTest.Mock
         [ExecuteSymbol(GrammarSymbol.PrintProc)]
         public Data Print(Data pValue)
         {
-            Debug.WriteLine(pValue.GetString());
+            Debug.WriteLine(pValue.getString());
 
             return Data.Undefined;
         }

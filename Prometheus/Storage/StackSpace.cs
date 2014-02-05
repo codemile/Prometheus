@@ -29,7 +29,7 @@ namespace Prometheus.Storage
         public StackSpace(Cursor pCursor)
         {
             _cursor = pCursor;
-            _parent = _cursor.Scope;
+            _parent = _cursor.Stack;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Prometheus.Storage
             : base(pStorage)
         {
             _cursor = pCursor;
-            _parent = _cursor.Scope;
+            _parent = _cursor.Stack;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Prometheus.Storage
         /// </summary>
         public override void Dispose()
         {
-            _cursor.Scope = _parent;
+            _cursor.Stack = _parent;
 
             _cursor = null;
             _parent = null;

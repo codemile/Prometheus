@@ -23,7 +23,7 @@ namespace Prometheus.Runtime
         [ExecuteInternal("lower")]
         public Data Lower(Data pValue)
         {
-            return new Data(pValue.GetString().ToLower());
+            return new Data(pValue.getString().ToLower());
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Prometheus.Runtime
         [ExecuteInternal("trim")]
         public Data Trim(Data pValue)
         {
-            return new Data(pValue.GetString().Trim());
+            return new Data(pValue.getString().Trim());
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Prometheus.Runtime
         [ExecuteInternal("upper")]
         public Data Upper(Data pValue)
         {
-            return new Data(pValue.GetString().ToUpper());
+            return new Data(pValue.getString().ToUpper());
         }
     }
 }

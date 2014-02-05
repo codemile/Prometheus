@@ -96,13 +96,13 @@ namespace Prometheus.Runtime
             if (t1 == typeof (string) || t2 == typeof (string) ||
                 t1 == typeof (Node) || t2 == typeof (Node))
             {
-                return new Data(string.Concat(pValue1.GetString(), pValue2.GetString()));
+                return new Data(string.Concat(pValue1.getString(), pValue2.getString()));
             }
 
             Type type = DataConverter.BestNumericType(t1, t2);
             return type == Data.Integer
-                ? new Data(pValue1.GetInteger() + pValue2.GetInteger())
-                : new Data(pValue1.GetPrecise() + pValue2.GetPrecise());
+                ? new Data(pValue1.getInteger() + pValue2.getInteger())
+                : new Data(pValue1.getPrecise() + pValue2.getPrecise());
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.DivideExpression)]
         public Data Div(Data pValue1, Data pValue2)
         {
-            return new Data(pValue1.GetPrecise() / pValue2.GetPrecise());
+            return new Data(pValue1.getPrecise() / pValue2.getPrecise());
         }
 
         /// <summary>
@@ -122,8 +122,8 @@ namespace Prometheus.Runtime
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
             return type == Data.Integer
-                ? new Data(pValue1.GetInteger() * pValue2.GetInteger())
-                : new Data(pValue1.GetPrecise() * pValue2.GetPrecise());
+                ? new Data(pValue1.getInteger() * pValue2.getInteger())
+                : new Data(pValue1.getPrecise() * pValue2.getPrecise());
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace Prometheus.Runtime
         {
             Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
             return type == Data.Integer
-                ? new Data(pValue1.GetInteger() - pValue2.GetInteger())
-                : new Data(pValue1.GetPrecise() - pValue2.GetPrecise());
+                ? new Data(pValue1.getInteger() - pValue2.getInteger())
+                : new Data(pValue1.getPrecise() - pValue2.getPrecise());
         }
     }
 }
