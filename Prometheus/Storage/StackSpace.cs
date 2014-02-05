@@ -1,0 +1,109 @@
+﻿using System.Collections.Generic;
+using Prometheus.Exceptions.Executor;
+using Prometheus.Nodes.Types;
+using Prometheus.Parser;
+using Prometheus.Properties;
+
+namespace Prometheus.Storage
+{
+    /// <summary>
+    /// Executing blocks place their variables into this class
+    /// to limit their scope.
+    /// Each stack gets a ID counter from the previous stack.
+    /// </summary>
+    public class StackSpace : MemorySpace
+    {
+        /// <summary>
+        /// The parser's cursor
+        /// </summary>
+        private Cursor _cursor;
+
+        /// <summary>
+        /// The parent scope
+        /// </summary>
+        private StackSpace _parent;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public StackSpace(Cursor pCursor)
+        {
+            _cursor = pCursor;
+            _parent = _cursor.Scope;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public StackSpace(Cursor pCursor, Dictionary<string, Data> pStorage)
+            : base(pStorage)
+        {
+            _cursor = pCursor;
+            _parent = _cursor.Scope;
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public override void Dispose()
+        {
+            _cursor.Scope = _parent;
+
+            _cursor = null;
+            _parent = null;
+
+            base.Dispose();
+        }
+
+        /// <summary>
+        /// Looks for the identifier in the current scope, and
+        /// all parent scopes.
+        /// </summary>
+        /// <param name="pIdentifier">The identifier to find</param>
+        /// <returns>The data object or Null if not found.</returns>
+        public override Data Get(string pIdentifier)
+        {
+            Data d = base.Get(pIdentifier);
+            if (d != null)
+            {
+                return d;
+            }
+            if (_parent != null)
+            {
+                return _parent.Get(pIdentifier);
+            }
+            throw new IdentifierException(Errors.IdentifierNotDefined, pIdentifier);
+        }
+
+        /// <summary>
+        /// Prints a list of all variables.
+        /// </summary>
+        public override void Print(int pIndent = 0)
+        {
+            if (_parent != null)
+            {
+                _parent.Print(pIndent + 1);
+            }
+            base.Print(pIndent);
+        }
+
+        /// <summary>
+        /// Looks for the identifier in the current scope, and
+        /// all parent scopes.
+        /// </summary>
+        /// <param name="pIdentifier">The identifier to find</param>
+        /// <param name="pData">The data to assign to the identifier</param>
+        public override bool Set(string pIdentifier, Data pData)
+        {
+            if (base.Set(pIdentifier, pData))
+            {
+                return true;
+            }
+            if (_parent != null)
+            {
+                return _parent.Set(pIdentifier, pData);
+            }
+            throw new IdentifierException(Errors.IdentifierNotDefined, pIdentifier);
+        }
+    }
+}

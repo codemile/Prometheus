@@ -1,9 +1,10 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 
-namespace Prometheus.Executors
+namespace Prometheus.Parser.Executors
 {
     /// <summary>
     /// Base class for objects that execute code for the parser.
@@ -27,7 +28,7 @@ namespace Prometheus.Executors
         /// From the node and the method arguments find method on the current object that
         /// implements this feature.
         /// </summary>
-        protected abstract MethodInfo GetMethod(Node pNode, object[] pValues);
+        protected abstract MethodInfo GetMethod(Node pNode, int pArgCount);
 
         /// <summary>
         /// Executes a method on this object that matches the argument types.
@@ -38,8 +39,36 @@ namespace Prometheus.Executors
         {
             try
             {
-                MethodInfo method = GetMethod(Executor.Cursor.Node, pValues);
+                MethodInfo method = GetMethod(Executor.Cursor.Node, pValues.Length);
                 return (Data)method.Invoke(this, pValues);
+            }
+            catch (TargetInvocationException e)
+            {
+                if (e.InnerException is RunTimeException)
+                {
+                    throw e.InnerException;
+                }
+                throw;
+            }
+        }
+
+        public Data Execute(List<Data> pValues)
+        {
+            try
+            {
+                MethodInfo method = GetMethod(Executor.Cursor.Node, pValues.Count);
+
+                ParameterInfo[] infos = method.GetParameters();
+                object[] values = new object[pValues.Count];
+
+                for (int i = 0, c = pValues.Count; i < c; i++)
+                {
+                    values[i] = pValues[i].Get(infos[i].ParameterType);
+                }
+
+                object result = method.Invoke(this, values);
+
+                return new Data(result);
             }
             catch (TargetInvocationException e)
             {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Prometheus.Executors;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Parser.Executors;
 
 namespace Prometheus.Compile.Optomizer
 {
@@ -17,11 +17,13 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _drop = new HashSet<GrammarSymbol>
                                                                {
+                                                                   GrammarSymbol.End,
                                                                    GrammarSymbol.Block,
                                                                    GrammarSymbol.Statement,
                                                                    GrammarSymbol.Statements,
                                                                    GrammarSymbol.FormalParameterList,
-                                                                   GrammarSymbol.Arguments
+                                                                   GrammarSymbol.Arguments,
+                                                                   GrammarSymbol.BaseClass
                                                                };
 
         /// <summary>
@@ -41,7 +43,8 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        GrammarSymbol.FormalParameterList
+                                                                        GrammarSymbol.FormalParameterList,
+                                                                        GrammarSymbol.BaseClass
                                                                     };
 
         /// <summary>

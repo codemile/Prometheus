@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using Prometheus.Exceptions.Executor;
 
 namespace Prometheus.Nodes.Types
 {
@@ -9,6 +11,20 @@ namespace Prometheus.Nodes.Types
     [DebuggerDisplay("{Type}:{_value}")]
     public class Data
     {
+#if DEBUG
+        private static readonly HashSet<Type> _supported = new HashSet<Type>
+                                                           {
+                                                               typeof (long),
+                                                               typeof (double),
+                                                               typeof (string),
+                                                               typeof (Undefined),
+                                                               typeof (bool),
+                                                               typeof (Identifier),
+                                                               typeof (Node),
+                                                               typeof (StaticType)
+                                                           };
+#endif
+
         /// <summary>
         /// The floating point degree of error.
         /// </summary>
@@ -53,6 +69,19 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Access the value by a give type. The type will be converted if
+        /// conversion is possible.
+        /// </summary>
+        /// <param name="pType">The target type</param>
+        /// <returns>The value as an object</returns>
+        public object Get(Type pType)
+        {
+            return (_value.GetType() == pType)
+                ? _value
+                : Convert.ChangeType(_value, pType);
+        }
+
+        /// <summary>
         /// Undefined constructor
         /// </summary>
         private Data()
@@ -62,71 +91,19 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
-        /// Function expression
+        /// Generic constructor. Only pass supported types.
         /// </summary>
-        public Data(Node pNode)
+        public Data(object pObj)
         {
-            _value = pNode;
-            Type = typeof (Node);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Data(ArgumentList pArguments)
-        {
-            _value = pArguments;
-            Type = typeof (ArgumentList);
-        }
-
-        /// <summary>
-        /// Identifier constructor
-        /// </summary>
-        /// <param name="pIdentifier"></param>
-        public Data(Identifier pIdentifier)
-        {
-            _value = pIdentifier;
-            Type = typeof (Identifier);
-        }
-
-        /// <summary>
-        /// String constructor
-        /// </summary>
-        /// <param name="pValue">The value</param>
-        public Data(string pValue)
-        {
-            _value = pValue;
-            Type = typeof (string);
-        }
-
-        /// <summary>
-        /// Number constructor
-        /// </summary>
-        /// <param name="pValue">The value</param>
-        public Data(long pValue)
-        {
-            _value = pValue;
-            Type = typeof (long);
-        }
-
-        /// <summary>
-        /// Decimal constructor
-        /// </summary>
-        /// <param name="pValue">The value</param>
-        public Data(double pValue)
-        {
-            _value = pValue;
-            Type = typeof (double);
-        }
-
-        /// <summary>
-        /// Boolean constructor
-        /// </summary>
-        /// <param name="pValue">The value</param>
-        public Data(bool pValue)
-        {
-            _value = pValue;
-            Type = typeof (bool);
+#if DEBUG
+            if (!_supported.Contains(pObj.GetType()))
+            {
+                throw new UnexpectedErrorException(string.Format("{0} type is not supported by Data.",
+                    pObj.GetType().Name));
+            }
+#endif
+            _value = pObj;
+            Type = pObj.GetType();
         }
 
         /// <summary>
@@ -197,6 +174,15 @@ namespace Prometheus.Nodes.Types
         public Identifier getIdentifier()
         {
             return (Identifier)_value;
+        }
+
+        /// <summary>
+        /// Access the value as a static type.
+        /// </summary>
+        /// <returns>The static type.</returns>
+        public StaticType getStaticType()
+        {
+            return (StaticType)_value;
         }
 
         /// <summary>

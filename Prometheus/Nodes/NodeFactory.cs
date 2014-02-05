@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GOLD;
+﻿using GOLD;
 using Prometheus.Compile;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
@@ -14,12 +13,6 @@ namespace Prometheus.Nodes
     public class NodeFactory
     {
         /// <summary>
-        /// A list of symbols that can be attached to
-        /// nodes as data.
-        /// </summary>
-        private readonly List<GrammarSymbol> _dataTypes;
-
-        /// <summary>
         /// Gets the grammar symbol.
         /// </summary>
         /// <param name="pReduction">The node being reduced.</param>
@@ -33,18 +26,11 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new Node object from a Reduction object.
         /// </summary>
-        public NodeFactory()
-        {
-            _dataTypes = new List<GrammarSymbol>();
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="pReduction"></param>
-        /// <param name="pLocation"></param>
-        /// <returns></returns>
+        /// <param name="pReduction">The reduction object.</param>
+        /// <param name="pLocation">The location in the code.</param>
+        /// <returns>The new node</returns>
         public Node Create(Reduction pReduction, Location pLocation)
         {
             GrammarSymbol symbol = getSymbol(pReduction);
@@ -68,7 +54,7 @@ namespace Prometheus.Nodes
 
                 Symbol parent = token.Parent;
                 GrammarSymbol dataType = (GrammarSymbol)parent.TableIndex();
-                if (!_dataTypes.Contains(dataType))
+                if (!DataFactory.isDataType(dataType))
                 {
                     continue;
                 }
@@ -77,16 +63,6 @@ namespace Prometheus.Nodes
                 node.Data.Add(DataFactory.Create(pLocation, dataType, str));
             }
             return node;
-        }
-
-        /// <summary>
-        /// Adds a symbol to the list of allowed type
-        /// to be attached to nodes as data.
-        /// </summary>
-        /// <param name="pParserSymbol">The symbol that defines a data type.</param>
-        public void DataType(GrammarSymbol pParserSymbol)
-        {
-            _dataTypes.Add(pParserSymbol);
         }
     }
 }

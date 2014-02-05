@@ -1,4 +1,5 @@
 ﻿using Prometheus.Nodes;
+using Prometheus.Storage;
 
 namespace Prometheus.Parser
 {
@@ -15,7 +16,7 @@ namespace Prometheus.Parser
         /// <summary>
         /// The current scope for variables.
         /// </summary>
-        public VariableScope Scope;
+        public StackSpace Scope;
 
         /// <summary>
         /// Constructor

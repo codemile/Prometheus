@@ -34,6 +34,7 @@ Number			= [0123456789,]+
 Decimal			= [0123456789,]+ '.' [0123456789]+
 Boolean			= true | false | on | off | yes | no | always | never
 RegExp			= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' ( 'g' | 'i' | 'm' )*
+Type			= object | model | observer
 
 ! ===================================================================
 ! Comments
@@ -89,10 +90,24 @@ Comment Line  = '//'
 				| '(' <Expression> ')'
 				| <Call Expression>
 
+! ===========================================================================
+! End of statement marker
+! ===========================================================================
+
+<End>				::= ';'
+
+<End Opt>			::= <End>
+					| ! Nothing
+
+<Block or End>		::= <Block>
+					|  <End>
+
 ! ===================================================================
 ! Statements
 ! ===================================================================
-<Program>		::= <Statements>
+<Program>		::= <Object Decl>
+				| <Object Decl> <Statements>
+				| <Statements>
 				| !Nothing
 
 <Block>			::= '{' <Statements> '}'
@@ -106,9 +121,22 @@ Comment Line  = '//'
 				| <Block>
 
 <Statement>		::= <FlowControl>
-				| <Variables> ';'
-				| <Procedure> ';'
-				| <Call Expression> ';'
+				| <Variables> <End>
+				| <Procedure> <End>
+				| <Call Expression> <End>
+				| <New Expression> <End>
+				| <End>
+
+! ===================================================================
+! Objects
+! ===================================================================
+
+<Object Decl>	::= <Base Class> Identifier <Block>
+				| <Base Class> Identifier '(' ')' <Block>
+				| <Base Class> Identifier '(' <Formal Parameter List> ')' <Block>
+
+<Base Class>	::= Type
+				| Identifier
 
 ! ===================================================================
 ! Functions
@@ -129,6 +157,8 @@ Comment Line  = '//'
 
 <Call Expression>		::= <Variable> <Arguments>
 						| <Call Expression> <Arguments>			! chaining
+
+<New Expression>		::= 'new' Identifier <Arguments>
 
 ! This is not used by the grammar. The compiler uses to mark calls to internal methods.
 <CallInternal>			::= ! matches nothing
@@ -179,6 +209,7 @@ Comment Line  = '//'
 
 <Declare>			::= VAR Identifier
 					| VAR Identifier '=' <Expression>
+					| VAR Identifier '=' <New Expression>
 
 <Assignment>		::= Identifier '=' <Expression>
 

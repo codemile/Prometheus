@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
-using Prometheus.Executors;
-using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Parser.Executors;
+using Prometheus.Parser.Executors.Attributes;
 
 namespace Prometheus.Runtime
 {

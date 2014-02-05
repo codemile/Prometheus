@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Parser.Executors.Attributes;
 
-namespace Prometheus.Executors
+namespace Prometheus.Parser.Executors
 {
     /// <summary>
     /// All executable objects
@@ -29,12 +29,12 @@ namespace Prometheus.Executors
         /// <summary>
         /// Find the target method using the lookup table.
         /// </summary>
-        protected override MethodInfo GetMethod(Node pNode, object[] pValues)
+        protected override MethodInfo GetMethod(Node pNode, int pArgCount)
         {
 #if DEBUG
-            ValidateArguments(pValues);
+            ValidateArguments(pArgCount);
 #endif
-            return _methods[Executor.Cursor.Node.Type][pValues.Length];
+            return _methods[Executor.Cursor.Node.Type][pArgCount];
         }
 
 #if DEBUG
@@ -42,7 +42,7 @@ namespace Prometheus.Executors
         /// Performs a safety check in debug mode. The node tree should be in a stable state
         /// after being compiled. These errors should happen in a stable release.
         /// </summary>
-        private void ValidateArguments(ICollection<object> pValues)
+        private void ValidateArguments(int pArgCount)
         {
             GrammarSymbol type = Executor.Cursor.Node.Type;
             if (!_methods.ContainsKey(type))
@@ -50,10 +50,10 @@ namespace Prometheus.Executors
                 throw new InvalidArgumentException(
                     string.Format("{0} does not implement <{1}>", GetType().FullName, type), Executor.Cursor.Node);
             }
-            if (!_methods[type].ContainsKey(pValues.Count))
+            if (!_methods[type].ContainsKey(pArgCount))
             {
                 throw new InvalidArgumentException(
-                    string.Format("{0} does not have {1} argument method for <{2}>", GetType().FullName, pValues.Count,
+                    string.Format("{0} does not have {1} argument method for <{2}>", GetType().FullName, pArgCount,
                         type), Executor.Cursor.Node);
             }
         }

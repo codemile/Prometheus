@@ -27,6 +27,15 @@ namespace Prometheus.Exceptions.Executor
         /// Constructor
         /// </summary>
         /// <param name="pMessage">Exception message</param>
+        protected RunTimeException(string pMessage)
+            : base(pMessage)
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="pMessage">Exception message</param>
         /// <param name="pNode">The node the error relates to</param>
         protected RunTimeException(string pMessage, Node pNode)
             : base(Message(pMessage, pNode))

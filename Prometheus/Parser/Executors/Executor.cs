@@ -2,13 +2,13 @@
 using System.Linq;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Parser;
+using Prometheus.Parser.Executors.Attributes;
+using Prometheus.Storage;
 
-namespace Prometheus.Executors
+namespace Prometheus.Parser.Executors
 {
     /// <summary>
     /// Handles execution of a node in the tree.
@@ -57,19 +57,7 @@ namespace Prometheus.Executors
                 values[i] = pArguments[i];
             }
 
-            /*
-                        try
-                        {
-            */
-            return _internalLookup[pInternal].Execute(values);
-            /*
-                        }
-                        catch (IdentifierException e)
-                        {
-                            IdentifierException.Rethrow(e, pParent);
-                        }
-                        return Data.Undefined;
-            */
+            return _internalLookup[pInternal].Execute(pArguments);
         }
 
         /// <summary>
@@ -77,7 +65,7 @@ namespace Prometheus.Executors
         /// </summary>
         public Data Execute(Node pNode, Dictionary<string, Data> pVariables)
         {
-            using (Cursor.Scope = new VariableScope(Cursor, pVariables))
+            using (Cursor.Scope = new StackSpace(Cursor, pVariables))
             {
                 return WalkDownChildren(pNode);
             }
@@ -115,7 +103,7 @@ namespace Prometheus.Executors
                         {
                             return Data.Undefined;
                         }
-                        using (Cursor.Scope = new VariableScope(Cursor))
+                        using (Cursor.Scope = new StackSpace(Cursor))
                         {
                             return WalkDownChildren(pParent.Children[1]);
                         }
@@ -125,12 +113,12 @@ namespace Prometheus.Executors
                         Data _if = WalkDownChildren(pParent.Children[0]);
                         if (_if.GetBool())
                         {
-                            using (Cursor.Scope = new VariableScope(Cursor))
+                            using (Cursor.Scope = new StackSpace(Cursor))
                             {
                                 return WalkDownChildren(pParent.Children[1]);
                             }
                         }
-                        using (Cursor.Scope = new VariableScope(Cursor))
+                        using (Cursor.Scope = new StackSpace(Cursor))
                         {
                             return WalkDownChildren(pParent.Children[2]);
                         }
@@ -215,13 +203,17 @@ namespace Prometheus.Executors
             AssertNode(pParent);
 #endif
 
+            // root of a constructor function, execute children for new objects only.
+            bool executeChildren = pParent.Type != GrammarSymbol.ObjectDecl;
+
             int dCount = pParent.Data.Count;
-            object[] values = new object[pParent.Children.Count + dCount];
+            int cChild = executeChildren ? pParent.Children.Count : 0;
+            object[] values = new object[cChild + dCount];
             for (int i = 0, c = dCount; i < c; i++)
             {
                 values[i] = pParent.Data[i];
             }
-            for (int i = 0, j = dCount, c = pParent.Children.Count; i < c; i++, j++)
+            for (int i = 0, j = dCount, c = cChild; i < c; i++, j++)
             {
                 values[j] = WalkDownChildren(pParent.Children[i]);
             }

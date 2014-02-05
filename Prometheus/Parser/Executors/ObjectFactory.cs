@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Logging;
-using Prometheus.Executors.Attributes;
+using Prometheus.Parser.Executors.Attributes;
 
-namespace Prometheus.Executors
+namespace Prometheus.Parser.Executors
 {
     /// <summary>
     /// Prometheus doesn't connect grammar in the parser to the methods in compiled code. So at run-time

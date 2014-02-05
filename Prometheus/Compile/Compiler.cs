@@ -5,7 +5,6 @@ using GOLD;
 using Logging;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Compiler;
-using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Properties;
 
@@ -117,12 +116,6 @@ namespace Prometheus.Compile
             _parser = new GOLD.Parser();
 
             _factory = new NodeFactory();
-            _factory.DataType(GrammarSymbol.Identifier);
-            _factory.DataType(GrammarSymbol.StringDouble);
-            _factory.DataType(GrammarSymbol.StringSingle);
-            _factory.DataType(GrammarSymbol.Decimal);
-            _factory.DataType(GrammarSymbol.Number);
-            _factory.DataType(GrammarSymbol.Boolean);
 
             const string fullResourceName = "Prometheus.Grammar.Grammar.egt";
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fullResourceName))

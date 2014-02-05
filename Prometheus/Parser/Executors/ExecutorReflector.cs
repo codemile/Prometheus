@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Prometheus.Executors.Attributes;
-using Prometheus.Nodes.Types;
+using Prometheus.Parser.Executors.Attributes;
 
-namespace Prometheus.Executors
+namespace Prometheus.Parser.Executors
 {
     /// <summary>
     /// Uses reflection to create executor objects.
@@ -52,10 +51,10 @@ namespace Prometheus.Executors
                                                   !method.IsStatic &&
                                                   !method.IsConstructor &&
                                                   !method.ContainsGenericParameters &&
-                                                  method.GetCustomAttributes(true).Any(pObj=>pObj is T) &&
-                                                  method.GetParameters()
-                                                      .All(pParam=>pParam.ParameterType == typeof (Data)) &&
-                                                  method.ReturnType == typeof (Data)
+                                                  method.GetCustomAttributes(true).Any(pObj=>pObj is T)
+                                              //method.GetParameters()
+                                              //.All(pParam=>pParam.ParameterType == typeof (Data)) &&
+                                              //method.ReturnType == typeof (Data)
                                               select method;
             return methods;
         }

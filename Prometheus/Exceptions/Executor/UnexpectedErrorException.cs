@@ -12,8 +12,18 @@ namespace Prometheus.Exceptions.Executor
         /// Constructor
         /// </summary>
         /// <param name="pMessage">Exception message</param>
+        public UnexpectedErrorException(string pMessage)
+            : base(pMessage)
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="pMessage">Exception message</param>
         /// <param name="pNode">The node the error relates to</param>
-        public UnexpectedErrorException(string pMessage, Node pNode) : base(pMessage, pNode)
+        public UnexpectedErrorException(string pMessage, Node pNode)
+            : base(pMessage, pNode)
         {
         }
 
@@ -22,7 +32,8 @@ namespace Prometheus.Exceptions.Executor
         /// </summary>
         /// <param name="pMessage">Exception message</param>
         /// <param name="pInner">Inner exception</param>
-        public UnexpectedErrorException(string pMessage, Exception pInner) : base(pMessage, pInner)
+        public UnexpectedErrorException(string pMessage, Exception pInner)
+            : base(pMessage, pInner)
         {
         }
     }

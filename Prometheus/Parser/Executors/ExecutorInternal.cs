@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using Prometheus.Executors.Attributes;
 using Prometheus.Nodes;
+using Prometheus.Parser.Executors.Attributes;
 
-namespace Prometheus.Executors
+namespace Prometheus.Parser.Executors
 {
     /// <summary>
     /// Derived by classes that implement core APIs as functions. An example
@@ -28,10 +28,10 @@ namespace Prometheus.Executors
         /// <summary>
         /// Looks up the method to use for the internal command.
         /// </summary>
-        protected override MethodInfo GetMethod(Node pNode, object[] pValues)
+        protected override MethodInfo GetMethod(Node pNode, int pArgCount)
         {
             string name = pNode.Data[0].getIdentifier().Name;
-            return _methods[name][pValues.Length];
+            return _methods[name][pArgCount];
         }
     }
 }

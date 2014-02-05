@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Prometheus.Executors.Attributes
+namespace Prometheus.Parser.Executors.Attributes
 {
     /// <summary>
     /// Base class for attributes that identify executable methods.

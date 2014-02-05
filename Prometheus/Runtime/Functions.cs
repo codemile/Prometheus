@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Executors;
-using Prometheus.Executors.Attributes;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Parser.Executors;
+using Prometheus.Parser.Executors.Attributes;
 
 namespace Prometheus.Runtime
 {
@@ -13,27 +12,6 @@ namespace Prometheus.Runtime
     /// </summary>
     public class Functions : ExecutorGrammar
     {
-        /// <summary>
-        /// Collects the arguments for a function from the node.
-        /// </summary>
-        private static Dictionary<string, Data> CollectArguments(Node pNode, Data pArguments)
-        {
-            int argCount = pNode.Data.Count;
-
-            ArgumentList list = pArguments.getArgumentList();
-            if (list.Count < argCount)
-            {
-                list.AddRange(Enumerable.Repeat(Data.Undefined, argCount - list.Count));
-            }
-
-            Dictionary<string, Data> variables = new Dictionary<string, Data>(pNode.Data.Count);
-            for (int i = 0; i < argCount; i++)
-            {
-                variables.Add(pNode.Data[i].getIdentifier().Name, list[i]);
-            }
-            return variables;
-        }
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -123,7 +101,7 @@ namespace Prometheus.Runtime
             try
             {
                 Node node = pFunction.getNode();
-                Dictionary<string, Data> variables = CollectArguments(node, pArguments);
+                Dictionary<string, Data> variables = Runtime.Arguments.CollectArguments(node, pArguments);
 
                 return Executor.Execute(node.Children[0], variables);
             }

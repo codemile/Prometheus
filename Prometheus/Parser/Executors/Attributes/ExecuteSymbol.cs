@@ -1,6 +1,6 @@
 ﻿using Prometheus.Grammar;
 
-namespace Prometheus.Executors.Attributes
+namespace Prometheus.Parser.Executors.Attributes
 {
     /// <summary>
     /// Defines a method that executes code for a Grammar Symbol.

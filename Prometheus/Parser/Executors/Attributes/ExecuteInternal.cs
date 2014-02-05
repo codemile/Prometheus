@@ -1,4 +1,4 @@
-﻿namespace Prometheus.Executors.Attributes
+﻿namespace Prometheus.Parser.Executors.Attributes
 {
     /// <summary>
     /// Allows a class to expose it's methods as built-in function APIs.

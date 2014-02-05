@@ -1,7 +1,7 @@
-﻿using Prometheus.Executors;
-using Prometheus.Executors.Attributes;
-using Prometheus.Grammar;
+﻿using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
+using Prometheus.Parser.Executors;
+using Prometheus.Parser.Executors.Attributes;
 
 namespace Prometheus.Runtime
 {
@@ -91,6 +91,15 @@ namespace Prometheus.Runtime
         {
             Executor.Cursor.Scope.Print();
             return Data.Undefined;
+        }
+
+        /// <summary>
+        /// Returns the value of data stored in the source code.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.Value)]
+        public Data Value(Data pValue)
+        {
+            return pValue;
         }
 
         /// <summary>
