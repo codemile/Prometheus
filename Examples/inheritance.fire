@@ -3,19 +3,20 @@
  */
 object Child {
 	// an example  property
-	this.Name = "John Smith";
+	this.Message = "Child: No!!!!!";
 	
 	// an example member function
 	this.foo = function() {
-		print this.Name;
+		print this.Message;
 	};
 	
-	print "Child constructor";
+	print "Child: How are you?";
 };
 
 Child Father {
 	base();
-	print "Luke I am your father";
+	print "Father: Luke I am your father";
+	//this.Message = "Father: Surprised?";
 };
 
 var x = new Father();

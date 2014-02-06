@@ -63,6 +63,15 @@ namespace Prometheus.Compile.Optomizer
                                                                     };
 
         /// <summary>
+        /// These nodes have a child QualifiedID node's data assigned to them.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _qualifiedData = new HashSet<GrammarSymbol>
+                                                                        {
+                                                                            GrammarSymbol.Assignment,
+                                                                            GrammarSymbol.ObjectDecl
+                                                                        };
+
+        /// <summary>
         /// Used to perform optimization
         /// </summary>
         private Executor _executor;
@@ -218,13 +227,13 @@ namespace Prometheus.Compile.Optomizer
                 Qualify(pNode);
             }
 
-            if (pNode.Type == GrammarSymbol.Assignment &&
+            if (_qualifiedData.Contains(pNode.Type) &&
                 pNode.Children[0].Type == GrammarSymbol.QualifiedID &&
                 pNode.Children[0].Children.Count == 0)
             {
                 Assertion.Data(1,pNode.Children[0]);
                 Qualified qualified = Assertion.Get<Qualified>(pNode.Children[0],0);
-                pNode.Data.Add(new Data(qualified));
+                pNode.Data.Insert(0,new Data(qualified));
                 pNode.Children.RemoveAt(0);
             }
 

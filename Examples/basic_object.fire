@@ -1,0 +1,15 @@
+/**
+ * A simply object example.
+ */
+object Basic {
+	// an example  property
+	this.title = "Hello World";
+	
+	// an example member function
+	this.foo = function() {
+		print this.title;
+	};
+};
+
+var x = new Basic();
+x.foo();

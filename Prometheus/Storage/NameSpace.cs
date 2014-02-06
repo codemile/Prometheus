@@ -83,6 +83,16 @@ namespace Prometheus.Storage
         /// <summary>
         /// Gets the declaration of an object.
         /// </summary>
+        /// <param name="pQualified">The identifier</param>
+        /// <returns>The declaration or null.</returns>
+        public Declaration Get(Qualified pQualified)
+        {
+            return Get(pQualified.Parts, 0);
+        }
+
+        /// <summary>
+        /// Gets the declaration of an object.
+        /// </summary>
         /// <param name="pIdentifier">The identifier</param>
         /// <returns>The declaration or null.</returns>
         public Declaration Get(Identifier pIdentifier)

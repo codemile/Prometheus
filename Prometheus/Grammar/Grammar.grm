@@ -80,8 +80,6 @@ Comment Line  = '//'
 ! ===================================================================
 
 <Valid ID>			::= Identifier
-					|  'this'
-					| 'base'
 
 <Qualified ID>		::= <Valid ID> <Member List>
 	 
@@ -160,12 +158,12 @@ Comment Line  = '//'
 <Object Decls>	::= <Object Decl>
 				| <Object Decls> <Object Decl>
 
-<Object Decl>	::= <Base Class> Identifier <Block>
-				| <Base Class> Identifier '(' ')' <Block>
-				| <Base Class> Identifier '(' <Formal Parameter List> ')' <Block>
+<Object Decl>	::= <Base Class> Identifier <Block> <End>
+				| <Base Class> Identifier '(' ')' <Block> <End>
+				| <Base Class> Identifier '(' <Formal Parameter List> ')' <Block> <End>
 
 <Base Class>	::= Type
-				| Identifier
+				| <Qualified ID>
 
 ! ===================================================================
 ! Functions

@@ -63,6 +63,7 @@
     <Compile Include="Nodes\Types\Qualified.cs" />
     <Compile Include="Nodes\Types\Alias.cs" />
     <Compile Include="Nodes\Types\StaticType.cs" />
+    <Compile Include="Objects\CreateInherited.cs" />
     <Compile Include="Objects\Declaration.cs" />
     <Compile Include="Objects\Instance.cs" />
     <Compile Include="Objects\Reference.cs" />

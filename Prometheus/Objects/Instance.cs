@@ -1,4 +1,5 @@
-﻿using Prometheus.Storage;
+﻿using Prometheus.Nodes;
+using Prometheus.Storage;
 
 namespace Prometheus.Objects
 {
@@ -13,6 +14,11 @@ namespace Prometheus.Objects
         public readonly MemorySpace Members;
 
         /// <summary>
+        /// The constructor method for this instance.
+        /// </summary>
+        public Node Constructor;
+
+        /// <summary>
         /// The number of references to this instance.
         /// </summary>
         public int References;
@@ -20,8 +26,9 @@ namespace Prometheus.Objects
         /// <summary>
         /// Constructor
         /// </summary>
-        public Instance()
+        public Instance(Node pConstructor)
         {
+            Constructor = pConstructor;
             References = 0;
             Members = new MemorySpace();
         }

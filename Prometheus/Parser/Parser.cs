@@ -24,7 +24,7 @@ namespace Prometheus.Parser
                 Dictionary<string, Data> globals = new Dictionary<string, Data>();
 
                 // create root object (the default "this" reference)
-                Data _this = executor.Cursor.Heap.Add(new Instance());
+                Data _this = executor.Cursor.Heap.Add(new Instance(null));
                 globals.Add("this", _this);
 
                 using (executor.Cursor.Stack = new StackSpace(executor.Cursor, globals))

@@ -48,16 +48,14 @@ namespace Prometheus.Objects
         {
             Declaration decl = Executor.Cursor.Packages.Get(pIdentifier.getIdentifier());
 
-            Instance inst = new Instance();
-            Data alias = Executor.Cursor.Heap.Add(inst);
+            CreateInherited created = new CreateInherited(Executor.Cursor.Heap, decl);
 
-            inst.Members.Create("this", alias);
             MemorySpace prevMemory = Executor.Cursor.Stack;
-            Executor.Cursor.Stack = inst.Members;
+            Executor.Cursor.Stack = created.Inst.Members;
 
             try
             {
-                Executor.Execute(decl.Constructor, new Dictionary<string, Data>());
+                Executor.Execute(created.Inst.Constructor, new Dictionary<string, Data>());
             }
             catch (ReturnException)
             {
@@ -66,10 +64,10 @@ namespace Prometheus.Objects
             finally
             {
                 Executor.Cursor.Stack = prevMemory;
-                inst.Members.Unset("this");
+                created.Inst.Members.Unset("this");
             }
 
-            return alias;
+            return created.Alias;
         }
 
         /// <summary>
@@ -79,10 +77,24 @@ namespace Prometheus.Objects
         public Data ObjectDeclare(Data pBaseType, Data pIdentifier)
         {
             Node obj = Executor.Cursor.Node;
-            StaticType type = pBaseType.getStaticType();
+            Declaration baseDecl = null;
+            if (pBaseType.Type == typeof (StaticType))
+            {
+                StaticType type = pBaseType.getStaticType();
+                baseDecl = null; // TODO: Add an instance of a default object base.
+            }
+            else if (pBaseType.Type == typeof (Qualified))
+            {
+                Qualified baseType = pBaseType.getQualified();
+                baseDecl = Executor.Cursor.Packages.Get(baseType);
+            }
+            else
+            {
+                throw new UnexpectedErrorException(string.Format("Can not declare object of base type <{0}>", pBaseType.Type.FullName), obj);
+            }
             Identifier id = pIdentifier.getIdentifier();
 
-            Declaration decl = new Declaration(null, id, obj);
+            Declaration decl = new Declaration(baseDecl, id, obj);
             Executor.Cursor.Packages.Add(decl);
 
             return Data.Undefined;

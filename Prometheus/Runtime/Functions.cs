@@ -3,6 +3,7 @@ using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Objects;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
@@ -93,22 +94,33 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Executes an identify as a function.
+        /// Executes a closure a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
         public Data Call(Data pClosure, Data pArguments)
         {
             try
             {
-                Closure closure = pClosure.getClosure();
-                // empty function check
-                if (closure.Function.Children.Count == 0)
+                // calling base constructor
+                if (pClosure.Type == typeof (Alias))
                 {
-                    return Data.Undefined;
+                    Alias a = pClosure.getAlias();
+                    Instance inst = Executor.Cursor.Heap.Get(a);
+                    Dictionary<string, Data> variables = Runtime.Arguments.CollectArguments(inst.Constructor, pArguments);
+                    return Executor.Execute(inst.Constructor, variables);
                 }
-                Dictionary<string, Data> variables = Runtime.Arguments.CollectArguments(closure.Function, pArguments);
-                variables.Add("this", closure.This);
-                return Executor.Execute(closure.Function.Children[0], variables);
+                else
+                {
+                    Closure closure = pClosure.getClosure();
+                    // empty function check
+                    if (closure.Function.Children.Count == 0)
+                    {
+                        return Data.Undefined;
+                    }
+                    Dictionary<string, Data> variables = Runtime.Arguments.CollectArguments(closure.Function, pArguments);
+                    variables.Add("this", closure.This);
+                    return Executor.Execute(closure.Function.Children[0], variables);
+                }
             }
             catch (ReturnException returnData)
             {
