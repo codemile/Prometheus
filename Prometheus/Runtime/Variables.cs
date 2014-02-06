@@ -31,6 +31,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Assignment)]
         public Data Assignment(Data pQualified, Data pValue)
         {
+            pValue = CreateClosure(pValue);
             Executor.Cursor.Set(pQualified.getQualified(), pValue);
             return pValue;
         }
@@ -61,7 +62,30 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Declare)]
         public Data Declare(Data pIdentifier, Data pValue)
         {
+            pValue = CreateClosure(pValue);
             Executor.Cursor.Stack.Create(pIdentifier.getIdentifier().Name, pValue);
+            return pValue;
+        }
+
+        /// <summary>
+        /// Will convert a function expression into a closure function with a reference
+        /// to the current "this" object.
+        /// </summary>
+        private Data CreateClosure(Data pValue)
+        {
+            if (pValue.Type != typeof (Node))
+            {
+                return pValue;
+            }
+            Node func = pValue.getNode();
+            if (func.Type != GrammarSymbol.FunctionExpression)
+            {
+                return pValue;
+            }
+            Data _this = Executor.Cursor.Stack.Get("this");
+            Alias aThis = _this.getAlias();
+            Closure closure = new Closure(aThis, func);
+            pValue = new Data(closure);
             return pValue;
         }
 

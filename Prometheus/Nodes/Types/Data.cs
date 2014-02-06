@@ -23,7 +23,8 @@ namespace Prometheus.Nodes.Types
                                                                typeof (Qualified),
                                                                typeof (Node),
                                                                typeof (StaticType),
-                                                               typeof (Alias)
+                                                               typeof (Alias),
+                                                               typeof (Closure)
                                                            };
 #endif
 
@@ -215,6 +216,14 @@ namespace Prometheus.Nodes.Types
         public Alias getAlias()
         {
             return (Alias)_value;
+        }
+
+        /// <summary>
+        /// Access the value as a closure function
+        /// </summary>
+        public Closure getClosure()
+        {
+            return (Closure)_value;
         }
     }
 }

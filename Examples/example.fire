@@ -1,4 +1,4 @@
-object Example {
+/**object Example {
 
 	this.t = "Hello World";
 
@@ -11,3 +11,15 @@ object Example {
 var x = new Example();
 
 x.foo();
+**/
+
+this.title = "Hello World";
+
+this.x = function() {
+	print this.title;
+	return "result";
+};
+
+this.y = this.x;
+
+print this.y();

@@ -87,23 +87,28 @@ namespace Prometheus.Runtime
         /// Executes an identify as a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public Data Call(Data pFunction)
+        public Data Call(Data pClosure)
         {
-            return Call(pFunction, Data.Undefined);
+            return Call(pClosure, Data.Undefined);
         }
 
         /// <summary>
         /// Executes an identify as a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public Data Call(Data pFunction, Data pArguments)
+        public Data Call(Data pClosure, Data pArguments)
         {
             try
             {
-                Node node = pFunction.getNode();
-                Dictionary<string, Data> variables = Runtime.Arguments.CollectArguments(node, pArguments);
-
-                return Executor.Execute(node.Children[0], variables);
+                Closure closure = pClosure.getClosure();
+                // empty function check
+                if (closure.Function.Children.Count == 0)
+                {
+                    return Data.Undefined;
+                }
+                Dictionary<string, Data> variables = Runtime.Arguments.CollectArguments(closure.Function, pArguments);
+                variables.Add("this", closure.This);
+                return Executor.Execute(closure.Function.Children[0], variables);
             }
             catch (ReturnException returnData)
             {
