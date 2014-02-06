@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Nodes.Types;
+using Prometheus.Storage;
 
 namespace Prometheus.Objects
 {
@@ -11,7 +12,7 @@ namespace Prometheus.Objects
         /// <summary>
         /// Members of this object
         /// </summary>
-        public readonly Dictionary<string, Data> Members;
+        public readonly MemorySpace Members;
 
         /// <summary>
         /// The number of references to this instance.
@@ -21,11 +22,10 @@ namespace Prometheus.Objects
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="pMembers">Populates this object's members from data.</param>
-        public Instance(IDictionary<string, Data> pMembers)
+        public Instance()
         {
             References = 0;
-            Members = new Dictionary<string, Data>(pMembers);
+            Members = new MemorySpace();
         }
     }
 }

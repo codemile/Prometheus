@@ -17,7 +17,7 @@
 ! ===================================================================
 
 {ID Head}				= {Letter} + [_]
-{ID Tail}				= {Alphanumeric} + [_]
+{ID Tail}				= {Alphanumeric} + [_\.]
 {DoubleString Chars}	= {Printable} + {HT} - ["\]
 {SingleString Chars}	= {Printable} + {HT} - [''\]
 {Non Terminator}		= {DoubleString Chars} - {CR} - {LF}
@@ -28,6 +28,7 @@
 ! ===================================================================
 
 Identifier		= {ID Head}{ID Tail}*
+This			= this
 StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"'
 StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* ['']
 Number			= [0123456789,]+
@@ -78,7 +79,7 @@ Comment Line  = '//'
 ! ===================================================================
 
 <Variable>		::= Identifier
-				| 'this'
+				| This '.' Identifier
 
 <Value>			::= StringDouble
 				| StringSingle
@@ -213,10 +214,10 @@ Comment Line  = '//'
 					| VAR Identifier '=' <Expression>
 					| VAR Identifier '=' <New Expression>
 
-<Assignment>		::= Identifier '=' <Expression>
+<Assignment>		::= <Variable> '=' <Expression>
 
-<Increment>			::= Identifier '++'
-<Decrement>			::= Identifier '--'
+<Increment>			::= <Variable> '++'
+<Decrement>			::= <Variable> '--'
 
 ! ===================================================================
 ! Procedures

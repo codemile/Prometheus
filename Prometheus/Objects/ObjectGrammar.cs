@@ -47,20 +47,24 @@ namespace Prometheus.Objects
         public Data New(Data pIdentifier, Data pArguments)
         {
             Declaration decl = Executor.Cursor.Packages.Get(pIdentifier.getIdentifier());
+
+            Instance inst = new Instance();
+            Data alias = Executor.Cursor.Heap.Add(inst);
+
             using (Executor.Cursor.Stack = new StackSpace(Executor.Cursor))
             {
+                Executor.Cursor.Stack.Create(new Identifier("this"), alias);
+
                 try
                 {
                     Executor.Execute(decl.Constructor, new Dictionary<string, Data>());
                 }
-                catch (ReturnException returnData)
+                catch (ReturnException)
                 {
                     // ignore return value from constructors
                 }
-                Instance inst = new Instance(Executor.Cursor.Stack.Storage);
-                Executor.Cursor.Heap.Add(inst);
-                return Executor.Cursor.Heap.Add(inst);
             }
+            return alias;
         }
 
         /// <summary>

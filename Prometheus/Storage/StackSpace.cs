@@ -61,7 +61,7 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pIdentifier">The identifier to find</param>
         /// <returns>The data object or Null if not found.</returns>
-        public override Data Get(string pIdentifier)
+        public override Data Get(Identifier pIdentifier)
         {
             Data d = base.Get(pIdentifier);
             if (d != null)
@@ -72,7 +72,7 @@ namespace Prometheus.Storage
             {
                 return _parent.Get(pIdentifier);
             }
-            throw new IdentifierException(Errors.IdentifierNotDefined, pIdentifier);
+            throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pIdentifier));
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pIdentifier">The identifier to find</param>
         /// <param name="pData">The data to assign to the identifier</param>
-        public override bool Set(string pIdentifier, Data pData)
+        public override bool Set(Identifier pIdentifier, Data pData)
         {
             if (base.Set(pIdentifier, pData))
             {
@@ -103,7 +103,7 @@ namespace Prometheus.Storage
             {
                 return _parent.Set(pIdentifier, pData);
             }
-            throw new IdentifierException(Errors.IdentifierNotDefined, pIdentifier);
+            throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pIdentifier));
         }
     }
 }

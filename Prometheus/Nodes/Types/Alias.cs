@@ -10,14 +10,14 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Position of object in the heap.
         /// </summary>
-        private readonly int _heap;
+        public readonly int Heap;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public Alias(int pHeap)
         {
-            _heap = pHeap;
+            Heap = pHeap;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Prometheus.Nodes.Types
         /// </returns>
         public override string ToString()
         {
-            return _heap.ToString(CultureInfo.InvariantCulture);
+            return Heap.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

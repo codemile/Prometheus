@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
 using Prometheus.Objects;
 
@@ -45,6 +46,20 @@ namespace Prometheus.Storage
         public void Dispose()
         {
             _storage.Clear();
+        }
+
+        /// <summary>
+        /// Access an object instance by it's alias.
+        /// </summary>
+        /// <param name="pAlias">The alias</param>
+        /// <returns>The instance</returns>
+        public Instance Get(Alias pAlias)
+        {
+            if (pAlias.Heap >= _storage.Count)
+            {
+                throw new UnexpectedErrorException("Memory location no longer refers to object.");
+            }
+            return _storage[pAlias.Heap];
         }
     }
 }

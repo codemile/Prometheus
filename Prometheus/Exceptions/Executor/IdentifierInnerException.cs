@@ -5,13 +5,13 @@ namespace Prometheus.Exceptions.Executor
     /// <summary>
     /// A rethrowable exception related to an identifier.
     /// </summary>
-    public class IdentifierException : RunTimeException
+    public class IdentifierInnerException : RunTimeException
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public IdentifierException(string pMessage, Node pNode)
-            : base(pMessage, pNode)
+        public IdentifierInnerException(string pMessage)
+            : base(pMessage)
         {
         }
     }

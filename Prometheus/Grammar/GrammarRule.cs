@@ -45,7 +45,7 @@ namespace Prometheus.Grammar
 		@UnaryOperator_NOT = 34,                         // <UnaryOperator> ::= NOT <Value>
 		@UnaryOperator = 35,                             // <UnaryOperator> ::= <Value>
 		@Variable_Identifier = 36,                       // <Variable> ::= Identifier
-		@Variable_this = 37,                             // <Variable> ::= this
+		@Variable_This_Dot_Identifier = 37,              // <Variable> ::= This '.' Identifier
 		@Value_StringDouble = 38,                        // <Value> ::= StringDouble
 		@Value_StringSingle = 39,                        // <Value> ::= StringSingle
 		@Value_Number = 40,                              // <Value> ::= Number
@@ -124,9 +124,9 @@ namespace Prometheus.Grammar
 		@Declare_VAR_Identifier = 113,                   // <Declare> ::= VAR Identifier
 		@Declare_VAR_Identifier_Eq = 114,                // <Declare> ::= VAR Identifier '=' <Expression>
 		@Declare_VAR_Identifier_Eq2 = 115,               // <Declare> ::= VAR Identifier '=' <New Expression>
-		@Assignment_Identifier_Eq = 116,                 // <Assignment> ::= Identifier '=' <Expression>
-		@Increment_Identifier_PlusPlus = 117,            // <Increment> ::= Identifier '++'
-		@Decrement_Identifier_MinusMinus = 118,          // <Decrement> ::= Identifier '--'
+		@Assignment_Eq = 116,                            // <Assignment> ::= <Variable> '=' <Expression>
+		@Increment_PlusPlus = 117,                       // <Increment> ::= <Variable> '++'
+		@Decrement_MinusMinus = 118,                     // <Decrement> ::= <Variable> '--'
 		@Procedure = 119,                                // <Procedure> ::= <UnsetProc>
 		@Procedure2 = 120,                               // <Procedure> ::= <RejectProc>
 		@Procedure3 = 121,                               // <Procedure> ::= <AcceptProc>

@@ -198,5 +198,14 @@ namespace Prometheus.Nodes.Types
         {
             return (Node)_value;
         }
+
+        /// <summary>
+        /// Access the value as an alias.
+        /// </summary>
+        /// <returns>The alias</returns>
+        public Alias getAlias()
+        {
+            return (Alias)_value;
+        }
     }
 }

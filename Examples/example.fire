@@ -1,5 +1,11 @@
 object Example {
-	print "Hello World";
+	vars;
+	this.title = "Hello World";
+	vars;
+//	print this.title;
 };
 
 var x = new Example();
+
+vars;
+print x.title;

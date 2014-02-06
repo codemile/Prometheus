@@ -10,7 +10,7 @@ namespace Prometheus.Storage
     /// <summary>
     /// Base class for variable storage.
     /// </summary>
-    public abstract class MemorySpace : IDisposable
+    public class MemorySpace : IDisposable
     {
         /// <summary>
         /// Logging
@@ -20,12 +20,12 @@ namespace Prometheus.Storage
         /// <summary>
         /// Storage of variable values.
         /// </summary>
-        public Dictionary<string, Data> Storage { get; private set; }
+        private readonly Dictionary<string, Data> _storage;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        protected MemorySpace()
+        public MemorySpace()
             : this(new Dictionary<string, Data>())
         {
         }
@@ -35,7 +35,7 @@ namespace Prometheus.Storage
         /// </summary>
         protected MemorySpace(Dictionary<string, Data> pStorage)
         {
-            Storage = pStorage;
+            _storage = pStorage;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Prometheus.Storage
         /// </summary>
         public virtual void Dispose()
         {
-            Storage.Clear();
+            _storage.Clear();
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pIdentifier">The identifier to get</param>
         /// <returns>The data</returns>
-        public virtual Data Get(string pIdentifier)
+        public virtual Data Get(Identifier pIdentifier)
         {
-            return Storage.ContainsKey(pIdentifier) ? Storage[pIdentifier] : null;
+            return _storage.ContainsKey(pIdentifier.Name) ? _storage[pIdentifier.Name] : null;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Prometheus.Storage
         public virtual void Print(int pIndent = 0)
         {
             string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
-            foreach (KeyValuePair<string, Data> var in Storage)
+            foreach (KeyValuePair<string, Data> var in _storage)
             {
                 if (var.Value.Type == typeof (string))
                 {
@@ -80,14 +80,32 @@ namespace Prometheus.Storage
         /// <param name="pIdentifier">The identifier to set</param>
         /// <param name="pData">The data</param>
         /// <returns>True if identifier exists</returns>
-        public virtual bool Set(string pIdentifier, Data pData)
+        public virtual bool Set(Identifier pIdentifier, Data pData)
         {
-            if (!Storage.ContainsKey(pIdentifier))
+            if (!_storage.ContainsKey(pIdentifier.Name))
             {
                 return false;
             }
-            Storage[pIdentifier] = pData;
+            _storage[pIdentifier.Name] = pData;
             return true;
+        }
+
+        /// <summary>
+        /// Assigns a value to an identifier. Creates the a new
+        /// variable if required.
+        /// </summary>
+        /// <param name="pIdentifier">The identifier to create</param>
+        /// <param name="pData">The data to assign</param>
+        public void Assign(Identifier pIdentifier, Data pData)
+        {
+            if (_storage.ContainsKey(pIdentifier.Name))
+            {
+                _storage[pIdentifier.Name] = pData;
+            }
+            else
+            {
+                _storage.Add(pIdentifier.Name, pData);
+            }
         }
 
         /// <summary>
@@ -95,14 +113,14 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pIdentifier">The identifier to create</param>
         /// <param name="pData">The data to assign</param>
-        public void Create(string pIdentifier, Data pData)
+        public void Create(Identifier pIdentifier, Data pData)
         {
             // only check the current scope
-            if (Storage.ContainsKey(pIdentifier))
+            if (_storage.ContainsKey(pIdentifier.Name))
             {
-                throw new IdentifierException(Errors.IdentifierAlreadyDefined, pIdentifier);
+                throw new IdentifierInnerException(string.Format(Errors.IdentifierAlreadyDefined, pIdentifier));
             }
-            Storage.Add(pIdentifier, pData);
+            _storage.Add(pIdentifier.Name, pData);
         }
     }
 }

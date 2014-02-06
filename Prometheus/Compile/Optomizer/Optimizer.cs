@@ -178,6 +178,15 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         private Node WalkBranch(Node pNode)
         {
+            if (pNode.Type == GrammarSymbol.Assignment &&
+                pNode.Children.Count == 2)
+            {
+                // move Identifier to Assignment data
+                pNode.Data.Add(pNode.Children[0].Data[0]);
+                pNode.Children.RemoveAt(0);
+                _modified = true;
+            }
+
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
                 Node child = pNode.Children[i];

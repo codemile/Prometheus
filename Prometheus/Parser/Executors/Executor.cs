@@ -224,12 +224,10 @@ namespace Prometheus.Parser.Executors
                 Cursor.Node = pParent;
                 return _grammarLookup[pParent.Type].Execute(values);
             }
-            catch (IdentifierException e)
+            catch (IdentifierInnerException e)
             {
-                IdentifierException.Rethrow(e, pParent);
+                throw new IdentifierException(e.Message, pParent);
             }
-
-            return Data.Undefined;
         }
 
         /// <summary>
@@ -258,12 +256,10 @@ namespace Prometheus.Parser.Executors
                 Cursor.Node = pNode;
                 return pBase.Execute(values);
             }
-            catch (IdentifierException e)
+            catch (IdentifierInnerException e)
             {
-                IdentifierException.Rethrow(e, pNode);
+                throw new IdentifierException(e.Message, pNode);
             }
-
-            return Data.Undefined;
         }
 
 #if DEBUG

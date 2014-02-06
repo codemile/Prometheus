@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using Logging;
 using Prometheus.Nodes.Types;
+using Prometheus.Objects;
 
-namespace Prometheus.Objects
+namespace Prometheus.Storage
 {
     /// <summary>
     /// Holds all the declarations for single namespace.
