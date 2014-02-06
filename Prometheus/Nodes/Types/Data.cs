@@ -20,6 +20,7 @@ namespace Prometheus.Nodes.Types
                                                                typeof (Undefined),
                                                                typeof (bool),
                                                                typeof (Identifier),
+                                                               typeof (Qualified),
                                                                typeof (Node),
                                                                typeof (StaticType),
                                                                typeof (Alias)
@@ -179,6 +180,14 @@ namespace Prometheus.Nodes.Types
         public Identifier getIdentifier()
         {
             return (Identifier)_value;
+        }
+
+        /// <summary>
+        /// Access the value as a qualified ID.
+        /// </summary>
+        public Qualified getQualified()
+        {
+            return (Qualified)_value;
         }
 
         /// <summary>

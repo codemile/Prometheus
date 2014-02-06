@@ -43,9 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compile\iSourceRef.cs" />
+    <Compile Include="Compile\Optomizer\Assertion.cs" />
     <Compile Include="Compile\Optomizer\iNodeOptimizer.cs" />
     <Compile Include="Compile\Optomizer\Optimizer.cs" />
     <Compile Include="Compile\SourceReader.cs" />
+    <Compile Include="Exceptions\Compiler\OptimizationException.cs" />
     <Compile Include="Exceptions\Executor\BreakException.cs" />
     <Compile Include="Exceptions\Executor\ContinueException.cs" />
     <Compile Include="Exceptions\Executor\IdentifierException.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
+    <Compile Include="Nodes\Types\Qualified.cs" />
     <Compile Include="Nodes\Types\Alias.cs" />
     <Compile Include="Nodes\Types\StaticType.cs" />
     <Compile Include="Objects\Declaration.cs" />

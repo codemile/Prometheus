@@ -15,6 +15,17 @@ namespace Prometheus.Compile.Optomizer
     public class Optimizer
     {
         /// <summary>
+        /// Defines which symbols are used to only collection child symbols. The goal is to prevent the chaining
+        /// of collections that could be reduced to a single collection.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _arrays = new HashSet<GrammarSymbol>
+                                                                 {
+                                                                     GrammarSymbol.Statements,
+                                                                     GrammarSymbol.ObjectDecls,
+                                                                     GrammarSymbol.Program
+                                                                 };
+
+        /// <summary>
         /// These nodes can be dropped from the tree, if they have no child and no data.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _drop = new HashSet<GrammarSymbol>
@@ -52,17 +63,6 @@ namespace Prometheus.Compile.Optomizer
                                                                     };
 
         /// <summary>
-        /// Defines which symbols are used to only collection child symbols. The goal is to prevent the chaining
-        /// of collections that could be reduced to a single collection.
-        /// </summary>
-        private static readonly HashSet<GrammarSymbol> _arrays = new HashSet<GrammarSymbol>
-                                                                                   {
-                                                                                       GrammarSymbol.Statements,
-                                                                                       GrammarSymbol.ObjectDecls,
-                                                                                       GrammarSymbol.Program
-                                                                                   };
-
-        /// <summary>
         /// Used to perform optimization
         /// </summary>
         private Executor _executor;
@@ -98,7 +98,7 @@ namespace Prometheus.Compile.Optomizer
         private Node CallInternal(Node pNode)
         {
             if (pNode.Children.Count == 0 ||
-                pNode.Children[0].Type != GrammarSymbol.Variable)
+                pNode.Children[0].Type == GrammarSymbol.QualifiedID)
             {
                 return pNode;
             }
@@ -172,19 +172,60 @@ namespace Prometheus.Compile.Optomizer
         }
 
         /// <summary>
+        /// Converts the child nodes into a data reference to a qualifier ID.
+        /// </summary>
+        /// <param name="pNode"></param>
+        private void Qualify(Node pNode)
+        {
+            Assertion.Children(2, pNode);
+            Assertion.Data(0, pNode);
+            Assertion.Data(1, pNode.Children[0]);
+
+            List<string> path = new List<string> {pNode.Children[0].Data[0].getIdentifier().Name};
+
+            Node member = pNode.Children[1];
+            while (true)
+            {
+                if (member.Data.Count == 0)
+                {
+                    Assertion.Children(0, member);
+                    break;
+                }
+                Assertion.Data(1, member);
+                Assertion.Children(1, member);
+
+                path.Add(Assertion.Get<Identifier>(member, 0).Name.Substring(1));
+                member = member.Children[0];
+            }
+
+            Qualified q = new Qualified(path.ToArray());
+            pNode.Data.Add(new Data(q));
+            pNode.Children.Clear();
+
+            _modified = true;
+        }
+
+        /// <summary>
         /// Process all the nodes in the tree by walking all branches. Update any
         /// children that are modified, or remove children if a recursive call
         /// returns null for that child.
         /// </summary>
         private Node WalkBranch(Node pNode)
         {
-            if (pNode.Type == GrammarSymbol.Assignment &&
-                pNode.Children.Count == 2)
+            if (pNode.Type == GrammarSymbol.QualifiedID &&
+                pNode.Children.Count != 0)
             {
-                // move Identifier to Assignment data
-                pNode.Data.Add(pNode.Children[0].Data[0]);
+                Qualify(pNode);
+            }
+
+            if (pNode.Type == GrammarSymbol.Assignment &&
+                pNode.Children[0].Type == GrammarSymbol.QualifiedID &&
+                pNode.Children[0].Children.Count == 0)
+            {
+                Assertion.Data(1,pNode.Children[0]);
+                Qualified qualified = Assertion.Get<Qualified>(pNode.Children[0],0);
+                pNode.Data.Add(new Data(qualified));
                 pNode.Children.RemoveAt(0);
-                _modified = true;
             }
 
             for (int i = 0, c = pNode.Children.Count; i < c; i++)

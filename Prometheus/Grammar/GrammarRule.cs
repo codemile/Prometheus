@@ -36,114 +36,118 @@ namespace Prometheus.Grammar
 		@MultiplyExpression = 25,                        // <MultiplyExpression> ::= <DivideExpression>
 		@DivideExpression_Div = 26,                      // <DivideExpression> ::= <DivideExpression> '/' <UnaryOperator>
 		@DivideExpression = 27,                          // <DivideExpression> ::= <UnaryOperator>
-		@UnaryOperator_MinusMinus = 28,                  // <UnaryOperator> ::= '--' <Variable>
-		@UnaryOperator_PlusPlus = 29,                    // <UnaryOperator> ::= '++' <Variable>
+		@UnaryOperator_MinusMinus = 28,                  // <UnaryOperator> ::= '--' <Qualified ID>
+		@UnaryOperator_PlusPlus = 29,                    // <UnaryOperator> ::= '++' <Qualified ID>
 		@UnaryOperator_Minus = 30,                       // <UnaryOperator> ::= '-' <Value>
 		@UnaryOperator_Plus = 31,                        // <UnaryOperator> ::= '+' <Value>
 		@UnaryOperator_Exclam = 32,                      // <UnaryOperator> ::= '!' <Value>
 		@UnaryOperator_Tilde = 33,                       // <UnaryOperator> ::= '~' <Value>
 		@UnaryOperator_NOT = 34,                         // <UnaryOperator> ::= NOT <Value>
 		@UnaryOperator = 35,                             // <UnaryOperator> ::= <Value>
-		@Variable_Identifier = 36,                       // <Variable> ::= Identifier
-		@Variable_This_Dot_Identifier = 37,              // <Variable> ::= This '.' Identifier
-		@Value_StringDouble = 38,                        // <Value> ::= StringDouble
-		@Value_StringSingle = 39,                        // <Value> ::= StringSingle
-		@Value_Number = 40,                              // <Value> ::= Number
-		@Value_Decimal = 41,                             // <Value> ::= Decimal
-		@Value_Boolean = 42,                             // <Value> ::= Boolean
-		@Value = 43,                                     // <Value> ::= <Variable>
-		@Value2 = 44,                                    // <Value> ::= <Function Expression>
-		@Value_LParen_RParen = 45,                       // <Value> ::= '(' <Expression> ')'
-		@Value3 = 46,                                    // <Value> ::= <Call Expression>
-		@End_Semi = 47,                                  // <End> ::= ';'
-		@EndOpt = 48,                                    // <End Opt> ::= <End>
-		@EndOpt2 = 49,                                   // <End Opt> ::= 
-		@BlockorEnd = 50,                                // <Block or End> ::= <Block>
-		@BlockorEnd2 = 51,                               // <Block or End> ::= <End>
-		@Program = 52,                                   // <Program> ::= <Object Decls>
-		@Program2 = 53,                                  // <Program> ::= <Object Decls> <Statements>
-		@Program3 = 54,                                  // <Program> ::= <Statements>
-		@Program4 = 55,                                  // <Program> ::= 
-		@Block_LBrace_RBrace = 56,                       // <Block> ::= '{' <Statements> '}'
-		@Block_LBrace_RBrace2 = 57,                      // <Block> ::= '{' '}'
-		@StatementorBlock = 58,                          // <Statement or Block> ::= <Statement>
-		@StatementorBlock2 = 59,                         // <Statement or Block> ::= <Block>
-		@Statements = 60,                                // <Statements> ::= <Statement>
-		@Statements2 = 61,                               // <Statements> ::= <Statements> <Statement>
-		@Statements3 = 62,                               // <Statements> ::= <Block>
-		@Statement = 63,                                 // <Statement> ::= <FlowControl>
-		@Statement2 = 64,                                // <Statement> ::= <Variables> <End>
-		@Statement3 = 65,                                // <Statement> ::= <Procedure> <End>
-		@Statement4 = 66,                                // <Statement> ::= <Call Expression> <End>
-		@Statement5 = 67,                                // <Statement> ::= <New Expression> <End>
-		@Statement6 = 68,                                // <Statement> ::= <End>
-		@ObjectDecls = 69,                               // <Object Decls> ::= <Object Decl>
-		@ObjectDecls2 = 70,                              // <Object Decls> ::= <Object Decls> <Object Decl>
-		@ObjectDecl_Identifier = 71,                     // <Object Decl> ::= <Base Class> Identifier <Block>
-		@ObjectDecl_Identifier_LParen_RParen = 72,       // <Object Decl> ::= <Base Class> Identifier '(' ')' <Block>
-		@ObjectDecl_Identifier_LParen_RParen2 = 73,      // <Object Decl> ::= <Base Class> Identifier '(' <Formal Parameter List> ')' <Block>
-		@BaseClass_Type = 74,                            // <Base Class> ::= Type
-		@BaseClass_Identifier = 75,                      // <Base Class> ::= Identifier
-		@FunctionDeclaration_function_Identifier_LParen_RParen = 76,  // <Function Declaration> ::= function Identifier '(' <Formal Parameter List> ')' <Block>
-		@FunctionDeclaration_function_Identifier_LParen_RParen2 = 77,  // <Function Declaration> ::= function Identifier '(' ')' <Block>
-		@FunctionExpression_function_LParen_RParen = 78,  // <Function Expression> ::= function '(' ')' <Block>
-		@FunctionExpression_function_LParen_RParen2 = 79,  // <Function Expression> ::= function '(' <Formal Parameter List> ')' <Block>
-		@FormalParameterList_Identifier = 80,            // <Formal Parameter List> ::= Identifier
-		@FormalParameterList_Comma_Identifier = 81,      // <Formal Parameter List> ::= <Formal Parameter List> ',' Identifier
-		@CallExpression = 82,                            // <Call Expression> ::= <Variable> <Arguments>
-		@CallExpression2 = 83,                           // <Call Expression> ::= <Call Expression> <Arguments>
-		@NewExpression_new_Identifier = 84,              // <New Expression> ::= new Identifier <Arguments>
-		@CallInternal = 85,                              // <CallInternal> ::= 
-		@Arguments_LParen_RParen = 86,                   // <Arguments> ::= '(' ')'
-		@Arguments_LParen_RParen2 = 87,                  // <Arguments> ::= '(' <Argument List> ')'
-		@ArgumentList = 88,                              // <Argument List> ::= <Expression>
-		@ArgumentList_Comma = 89,                        // <Argument List> ::= <Argument List> ',' <Expression>
-		@FlowControl = 90,                               // <FlowControl> ::= <IfControl>
-		@FlowControl2 = 91,                              // <FlowControl> ::= <DoWhileControl>
-		@FlowControl3 = 92,                              // <FlowControl> ::= <DoUntilControl>
-		@FlowControl4 = 93,                              // <FlowControl> ::= <LoopWhileControl>
-		@FlowControl5 = 94,                              // <FlowControl> ::= <LoopUntilControl>
-		@FlowControl6 = 95,                              // <FlowControl> ::= <ForControl>
-		@FlowControl7 = 96,                              // <FlowControl> ::= <ForStepControl>
-		@FlowControl8 = 97,                              // <FlowControl> ::= <BreakControl>
-		@FlowControl9 = 98,                              // <FlowControl> ::= <ContinueControl>
-		@IfControl_IF_LParen_RParen = 99,                // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block>
-		@IfControl_IF_LParen_RParen_ELSE = 100,          // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block> ELSE <Statement or Block>
-		@DoWhileControl_WHILE_LParen_RParen = 101,       // <DoWhileControl> ::= WHILE '(' <Expression> ')' <Statement or Block>
-		@DoUntilControl_UNTIL_LParen_RParen = 102,       // <DoUntilControl> ::= UNTIL '(' <Expression> ')' <Statement or Block>
-		@LoopWhileControl_DO_WHILE_LParen_RParen = 103,  // <LoopWhileControl> ::= DO <Statement or Block> WHILE '(' <Expression> ')'
-		@LoopUntilControl_DO_UNTIL_LParen_RParen = 104,  // <LoopUntilControl> ::= DO <Statement or Block> UNTIL '(' <Expression> ')'
-		@ForControl_FOR_Identifier_Eq_TO = 105,          // <ForControl> ::= FOR Identifier '=' <Expression> TO <Expression> <Statement or Block>
-		@ForStepControl_FOR_Identifier_Eq_TO_STEP = 106,  // <ForStepControl> ::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Statement or Block>
-		@BreakControl_BREAK = 107,                       // <BreakControl> ::= BREAK
-		@ContinueControl_CONTINUE = 108,                 // <ContinueControl> ::= CONTINUE
-		@Variables = 109,                                // <Variables> ::= <Declare>
-		@Variables2 = 110,                               // <Variables> ::= <Assignment>
-		@Variables3 = 111,                               // <Variables> ::= <Increment>
-		@Variables4 = 112,                               // <Variables> ::= <Decrement>
-		@Declare_VAR_Identifier = 113,                   // <Declare> ::= VAR Identifier
-		@Declare_VAR_Identifier_Eq = 114,                // <Declare> ::= VAR Identifier '=' <Expression>
-		@Declare_VAR_Identifier_Eq2 = 115,               // <Declare> ::= VAR Identifier '=' <New Expression>
-		@Assignment_Eq = 116,                            // <Assignment> ::= <Variable> '=' <Expression>
-		@Increment_PlusPlus = 117,                       // <Increment> ::= <Variable> '++'
-		@Decrement_MinusMinus = 118,                     // <Decrement> ::= <Variable> '--'
-		@Procedure = 119,                                // <Procedure> ::= <UnsetProc>
-		@Procedure2 = 120,                               // <Procedure> ::= <RejectProc>
-		@Procedure3 = 121,                               // <Procedure> ::= <AcceptProc>
-		@Procedure4 = 122,                               // <Procedure> ::= <ScopeProc>
-		@Procedure5 = 123,                               // <Procedure> ::= <IncludeProc>
-		@Procedure6 = 124,                               // <Procedure> ::= <PrintProc>
-		@Procedure7 = 125,                               // <Procedure> ::= <ReturnProc>
-		@Procedure8 = 126,                               // <Procedure> ::= <ListVars>
-		@Procedure9 = 127,                               // <Procedure> ::= <ListObjects>
-		@UnsetProc_UNSET_Identifier = 128,               // <UnsetProc> ::= UNSET Identifier
-		@RejectProc_REJECT = 129,                        // <RejectProc> ::= REJECT <Expression>
-		@AcceptProc_ACCEPT = 130,                        // <AcceptProc> ::= ACCEPT <Expression>
-		@ScopeProc_SCOPE = 131,                          // <ScopeProc> ::= SCOPE <Expression>
-		@IncludeProc_INCLUDE = 132,                      // <IncludeProc> ::= INCLUDE <Expression>
-		@PrintProc_PRINT = 133,                          // <PrintProc> ::= PRINT <Expression>
-		@ReturnProc_RETURN = 134,                        // <ReturnProc> ::= RETURN <Expression>
-		@ListVars_VARS = 135,                            // <ListVars> ::= VARS
-		@ListObjects_OBJECTS = 136                       // <ListObjects> ::= OBJECTS
+		@ValidID_Identifier = 36,                        // <Valid ID> ::= Identifier
+		@ValidID_this = 37,                              // <Valid ID> ::= this
+		@ValidID_base = 38,                              // <Valid ID> ::= base
+		@QualifiedID = 39,                               // <Qualified ID> ::= <Valid ID> <Member List>
+		@MemberList_MemberName = 40,                     // <Member List> ::= <Member List> MemberName
+		@MemberList = 41,                                // <Member List> ::= 
+		@Value_StringDouble = 42,                        // <Value> ::= StringDouble
+		@Value_StringSingle = 43,                        // <Value> ::= StringSingle
+		@Value_Number = 44,                              // <Value> ::= Number
+		@Value_Decimal = 45,                             // <Value> ::= Decimal
+		@Value_Boolean = 46,                             // <Value> ::= Boolean
+		@Value = 47,                                     // <Value> ::= <Qualified ID>
+		@Value2 = 48,                                    // <Value> ::= <Function Expression>
+		@Value_LParen_RParen = 49,                       // <Value> ::= '(' <Expression> ')'
+		@Value3 = 50,                                    // <Value> ::= <Call Expression>
+		@VariableStatements = 51,                        // <Variable Statements> ::= <Declare>
+		@VariableStatements2 = 52,                       // <Variable Statements> ::= <Assignment>
+		@VariableStatements3 = 53,                       // <Variable Statements> ::= <Increment>
+		@VariableStatements4 = 54,                       // <Variable Statements> ::= <Decrement>
+		@Declare_VAR_Identifier = 55,                    // <Declare> ::= VAR Identifier
+		@Declare_VAR_Identifier_Eq = 56,                 // <Declare> ::= VAR Identifier '=' <Expression>
+		@Declare_VAR_Identifier_Eq2 = 57,                // <Declare> ::= VAR Identifier '=' <New Expression>
+		@Assignment_Eq = 58,                             // <Assignment> ::= <Qualified ID> '=' <Expression>
+		@Increment_PlusPlus = 59,                        // <Increment> ::= <Qualified ID> '++'
+		@Decrement_MinusMinus = 60,                      // <Decrement> ::= <Qualified ID> '--'
+		@End_Semi = 61,                                  // <End> ::= ';'
+		@EndOpt = 62,                                    // <End Opt> ::= <End>
+		@EndOpt2 = 63,                                   // <End Opt> ::= 
+		@BlockorEnd = 64,                                // <Block or End> ::= <Block>
+		@BlockorEnd2 = 65,                               // <Block or End> ::= <End>
+		@Program = 66,                                   // <Program> ::= <Object Decls>
+		@Program2 = 67,                                  // <Program> ::= <Object Decls> <Statements>
+		@Program3 = 68,                                  // <Program> ::= <Statements>
+		@Program4 = 69,                                  // <Program> ::= 
+		@Block_LBrace_RBrace = 70,                       // <Block> ::= '{' <Statements> '}'
+		@Block_LBrace_RBrace2 = 71,                      // <Block> ::= '{' '}'
+		@StatementorBlock = 72,                          // <Statement or Block> ::= <Statement>
+		@StatementorBlock2 = 73,                         // <Statement or Block> ::= <Block>
+		@Statements = 74,                                // <Statements> ::= <Statement>
+		@Statements2 = 75,                               // <Statements> ::= <Statements> <Statement>
+		@Statements3 = 76,                               // <Statements> ::= <Block>
+		@Statement = 77,                                 // <Statement> ::= <FlowControl>
+		@Statement2 = 78,                                // <Statement> ::= <Variable Statements> <End>
+		@Statement3 = 79,                                // <Statement> ::= <Procedure> <End>
+		@Statement4 = 80,                                // <Statement> ::= <Call Expression> <End>
+		@Statement5 = 81,                                // <Statement> ::= <New Expression> <End>
+		@Statement6 = 82,                                // <Statement> ::= <End>
+		@ObjectDecls = 83,                               // <Object Decls> ::= <Object Decl>
+		@ObjectDecls2 = 84,                              // <Object Decls> ::= <Object Decls> <Object Decl>
+		@ObjectDecl_Identifier = 85,                     // <Object Decl> ::= <Base Class> Identifier <Block>
+		@ObjectDecl_Identifier_LParen_RParen = 86,       // <Object Decl> ::= <Base Class> Identifier '(' ')' <Block>
+		@ObjectDecl_Identifier_LParen_RParen2 = 87,      // <Object Decl> ::= <Base Class> Identifier '(' <Formal Parameter List> ')' <Block>
+		@BaseClass_Type = 88,                            // <Base Class> ::= Type
+		@BaseClass_Identifier = 89,                      // <Base Class> ::= Identifier
+		@FunctionDeclaration_function_Identifier_LParen_RParen = 90,  // <Function Declaration> ::= function Identifier '(' <Formal Parameter List> ')' <Block>
+		@FunctionDeclaration_function_Identifier_LParen_RParen2 = 91,  // <Function Declaration> ::= function Identifier '(' ')' <Block>
+		@FunctionExpression_function_LParen_RParen = 92,  // <Function Expression> ::= function '(' ')' <Block>
+		@FunctionExpression_function_LParen_RParen2 = 93,  // <Function Expression> ::= function '(' <Formal Parameter List> ')' <Block>
+		@FormalParameterList_Identifier = 94,            // <Formal Parameter List> ::= Identifier
+		@FormalParameterList_Comma_Identifier = 95,      // <Formal Parameter List> ::= <Formal Parameter List> ',' Identifier
+		@CallExpression = 96,                            // <Call Expression> ::= <Qualified ID> <Arguments>
+		@CallExpression2 = 97,                           // <Call Expression> ::= <Call Expression> <Arguments>
+		@NewExpression_new_Identifier = 98,              // <New Expression> ::= new Identifier <Arguments>
+		@CallInternal = 99,                              // <CallInternal> ::= 
+		@Arguments_LParen_RParen = 100,                  // <Arguments> ::= '(' ')'
+		@Arguments_LParen_RParen2 = 101,                 // <Arguments> ::= '(' <Argument List> ')'
+		@ArgumentList = 102,                             // <Argument List> ::= <Expression>
+		@ArgumentList_Comma = 103,                       // <Argument List> ::= <Argument List> ',' <Expression>
+		@FlowControl = 104,                              // <FlowControl> ::= <IfControl>
+		@FlowControl2 = 105,                             // <FlowControl> ::= <DoWhileControl>
+		@FlowControl3 = 106,                             // <FlowControl> ::= <DoUntilControl>
+		@FlowControl4 = 107,                             // <FlowControl> ::= <LoopWhileControl>
+		@FlowControl5 = 108,                             // <FlowControl> ::= <LoopUntilControl>
+		@FlowControl6 = 109,                             // <FlowControl> ::= <ForControl>
+		@FlowControl7 = 110,                             // <FlowControl> ::= <ForStepControl>
+		@FlowControl8 = 111,                             // <FlowControl> ::= <BreakControl>
+		@FlowControl9 = 112,                             // <FlowControl> ::= <ContinueControl>
+		@IfControl_IF_LParen_RParen = 113,               // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block>
+		@IfControl_IF_LParen_RParen_ELSE = 114,          // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block> ELSE <Statement or Block>
+		@DoWhileControl_WHILE_LParen_RParen = 115,       // <DoWhileControl> ::= WHILE '(' <Expression> ')' <Statement or Block>
+		@DoUntilControl_UNTIL_LParen_RParen = 116,       // <DoUntilControl> ::= UNTIL '(' <Expression> ')' <Statement or Block>
+		@LoopWhileControl_DO_WHILE_LParen_RParen = 117,  // <LoopWhileControl> ::= DO <Statement or Block> WHILE '(' <Expression> ')'
+		@LoopUntilControl_DO_UNTIL_LParen_RParen = 118,  // <LoopUntilControl> ::= DO <Statement or Block> UNTIL '(' <Expression> ')'
+		@ForControl_FOR_Identifier_Eq_TO = 119,          // <ForControl> ::= FOR Identifier '=' <Expression> TO <Expression> <Statement or Block>
+		@ForStepControl_FOR_Identifier_Eq_TO_STEP = 120,  // <ForStepControl> ::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Statement or Block>
+		@BreakControl_BREAK = 121,                       // <BreakControl> ::= BREAK
+		@ContinueControl_CONTINUE = 122,                 // <ContinueControl> ::= CONTINUE
+		@Procedure = 123,                                // <Procedure> ::= <UnsetProc>
+		@Procedure2 = 124,                               // <Procedure> ::= <RejectProc>
+		@Procedure3 = 125,                               // <Procedure> ::= <AcceptProc>
+		@Procedure4 = 126,                               // <Procedure> ::= <ScopeProc>
+		@Procedure5 = 127,                               // <Procedure> ::= <IncludeProc>
+		@Procedure6 = 128,                               // <Procedure> ::= <PrintProc>
+		@Procedure7 = 129,                               // <Procedure> ::= <ReturnProc>
+		@Procedure8 = 130,                               // <Procedure> ::= <ListVars>
+		@Procedure9 = 131,                               // <Procedure> ::= <ListObjects>
+		@UnsetProc_UNSET = 132,                          // <UnsetProc> ::= UNSET <Qualified ID>
+		@RejectProc_REJECT = 133,                        // <RejectProc> ::= REJECT <Expression>
+		@AcceptProc_ACCEPT = 134,                        // <AcceptProc> ::= ACCEPT <Expression>
+		@ScopeProc_SCOPE = 135,                          // <ScopeProc> ::= SCOPE <Expression>
+		@IncludeProc_INCLUDE = 136,                      // <IncludeProc> ::= INCLUDE <Expression>
+		@PrintProc_PRINT = 137,                          // <PrintProc> ::= PRINT <Expression>
+		@ReturnProc_RETURN = 138,                        // <ReturnProc> ::= RETURN <Expression>
+		@ListVars_VARS = 139,                            // <ListVars> ::= VARS
+		@ListObjects_OBJECTS = 140                       // <ListObjects> ::= OBJECTS
 	}
 }

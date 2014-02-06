@@ -22,7 +22,12 @@ namespace Prometheus.Nodes.Types
                                                                         GrammarSymbol.Decimal,
                                                                         GrammarSymbol.Boolean,
                                                                         GrammarSymbol.Identifier,
-                                                                        GrammarSymbol.Type
+                                                                        GrammarSymbol.Type,
+                                                                        GrammarSymbol.QualifiedID,
+                                                                        GrammarSymbol.ValidID,
+                                                                        GrammarSymbol.MemberName,
+                                                                        GrammarSymbol.@this,
+                                                                        GrammarSymbol.@base
                                                                     };
 
         /// <summary>
@@ -61,6 +66,8 @@ namespace Prometheus.Nodes.Types
                     break;
 
                 case GrammarSymbol.Identifier:
+                case GrammarSymbol.@this:
+                case GrammarSymbol.MemberName:
                     return new Data(new Identifier(pValue));
 
                 case GrammarSymbol.Type:

@@ -21,7 +21,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// The parent scope
         /// </summary>
-        private StackSpace _parent;
+        private MemorySpace _parent;
 
         /// <summary>
         /// Constructor
@@ -59,20 +59,20 @@ namespace Prometheus.Storage
         /// Looks for the identifier in the current scope, and
         /// all parent scopes.
         /// </summary>
-        /// <param name="pIdentifier">The identifier to find</param>
+        /// <param name="pName">The identifier to find</param>
         /// <returns>The data object or Null if not found.</returns>
-        public override Data Get(Identifier pIdentifier)
+        public override Data Get(string pName)
         {
-            Data d = base.Get(pIdentifier);
+            Data d = base.Get(pName);
             if (d != null)
             {
                 return d;
             }
             if (_parent != null)
             {
-                return _parent.Get(pIdentifier);
+                return _parent.Get(pName);
             }
-            throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pIdentifier));
+            throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
         }
 
         /// <summary>
@@ -93,17 +93,17 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pIdentifier">The identifier to find</param>
         /// <param name="pData">The data to assign to the identifier</param>
-        public override bool Set(Identifier pIdentifier, Data pData)
+        public override bool Set(string pName, Data pData)
         {
-            if (base.Set(pIdentifier, pData))
+            if (base.Set(pName, pData))
             {
                 return true;
             }
             if (_parent != null)
             {
-                return _parent.Set(pIdentifier, pData);
+                return _parent.Set(pName, pData);
             }
-            throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pIdentifier));
+            throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
         }
     }
 }

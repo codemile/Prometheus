@@ -51,19 +51,24 @@ namespace Prometheus.Objects
             Instance inst = new Instance();
             Data alias = Executor.Cursor.Heap.Add(inst);
 
-            using (Executor.Cursor.Stack = new StackSpace(Executor.Cursor))
-            {
-                Executor.Cursor.Stack.Create(new Identifier("this"), alias);
+            inst.Members.Create("this", alias);
+            MemorySpace prevMemory = Executor.Cursor.Stack;
+            Executor.Cursor.Stack = inst.Members;
 
-                try
-                {
-                    Executor.Execute(decl.Constructor, new Dictionary<string, Data>());
-                }
-                catch (ReturnException)
-                {
-                    // ignore return value from constructors
-                }
+            try
+            {
+                Executor.Execute(decl.Constructor, new Dictionary<string, Data>());
             }
+            catch (ReturnException)
+            {
+                // ignore return value from constructors
+            }
+            finally
+            {
+                Executor.Cursor.Stack = prevMemory;
+                inst.Members.Unset("this");
+            }
+
             return alias;
         }
 

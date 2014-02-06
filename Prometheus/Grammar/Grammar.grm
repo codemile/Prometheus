@@ -17,7 +17,7 @@
 ! ===================================================================
 
 {ID Head}				= {Letter} + [_]
-{ID Tail}				= {Alphanumeric} + [_\.]
+{ID Tail}				= {Alphanumeric} + [_]
 {DoubleString Chars}	= {Printable} + {HT} - ["\]
 {SingleString Chars}	= {Printable} + {HT} - [''\]
 {Non Terminator}		= {DoubleString Chars} - {CR} - {LF}
@@ -28,7 +28,8 @@
 ! ===================================================================
 
 Identifier		= {ID Head}{ID Tail}*
-This			= this
+MemberName		=  '.' {ID Head}{ID Tail}*       
+
 StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"'
 StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* ['']
 Number			= [0123456789,]+
@@ -65,8 +66,8 @@ Comment Line  = '//'
 <MultiplyExpression>    ::= <MultiplyExpression> '*' <DivideExpression>  | <DivideExpression> 
 <DivideExpression>		::= <DivideExpression> '/' <UnaryOperator>  | <UnaryOperator> 
 
-<UnaryOperator>			::= '--' <Variable>
-						 | '++' <Variable>
+<UnaryOperator>			::= '--' <Qualified ID>
+						 | '++' <Qualified ID>
 						 | '-' <Value>
 						 | '+' <Value>
 						 | '!' <Value>
@@ -78,18 +79,42 @@ Comment Line  = '//'
 ! Variables And Primitives
 ! ===================================================================
 
-<Variable>		::= Identifier
-				| This '.' Identifier
+<Valid ID>			::= Identifier
+					|  'this'
+					| 'base'
 
-<Value>			::= StringDouble
-				| StringSingle
-				| Number
-				| Decimal
-				| Boolean
-				| <Variable>
-				| <Function Expression>
-				| '(' <Expression> ')'
-				| <Call Expression>
+<Qualified ID>		::= <Valid ID> <Member List>
+	 
+<Member List>		::= <Member List> MemberName
+					|  !Zero or more 
+
+
+<Value>				::= StringDouble
+					| StringSingle
+					| Number
+					| Decimal
+					| Boolean
+					| <Qualified ID>
+					| <Function Expression>
+					| '(' <Expression> ')'
+					| <Call Expression>
+
+
+<Variable Statements>	::= <Declare>
+						| <Assignment>
+						| <Increment>
+						| <Decrement>
+
+
+
+<Declare>			::= VAR Identifier
+					| VAR Identifier '=' <Expression>
+					| VAR Identifier '=' <New Expression>
+
+<Assignment>		::= <Qualified ID> '=' <Expression>
+
+<Increment>			::= <Qualified ID> '++'
+<Decrement>			::= <Qualified ID> '--'
 
 ! ===========================================================================
 ! End of statement marker
@@ -122,7 +147,7 @@ Comment Line  = '//'
 				| <Block>
 
 <Statement>		::= <FlowControl>
-				| <Variables> <End>
+				| <Variable Statements> <End>
 				| <Procedure> <End>
 				| <Call Expression> <End>
 				| <New Expression> <End>
@@ -159,7 +184,7 @@ Comment Line  = '//'
 ! Formal Expressions
 ! ===================================================================
 
-<Call Expression>		::= <Variable> <Arguments>
+<Call Expression>		::= <Qualified ID> <Arguments>
 						| <Call Expression> <Arguments>			! chaining
 
 <New Expression>		::= 'new' Identifier <Arguments>
@@ -202,24 +227,6 @@ Comment Line  = '//'
 <ContinueControl>	::= CONTINUE
 
 ! ===================================================================
-! Variable Commands
-! ===================================================================
-
-<Variables>			::= <Declare>
-					| <Assignment>
-					| <Increment>
-					| <Decrement>
-
-<Declare>			::= VAR Identifier
-					| VAR Identifier '=' <Expression>
-					| VAR Identifier '=' <New Expression>
-
-<Assignment>		::= <Variable> '=' <Expression>
-
-<Increment>			::= <Variable> '++'
-<Decrement>			::= <Variable> '--'
-
-! ===================================================================
 ! Procedures
 ! ===================================================================
 
@@ -233,7 +240,7 @@ Comment Line  = '//'
 					| <ListVars>
 					| <ListObjects>
 
-<UnsetProc>			::= UNSET Identifier
+<UnsetProc>			::= UNSET <Qualified ID>
 <RejectProc>		::= REJECT <Expression>
 <AcceptProc>		::= ACCEPT <Expression>
 <ScopeProc>			::= SCOPE <Expression>

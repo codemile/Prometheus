@@ -1,11 +1,13 @@
 object Example {
-	vars;
-	this.title = "Hello World";
-	vars;
-//	print this.title;
+
+	this.t = "Hello World";
+
+	this.foo = function() {
+		print this.t;
+	};
+
 };
 
 var x = new Example();
 
-vars;
-print x.title;
+x.foo();

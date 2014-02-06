@@ -49,11 +49,11 @@ namespace Prometheus.Storage
         /// <summary>
         /// Derived classes will handle the lookup of an identifier.
         /// </summary>
-        /// <param name="pIdentifier">The identifier to get</param>
+        /// <param name="pName">The identifier to get</param>
         /// <returns>The data</returns>
-        public virtual Data Get(Identifier pIdentifier)
+        public virtual Data Get(string pName)
         {
-            return _storage.ContainsKey(pIdentifier.Name) ? _storage[pIdentifier.Name] : null;
+            return _storage.ContainsKey(pName) ? _storage[pName] : null;
         }
 
         /// <summary>
@@ -77,16 +77,16 @@ namespace Prometheus.Storage
         /// <summary>
         /// Derived classes will handle the setting.
         /// </summary>
-        /// <param name="pIdentifier">The identifier to set</param>
+        /// <param name="pName">The identifier to set</param>
         /// <param name="pData">The data</param>
         /// <returns>True if identifier exists</returns>
-        public virtual bool Set(Identifier pIdentifier, Data pData)
+        public virtual bool Set(string pName, Data pData)
         {
-            if (!_storage.ContainsKey(pIdentifier.Name))
+            if (!_storage.ContainsKey(pName))
             {
                 return false;
             }
-            _storage[pIdentifier.Name] = pData;
+            _storage[pName] = pData;
             return true;
         }
 
@@ -94,33 +94,47 @@ namespace Prometheus.Storage
         /// Assigns a value to an identifier. Creates the a new
         /// variable if required.
         /// </summary>
-        /// <param name="pIdentifier">The identifier to create</param>
+        /// <param name="pName">The identifier to create</param>
         /// <param name="pData">The data to assign</param>
-        public void Assign(Identifier pIdentifier, Data pData)
+        public void Assign(string pName, Data pData)
         {
-            if (_storage.ContainsKey(pIdentifier.Name))
+            if (_storage.ContainsKey(pName))
             {
-                _storage[pIdentifier.Name] = pData;
+                _storage[pName] = pData;
             }
             else
             {
-                _storage.Add(pIdentifier.Name, pData);
+                _storage.Add(pName, pData);
             }
         }
 
         /// <summary>
         /// Creates a new variable in the current scope.
         /// </summary>
-        /// <param name="pIdentifier">The identifier to create</param>
+        /// <param name="pName">The identifier to create</param>
         /// <param name="pData">The data to assign</param>
-        public void Create(Identifier pIdentifier, Data pData)
+        public void Create(string pName, Data pData)
         {
             // only check the current scope
-            if (_storage.ContainsKey(pIdentifier.Name))
+            if (_storage.ContainsKey(pName))
             {
-                throw new IdentifierInnerException(string.Format(Errors.IdentifierAlreadyDefined, pIdentifier));
+                throw new IdentifierInnerException(string.Format(Errors.IdentifierAlreadyDefined, pName));
             }
-            _storage.Add(pIdentifier.Name, pData);
+            _storage.Add(pName, pData);
+        }
+
+        /// <summary>
+        /// Removes a variable from the current scope.
+        /// </summary>
+        /// <param name="pName">The identifier to remove</param>
+        public virtual bool Unset(string pName)
+        {
+            if (!_storage.ContainsKey(pName))
+            {
+                return false;
+            }
+            _storage.Remove(pName);
+            return true;
         }
     }
 }

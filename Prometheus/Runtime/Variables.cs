@@ -1,8 +1,12 @@
-﻿using Prometheus.Grammar;
+﻿using Prometheus.Exceptions.Executor;
+using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Objects;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
+using Prometheus.Properties;
+using Prometheus.Storage;
 
 namespace Prometheus.Runtime
 {
@@ -22,25 +26,12 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Assigns a value to an Identifier
         /// </summary>
-        /// <param name="pIdentifier">The variable name</param>
+        /// <param name="pQualified">The variable name</param>
         /// <param name="pValue">The value to assign</param>
         [ExecuteSymbol(GrammarSymbol.Assignment)]
-        public Data Assignment(Data pIdentifier, Data pValue)
+        public Data Assignment(Data pQualified, Data pValue)
         {
-            Identifier id = pIdentifier.getIdentifier();
-            int pos = id.Name.IndexOf('.');
-            if (pos > 0)
-            {
-                string prefix = id.Name.Substring(0, pos);
-                string member = id.Name.Substring(pos + 1);
-                Data alias = Executor.Cursor.Stack.Get(new Identifier(prefix));
-                Instance inst = Executor.Cursor.Heap.Get(alias.getAlias());
-                inst.Members.Assign(new Identifier(member), pValue);
-            }
-            else
-            {
-                Executor.Cursor.Stack.Set(pIdentifier.getIdentifier(), pValue);
-            }
+            Executor.Cursor.Set(pQualified.getQualified(), pValue);
             return pValue;
         }
 
@@ -48,13 +39,16 @@ namespace Prometheus.Runtime
         /// Decrement
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.Decrement)]
-        public Data Dec(Data pIdentifier)
+        public Data Dec(Data pQualified)
         {
-            Data d = Executor.Cursor.Stack.Get(pIdentifier.getIdentifier());
+            Qualified id = pQualified.getQualified();
+            string member = id.Parts[id.Parts.Length - 1];
+            MemorySpace memory = Executor.Cursor.Resolve(id);
+            Data d = memory.Get(member);
             d = d.Type == typeof (double)
                 ? new Data(d.getPrecise() - 1)
                 : new Data(d.getInteger() - 1);
-            Executor.Cursor.Stack.Set(pIdentifier.getIdentifier(), d);
+            memory.Set(member, d);
             return d;
         }
 
@@ -67,7 +61,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Declare)]
         public Data Declare(Data pIdentifier, Data pValue)
         {
-            Executor.Cursor.Stack.Create(pIdentifier.getIdentifier(), pValue);
+            Executor.Cursor.Stack.Create(pIdentifier.getIdentifier().Name, pValue);
             return pValue;
         }
 
@@ -86,14 +80,16 @@ namespace Prometheus.Runtime
         /// Increment
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.Increment)]
-        public Data Inc(Data pIdentifier)
+        public Data Inc(Data pQualified)
         {
-            // TODO: Has to walk scope parents again to set.
-            Data d = Executor.Cursor.Stack.Get(pIdentifier.getIdentifier());
+            Qualified id = pQualified.getQualified();
+            string member = id.Parts[id.Parts.Length - 1];
+            MemorySpace memory = Executor.Cursor.Resolve(id);
+            Data d = memory.Get(member);
             d = d.Type == typeof (double)
                 ? new Data(d.getPrecise() + 1)
                 : new Data(d.getInteger() + 1);
-            Executor.Cursor.Stack.Set(pIdentifier.getIdentifier(), d);
+            memory.Set(member, d);
             return d;
         }
 
@@ -119,22 +115,12 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Returns the value of a variable.
         /// </summary>
-        /// <param name="pIdentifier">The variable name</param>
+        /// <param name="pQualifier">The variable name</param>
         /// <returns>The value or undefined.</returns>
-        [ExecuteSymbol(GrammarSymbol.Variable)]
-        public Data Variable(Data pIdentifier)
+        [ExecuteSymbol(GrammarSymbol.QualifiedID)]
+        public Data Qualified(Data pQualifier)
         {
-            Identifier id = pIdentifier.getIdentifier();
-            int pos = id.Name.IndexOf('.');
-            if (pos > 0)
-            {
-                string prefix = id.Name.Substring(0, pos);
-                string member = id.Name.Substring(pos + 1);
-                Data alias = Executor.Cursor.Stack.Get(new Identifier(prefix));
-                Instance inst = Executor.Cursor.Heap.Get(alias.getAlias());
-                return inst.Members.Get(new Identifier(member));
-            }
-            return Executor.Cursor.Stack.Get(pIdentifier.getIdentifier());
+            return Executor.Cursor.Get(pQualifier.getQualified());
         }
     }
 }
