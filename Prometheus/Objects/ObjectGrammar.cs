@@ -3,7 +3,6 @@ using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
@@ -27,26 +26,27 @@ namespace Prometheus.Objects
         /// Lists object declarations.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ListObjects)]
-        public void ListObjects()
+        public Data ListObjects()
         {
             Executor.Cursor.Packages.Print();
+            return Data.Undefined;
         }
 
         /// <summary>
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public iDataType New(IdentifierType pIdentifierType)
+        public Data New(Data pIdentifier)
         {
-            return New(pIdentifierType, UndefinedType.UNDEFINED);
+            return New(pIdentifier, Data.Undefined);
         }
 
         /// <summary>
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public AliasType New(IdentifierType pIdentifierType, iDataType pArguments)
+        public Data New(Data pIdentifier, Data pArguments)
         {
-            Declaration decl = Executor.Cursor.Packages.Get(pIdentifierType);
+            Declaration decl = Executor.Cursor.Packages.Get(pIdentifier.getIdentifier());
 
             CreateInherited created = new CreateInherited(Executor.Cursor.Heap, decl);
 
@@ -55,7 +55,7 @@ namespace Prometheus.Objects
 
             try
             {
-                Executor.Execute(created.Inst.Constructor, new Dictionary<string, iDataType>());
+                Executor.Execute(created.Inst.Constructor, new Dictionary<string, Data>());
             }
             catch (ReturnException)
             {
@@ -67,28 +67,38 @@ namespace Prometheus.Objects
                 created.Inst.Members.Unset("this");
             }
 
-            return created.AliasType;
+            return created.Alias;
         }
 
         /// <summary>
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public void ObjectDeclare(StaticType pBaseType, IdentifierType pIdentifierType)
-        {
-            Executor.Cursor.Packages.Add(new Declaration(null, pIdentifierType, Executor.Cursor.Node));
-        }
-
-        /// <summary>
-        /// Declares a new object type
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public void ObjectDeclare(QualifiedType pBaseType, IdentifierType pIdentifierType)
+        public Data ObjectDeclare(Data pBaseType, Data pIdentifier)
         {
             Node obj = Executor.Cursor.Node;
-            Declaration baseDecl = Executor.Cursor.Packages.Get(pBaseType);
-            Declaration decl = new Declaration(baseDecl, pIdentifierType, obj);
+            Declaration baseDecl = null;
+            if (pBaseType.Type == typeof (StaticType))
+            {
+                StaticType type = pBaseType.getStaticType();
+                baseDecl = null; // TODO: Add an instance of a default object base.
+            }
+            else if (pBaseType.Type == typeof (Qualified))
+            {
+                Qualified baseType = pBaseType.getQualified();
+                baseDecl = Executor.Cursor.Packages.Get(baseType);
+            }
+            else
+            {
+                throw new UnexpectedErrorException(
+                    string.Format("Can not declare object of base type <{0}>", pBaseType.Type.FullName), obj);
+            }
+            Identifier id = pIdentifier.getIdentifier();
+
+            Declaration decl = new Declaration(baseDecl, id, obj);
             Executor.Cursor.Packages.Add(decl);
+
+            return Data.Undefined;
         }
     }
 }

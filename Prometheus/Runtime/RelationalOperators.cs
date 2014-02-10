@@ -4,7 +4,6 @@ using Prometheus.Compile.Optomizer;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
@@ -65,55 +64,26 @@ namespace Prometheus.Runtime
             // do relational operation now
             Node reduced = new Node(GrammarSymbol.Value, pNode.Location);
 
-            iDataType valueA = pNode.Children[0].Data[0];
-            iDataType valueB = pNode.Children[1].Data[0];
+            Data valueA = pNode.Children[0].Data[0];
+            Data valueB = pNode.Children[1].Data[0];
 
-            if (valueA.GetType() == typeof (IntegerType) && valueB.GetType() == typeof (IntegerType))
+            switch (pNode.Type)
             {
-                IntegerType a = (IntegerType)valueA;
-                IntegerType b = (IntegerType)valueB;
-                switch (pNode.Type)
-                {
-                    case GrammarSymbol.GtOperator:
-                        reduced.Data.Add(GreaterThan(a, b));
-                        break;
-                    case GrammarSymbol.LtOperator:
-                        reduced.Data.Add(LessThan(a, b));
-                        break;
-                    case GrammarSymbol.GteOperator:
-                        reduced.Data.Add(GreaterThanEqual(a, b));
-                        break;
-                    case GrammarSymbol.LteOperator:
-                        reduced.Data.Add(LessThanEqual(a, b));
-                        break;
-                    case GrammarSymbol.EqualOperator:
-                        reduced.Data.Add(Equal(a, b));
-                        break;
-                }
-            }
-
-            if (valueA.GetType() == typeof (FloatType) && valueB.GetType() == typeof (FloatType))
-            {
-                FloatType a = (FloatType)valueA;
-                FloatType b = (FloatType)valueB;
-                switch (pNode.Type)
-                {
-                    case GrammarSymbol.GtOperator:
-                        reduced.Data.Add(GreaterThan(a, b));
-                        break;
-                    case GrammarSymbol.LtOperator:
-                        reduced.Data.Add(LessThan(a, b));
-                        break;
-                    case GrammarSymbol.GteOperator:
-                        reduced.Data.Add(GreaterThanEqual(a, b));
-                        break;
-                    case GrammarSymbol.LteOperator:
-                        reduced.Data.Add(LessThanEqual(a, b));
-                        break;
-                    case GrammarSymbol.EqualOperator:
-                        reduced.Data.Add(Equal(a, b));
-                        break;
-                }
+                case GrammarSymbol.GtOperator:
+                    reduced.Data.Add(GreaterThan(valueA, valueB));
+                    break;
+                case GrammarSymbol.LtOperator:
+                    reduced.Data.Add(LessThan(valueA, valueB));
+                    break;
+                case GrammarSymbol.GteOperator:
+                    reduced.Data.Add(GreaterThanEqual(valueA, valueB));
+                    break;
+                case GrammarSymbol.LteOperator:
+                    reduced.Data.Add(LessThanEqual(valueA, valueB));
+                    break;
+                case GrammarSymbol.EqualOperator:
+                    reduced.Data.Add(Equal(valueA, valueB));
+                    break;
             }
 
             return reduced;
@@ -123,99 +93,60 @@ namespace Prometheus.Runtime
         /// Equal
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.EqualOperator)]
-        public BooleanType Equal(IntegerType pValue1, IntegerType pValue2)
+        public Data Equal(Data pValue1, Data pValue2)
         {
-            return new BooleanType(pValue1.Value == pValue2.Value);
-        }
-
-        /// <summary>
-        /// Equal
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.EqualOperator)]
-        public BooleanType Equal(StringType pValue1, StringType pValue2)
-        {
-            return new BooleanType(pValue1.Value == pValue2.Value);
-        }
-
-        /// <summary>
-        /// Equal
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.EqualOperator)]
-        public BooleanType Equal(FloatType pValue1, FloatType pValue2)
-        {
-            return new BooleanType(Math.Abs(pValue1.Value - pValue2.Value) < double.Epsilon);
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.getInteger() == pValue2.getInteger())
+                : new Data(Math.Abs(pValue1.getPrecise() - pValue2.getPrecise()) < Data.PRECISE_EPSILON);
         }
 
         /// <summary>
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.GtOperator)]
-        public BooleanType GreaterThan(IntegerType pValue1, IntegerType pValue2)
+        public Data GreaterThan(Data pValue1, Data pValue2)
         {
-            return new BooleanType(pValue1.Value > pValue2.Value);
-        }
-
-        /// <summary>
-        /// Greater Than
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.GtOperator)]
-        public BooleanType GreaterThan(FloatType pValue1, FloatType pValue2)
-        {
-            return new BooleanType(pValue1.Value > pValue2.Value);
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.getInteger() > pValue2.getInteger())
+                : new Data(pValue1.getPrecise() > pValue2.getPrecise());
         }
 
         /// <summary>
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.GteOperator)]
-        public BooleanType GreaterThanEqual(IntegerType pValue1, IntegerType pValue2)
+        public Data GreaterThanEqual(Data pValue1, Data pValue2)
         {
-            return new BooleanType(pValue1.Value >= pValue2.Value);
-        }
-
-        /// <summary>
-        /// Greater Than
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.GteOperator)]
-        public BooleanType GreaterThanEqual(FloatType pValue1, FloatType pValue2)
-        {
-            return new BooleanType(pValue1.Value >= pValue2.Value);
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.getInteger() >= pValue2.getInteger())
+                : new Data(pValue1.getPrecise() >= pValue2.getPrecise());
         }
 
         /// <summary>
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.LtOperator)]
-        public BooleanType LessThan(IntegerType pValue1, IntegerType pValue2)
+        public Data LessThan(Data pValue1, Data pValue2)
         {
-            return new BooleanType(pValue1.Value < pValue2.Value);
-        }
-
-        /// <summary>
-        /// Greater Than
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.LtOperator)]
-        public BooleanType LessThan(FloatType pValue1, FloatType pValue2)
-        {
-            return new BooleanType(pValue1.Value < pValue2.Value);
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.getInteger() < pValue2.getInteger())
+                : new Data(pValue1.getPrecise() < pValue2.getPrecise());
         }
 
         /// <summary>
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.LteOperator)]
-        public BooleanType LessThanEqual(IntegerType pValue1, IntegerType pValue2)
+        public Data LessThanEqual(Data pValue1, Data pValue2)
         {
-            return new BooleanType(pValue1.Value <= pValue2.Value);
-        }
-
-        /// <summary>
-        /// Greater Than
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.LteOperator)]
-        public BooleanType LessThanEqual(FloatType pValue1, FloatType pValue2)
-        {
-            return new BooleanType(pValue1.Value <= pValue2.Value);
+            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == Data.Integer
+                ? new Data(pValue1.getInteger() <= pValue2.getInteger())
+                : new Data(pValue1.getPrecise() <= pValue2.getPrecise());
         }
     }
 }

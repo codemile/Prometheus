@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using Prometheus.Compile;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
-using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
 
-namespace Prometheus.Nodes
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Handles create data objects during compile time.
@@ -33,20 +31,20 @@ namespace Prometheus.Nodes
         /// <summary>
         /// Creates a data object and adjusts the value is needed.
         /// </summary>
-        public static iDataType Create(Location pLocation, GrammarSymbol pSymbol, string pValue)
+        public static Data Create(Location pLocation, GrammarSymbol pSymbol, string pValue)
         {
             switch (pSymbol)
             {
                     // drop the quotes
                 case GrammarSymbol.StringDouble:
                 case GrammarSymbol.StringSingle:
-                    return new StringType(pValue.Substring(1, pValue.Length - 2));
+                    return new Data(pValue.Substring(1, pValue.Length - 2));
 
                 case GrammarSymbol.Number:
-                    return new IntegerType(Convert.ToInt64(pValue));
+                    return new Data(Convert.ToInt64(pValue));
 
                 case GrammarSymbol.Decimal:
-                    return new FloatType(Convert.ToDouble(pValue));
+                    return new Data(Convert.ToDouble(pValue));
 
                 case GrammarSymbol.Boolean:
                     pValue = pValue.ToLower();
@@ -56,21 +54,22 @@ namespace Prometheus.Nodes
                         case "on":
                         case "yes":
                         case "always":
-                            return new BooleanType(true);
+                            return new Data(true);
                         case "false":
                         case "off":
                         case "no":
                         case "never":
-                            return new BooleanType(false);
+                            return new Data(false);
                     }
                     break;
 
                 case GrammarSymbol.Identifier:
+                    //case GrammarSymbol.@this:
                 case GrammarSymbol.MemberName:
-                    return new IdentifierType(pValue);
+                    return new Data(new Identifier(pValue));
 
                 case GrammarSymbol.Type:
-                    return new StaticType(pValue);
+                    return new Data(new StaticType(pValue));
             }
 
             throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol),

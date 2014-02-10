@@ -6,7 +6,6 @@ using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
 
@@ -51,7 +50,7 @@ namespace Prometheus.Parser.Executors
         /// <param name="pInternal">Name of the API to call</param>
         /// <param name="pArguments">The arguments</param>
         /// <returns>The resulting data</returns>
-        public iDataType Execute(string pInternal, List<iDataType> pArguments)
+        public Data Execute(string pInternal, List<Data> pArguments)
         {
             object[] values = new object[pArguments.Count];
             for (int i = 0, c = pArguments.Count; i < c; i++)
@@ -59,13 +58,13 @@ namespace Prometheus.Parser.Executors
                 values[i] = pArguments[i];
             }
 
-            return _internalLookup[pInternal].Execute(values);
+            return _internalLookup[pInternal].Execute(pArguments);
         }
 
         /// <summary>
         /// Executes a node
         /// </summary>
-        public iDataType Execute(Node pNode, Dictionary<string, iDataType> pVariables)
+        public Data Execute(Node pNode, Dictionary<string, Data> pVariables)
         {
             using (Cursor.Stack = new StackSpace(Cursor, pVariables))
             {
@@ -78,12 +77,12 @@ namespace Prometheus.Parser.Executors
         /// </summary>
         /// <param name="pParent">The parent node</param>
         /// <returns>The resulting data</returns>
-        private iDataType WalkDownChildren(Node pParent)
+        private Data WalkDownChildren(Node pParent)
         {
             switch (pParent.Type)
             {
                 case GrammarSymbol.FunctionExpression:
-                    return new Function(pParent);
+                    return new Data(pParent);
 
                 case GrammarSymbol.Program:
                 case GrammarSymbol.Block:
@@ -93,17 +92,17 @@ namespace Prometheus.Parser.Executors
                     {
                         WalkDownChildren(pParent.Children[i]);
                     }
-                    return UndefinedType.UNDEFINED;
+                    return Data.Undefined;
                 }
 
                 case GrammarSymbol.IfControl:
                 {
                     if (pParent.Children.Count == 2)
                     {
-                        BooleanType exp = (BooleanType)WalkDownChildren(pParent.Children[0]);
-                        if (exp.Value)
+                        Data exp = WalkDownChildren(pParent.Children[0]);
+                        if (!exp.getBool())
                         {
-                            return UndefinedType.UNDEFINED;
+                            return Data.Undefined;
                         }
                         using (Cursor.Stack = new StackSpace(Cursor))
                         {
@@ -112,8 +111,8 @@ namespace Prometheus.Parser.Executors
                     }
                     if (pParent.Children.Count == 3)
                     {
-                        BooleanType _if = (BooleanType)WalkDownChildren(pParent.Children[0]);
-                        if (_if.Value)
+                        Data _if = WalkDownChildren(pParent.Children[0]);
+                        if (_if.getBool())
                         {
                             using (Cursor.Stack = new StackSpace(Cursor))
                             {
@@ -139,8 +138,8 @@ namespace Prometheus.Parser.Executors
                     try
                     {
                         while (pParent.Type == GrammarSymbol.DoWhileControl
-                            ? ((BooleanType)WalkDownChildren(pParent.Children[0])).Value
-                            : (!((BooleanType)WalkDownChildren(pParent.Children[0])).Value))
+                            ? WalkDownChildren(pParent.Children[0]).getBool()
+                            : !WalkDownChildren(pParent.Children[0]).getBool())
                         {
                             try
                             {
@@ -154,7 +153,7 @@ namespace Prometheus.Parser.Executors
                     catch (BreakException)
                     {
                     }
-                    return UndefinedType.UNDEFINED;
+                    return Data.Undefined;
                 }
 
                 case GrammarSymbol.LoopWhileControl:
@@ -175,13 +174,13 @@ namespace Prometheus.Parser.Executors
                             {
                             }
                         } while (pParent.Type == GrammarSymbol.LoopWhileControl
-                            ? ((BooleanType)WalkDownChildren(pParent.Children[1])).Value
-                            : (!((BooleanType)WalkDownChildren(pParent.Children[1])).Value));
+                            ? WalkDownChildren(pParent.Children[1]).getBool()
+                            : !WalkDownChildren(pParent.Children[1]).getBool());
                     }
                     catch (BreakException)
                     {
                     }
-                    return UndefinedType.UNDEFINED;
+                    return Data.Undefined;
                 }
 
                 case GrammarSymbol.ForControl:
@@ -191,7 +190,7 @@ namespace Prometheus.Parser.Executors
                     AssertChildren(pParent, (pParent.Type == GrammarSymbol.ForControl) ? 3 : 4);
                     AssertData(pParent, 1);
 #endif
-                    return UndefinedType.UNDEFINED;
+                    return Data.Undefined;
                 }
 
                 case GrammarSymbol.BreakControl:
@@ -239,7 +238,7 @@ namespace Prometheus.Parser.Executors
         /// <param name="pNode">The node to execute</param>
         /// <param name="pBase">The object that implements the node</param>
         /// <returns>The returning data</returns>
-        private iDataType ExecuteBase(Node pNode, ExecutorBase pBase)
+        private Data ExecuteBase(Node pNode, ExecutorBase pBase)
         {
             int dCount = pNode.Data.Count;
             object[] values = new object[pNode.Children.Count + dCount];

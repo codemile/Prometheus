@@ -29,9 +29,11 @@ namespace Prometheus.Runtime
         /// </summary>
         /// <param name="pValue">The message to print.</param>
         [ExecuteSymbol(GrammarSymbol.PrintProc)]
-        public void Print(StringType pValue)
+        public Data Print(Data pValue)
         {
-            _logger.Fine(pValue.Value);
+            _logger.Fine(pValue.getString());
+
+            return Data.Undefined;
         }
     }
 }

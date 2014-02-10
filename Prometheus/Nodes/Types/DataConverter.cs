@@ -1,7 +1,6 @@
 ﻿using System;
-using Prometheus.Nodes.Types;
 
-namespace Prometheus.Nodes
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Handles type juggling at run-time. The engine only supports two types of
@@ -20,29 +19,29 @@ namespace Prometheus.Nodes
         /// <returns>The best numeric type</returns>
         public static Type BestNumericType(Type pType1, Type pType2)
         {
-            Type t1 = (pType1 == typeof (UndefinedType)) ? typeof (FloatType) : pType1;
-            Type t2 = (pType2 == typeof (UndefinedType)) ? typeof (FloatType) : pType2;
+            Type t1 = (pType1 == typeof (Undefined)) ? Data.Precise : pType1;
+            Type t2 = (pType2 == typeof (Undefined)) ? Data.Precise : pType2;
 
-            t1 = (t1 == typeof (FloatType) || t1 == typeof (IntegerType)) ? t1 : typeof (IntegerType);
-
-            if (t1 == t2)
-            {
-                return t1;
-            }
-
-            t2 = (t2 == typeof (FloatType) || t2 == typeof (IntegerType)) ? t2 : typeof (IntegerType);
+            t1 = (t1 == Data.Precise || t1 == Data.Integer) ? t1 : Data.Integer;
 
             if (t1 == t2)
             {
                 return t1;
             }
 
-            if (t1 == typeof (FloatType) || t2 == typeof (FloatType))
+            t2 = (t2 == Data.Precise || t2 == Data.Integer) ? t2 : Data.Integer;
+
+            if (t1 == t2)
             {
-                return typeof (FloatType);
+                return t1;
             }
 
-            return typeof (IntegerType);
+            if (t1 == Data.Precise || t2 == Data.Precise)
+            {
+                return Data.Precise;
+            }
+
+            return Data.Integer;
         }
     }
 }

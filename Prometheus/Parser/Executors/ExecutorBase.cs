@@ -59,7 +59,6 @@ namespace Prometheus.Parser.Executors
         /// <param name="pValues">The arguments</param>
         /// <returns>The output data</returns>
         /// <exception cref="RunTimeException">Throws runtime exceptions from inner grammar objects.</exception>
-/*
         public iDataType Execute(List<iDataType> pValues)
         {
             try
@@ -87,6 +86,5 @@ namespace Prometheus.Parser.Executors
                 throw;
             }
         }
-*/
     }
 }

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Runtime
 {
@@ -11,21 +10,20 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Collects the arguments for a function from the node.
         /// </summary>
-        public static Dictionary<string, iDataType> CollectArguments(Node pNode, ArgumentListType pArguments)
+        public static Dictionary<string, Data> CollectArguments(Node pNode, Data pArguments)
         {
             int argCount = pNode.Data.Count;
 
-            if (pArguments.Arguments.Count < argCount)
+            ArgumentList list = pArguments.getArgumentList();
+            if (list.Count < argCount)
             {
-                pArguments.Arguments.AddRange(Enumerable.Repeat(UndefinedType.UNDEFINED,
-                    argCount - pArguments.Arguments.Count));
+                list.AddRange(Enumerable.Repeat(Data.Undefined, argCount - list.Count));
             }
 
-            Dictionary<string, iDataType> variables = new Dictionary<string, iDataType>(pNode.Data.Count);
+            Dictionary<string, Data> variables = new Dictionary<string, Data>(pNode.Data.Count);
             for (int i = 0; i < argCount; i++)
             {
-                IdentifierType id = (IdentifierType)pNode.Data[i];
-                variables.Add(id.Name, pArguments.Arguments[i]);
+                variables.Add(pNode.Data[i].getIdentifier().Name, list[i]);
             }
             return variables;
         }

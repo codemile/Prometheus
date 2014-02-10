@@ -1,12 +1,11 @@
 ﻿using System.Globalization;
-using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Holds a reference to an object in the heap.
     /// </summary>
-    public class AliasType : iDataType
+    public class Alias
     {
         /// <summary>
         /// Position of object in the heap.
@@ -16,7 +15,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public AliasType(int pHeap)
+        public Alias(int pHeap)
         {
             Heap = pHeap;
         }

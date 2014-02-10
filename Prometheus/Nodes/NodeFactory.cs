@@ -1,6 +1,7 @@
 ﻿using GOLD;
 using Prometheus.Compile;
 using Prometheus.Grammar;
+using Prometheus.Nodes.Types;
 
 namespace Prometheus.Nodes
 {

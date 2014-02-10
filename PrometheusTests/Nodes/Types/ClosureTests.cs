@@ -11,7 +11,7 @@ namespace PrometheusTest.Nodes.Types
         public void Closure()
         {
             Closure c = new Closure(MockAlias.Create(), MockNode.Create());
-            Assert.AreEqual(typeof (Alias), c.This.Heap);
+            Assert.AreEqual(typeof (Alias), c.This.getValue());
             Assert.IsNotNull(c.Function);
         }
     }

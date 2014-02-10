@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
 {
@@ -7,7 +6,7 @@ namespace Prometheus.Nodes.Types
     /// Refers to a string that defines a static type (int, object, class, etc..)
     /// </summary>
     [DebuggerDisplay("{Name}")]
-    public class StaticType : iDataType
+    public class StaticType
     {
         /// <summary>
         /// the display name

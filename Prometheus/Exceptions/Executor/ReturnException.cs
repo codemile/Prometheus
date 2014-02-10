@@ -1,5 +1,4 @@
 ﻿using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Exceptions.Executor
 {
@@ -10,12 +9,12 @@ namespace Prometheus.Exceptions.Executor
     {
         /// <summary>
         /// </summary>
-        public readonly iDataType Value;
+        public readonly Data Value;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ReturnException(iDataType pValue)
+        public ReturnException(Data pValue)
         {
             Value = pValue;
         }
