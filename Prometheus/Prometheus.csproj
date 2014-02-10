@@ -59,15 +59,10 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
-    <Compile Include="Nodes\Function.cs" />
-    <Compile Include="Nodes\Types\Boolean.cs" />
     <Compile Include="Nodes\Types\Closure.cs" />
-    <Compile Include="Nodes\Types\Float.cs" />
-    <Compile Include="Nodes\Types\Integer.cs" />
     <Compile Include="Nodes\Types\Qualified.cs" />
     <Compile Include="Nodes\Types\Alias.cs" />
     <Compile Include="Nodes\Types\StaticType.cs" />
-    <Compile Include="Nodes\Types\String.cs" />
     <Compile Include="Objects\CreateInherited.cs" />
     <Compile Include="Objects\Declaration.cs" />
     <Compile Include="Objects\Instance.cs" />
