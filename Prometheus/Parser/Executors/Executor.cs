@@ -59,7 +59,7 @@ namespace Prometheus.Parser.Executors
                 values[i] = pArguments[i];
             }
 
-            return _internalLookup[pInternal].Execute(pArguments);
+            return _internalLookup[pInternal].Execute(values);
         }
 
         /// <summary>
