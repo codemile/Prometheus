@@ -1,6 +1,9 @@
-﻿using Prometheus.Grammar;
+﻿using System;
+using Prometheus.Exceptions.Executor;
+using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
@@ -16,22 +19,15 @@ namespace Prometheus.Runtime
         /// Will convert a function expression into a closure function with a reference
         /// to the current "this" object.
         /// </summary>
-        private Data CreateClosure(Data pValue)
+        private ClosureType CreateClosure(Node pFunc)
         {
-            if (pValue.Type != typeof (Node))
+            if (pFunc.Type != GrammarSymbol.FunctionExpression)
             {
-                return pValue;
+                throw new UnexpectedErrorException("Was expecting node for closure");
             }
-            Node func = pValue.getNode();
-            if (func.Type != GrammarSymbol.FunctionExpression)
-            {
-                return pValue;
-            }
-            Data _this = Executor.Cursor.Stack.Get("this");
-            Alias aThis = _this.getAlias();
-            Closure closure = new Closure(aThis, func);
-            pValue = new Data(closure);
-            return pValue;
+            AliasType aThis = (AliasType)Executor.Cursor.Stack.Get("this");
+            ClosureType closureType = new ClosureType(aThis, pFunc);
+            return closureType;
         }
 
         /// <summary>
@@ -45,29 +41,31 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Assigns a value to an Identifier
         /// </summary>
-        /// <param name="pQualified">The variable name</param>
-        /// <param name="pValue">The value to assign</param>
+        /// <param name="pQualifiedType">The variable name</param>
+        /// <param name="pDataType">The value to assign</param>
         [ExecuteSymbol(GrammarSymbol.Assignment)]
-        public Data Assignment(Data pQualified, Data pValue)
+        public iDataType Assignment(QualifiedType pQualifiedType, iDataType pDataType)
         {
-            pValue = CreateClosure(pValue);
-            Executor.Cursor.Set(pQualified.getQualified(), pValue);
-            return pValue;
+/*
+            pFunc = CreateClosure(pFunc);
+            Executor.Cursor.Set(pQualified, pFunc);
+            return pFunc;
+*/
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Decrement
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.Decrement)]
-        public Data Dec(Data pQualified)
+        public iDataType Dec(QualifiedType pQualifiedType)
         {
-            Qualified id = pQualified.getQualified();
-            string member = id.Parts[id.Parts.Length - 1];
-            MemorySpace memory = Executor.Cursor.Resolve(id);
-            Data d = memory.Get(member);
-            d = d.Type == typeof (double)
-                ? new Data(d.getPrecise() - 1)
-                : new Data(d.getInteger() - 1);
+            string member = pQualifiedType.Parts[pQualifiedType.Parts.Length - 1];
+            MemorySpace memory = Executor.Cursor.Resolve(pQualifiedType);
+            iDataType d = memory.Get(member);
+            d = d is FloatType
+                ? (iDataType)new FloatType(((FloatType)d).Value - 1)
+                : new IntegerType(((IntegerType)d).Value - 1);
             memory.Set(member, d);
             return d;
         }
@@ -75,41 +73,42 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Declares a variable with a value
         /// </summary>
-        /// <param name="pIdentifier">Name of the variable</param>
+        /// <param name="pIdentifierType">Name of the variable</param>
         /// <param name="pValue">The value</param>
         /// <returns>The value assigned</returns>
         [ExecuteSymbol(GrammarSymbol.Declare)]
-        public Data Declare(Data pIdentifier, Data pValue)
+        public void Declare(IdentifierType pIdentifierType, iDataType pValue)
         {
+            throw new NotImplementedException();
+/*
             pValue = CreateClosure(pValue);
-            Executor.Cursor.Stack.Create(pIdentifier.getIdentifier().Name, pValue);
-            return pValue;
+            Executor.Cursor.Stack.Create(pIdentifier.Name, pValue);
+*/
         }
 
         /// <summary>
         /// Declares a variable without a value
         /// </summary>
-        /// <param name="pIdentifier">Name of the variable</param>
+        /// <param name="pIdentifierType">Name of the variable</param>
         /// <returns>The value assigned</returns>
         [ExecuteSymbol(GrammarSymbol.Declare)]
-        public Data Declare(Data pIdentifier)
+        public void Declare(IdentifierType pIdentifierType)
         {
-            return Declare(pIdentifier, Data.Undefined);
+            Declare(pIdentifierType, UndefinedType.UNDEFINED);
         }
 
         /// <summary>
         /// Increment
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.Increment)]
-        public Data Inc(Data pQualified)
+        public iDataType Inc(QualifiedType pQualifiedType)
         {
-            Qualified id = pQualified.getQualified();
-            string member = id.Parts[id.Parts.Length - 1];
-            MemorySpace memory = Executor.Cursor.Resolve(id);
-            Data d = memory.Get(member);
-            d = d.Type == typeof (double)
-                ? new Data(d.getPrecise() + 1)
-                : new Data(d.getInteger() + 1);
+            string member = pQualifiedType.Parts[pQualifiedType.Parts.Length - 1];
+            MemorySpace memory = Executor.Cursor.Resolve(pQualifiedType);
+            iDataType d = memory.Get(member);
+            d = d is FloatType
+                ? (iDataType)new FloatType(((FloatType)d).Value + 1)
+                : new IntegerType(((IntegerType)d).Value + 1);
             memory.Set(member, d);
             return d;
         }
@@ -118,10 +117,9 @@ namespace Prometheus.Runtime
         /// Decrement
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ListVars)]
-        public Data ListVars()
+        public void ListVars()
         {
             Executor.Cursor.Stack.Print();
-            return Data.Undefined;
         }
 
         /// <summary>
@@ -130,16 +128,16 @@ namespace Prometheus.Runtime
         /// <param name="pQualifier">The variable name</param>
         /// <returns>The value or undefined.</returns>
         [ExecuteSymbol(GrammarSymbol.QualifiedID)]
-        public Data Qualified(Data pQualifier)
+        public iDataType Qualified(QualifiedType pQualifier)
         {
-            return Executor.Cursor.Get(pQualifier.getQualified());
+            return Executor.Cursor.Get(pQualifier);
         }
 
         /// <summary>
         /// Returns the value of data stored in the source code.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.Value)]
-        public Data Value(Data pValue)
+        public iDataType Value(iDataType pValue)
         {
             return pValue;
         }

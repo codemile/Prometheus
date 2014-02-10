@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser;
 using Prometheus.Properties;
 
@@ -35,7 +36,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        public StackSpace(Cursor pCursor, Dictionary<string, Data> pStorage)
+        public StackSpace(Cursor pCursor, Dictionary<string, iDataType> pStorage)
             : base(pStorage)
         {
             _cursor = pCursor;
@@ -61,9 +62,9 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pName">The identifier to find</param>
         /// <returns>The data object or Null if not found.</returns>
-        public override Data Get(string pName)
+        public override iDataType Get(string pName)
         {
-            Data d = base.Get(pName);
+            iDataType d = base.Get(pName);
             if (d != null)
             {
                 return d;
@@ -92,16 +93,16 @@ namespace Prometheus.Storage
         /// all parent scopes.
         /// </summary>
         /// <param name="pIdentifier">The identifier to find</param>
-        /// <param name="pData">The data to assign to the identifier</param>
-        public override bool Set(string pName, Data pData)
+        /// <param name="pDataType">The data to assign to the identifier</param>
+        public override bool Set(string pName, iDataType pDataType)
         {
-            if (base.Set(pName, pData))
+            if (base.Set(pName, pDataType))
             {
                 return true;
             }
             if (_parent != null)
             {
-                return _parent.Set(pName, pData);
+                return _parent.Set(pName, pDataType);
             }
             throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
         }

@@ -21,11 +21,9 @@ namespace PrometheusTest.Mock
         /// </summary>
         /// <param name="pValue">The message to print.</param>
         [ExecuteSymbol(GrammarSymbol.PrintProc)]
-        public Data Print(Data pValue)
+        public void Print(String pValue)
         {
-            Debug.WriteLine(pValue.getString());
-
-            return Data.Undefined;
+            Debug.WriteLine(pValue.Value);
         }
     }
 }

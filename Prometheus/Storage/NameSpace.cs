@@ -109,21 +109,21 @@ namespace Prometheus.Storage
         /// <summary>
         /// Gets the declaration of an object.
         /// </summary>
-        /// <param name="pQualified">The identifier</param>
+        /// <param name="pQualifiedType">The identifier</param>
         /// <returns>The declaration or null.</returns>
-        public Declaration Get(Qualified pQualified)
+        public Declaration Get(QualifiedType pQualifiedType)
         {
-            return Get(pQualified.Parts, 0);
+            return Get(pQualifiedType.Parts, 0);
         }
 
         /// <summary>
         /// Gets the declaration of an object.
         /// </summary>
-        /// <param name="pIdentifier">The identifier</param>
+        /// <param name="pIdentifierType">The identifier</param>
         /// <returns>The declaration or null.</returns>
-        public Declaration Get(Identifier pIdentifier)
+        public Declaration Get(IdentifierType pIdentifierType)
         {
-            string[] parts = pIdentifier.Name.Split(new[] {'.'});
+            string[] parts = pIdentifierType.Name.Split(new[] {'.'});
             return Get(parts, 0);
         }
 

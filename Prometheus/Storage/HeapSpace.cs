@@ -42,24 +42,24 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pInstance">The instance of the object.</param>
         /// <returns>An alias pointing to the object.</returns>
-        public Data Add(Instance pInstance)
+        public AliasType Add(Instance pInstance)
         {
             _storage.Add(pInstance);
-            return new Data(new Alias(_storage.Count - 1));
+            return new AliasType(_storage.Count - 1);
         }
 
         /// <summary>
         /// Access an object instance by it's alias.
         /// </summary>
-        /// <param name="pAlias">The alias</param>
+        /// <param name="pAliasType">The alias</param>
         /// <returns>The instance</returns>
-        public Instance Get(Alias pAlias)
+        public Instance Get(AliasType pAliasType)
         {
-            if (pAlias.Heap >= _storage.Count)
+            if (pAliasType.Heap >= _storage.Count)
             {
                 throw new UnexpectedErrorException("Memory location no longer refers to object.");
             }
-            return _storage[pAlias.Heap];
+            return _storage[pAliasType.Heap];
         }
     }
 }
