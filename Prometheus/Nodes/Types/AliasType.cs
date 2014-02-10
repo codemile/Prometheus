@@ -5,7 +5,7 @@ namespace Prometheus.Nodes.Types
     /// <summary>
     /// Holds a reference to an object in the heap.
     /// </summary>
-    public class Alias
+    public class AliasType
     {
         /// <summary>
         /// Position of object in the heap.
@@ -15,7 +15,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public Alias(int pHeap)
+        public AliasType(int pHeap)
         {
             Heap = pHeap;
         }

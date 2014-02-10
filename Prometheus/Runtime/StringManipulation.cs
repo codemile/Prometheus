@@ -1,4 +1,5 @@
 ﻿using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
@@ -21,27 +22,27 @@ namespace Prometheus.Runtime
         /// Converts to lower case.
         /// </summary>
         [ExecuteInternal("lower")]
-        public Data Lower(Data pValue)
+        public DataType Lower(DataType pValue)
         {
-            return new Data(pValue.getString().ToLower());
+            return new DataType(pValue.getString().ToLower());
         }
 
         /// <summary>
         /// Converts to trims spaces
         /// </summary>
         [ExecuteInternal("trim")]
-        public Data Trim(Data pValue)
+        public DataType Trim(DataType pValue)
         {
-            return new Data(pValue.getString().Trim());
+            return new DataType(pValue.getString().Trim());
         }
 
         /// <summary>
         /// Converts to upper case.
         /// </summary>
         [ExecuteInternal("upper")]
-        public Data Upper(Data pValue)
+        public DataType Upper(DataType pValue)
         {
-            return new Data(pValue.getString().ToUpper());
+            return new DataType(pValue.getString().ToUpper());
         }
     }
 }

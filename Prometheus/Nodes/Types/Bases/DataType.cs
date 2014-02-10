@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Prometheus.Exceptions.Executor;
 
-namespace Prometheus.Nodes.Types
+namespace Prometheus.Nodes.Types.Bases
 {
     /// <summary>
     /// The data for a node.
     /// </summary>
     [DebuggerDisplay("{Type}:{_value}")]
-    public class Data
+    public class DataType
     {
 #if DEBUG
         private static readonly HashSet<Type> _supported = new HashSet<Type>
@@ -17,14 +17,14 @@ namespace Prometheus.Nodes.Types
                                                                typeof (long),
                                                                typeof (double),
                                                                typeof (string),
-                                                               typeof (Undefined),
+                                                               typeof (UndefinedType),
                                                                typeof (bool),
-                                                               typeof (Identifier),
-                                                               typeof (Qualified),
+                                                               typeof (IdentifierType),
+                                                               typeof (QualifiedType),
                                                                typeof (Node),
                                                                typeof (StaticType),
-                                                               typeof (Alias),
-                                                               typeof (Closure)
+                                                               typeof (AliasType),
+                                                               typeof (ClosureType)
                                                            };
 #endif
 
@@ -46,7 +46,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Represents an undefined data type.
         /// </summary>
-        public static readonly Data Undefined = new Data();
+        public static readonly DataType Undefined = new DataType();
 
         /// <summary>
         /// The data type.
@@ -87,16 +87,16 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Undefined constructor
         /// </summary>
-        private Data()
+        private DataType()
         {
-            _value = new Undefined();
-            Type = typeof (Undefined);
+            _value = new UndefinedType();
+            Type = typeof (UndefinedType);
         }
 
         /// <summary>
         /// Generic constructor. Only pass supported types.
         /// </summary>
-        public Data(object pObj)
+        public DataType(object pObj)
         {
 #if DEBUG
             if (!_supported.Contains(pObj.GetType()))
@@ -160,37 +160,37 @@ namespace Prometheus.Nodes.Types
             {
                 return "function";
             }
-            return Type == typeof (Alias) ? "object" : Get<string>();
+            return Type == typeof (AliasType) ? "object" : Get<string>();
         }
 
         /// <summary>
         /// Accesses the data as a list of arguments.
         /// </summary>
         /// <returns>An argument collection</returns>
-        public ArgumentList getArgumentList()
+        public ArgumentListType getArgumentList()
         {
-            if (Type == typeof (ArgumentList))
+            if (Type == typeof (ArgumentListType))
             {
-                return (ArgumentList)_value;
+                return (ArgumentListType)_value;
             }
-            return new ArgumentList {this};
+            return new ArgumentListType {this};
         }
 
         /// <summary>
         /// Access the value as an identifier.
         /// </summary>
         /// <returns>The identifier</returns>
-        public Identifier getIdentifier()
+        public IdentifierType getIdentifier()
         {
-            return (Identifier)_value;
+            return (IdentifierType)_value;
         }
 
         /// <summary>
         /// Access the value as a qualified ID.
         /// </summary>
-        public Qualified getQualified()
+        public QualifiedType getQualified()
         {
-            return (Qualified)_value;
+            return (QualifiedType)_value;
         }
 
         /// <summary>
@@ -215,17 +215,17 @@ namespace Prometheus.Nodes.Types
         /// Access the value as an alias.
         /// </summary>
         /// <returns>The alias</returns>
-        public Alias getAlias()
+        public AliasType getAlias()
         {
-            return (Alias)_value;
+            return (AliasType)_value;
         }
 
         /// <summary>
         /// Access the value as a closure function
         /// </summary>
-        public Closure getClosure()
+        public ClosureType getClosure()
         {
-            return (Closure)_value;
+            return (ClosureType)_value;
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace Prometheus.Nodes.Types
     /// Represents an undefined value.
     /// </summary>
     [DebuggerDisplay("Undefined")]
-    public class Undefined : IConvertible
+    public class UndefinedType : IConvertible
     {
         /// <summary>
         /// Returns the <see cref="T:System.TypeCode"/> for this instance.

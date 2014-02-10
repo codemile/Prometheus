@@ -1,6 +1,7 @@
 ﻿using Logging;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
@@ -29,11 +30,11 @@ namespace Prometheus.Runtime
         /// </summary>
         /// <param name="pValue">The message to print.</param>
         [ExecuteSymbol(GrammarSymbol.PrintProc)]
-        public Data Print(Data pValue)
+        public DataType Print(DataType pValue)
         {
             _logger.Fine(pValue.getString());
 
-            return Data.Undefined;
+            return DataType.Undefined;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Logging;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Properties;
 
 namespace Prometheus.Storage
@@ -20,20 +21,20 @@ namespace Prometheus.Storage
         /// <summary>
         /// Storage of variable values.
         /// </summary>
-        private readonly Dictionary<string, Data> _storage;
+        private readonly Dictionary<string, DataType> _storage;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public MemorySpace()
-            : this(new Dictionary<string, Data>())
+            : this(new Dictionary<string, DataType>())
         {
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        protected MemorySpace(Dictionary<string, Data> pStorage)
+        protected MemorySpace(Dictionary<string, DataType> pStorage)
         {
             _storage = pStorage;
         }
@@ -51,7 +52,7 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pName">The identifier to get</param>
         /// <returns>The data</returns>
-        public virtual Data Get(string pName)
+        public virtual DataType Get(string pName)
         {
             return _storage.ContainsKey(pName) ? _storage[pName] : null;
         }
@@ -63,7 +64,7 @@ namespace Prometheus.Storage
         public virtual void Print(int pIndent = 0)
         {
             string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
-            foreach (KeyValuePair<string, Data> var in _storage)
+            foreach (KeyValuePair<string, DataType> var in _storage)
             {
                 if (var.Value.Type == typeof (string))
                 {
@@ -78,15 +79,15 @@ namespace Prometheus.Storage
         /// Derived classes will handle the setting.
         /// </summary>
         /// <param name="pName">The identifier to set</param>
-        /// <param name="pData">The data</param>
+        /// <param name="pDataType">The data</param>
         /// <returns>True if identifier exists</returns>
-        public virtual bool Set(string pName, Data pData)
+        public virtual bool Set(string pName, DataType pDataType)
         {
             if (!_storage.ContainsKey(pName))
             {
                 return false;
             }
-            _storage[pName] = pData;
+            _storage[pName] = pDataType;
             return true;
         }
 
@@ -109,16 +110,16 @@ namespace Prometheus.Storage
         /// variable if required.
         /// </summary>
         /// <param name="pName">The identifier to create</param>
-        /// <param name="pData">The data to assign</param>
-        public void Assign(string pName, Data pData)
+        /// <param name="pDataType">The data to assign</param>
+        public void Assign(string pName, DataType pDataType)
         {
             if (_storage.ContainsKey(pName))
             {
-                _storage[pName] = pData;
+                _storage[pName] = pDataType;
             }
             else
             {
-                _storage.Add(pName, pData);
+                _storage.Add(pName, pDataType);
             }
         }
 
@@ -126,15 +127,15 @@ namespace Prometheus.Storage
         /// Creates a new variable in the current scope.
         /// </summary>
         /// <param name="pName">The identifier to create</param>
-        /// <param name="pData">The data to assign</param>
-        public void Create(string pName, Data pData)
+        /// <param name="pDataType">The data to assign</param>
+        public void Create(string pName, DataType pDataType)
         {
             // only check the current scope
             if (_storage.ContainsKey(pName))
             {
                 throw new IdentifierInnerException(string.Format(Errors.IdentifierAlreadyDefined, pName));
             }
-            _storage.Add(pName, pData);
+            _storage.Add(pName, pDataType);
         }
     }
 }

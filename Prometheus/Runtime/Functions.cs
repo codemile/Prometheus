@@ -2,6 +2,7 @@
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Objects;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
@@ -24,101 +25,101 @@ namespace Prometheus.Runtime
         /// Handles passing arguments to the call method.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
-        public Data Arguments()
+        public DataType Arguments()
         {
-            return Data.Undefined;
+            return DataType.Undefined;
         }
 
         /// <summary>
         /// Handles passing arguments to the call method.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
-        public Data Arguments(Data pArg1)
+        public DataType Arguments(DataType pArg1)
         {
-            return new Data(new ArgumentList {pArg1});
+            return new DataType(new ArgumentListType {pArg1});
         }
 
         /// <summary>
         /// Handles passing arguments to the call method.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
-        public Data Arguments(Data pArg1, Data pArg2)
+        public DataType Arguments(DataType pArg1, DataType pArg2)
         {
-            return new Data(new ArgumentList {pArg1, pArg2});
+            return new DataType(new ArgumentListType {pArg1, pArg2});
         }
 
         /// <summary>
         /// Handles passing arguments to the call method.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
-        public Data Arguments(Data pArg1, Data pArg2, Data pArg3)
+        public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3)
         {
-            return new Data(new ArgumentList {pArg1, pArg2, pArg3});
+            return new DataType(new ArgumentListType {pArg1, pArg2, pArg3});
         }
 
         /// <summary>
         /// Handles passing arguments to the call method.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
-        public Data Arguments(Data pArg1, Data pArg2, Data pArg3, Data pArg4)
+        public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4)
         {
-            return new Data(new ArgumentList {pArg1, pArg2, pArg3, pArg4});
+            return new DataType(new ArgumentListType {pArg1, pArg2, pArg3, pArg4});
         }
 
         /// <summary>
         /// Handles passing arguments to the call method.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
-        public Data Arguments(Data pArg1, Data pArg2, Data pArg3, Data pArg4, Data pArg5)
+        public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4, DataType pArg5)
         {
-            return new Data(new ArgumentList {pArg1, pArg2, pArg3, pArg4, pArg5});
+            return new DataType(new ArgumentListType {pArg1, pArg2, pArg3, pArg4, pArg5});
         }
 
         /// <summary>
         /// Handles passing arguments to the call method.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
-        public Data Arguments(Data pArg1, Data pArg2, Data pArg3, Data pArg4, Data pArg5, Data pArg6)
+        public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4, DataType pArg5, DataType pArg6)
         {
-            return new Data(new ArgumentList {pArg1, pArg2, pArg3, pArg4, pArg5, pArg6});
+            return new DataType(new ArgumentListType {pArg1, pArg2, pArg3, pArg4, pArg5, pArg6});
         }
 
         /// <summary>
         /// Executes an identify as a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public Data Call(Data pClosure)
+        public DataType Call(DataType pClosure)
         {
-            return Call(pClosure, Data.Undefined);
+            return Call(pClosure, DataType.Undefined);
         }
 
         /// <summary>
         /// Executes a closure a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public Data Call(Data pClosure, Data pArguments)
+        public DataType Call(DataType pClosure, DataType pArguments)
         {
             try
             {
                 // calling base constructor
-                if (pClosure.Type == typeof (Alias))
+                if (pClosure.Type == typeof (AliasType))
                 {
-                    Alias a = pClosure.getAlias();
+                    AliasType a = pClosure.getAlias();
                     Instance inst = Executor.Cursor.Heap.Get(a);
-                    Dictionary<string, Data> variables = Runtime.Arguments.CollectArguments(inst.Constructor, pArguments);
+                    Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(inst.Constructor, pArguments);
                     return Executor.Execute(inst.Constructor, variables);
                 }
                 else
                 {
-                    Closure closure = pClosure.getClosure();
+                    ClosureType closureType = pClosure.getClosure();
                     // empty function check
-                    if (closure.Function.Children.Count == 0)
+                    if (closureType.Function.Children.Count == 0)
                     {
-                        return Data.Undefined;
+                        return DataType.Undefined;
                     }
-                    Dictionary<string, Data> variables = Runtime.Arguments.CollectArguments(closure.Function, pArguments);
-                    variables.Add("this", closure.This);
-                    return Executor.Execute(closure.Function.Children[0], variables);
+                    Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(closureType.Function, pArguments);
+                    variables.Add("this", closureType.This);
+                    return Executor.Execute(closureType.Function.Children[0], variables);
                 }
             }
             catch (ReturnException returnData)
@@ -131,7 +132,7 @@ namespace Prometheus.Runtime
         /// Executes an internal function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallInternal)]
-        public Data CallInternal(Data pIdentifier, Data pArguments)
+        public DataType CallInternal(DataType pIdentifier, DataType pArguments)
         {
             string name = pIdentifier.getIdentifier().Name;
             return Executor.Execute(name, pArguments.getArgumentList());
@@ -141,18 +142,18 @@ namespace Prometheus.Runtime
         /// Performs a return exception to break out of the function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ReturnProc)]
-        public Data Return()
+        public DataType Return()
         {
-            throw new ReturnException(Data.Undefined);
+            throw new ReturnException(DataType.Undefined);
         }
 
         /// <summary>
         /// Performs a return exception to break out of the function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ReturnProc)]
-        public Data Return(Data pData)
+        public DataType Return(DataType pDataType)
         {
-            throw new ReturnException(pData);
+            throw new ReturnException(pDataType);
         }
     }
 }

@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using Prometheus.Compile;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
+using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 
-namespace Prometheus.Nodes.Types
+namespace Prometheus.Nodes
 {
     /// <summary>
     /// Handles create data objects during compile time.
     /// </summary>
-    public static class DataFactory
+    public static class DataTypeFactory
     {
         /// <summary>
         /// A list of symbols that represent terminals that indicate a data type.
@@ -31,20 +33,20 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Creates a data object and adjusts the value is needed.
         /// </summary>
-        public static Data Create(Location pLocation, GrammarSymbol pSymbol, string pValue)
+        public static DataType Create(Location pLocation, GrammarSymbol pSymbol, string pValue)
         {
             switch (pSymbol)
             {
                     // drop the quotes
                 case GrammarSymbol.StringDouble:
                 case GrammarSymbol.StringSingle:
-                    return new Data(pValue.Substring(1, pValue.Length - 2));
+                    return new DataType(pValue.Substring(1, pValue.Length - 2));
 
                 case GrammarSymbol.Number:
-                    return new Data(Convert.ToInt64(pValue));
+                    return new DataType(Convert.ToInt64(pValue));
 
                 case GrammarSymbol.Decimal:
-                    return new Data(Convert.ToDouble(pValue));
+                    return new DataType(Convert.ToDouble(pValue));
 
                 case GrammarSymbol.Boolean:
                     pValue = pValue.ToLower();
@@ -54,22 +56,22 @@ namespace Prometheus.Nodes.Types
                         case "on":
                         case "yes":
                         case "always":
-                            return new Data(true);
+                            return new DataType(true);
                         case "false":
                         case "off":
                         case "no":
                         case "never":
-                            return new Data(false);
+                            return new DataType(false);
                     }
                     break;
 
                 case GrammarSymbol.Identifier:
                     //case GrammarSymbol.@this:
                 case GrammarSymbol.MemberName:
-                    return new Data(new Identifier(pValue));
+                    return new DataType(new IdentifierType(pValue));
 
                 case GrammarSymbol.Type:
-                    return new Data(new StaticType(pValue));
+                    return new DataType(new StaticType(pValue));
             }
 
             throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol),

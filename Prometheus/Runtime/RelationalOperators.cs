@@ -4,6 +4,7 @@ using Prometheus.Compile.Optomizer;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
@@ -64,8 +65,8 @@ namespace Prometheus.Runtime
             // do relational operation now
             Node reduced = new Node(GrammarSymbol.Value, pNode.Location);
 
-            Data valueA = pNode.Children[0].Data[0];
-            Data valueB = pNode.Children[1].Data[0];
+            DataType valueA = pNode.Children[0].Data[0];
+            DataType valueB = pNode.Children[1].Data[0];
 
             switch (pNode.Type)
             {
@@ -93,60 +94,60 @@ namespace Prometheus.Runtime
         /// Equal
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.EqualOperator)]
-        public Data Equal(Data pValue1, Data pValue2)
+        public DataType Equal(DataType pValue1, DataType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() == pValue2.getInteger())
-                : new Data(Math.Abs(pValue1.getPrecise() - pValue2.getPrecise()) < Data.PRECISE_EPSILON);
+            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == DataType.Integer
+                ? new DataType(pValue1.getInteger() == pValue2.getInteger())
+                : new DataType(Math.Abs(pValue1.getPrecise() - pValue2.getPrecise()) < DataType.PRECISE_EPSILON);
         }
 
         /// <summary>
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.GtOperator)]
-        public Data GreaterThan(Data pValue1, Data pValue2)
+        public DataType GreaterThan(DataType pValue1, DataType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() > pValue2.getInteger())
-                : new Data(pValue1.getPrecise() > pValue2.getPrecise());
+            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == DataType.Integer
+                ? new DataType(pValue1.getInteger() > pValue2.getInteger())
+                : new DataType(pValue1.getPrecise() > pValue2.getPrecise());
         }
 
         /// <summary>
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.GteOperator)]
-        public Data GreaterThanEqual(Data pValue1, Data pValue2)
+        public DataType GreaterThanEqual(DataType pValue1, DataType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() >= pValue2.getInteger())
-                : new Data(pValue1.getPrecise() >= pValue2.getPrecise());
+            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == DataType.Integer
+                ? new DataType(pValue1.getInteger() >= pValue2.getInteger())
+                : new DataType(pValue1.getPrecise() >= pValue2.getPrecise());
         }
 
         /// <summary>
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.LtOperator)]
-        public Data LessThan(Data pValue1, Data pValue2)
+        public DataType LessThan(DataType pValue1, DataType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() < pValue2.getInteger())
-                : new Data(pValue1.getPrecise() < pValue2.getPrecise());
+            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == DataType.Integer
+                ? new DataType(pValue1.getInteger() < pValue2.getInteger())
+                : new DataType(pValue1.getPrecise() < pValue2.getPrecise());
         }
 
         /// <summary>
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.LteOperator)]
-        public Data LessThanEqual(Data pValue1, Data pValue2)
+        public DataType LessThanEqual(DataType pValue1, DataType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() <= pValue2.getInteger())
-                : new Data(pValue1.getPrecise() <= pValue2.getPrecise());
+            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == DataType.Integer
+                ? new DataType(pValue1.getInteger() <= pValue2.getInteger())
+                : new DataType(pValue1.getPrecise() <= pValue2.getPrecise());
         }
     }
 }

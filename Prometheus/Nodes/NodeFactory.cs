@@ -54,13 +54,13 @@ namespace Prometheus.Nodes
 
                 Symbol parent = token.Parent;
                 GrammarSymbol dataType = (GrammarSymbol)parent.TableIndex();
-                if (!DataFactory.isDataType(dataType))
+                if (!DataTypeFactory.isDataType(dataType))
                 {
                     continue;
                 }
 
                 string str = (string)token.Data;
-                node.Data.Add(DataFactory.Create(pLocation, dataType, str));
+                node.Data.Add(DataTypeFactory.Create(pLocation, dataType, str));
             }
             return node;
         }

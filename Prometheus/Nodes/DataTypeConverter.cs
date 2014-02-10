@@ -1,12 +1,14 @@
 ﻿using System;
+using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 
-namespace Prometheus.Nodes.Types
+namespace Prometheus.Nodes
 {
     /// <summary>
     /// Handles type juggling at run-time. The engine only supports two types of
     /// numeric types "long" and "double".
     /// </summary>
-    public static class DataConverter
+    public static class DataTypeConverter
     {
         /// <summary>
         /// Inspects the two data objects to see what numeric type
@@ -19,29 +21,29 @@ namespace Prometheus.Nodes.Types
         /// <returns>The best numeric type</returns>
         public static Type BestNumericType(Type pType1, Type pType2)
         {
-            Type t1 = (pType1 == typeof (Undefined)) ? Data.Precise : pType1;
-            Type t2 = (pType2 == typeof (Undefined)) ? Data.Precise : pType2;
+            Type t1 = (pType1 == typeof (UndefinedType)) ? DataType.Precise : pType1;
+            Type t2 = (pType2 == typeof (UndefinedType)) ? DataType.Precise : pType2;
 
-            t1 = (t1 == Data.Precise || t1 == Data.Integer) ? t1 : Data.Integer;
-
-            if (t1 == t2)
-            {
-                return t1;
-            }
-
-            t2 = (t2 == Data.Precise || t2 == Data.Integer) ? t2 : Data.Integer;
+            t1 = (t1 == DataType.Precise || t1 == DataType.Integer) ? t1 : DataType.Integer;
 
             if (t1 == t2)
             {
                 return t1;
             }
 
-            if (t1 == Data.Precise || t2 == Data.Precise)
+            t2 = (t2 == DataType.Precise || t2 == DataType.Integer) ? t2 : DataType.Integer;
+
+            if (t1 == t2)
             {
-                return Data.Precise;
+                return t1;
             }
 
-            return Data.Integer;
+            if (t1 == DataType.Precise || t2 == DataType.Precise)
+            {
+                return DataType.Precise;
+            }
+
+            return DataType.Integer;
         }
     }
 }

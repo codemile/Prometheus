@@ -4,6 +4,7 @@ using Prometheus.Compile.Optomizer;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
@@ -63,8 +64,8 @@ namespace Prometheus.Runtime
             // do math operation now
             Node reduced = new Node(GrammarSymbol.Value, pNode.Location);
 
-            Data valueA = pNode.Children[0].Data[0];
-            Data valueB = pNode.Children[1].Data[0];
+            DataType valueA = pNode.Children[0].Data[0];
+            DataType valueB = pNode.Children[1].Data[0];
 
             switch (pNode.Type)
             {
@@ -89,53 +90,53 @@ namespace Prometheus.Runtime
         /// Addition
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.AddExpression)]
-        public Data Add(Data pValue1, Data pValue2)
+        public DataType Add(DataType pValue1, DataType pValue2)
         {
             Type t1 = pValue1.Type;
             Type t2 = pValue2.Type;
             if (t1 == typeof (string) || t2 == typeof (string) ||
                 t1 == typeof (Node) || t2 == typeof (Node))
             {
-                return new Data(string.Concat(pValue1.getString(), pValue2.getString()));
+                return new DataType(string.Concat(pValue1.getString(), pValue2.getString()));
             }
 
-            Type type = DataConverter.BestNumericType(t1, t2);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() + pValue2.getInteger())
-                : new Data(pValue1.getPrecise() + pValue2.getPrecise());
+            Type type = DataTypeConverter.BestNumericType(t1, t2);
+            return type == DataType.Integer
+                ? new DataType(pValue1.getInteger() + pValue2.getInteger())
+                : new DataType(pValue1.getPrecise() + pValue2.getPrecise());
         }
 
         /// <summary>
         /// Division
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.DivideExpression)]
-        public Data Div(Data pValue1, Data pValue2)
+        public DataType Div(DataType pValue1, DataType pValue2)
         {
-            return new Data(pValue1.getPrecise() / pValue2.getPrecise());
+            return new DataType(pValue1.getPrecise() / pValue2.getPrecise());
         }
 
         /// <summary>
         /// Multiplication
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.MultiplyExpression)]
-        public Data Mul(Data pValue1, Data pValue2)
+        public DataType Mul(DataType pValue1, DataType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() * pValue2.getInteger())
-                : new Data(pValue1.getPrecise() * pValue2.getPrecise());
+            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == DataType.Integer
+                ? new DataType(pValue1.getInteger() * pValue2.getInteger())
+                : new DataType(pValue1.getPrecise() * pValue2.getPrecise());
         }
 
         /// <summary>
         /// Subtraction
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.SubExpression)]
-        public Data Sub(Data pValue1, Data pValue2)
+        public DataType Sub(DataType pValue1, DataType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() - pValue2.getInteger())
-                : new Data(pValue1.getPrecise() - pValue2.getPrecise());
+            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
+            return type == DataType.Integer
+                ? new DataType(pValue1.getInteger() - pValue2.getInteger())
+                : new DataType(pValue1.getPrecise() - pValue2.getPrecise());
         }
     }
 }

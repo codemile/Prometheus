@@ -3,6 +3,7 @@ using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
@@ -26,25 +27,25 @@ namespace Prometheus.Objects
         /// Lists object declarations.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ListObjects)]
-        public Data ListObjects()
+        public DataType ListObjects()
         {
             Executor.Cursor.Packages.Print();
-            return Data.Undefined;
+            return DataType.Undefined;
         }
 
         /// <summary>
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public Data New(Data pIdentifier)
+        public DataType New(DataType pIdentifier)
         {
-            return New(pIdentifier, Data.Undefined);
+            return New(pIdentifier, DataType.Undefined);
         }
 
         /// <summary>
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public Data New(Data pIdentifier, Data pArguments)
+        public DataType New(DataType pIdentifier, DataType pArguments)
         {
             Declaration decl = Executor.Cursor.Packages.Get(pIdentifier.getIdentifier());
 
@@ -55,7 +56,7 @@ namespace Prometheus.Objects
 
             try
             {
-                Executor.Execute(created.Inst.Constructor, new Dictionary<string, Data>());
+                Executor.Execute(created.Inst.Constructor, new Dictionary<string, DataType>());
             }
             catch (ReturnException)
             {
@@ -74,7 +75,7 @@ namespace Prometheus.Objects
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public Data ObjectDeclare(Data pBaseType, Data pIdentifier)
+        public DataType ObjectDeclare(DataType pBaseType, DataType pIdentifier)
         {
             Node obj = Executor.Cursor.Node;
             Declaration baseDecl = null;
@@ -83,9 +84,9 @@ namespace Prometheus.Objects
                 StaticType type = pBaseType.getStaticType();
                 baseDecl = null; // TODO: Add an instance of a default object base.
             }
-            else if (pBaseType.Type == typeof (Qualified))
+            else if (pBaseType.Type == typeof (QualifiedType))
             {
-                Qualified baseType = pBaseType.getQualified();
+                QualifiedType baseType = pBaseType.getQualified();
                 baseDecl = Executor.Cursor.Packages.Get(baseType);
             }
             else
@@ -93,12 +94,12 @@ namespace Prometheus.Objects
                 throw new UnexpectedErrorException(
                     string.Format("Can not declare object of base type <{0}>", pBaseType.Type.FullName), obj);
             }
-            Identifier id = pIdentifier.getIdentifier();
+            IdentifierType id = pIdentifier.getIdentifier();
 
             Declaration decl = new Declaration(baseDecl, id, obj);
             Executor.Cursor.Packages.Add(decl);
 
-            return Data.Undefined;
+            return DataType.Undefined;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Prometheus.Compile;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes
 {
@@ -20,7 +21,7 @@ namespace Prometheus.Nodes
         /// <summary>
         /// The data for this node.
         /// </summary>
-        public readonly List<Data> Data;
+        public readonly List<DataType> Data;
 
         /// <summary>
         /// Where in the source code this node came from.
@@ -41,7 +42,7 @@ namespace Prometheus.Nodes
         {
             Type = pType;
             Location = pLocation;
-            Data = new List<Data>();
+            Data = new List<DataType>();
             Children = new List<Node>();
         }
 

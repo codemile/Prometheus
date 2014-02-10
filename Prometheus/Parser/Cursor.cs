@@ -2,6 +2,7 @@
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Objects;
 using Prometheus.Properties;
 using Prometheus.Storage;
@@ -62,15 +63,15 @@ namespace Prometheus.Parser
         /// <summary>
         /// Gets the value for a qualified identifier.
         /// </summary>
-        public Data Get(Qualified pID)
+        public DataType Get(QualifiedType pID)
         {
             MemorySpace memory = Resolve(pID);
-            Data data = memory.Get(pID.Parts[pID.Parts.Length - 1]);
-            if (data == null)
+            DataType dataType = memory.Get(pID.Parts[pID.Parts.Length - 1]);
+            if (dataType == null)
             {
                 throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pID));
             }
-            return data;
+            return dataType;
         }
 
         /// <summary>
@@ -78,19 +79,19 @@ namespace Prometheus.Parser
         /// </summary>
         /// <param name="pID">The qualified ID</param>
         /// <returns></returns>
-        public MemorySpace Resolve(Qualified pID)
+        public MemorySpace Resolve(QualifiedType pID)
         {
             MemorySpace memory = Stack;
             int index = 0;
             int count = pID.Parts.Length - 1;
             while (index < count)
             {
-                Data data = memory.Get(pID.Parts[index]);
-                if (data == null)
+                DataType dataType = memory.Get(pID.Parts[index]);
+                if (dataType == null)
                 {
                     throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pID));
                 }
-                Alias a = memory.Get(pID.Parts[index]).getAlias();
+                AliasType a = memory.Get(pID.Parts[index]).getAlias();
                 Instance inst = Heap.Get(a);
                 memory = inst.Members;
                 index++;
@@ -101,7 +102,7 @@ namespace Prometheus.Parser
         /// <summary>
         /// Sets a value for a qualified identifier.
         /// </summary>
-        public void Set(Qualified pID, Data pValue)
+        public void Set(QualifiedType pID, DataType pValue)
         {
             MemorySpace memory = Resolve(pID);
             memory.Assign(pID.Parts[pID.Parts.Length - 1], pValue);

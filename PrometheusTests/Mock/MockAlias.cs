@@ -4,14 +4,14 @@ namespace PrometheusTest.Mock
 {
     public static class MockAlias
     {
-        public static Alias Create(int pHeap)
+        public static AliasType Create(int pHeap)
         {
-            return new Alias(pHeap);
+            return new AliasType(pHeap);
         }
 
-        public static Alias Create()
+        public static AliasType Create()
         {
-            return new Alias(3);
+            return new AliasType(3);
         }
     }
 }

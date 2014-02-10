@@ -49,11 +49,6 @@
     <Compile Include="Mock\MockAlias.cs" />
     <Compile Include="Mock\MockCommand.cs" />
     <Compile Include="Mock\MockNode.cs" />
-    <Compile Include="Nodes\Types\AliasTests.cs" />
-    <Compile Include="Nodes\Types\ClosureTests.cs" />
-    <Compile Include="Nodes\Types\DataConverterTests.cs" />
-    <Compile Include="Nodes\Types\DataFactoryTests.cs" />
-    <Compile Include="Nodes\Types\IdentifierTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +58,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Nodes\Types\" />
     <Folder Include="Runtime\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

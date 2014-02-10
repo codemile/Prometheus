@@ -1,10 +1,12 @@
-﻿namespace Prometheus.Nodes.Types
+﻿using Prometheus.Nodes.Types.Bases;
+
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Holds a reference to a function and the object that should be used
     /// as the "this" reference.
     /// </summary>
-    public class Closure
+    public class ClosureType
     {
         /// <summary>
         /// The function
@@ -14,14 +16,14 @@
         /// <summary>
         /// Reference to "this"
         /// </summary>
-        public readonly Data This;
+        public readonly DataType This;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Closure(Alias pThis, Node pFunction)
+        public ClosureType(AliasType pThis, Node pFunction)
         {
-            This = new Data(pThis);
+            This = new DataType(pThis);
             Function = pFunction;
         }
     }

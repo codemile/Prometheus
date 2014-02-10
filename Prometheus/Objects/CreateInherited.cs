@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 
 namespace Prometheus.Objects
@@ -13,7 +14,7 @@ namespace Prometheus.Objects
         /// <summary>
         /// An empty base reference
         /// </summary>
-        private static readonly KeyValuePair<Instance, Data> _empty = new KeyValuePair<Instance, Data>(null, null);
+        private static readonly KeyValuePair<Instance, DataType> _empty = new KeyValuePair<Instance, DataType>(null, null);
 
         /// <summary>
         /// The storage of objects
@@ -23,7 +24,7 @@ namespace Prometheus.Objects
         /// <summary>
         /// The alias reference
         /// </summary>
-        public Data Alias;
+        public DataType Alias;
 
         /// <summary>
         /// The new instance of the object
@@ -34,16 +35,16 @@ namespace Prometheus.Objects
         /// Walks the inheritance of declarations creating each from the
         /// bottom up.
         /// </summary>
-        private KeyValuePair<Instance, Data> CreateAll(Declaration pDecl)
+        private KeyValuePair<Instance, DataType> CreateAll(Declaration pDecl)
         {
-            KeyValuePair<Instance, Data> baseInst = _empty;
+            KeyValuePair<Instance, DataType> baseInst = _empty;
             if (pDecl.Base != null)
             {
                 baseInst = CreateAll(pDecl.Base);
             }
 
             Instance inst = new Instance(pDecl.Constructor);
-            Data alias = _heap.Add(inst);
+            DataType alias = _heap.Add(inst);
 
             inst.Members.Create("this", alias);
 
@@ -52,7 +53,7 @@ namespace Prometheus.Objects
                 inst.Members.Create("base", baseInst.Value);
             }
 
-            return new KeyValuePair<Instance, Data>(inst, alias);
+            return new KeyValuePair<Instance, DataType>(inst, alias);
         }
 
         /// <summary>
@@ -62,7 +63,7 @@ namespace Prometheus.Objects
         {
             _heap = pHeap;
 
-            KeyValuePair<Instance, Data> inst = CreateAll(pDecl);
+            KeyValuePair<Instance, DataType> inst = CreateAll(pDecl);
             Inst = inst.Key;
             Alias = inst.Value;
         }
