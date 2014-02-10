@@ -91,6 +91,20 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
+        /// Removes a variable from the current scope.
+        /// </summary>
+        /// <param name="pName">The identifier to remove</param>
+        public virtual bool Unset(string pName)
+        {
+            if (!_storage.ContainsKey(pName))
+            {
+                return false;
+            }
+            _storage.Remove(pName);
+            return true;
+        }
+
+        /// <summary>
         /// Assigns a value to an identifier. Creates the a new
         /// variable if required.
         /// </summary>
@@ -121,20 +135,6 @@ namespace Prometheus.Storage
                 throw new IdentifierInnerException(string.Format(Errors.IdentifierAlreadyDefined, pName));
             }
             _storage.Add(pName, pData);
-        }
-
-        /// <summary>
-        /// Removes a variable from the current scope.
-        /// </summary>
-        /// <param name="pName">The identifier to remove</param>
-        public virtual bool Unset(string pName)
-        {
-            if (!_storage.ContainsKey(pName))
-            {
-                return false;
-            }
-            _storage.Remove(pName);
-            return true;
         }
     }
 }

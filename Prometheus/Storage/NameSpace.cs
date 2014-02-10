@@ -14,7 +14,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Logging
         /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof(NameSpace));
+        private static readonly Logger _logger = Logger.Create(typeof (NameSpace));
 
         /// <summary>
         /// The child namespaces of this space.
@@ -25,35 +25,6 @@ namespace Prometheus.Storage
         /// All the declarations in this package.
         /// </summary>
         private readonly Dictionary<string, Declaration> _declarations;
-
-        /// <summary>
-        /// Returns the definition of an object by searching this namespace and it's children.
-        /// </summary>
-        private Declaration Get(string pName)
-        {
-            return _declarations.ContainsKey(pName) ? _declarations[pName] : null;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public NameSpace()
-        {
-            _declarations = new Dictionary<string, Declaration>();
-            _childSpaces = new Dictionary<string, NameSpace>();
-        }
-
-        /// <summary>
-        /// Adds an object declaration to this namespace, or a children space
-        /// that matches the identifier for the declaration.
-        /// </summary>
-        /// <param name="pDecl">The declaration to add</param>
-        /// <returns>True if successful, or False if not added.</returns>
-        public bool Add(Declaration pDecl)
-        {
-            string[] parts = pDecl.Name.Name.Split(new[] {'.'});
-            return Add(pDecl, parts, 0);
-        }
 
         /// <summary>
         /// Walks the children until it finds the correct namespace to store this declaration.
@@ -81,24 +52,11 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
-        /// Gets the declaration of an object.
+        /// Returns the definition of an object by searching this namespace and it's children.
         /// </summary>
-        /// <param name="pQualified">The identifier</param>
-        /// <returns>The declaration or null.</returns>
-        public Declaration Get(Qualified pQualified)
+        private Declaration Get(string pName)
         {
-            return Get(pQualified.Parts, 0);
-        }
-
-        /// <summary>
-        /// Gets the declaration of an object.
-        /// </summary>
-        /// <param name="pIdentifier">The identifier</param>
-        /// <returns>The declaration or null.</returns>
-        public Declaration Get(Identifier pIdentifier)
-        {
-            string[] parts = pIdentifier.Name.Split(new[] { '.' });
-            return Get(parts, 0);
+            return _declarations.ContainsKey(pName) ? _declarations[pName] : null;
         }
 
         /// <summary>
@@ -115,6 +73,15 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public NameSpace()
+        {
+            _declarations = new Dictionary<string, Declaration>();
+            _childSpaces = new Dictionary<string, NameSpace>();
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
@@ -125,6 +92,39 @@ namespace Prometheus.Storage
             }
             _childSpaces.Clear();
             _declarations.Clear();
+        }
+
+        /// <summary>
+        /// Adds an object declaration to this namespace, or a children space
+        /// that matches the identifier for the declaration.
+        /// </summary>
+        /// <param name="pDecl">The declaration to add</param>
+        /// <returns>True if successful, or False if not added.</returns>
+        public bool Add(Declaration pDecl)
+        {
+            string[] parts = pDecl.Name.Name.Split(new[] {'.'});
+            return Add(pDecl, parts, 0);
+        }
+
+        /// <summary>
+        /// Gets the declaration of an object.
+        /// </summary>
+        /// <param name="pQualified">The identifier</param>
+        /// <returns>The declaration or null.</returns>
+        public Declaration Get(Qualified pQualified)
+        {
+            return Get(pQualified.Parts, 0);
+        }
+
+        /// <summary>
+        /// Gets the declaration of an object.
+        /// </summary>
+        /// <param name="pIdentifier">The identifier</param>
+        /// <returns>The declaration or null.</returns>
+        public Declaration Get(Identifier pIdentifier)
+        {
+            string[] parts = pIdentifier.Name.Split(new[] {'.'});
+            return Get(parts, 0);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Prometheus.Storage
             }
             foreach (NameSpace child in _childSpaces.Values)
             {
-                child.Print(pIndent+1);
+                child.Print(pIndent + 1);
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prometheus.Nodes.Types;
 
-namespace PrometheusTest.Nodes
+namespace PrometheusTest.Nodes.Types
 {
     [TestClass]
     public class DataConverterTests

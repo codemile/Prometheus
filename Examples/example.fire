@@ -1,22 +1,2 @@
-/**
- * Example of inheritance.
- */
-object Child {
-	// an example  property
-	this.Name = "John Smith";
-	
-	// an example member function
-	this.foo = function() {
-		print this.Name;
-	};
-	
-	print "Child constructor";
-};
-
-Child Father {
-	base();
-	print "Luke I am your father";
-};
-
-var x = new Father();
-x.foo();
+var x = 3;
+print x+4;

@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
-using Prometheus.Parser;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 

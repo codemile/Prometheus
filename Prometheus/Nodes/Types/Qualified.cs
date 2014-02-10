@@ -9,14 +9,14 @@ namespace Prometheus.Nodes.Types
     public class Qualified
     {
         /// <summary>
-        /// The original name
-        /// </summary>
-        private readonly string _fullName;
-
-        /// <summary>
         /// The parts of the name
         /// </summary>
         public readonly string[] Parts;
+
+        /// <summary>
+        /// The original name
+        /// </summary>
+        private readonly string _fullName;
 
         /// <summary>
         /// Constructor

@@ -19,7 +19,7 @@ namespace Prometheus.Compile.Optomizer
             if (pNode.Children.Count != pCount)
             {
                 throw new OptimizationException(
-                    string.Format("Expected <{0}> to have <{1}> children, but has {2} children instead", 
+                    string.Format("Expected <{0}> to have <{1}> children, but has {2} children instead",
                         pNode.Type,
                         pCount,
                         pNode.Children.Count),
@@ -35,10 +35,10 @@ namespace Prometheus.Compile.Optomizer
             if (pNode.Data.Count != pCount)
             {
                 throw new OptimizationException(
-                    string.Format("Expected <{0}> to have {1} data, but has {2} data instead", 
-                    pNode.Type,
-                    pCount, 
-                    pNode.Data.Count),
+                    string.Format("Expected <{0}> to have {1} data, but has {2} data instead",
+                        pNode.Type,
+                        pCount,
+                        pNode.Data.Count),
                     pNode.Location);
             }
         }
@@ -57,6 +57,35 @@ namespace Prometheus.Compile.Optomizer
         }
 
         /// <summary>
+        /// Data must be of expected type.
+        /// </summary>
+        public static T Get<T>(Node pNode, int pIndex)
+        {
+            if (pIndex >= pNode.Data.Count)
+            {
+                throw new OptimizationException(
+                    string.Format("<{0}> has {1} data, but expected at least {2}",
+                        pNode.Type,
+                        pNode.Data.Count,
+                        pIndex),
+                    pNode.Location);
+            }
+            Data data = pNode.Data[pIndex];
+            Type type = typeof (T);
+            if (data.Type != type)
+            {
+                throw new OptimizationException(
+                    string.Format("Expected <{0}> data {1} to be type <{2}> but found <{3}> instead",
+                        pNode.Type,
+                        pIndex,
+                        type.Name,
+                        data.Type.Name),
+                    pNode.Location);
+            }
+            return (T)data.Get(type);
+        }
+
+        /// <summary>
         /// Node must match a symbol.
         /// </summary>
         public static void Symbol(GrammarSymbol pSymbol, Node pNode)
@@ -67,35 +96,6 @@ namespace Prometheus.Compile.Optomizer
                     string.Format("Unexpected node <{0}> in tree graph", pNode.Type),
                     pNode.Location);
             }
-        }
-
-        /// <summary>
-        /// Data must be of expected type.
-        /// </summary>
-        public static T Get<T>(Node pNode, int pIndex)
-        {
-            if (pIndex >= pNode.Data.Count)
-            {
-                throw new OptimizationException(
-                    string.Format("<{0}> has {1} data, but expected at least {2}", 
-                    pNode.Type,
-                    pNode.Data.Count, 
-                    pIndex),
-                    pNode.Location);
-            }
-            Data data = pNode.Data[pIndex];
-            Type type = typeof (T);
-            if (data.Type != type)
-            {
-                throw new OptimizationException(
-                    string.Format("Expected <{0}> data {1} to be type <{2}> but found <{3}> instead", 
-                    pNode.Type,
-                    pIndex, 
-                    type.Name, 
-                    data.Type.Name),
-                    pNode.Location);
-            }
-            return (T)data.Get(type);
         }
     }
 }

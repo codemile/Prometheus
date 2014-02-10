@@ -54,15 +54,6 @@ namespace Prometheus.Compile.Optomizer
                                                                   };
 
         /// <summary>
-        /// These nodes have their data moved to their parents.
-        /// </summary>
-        private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
-                                                                    {
-                                                                        GrammarSymbol.FormalParameterList,
-                                                                        GrammarSymbol.BaseClass
-                                                                    };
-
-        /// <summary>
         /// These nodes have a child QualifiedID node's data assigned to them.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _qualifiedData = new HashSet<GrammarSymbol>
@@ -70,6 +61,15 @@ namespace Prometheus.Compile.Optomizer
                                                                             GrammarSymbol.Assignment,
                                                                             GrammarSymbol.ObjectDecl
                                                                         };
+
+        /// <summary>
+        /// These nodes have their data moved to their parents.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
+                                                                    {
+                                                                        GrammarSymbol.FormalParameterList,
+                                                                        GrammarSymbol.BaseClass
+                                                                    };
 
         /// <summary>
         /// Used to perform optimization
@@ -231,9 +231,9 @@ namespace Prometheus.Compile.Optomizer
                 pNode.Children[0].Type == GrammarSymbol.QualifiedID &&
                 pNode.Children[0].Children.Count == 0)
             {
-                Assertion.Data(1,pNode.Children[0]);
-                Qualified qualified = Assertion.Get<Qualified>(pNode.Children[0],0);
-                pNode.Data.Insert(0,new Data(qualified));
+                Assertion.Data(1, pNode.Children[0]);
+                Qualified qualified = Assertion.Get<Qualified>(pNode.Children[0], 0);
+                pNode.Data.Insert(0, new Data(qualified));
                 pNode.Children.RemoveAt(0);
             }
 

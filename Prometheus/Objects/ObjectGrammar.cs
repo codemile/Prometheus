@@ -90,7 +90,8 @@ namespace Prometheus.Objects
             }
             else
             {
-                throw new UnexpectedErrorException(string.Format("Can not declare object of base type <{0}>", pBaseType.Type.FullName), obj);
+                throw new UnexpectedErrorException(
+                    string.Format("Can not declare object of base type <{0}>", pBaseType.Type.FullName), obj);
             }
             Identifier id = pIdentifier.getIdentifier();
 

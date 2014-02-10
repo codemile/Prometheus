@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Logging;
 using Prometheus.Parser.Executors.Attributes;
 
 namespace Prometheus.Parser.Executors
@@ -15,9 +14,9 @@ namespace Prometheus.Parser.Executors
     public static class ObjectFactory
     {
 #if LOG_GRAMMAR
-        /// <summary>
-        /// Logging
-        /// </summary>
+    /// <summary>
+    /// Logging
+    /// </summary>
         private static readonly Logger _logger = Logger.Create(typeof (ObjectFactory));
 #endif
 

@@ -1,0 +1,12 @@
+algorithm isUniqueTitle(title)
+{
+	accept title 
+	reject title.length < 30;
+}
+
+// checks if a post is a film
+algorithm isFilm(doc,film) {
+	accept doc.body contains film_phrases;
+	accept film.title.length > 10 and anywhere contains doc.title;
+	reject body.length < 200;
+}

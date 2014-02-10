@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Objects;
 using Prometheus.Parser.Executors;

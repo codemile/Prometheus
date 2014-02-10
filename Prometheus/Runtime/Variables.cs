@@ -1,11 +1,8 @@
-﻿using Prometheus.Exceptions.Executor;
-using Prometheus.Grammar;
+﻿using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Objects;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
-using Prometheus.Properties;
 using Prometheus.Storage;
 
 namespace Prometheus.Runtime
@@ -15,6 +12,28 @@ namespace Prometheus.Runtime
     /// </summary>
     public class Variables : ExecutorGrammar
     {
+        /// <summary>
+        /// Will convert a function expression into a closure function with a reference
+        /// to the current "this" object.
+        /// </summary>
+        private Data CreateClosure(Data pValue)
+        {
+            if (pValue.Type != typeof (Node))
+            {
+                return pValue;
+            }
+            Node func = pValue.getNode();
+            if (func.Type != GrammarSymbol.FunctionExpression)
+            {
+                return pValue;
+            }
+            Data _this = Executor.Cursor.Stack.Get("this");
+            Alias aThis = _this.getAlias();
+            Closure closure = new Closure(aThis, func);
+            pValue = new Data(closure);
+            return pValue;
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -68,28 +87,6 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Will convert a function expression into a closure function with a reference
-        /// to the current "this" object.
-        /// </summary>
-        private Data CreateClosure(Data pValue)
-        {
-            if (pValue.Type != typeof (Node))
-            {
-                return pValue;
-            }
-            Node func = pValue.getNode();
-            if (func.Type != GrammarSymbol.FunctionExpression)
-            {
-                return pValue;
-            }
-            Data _this = Executor.Cursor.Stack.Get("this");
-            Alias aThis = _this.getAlias();
-            Closure closure = new Closure(aThis, func);
-            pValue = new Data(closure);
-            return pValue;
-        }
-
-        /// <summary>
         /// Declares a variable without a value
         /// </summary>
         /// <param name="pIdentifier">Name of the variable</param>
@@ -128,15 +125,6 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Returns the value of data stored in the source code.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.Value)]
-        public Data Value(Data pValue)
-        {
-            return pValue;
-        }
-
-        /// <summary>
         /// Returns the value of a variable.
         /// </summary>
         /// <param name="pQualifier">The variable name</param>
@@ -145,6 +133,15 @@ namespace Prometheus.Runtime
         public Data Qualified(Data pQualifier)
         {
             return Executor.Cursor.Get(pQualifier.getQualified());
+        }
+
+        /// <summary>
+        /// Returns the value of data stored in the source code.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.Value)]
+        public Data Value(Data pValue)
+        {
+            return pValue;
         }
     }
 }

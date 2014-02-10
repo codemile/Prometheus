@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Compile;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Objects;
 using Prometheus.Parser.Executors;
@@ -31,7 +30,7 @@ namespace Prometheus.Parser
                 {
                     Data value = executor.Execute(pCode.Root, new Dictionary<string, Data>()) ?? new Data(-1);
 
-                    return (value.Type == typeof(Undefined))
+                    return (value.Type == typeof (Undefined))
                         ? 0
                         : (int)value.getInteger();
                 }

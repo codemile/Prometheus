@@ -14,16 +14,6 @@ namespace Prometheus.Parser
     public class Cursor : IDisposable
     {
         /// <summary>
-        /// The current node being executed.
-        /// </summary>
-        public Node Node;
-
-        /// <summary>
-        /// The current stack of local variables.
-        /// </summary>
-        public MemorySpace Stack;
-
-        /// <summary>
         /// The storage of all objects.
         /// </summary>
         public readonly HeapSpace Heap;
@@ -32,6 +22,16 @@ namespace Prometheus.Parser
         /// All the object declarations.
         /// </summary>
         public readonly NameSpace Packages;
+
+        /// <summary>
+        /// The current node being executed.
+        /// </summary>
+        public Node Node;
+
+        /// <summary>
+        /// The current stack of local variables.
+        /// </summary>
+        public MemorySpace Stack;
 
         /// <summary>
         /// Constructor
@@ -74,15 +74,6 @@ namespace Prometheus.Parser
         }
 
         /// <summary>
-        /// Sets a value for a qualified identifier.
-        /// </summary>
-        public void Set(Qualified pID, Data pValue)
-        {
-            MemorySpace memory = Resolve(pID);
-            memory.Assign(pID.Parts[pID.Parts.Length-1], pValue);
-        }
-
-        /// <summary>
         /// Resolves the path to a qualified data member.
         /// </summary>
         /// <param name="pID">The qualified ID</param>
@@ -105,6 +96,15 @@ namespace Prometheus.Parser
                 index++;
             }
             return memory;
+        }
+
+        /// <summary>
+        /// Sets a value for a qualified identifier.
+        /// </summary>
+        public void Set(Qualified pID, Data pValue)
+        {
+            MemorySpace memory = Resolve(pID);
+            memory.Assign(pID.Parts[pID.Parts.Length - 1], pValue);
         }
     }
 }

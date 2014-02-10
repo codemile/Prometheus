@@ -30,6 +30,14 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _storage.Clear();
+        }
+
+        /// <summary>
         /// Adds an object to the heap.
         /// </summary>
         /// <param name="pInstance">The instance of the object.</param>
@@ -37,15 +45,7 @@ namespace Prometheus.Storage
         public Data Add(Instance pInstance)
         {
             _storage.Add(pInstance);
-            return new Data(new Alias(_storage.Count-1));
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            _storage.Clear();
+            return new Data(new Alias(_storage.Count - 1));
         }
 
         /// <summary>

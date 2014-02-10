@@ -123,7 +123,9 @@ namespace Prometheus.Nodes.Types
         /// <returns>The converted value.</returns>
         public bool getBool()
         {
-            return Type == typeof (Node) || Get<bool>();
+            return (Type == typeof (bool))
+                ? (bool)_value
+                : Get<bool>();
         }
 
         /// <summary>
@@ -224,6 +226,14 @@ namespace Prometheus.Nodes.Types
         public Closure getClosure()
         {
             return (Closure)_value;
+        }
+
+        /// <summary>
+        /// Access the raw object value.
+        /// </summary>
+        public object getValue()
+        {
+            return _value;
         }
     }
 }
