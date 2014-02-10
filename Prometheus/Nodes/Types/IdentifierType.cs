@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
 {
@@ -6,7 +7,7 @@ namespace Prometheus.Nodes.Types
     /// Holds the name of a reference, such as a variable name.
     /// </summary>
     [DebuggerDisplay("{Name}")]
-    public class Identifier
+    public class IdentifierType : iDataType
     {
         /// <summary>
         /// the display name
@@ -16,7 +17,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public Identifier(string pName)
+        public IdentifierType(string pName)
         {
             Name = pName.ToLower();
         }

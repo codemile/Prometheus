@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Parser.Executors.Attributes;
 
 namespace Prometheus.Parser.Executors
@@ -30,7 +31,7 @@ namespace Prometheus.Parser.Executors
         /// </summary>
         protected override MethodInfo GetMethod(Node pNode, int pArgCount)
         {
-            string name = pNode.Data[0].getIdentifier().Name;
+            string name = ((IdentifierType)pNode.Data[0]).Name;
             return _methods[name][pArgCount];
         }
     }

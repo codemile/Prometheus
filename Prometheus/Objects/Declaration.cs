@@ -24,12 +24,12 @@ namespace Prometheus.Objects
         /// <summary>
         /// The name of the object.
         /// </summary>
-        public readonly Identifier Name;
+        public readonly IdentifierType Name;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Declaration(Declaration pBase, Identifier pName, Node pObjDecl)
+        public Declaration(Declaration pBase, IdentifierType pName, Node pObjDecl)
         {
             Base = pBase;
             Name = pName;

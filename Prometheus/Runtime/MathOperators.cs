@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
@@ -63,23 +63,49 @@ namespace Prometheus.Runtime
             // do math operation now
             Node reduced = new Node(GrammarSymbol.Value, pNode.Location);
 
-            Data valueA = pNode.Children[0].Data[0];
-            Data valueB = pNode.Children[1].Data[0];
+            iDataType valueA = pNode.Children[0].Data[0];
+            iDataType valueB = pNode.Children[1].Data[0];
 
-            switch (pNode.Type)
+            if (valueA.GetType() == typeof (IntegerType) && valueB.GetType() == typeof (IntegerType))
             {
-                case GrammarSymbol.AddExpression:
-                    reduced.Data.Add(Add(valueA, valueB));
-                    break;
-                case GrammarSymbol.SubExpression:
-                    reduced.Data.Add(Sub(valueA, valueB));
-                    break;
-                case GrammarSymbol.MultiplyExpression:
-                    reduced.Data.Add(Mul(valueA, valueB));
-                    break;
-                case GrammarSymbol.DivideExpression:
-                    reduced.Data.Add(Div(valueA, valueB));
-                    break;
+                IntegerType a = (IntegerType)valueA;
+                IntegerType b = (IntegerType)valueB;
+                switch (pNode.Type)
+                {
+                    case GrammarSymbol.AddExpression:
+                        reduced.Data.Add(Add(a, b));
+                        break;
+                    case GrammarSymbol.SubExpression:
+                        reduced.Data.Add(Sub(a, b));
+                        break;
+                    case GrammarSymbol.MultiplyExpression:
+                        reduced.Data.Add(Mul(a, b));
+                        break;
+                    case GrammarSymbol.DivideExpression:
+                        reduced.Data.Add(Div(a, b));
+                        break;
+                }
+            }
+
+            if (valueA.GetType() == typeof (FloatType) && valueB.GetType() == typeof (FloatType))
+            {
+                FloatType a = (FloatType)valueA;
+                FloatType b = (FloatType)valueB;
+                switch (pNode.Type)
+                {
+                    case GrammarSymbol.AddExpression:
+                        reduced.Data.Add(Add(a, b));
+                        break;
+                    case GrammarSymbol.SubExpression:
+                        reduced.Data.Add(Sub(a, b));
+                        break;
+                    case GrammarSymbol.MultiplyExpression:
+                        reduced.Data.Add(Mul(a, b));
+                        break;
+                    case GrammarSymbol.DivideExpression:
+                        reduced.Data.Add(Div(a, b));
+                        break;
+                }
             }
 
             return reduced;
@@ -89,53 +115,81 @@ namespace Prometheus.Runtime
         /// Addition
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.AddExpression)]
-        public Data Add(Data pValue1, Data pValue2)
+        public StringType Add(StringType pValue1, StringType pValue2)
         {
-            Type t1 = pValue1.Type;
-            Type t2 = pValue2.Type;
-            if (t1 == typeof (string) || t2 == typeof (string) ||
-                t1 == typeof (Node) || t2 == typeof (Node))
-            {
-                return new Data(string.Concat(pValue1.getString(), pValue2.getString()));
-            }
+            return new StringType(string.Concat(pValue1.Value, pValue2.Value));
+        }
 
-            Type type = DataConverter.BestNumericType(t1, t2);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() + pValue2.getInteger())
-                : new Data(pValue1.getPrecise() + pValue2.getPrecise());
+        /// <summary>
+        /// Addition
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.AddExpression)]
+        public IntegerType Add(IntegerType pValue1, IntegerType pValue2)
+        {
+            return new IntegerType(pValue1.Value + pValue2.Value);
+        }
+
+        /// <summary>
+        /// Addition
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.AddExpression)]
+        public FloatType Add(FloatType pValue1, FloatType pValue2)
+        {
+            return new FloatType(pValue1.Value + pValue2.Value);
         }
 
         /// <summary>
         /// Division
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.DivideExpression)]
-        public Data Div(Data pValue1, Data pValue2)
+        public IntegerType Div(IntegerType pValue1, IntegerType pValue2)
         {
-            return new Data(pValue1.getPrecise() / pValue2.getPrecise());
+            return new IntegerType(pValue1.Value / pValue2.Value);
+        }
+
+        /// <summary>
+        /// Division
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.DivideExpression)]
+        public FloatType Div(FloatType pValue1, FloatType pValue2)
+        {
+            return new FloatType(pValue1.Value / pValue2.Value);
         }
 
         /// <summary>
         /// Multiplication
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.MultiplyExpression)]
-        public Data Mul(Data pValue1, Data pValue2)
+        public IntegerType Mul(IntegerType pValue1, IntegerType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() * pValue2.getInteger())
-                : new Data(pValue1.getPrecise() * pValue2.getPrecise());
+            return new IntegerType(pValue1.Value * pValue2.Value);
+        }
+
+        /// <summary>
+        /// Multiplication
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.MultiplyExpression)]
+        public FloatType Mul(FloatType pValue1, FloatType pValue2)
+        {
+            return new FloatType(pValue1.Value * pValue2.Value);
         }
 
         /// <summary>
         /// Subtraction
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.SubExpression)]
-        public Data Sub(Data pValue1, Data pValue2)
+        public IntegerType Sub(IntegerType pValue1, IntegerType pValue2)
         {
-            Type type = DataConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == Data.Integer
-                ? new Data(pValue1.getInteger() - pValue2.getInteger())
-                : new Data(pValue1.getPrecise() - pValue2.getPrecise());
+            return new IntegerType(pValue1.Value - pValue2.Value);
+        }
+
+        /// <summary>
+        /// Subtraction
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.SubExpression)]
+        public FloatType Sub(FloatType pValue1, FloatType pValue2)
+        {
+            return new FloatType(pValue1.Value - pValue2.Value);
         }
     }
 }

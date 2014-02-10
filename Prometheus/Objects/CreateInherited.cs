@@ -13,7 +13,8 @@ namespace Prometheus.Objects
         /// <summary>
         /// An empty base reference
         /// </summary>
-        private static readonly KeyValuePair<Instance, Data> _empty = new KeyValuePair<Instance, Data>(null, null);
+        private static readonly KeyValuePair<Instance, AliasType> _empty = new KeyValuePair<Instance, AliasType>(null,
+            null);
 
         /// <summary>
         /// The storage of objects
@@ -23,7 +24,7 @@ namespace Prometheus.Objects
         /// <summary>
         /// The alias reference
         /// </summary>
-        public Data Alias;
+        public AliasType AliasType;
 
         /// <summary>
         /// The new instance of the object
@@ -34,25 +35,25 @@ namespace Prometheus.Objects
         /// Walks the inheritance of declarations creating each from the
         /// bottom up.
         /// </summary>
-        private KeyValuePair<Instance, Data> CreateAll(Declaration pDecl)
+        private KeyValuePair<Instance, AliasType> CreateAll(Declaration pDecl)
         {
-            KeyValuePair<Instance, Data> baseInst = _empty;
+            KeyValuePair<Instance, AliasType> baseInst = _empty;
             if (pDecl.Base != null)
             {
                 baseInst = CreateAll(pDecl.Base);
             }
 
             Instance inst = new Instance(pDecl.Constructor);
-            Data alias = _heap.Add(inst);
+            AliasType aliasType = _heap.Add(inst);
 
-            inst.Members.Create("this", alias);
+            inst.Members.Create("this", aliasType);
 
             if (baseInst.Value != null)
             {
                 inst.Members.Create("base", baseInst.Value);
             }
 
-            return new KeyValuePair<Instance, Data>(inst, alias);
+            return new KeyValuePair<Instance, AliasType>(inst, aliasType);
         }
 
         /// <summary>
@@ -62,9 +63,9 @@ namespace Prometheus.Objects
         {
             _heap = pHeap;
 
-            KeyValuePair<Instance, Data> inst = CreateAll(pDecl);
+            KeyValuePair<Instance, AliasType> inst = CreateAll(pDecl);
             Inst = inst.Key;
-            Alias = inst.Value;
+            AliasType = inst.Value;
         }
     }
 }

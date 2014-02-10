@@ -3,6 +3,7 @@ using System.Reflection;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Parser.Executors
 {
@@ -35,12 +36,12 @@ namespace Prometheus.Parser.Executors
         /// </summary>
         /// <param name="pValues">The argument values.</param>
         /// <returns>The return value, or null if no return value.</returns>
-        public Data Execute(object[] pValues)
+        public iDataType Execute(object[] pValues)
         {
             try
             {
                 MethodInfo method = GetMethod(Executor.Cursor.Node, pValues.Length);
-                return (Data)method.Invoke(this, pValues);
+                return (iDataType)method.Invoke(this, pValues);
             }
             catch (TargetInvocationException e)
             {
@@ -58,7 +59,8 @@ namespace Prometheus.Parser.Executors
         /// <param name="pValues">The arguments</param>
         /// <returns>The output data</returns>
         /// <exception cref="RunTimeException">Throws runtime exceptions from inner grammar objects.</exception>
-        public Data Execute(List<Data> pValues)
+/*
+        public iDataType Execute(List<iDataType> pValues)
         {
             try
             {
@@ -74,7 +76,7 @@ namespace Prometheus.Parser.Executors
 
                 object result = method.Invoke(this, values);
 
-                return new Data(result);
+                return new iDataType(result);
             }
             catch (TargetInvocationException e)
             {
@@ -85,5 +87,6 @@ namespace Prometheus.Parser.Executors
                 throw;
             }
         }
+*/
     }
 }

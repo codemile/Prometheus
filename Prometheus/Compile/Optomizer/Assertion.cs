@@ -1,8 +1,8 @@
-﻿using System;
-using Prometheus.Exceptions.Compiler;
+﻿using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Compile.Optomizer
 {
@@ -70,19 +70,18 @@ namespace Prometheus.Compile.Optomizer
                         pIndex),
                     pNode.Location);
             }
-            Data data = pNode.Data[pIndex];
-            Type type = typeof (T);
-            if (data.Type != type)
+            iDataType dataType = pNode.Data[pIndex];
+            if (dataType.GetType() != typeof (T))
             {
                 throw new OptimizationException(
                     string.Format("Expected <{0}> data {1} to be type <{2}> but found <{3}> instead",
                         pNode.Type,
                         pIndex,
-                        type.Name,
-                        data.Type.Name),
+                        typeof (T).Name,
+                        dataType.GetType().Name),
                     pNode.Location);
             }
-            return (T)data.Get(type);
+            return (T)dataType;
         }
 
         /// <summary>

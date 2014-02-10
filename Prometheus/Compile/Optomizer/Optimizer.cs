@@ -3,6 +3,7 @@ using System.Linq;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 
 namespace Prometheus.Compile.Optomizer
@@ -112,13 +113,13 @@ namespace Prometheus.Compile.Optomizer
                 return pNode;
             }
 
-            Data id = pNode.Children[0].Data[0];
-            if (!_internalIds.Contains(id.getIdentifier().Name))
+            IdentifierType id = (IdentifierType)pNode.Children[0].Data[0];
+            if (!_internalIds.Contains(id.Name))
             {
                 return pNode;
             }
 
-            Data identifier = pNode.Children[0].Data[0];
+            iDataType identifier = pNode.Children[0].Data[0];
 
             Node callInternal = new Node(GrammarSymbol.CallInternal, pNode.Location);
             callInternal.Data.Add(identifier);
@@ -190,7 +191,7 @@ namespace Prometheus.Compile.Optomizer
             Assertion.Data(0, pNode);
             Assertion.Data(1, pNode.Children[0]);
 
-            List<string> path = new List<string> {pNode.Children[0].Data[0].getIdentifier().Name};
+            List<string> path = new List<string> {((IdentifierType)pNode.Children[0].Data[0]).Name};
 
             Node member = pNode.Children[1];
             while (true)
@@ -203,12 +204,11 @@ namespace Prometheus.Compile.Optomizer
                 Assertion.Data(1, member);
                 Assertion.Children(1, member);
 
-                path.Add(Assertion.Get<Identifier>(member, 0).Name.Substring(1));
+                path.Add(Assertion.Get<IdentifierType>(member, 0).Name.Substring(1));
                 member = member.Children[0];
             }
 
-            Qualified q = new Qualified(path.ToArray());
-            pNode.Data.Add(new Data(q));
+            pNode.Data.Add(new QualifiedType(path.ToArray()));
             pNode.Children.Clear();
 
             _modified = true;
@@ -232,8 +232,8 @@ namespace Prometheus.Compile.Optomizer
                 pNode.Children[0].Children.Count == 0)
             {
                 Assertion.Data(1, pNode.Children[0]);
-                Qualified qualified = Assertion.Get<Qualified>(pNode.Children[0], 0);
-                pNode.Data.Insert(0, new Data(qualified));
+                QualifiedType qualifiedType = Assertion.Get<QualifiedType>(pNode.Children[0], 0);
+                pNode.Data.Insert(0, qualifiedType);
                 pNode.Children.RemoveAt(0);
             }
 
