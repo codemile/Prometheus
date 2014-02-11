@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
@@ -97,7 +96,7 @@ namespace Prometheus.Runtime
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
             {
-                return new StringType(string.Concat(str1.Value,str2.Value));
+                return new StringType(string.Concat(str1.Value, str2.Value));
             }
 
             NumericType num1 = pValue1 as NumericType;
@@ -141,7 +140,7 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
                     return new NumericType(num1.getLong() * num2.getLong());
                 }
@@ -161,7 +160,7 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
                     return new NumericType(num1.getLong() - num2.getLong());
                 }

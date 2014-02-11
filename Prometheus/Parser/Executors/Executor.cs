@@ -83,7 +83,7 @@ namespace Prometheus.Parser.Executors
             switch (pParent.Type)
             {
                 case GrammarSymbol.FunctionExpression:
-                    return new FunctionType(pParent);
+                    return new ClosureType(pParent);
 
                 case GrammarSymbol.Program:
                 case GrammarSymbol.Block:

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 
@@ -14,7 +13,8 @@ namespace Prometheus.Objects
         /// <summary>
         /// An empty base reference
         /// </summary>
-        private static readonly KeyValuePair<Instance, DataType> _empty = new KeyValuePair<Instance, DataType>(null, null);
+        private static readonly KeyValuePair<Instance, DataType> _empty = new KeyValuePair<Instance, DataType>(null,
+            null);
 
         /// <summary>
         /// The storage of objects

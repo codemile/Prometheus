@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser;
 using Prometheus.Properties;

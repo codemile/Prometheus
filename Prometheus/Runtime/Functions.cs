@@ -36,7 +36,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1)
         {
-            return new ArgumentListType(new[]{pArg1});
+            return new ArgumentListType(new[] {pArg1});
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2)
         {
-            return new ArgumentListType(new []{pArg1, pArg2});
+            return new ArgumentListType(new[] {pArg1, pArg2});
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3)
         {
-            return new ArgumentListType(new []{pArg1, pArg2, pArg3});
+            return new ArgumentListType(new[] {pArg1, pArg2, pArg3});
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4)
         {
-            return new ArgumentListType(new[]{pArg1, pArg2, pArg3, pArg4});
+            return new ArgumentListType(new[] {pArg1, pArg2, pArg3, pArg4});
         }
 
         /// <summary>
@@ -72,16 +72,17 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4, DataType pArg5)
         {
-            return new ArgumentListType(new[]{pArg1, pArg2, pArg3, pArg4, pArg5});
+            return new ArgumentListType(new[] {pArg1, pArg2, pArg3, pArg4, pArg5});
         }
 
         /// <summary>
         /// Handles passing arguments to the call method.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
-        public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4, DataType pArg5, DataType pArg6)
+        public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4, DataType pArg5,
+                                  DataType pArg6)
         {
-            return new ArgumentListType(new[]{pArg1, pArg2, pArg3, pArg4, pArg5, pArg6});
+            return new ArgumentListType(new[] {pArg1, pArg2, pArg3, pArg4, pArg5, pArg6});
         }
 
         /// <summary>
@@ -106,7 +107,8 @@ namespace Prometheus.Runtime
                 {
                     AliasType a = (AliasType)pClosure;
                     Instance inst = Executor.Cursor.Heap.Get(a);
-                    Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(inst.Constructor, pArguments);
+                    Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(inst.Constructor,
+                        pArguments);
                     return Executor.Execute(inst.Constructor, variables);
                 }
                 else
@@ -117,7 +119,8 @@ namespace Prometheus.Runtime
                     {
                         return DataType.Undefined;
                     }
-                    Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(closureType.Function, pArguments);
+                    Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(closureType.Function,
+                        pArguments);
                     variables.Add("this", closureType.This);
                     return Executor.Execute(closureType.Function.Children[0], variables);
                 }

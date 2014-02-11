@@ -1,5 +1,4 @@
-﻿using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
+﻿using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Exceptions.Executor
 {

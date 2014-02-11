@@ -17,7 +17,8 @@ namespace Prometheus.Runtime
 
             if (pArguments.Arguments.Count < argCount)
             {
-                pArguments.Arguments.AddRange(Enumerable.Repeat(DataType.Undefined, argCount - pArguments.Arguments.Count));
+                pArguments.Arguments.AddRange(Enumerable.Repeat(DataType.Undefined,
+                    argCount - pArguments.Arguments.Count));
             }
 
             Dictionary<string, DataType> variables = new Dictionary<string, DataType>(pNode.Data.Count);

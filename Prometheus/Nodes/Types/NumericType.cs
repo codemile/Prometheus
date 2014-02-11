@@ -37,6 +37,17 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
+        /// <summary>
         /// Access as double
         /// </summary>
         public double getDouble()
@@ -50,17 +61,6 @@ namespace Prometheus.Nodes.Types
         public long getLong()
         {
             return (long)Value;
-        }
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        public override string ToString()
-        {
-            return Value.ToString();
         }
     }
 }

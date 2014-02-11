@@ -4,7 +4,8 @@ namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Holds a reference to a function and the object that should be used
-    /// as the "this" reference.
+    /// as the "this" reference. The compiled flag just means that the function
+    /// has been created as an object in the heap.
     /// </summary>
     public class ClosureType : DataType
     {
@@ -25,6 +26,22 @@ namespace Prometheus.Nodes.Types
         {
             This = pThis;
             Function = pFunction;
+        }
+
+        /// <summary>
+        /// Un-compiled closure
+        /// </summary>
+        public ClosureType(Node pFunction)
+        {
+            Function = pFunction;
+        }
+
+        /// <summary>
+        /// True if this closure has been compiled.
+        /// </summary>
+        public bool isCompiled()
+        {
+            return This != null;
         }
     }
 }

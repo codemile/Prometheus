@@ -1,6 +1,5 @@
 ﻿using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -20,13 +19,13 @@ namespace Prometheus.Runtime
         /// </summary>
         private DataType CreateClosure(DataType pValue)
         {
-            FunctionType func = pValue as FunctionType;
-            if (func == null)
+            ClosureType func = pValue as ClosureType;
+            if (func == null || func.isCompiled())
             {
                 return pValue;
             }
             AliasType _this = (AliasType)Executor.Cursor.Stack.Get("this");
-            return new ClosureType(_this, func.Func);
+            return new ClosureType(_this, func.Function);
         }
 
         /// <summary>
@@ -62,11 +61,11 @@ namespace Prometheus.Runtime
             NumericType num = d as NumericType;
             if (num != null)
             {
-                return num.Type == typeof(long) 
-                    ? new NumericType(num.getLong()+1)
-                    : new NumericType(num.getDouble()+1);
+                return num.Type == typeof (long)
+                    ? new NumericType(num.getLong() + 1)
+                    : new NumericType(num.getDouble() + 1);
             }
-            throw DataTypeException.InvalidTypes("++",d);
+            throw DataTypeException.InvalidTypes("++", d);
         }
 
         /// <summary>
@@ -106,7 +105,7 @@ namespace Prometheus.Runtime
             NumericType num = d as NumericType;
             if (num != null)
             {
-                return num.Type == typeof(long)
+                return num.Type == typeof (long)
                     ? new NumericType(num.getLong() - 1)
                     : new NumericType(num.getDouble() - 1);
             }

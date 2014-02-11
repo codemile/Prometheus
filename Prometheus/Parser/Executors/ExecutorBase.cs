@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
-using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Parser.Executors

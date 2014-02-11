@@ -108,7 +108,7 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
                     return new BooleanType(num1.getLong() == num2.getLong());
                 }
@@ -117,7 +117,6 @@ namespace Prometheus.Runtime
 
             throw DataTypeException.InvalidTypes("==", pValue1, pValue2);
         }
-
 
         /// <summary>
         /// Greater Than
@@ -136,7 +135,7 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
                     return new BooleanType(num1.getLong() > num2.getLong());
                 }
@@ -163,7 +162,7 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
                     return new BooleanType(num1.getLong() >= num2.getLong());
                 }
@@ -190,7 +189,7 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
                     return new BooleanType(num1.getLong() < num2.getLong());
                 }
@@ -217,7 +216,7 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
                     return new BooleanType(num1.getLong() <= num2.getLong());
                 }

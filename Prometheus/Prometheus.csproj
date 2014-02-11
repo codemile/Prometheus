@@ -62,7 +62,6 @@
     <Compile Include="Exceptions\PrometheusException.cs" />
     <Compile Include="Nodes\Types\BooleanType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
-    <Compile Include="Nodes\Types\FunctionType.cs" />
     <Compile Include="Nodes\Types\NumericType.cs" />
     <Compile Include="Nodes\Types\QualifiedType.cs" />
     <Compile Include="Nodes\Types\AliasType.cs" />

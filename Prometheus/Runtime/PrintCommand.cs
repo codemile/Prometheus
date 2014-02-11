@@ -1,6 +1,5 @@
 ﻿using Logging;
 using Prometheus.Grammar;
-using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;

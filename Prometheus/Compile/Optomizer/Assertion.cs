@@ -2,7 +2,6 @@
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Compile.Optomizer

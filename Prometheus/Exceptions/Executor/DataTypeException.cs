@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types.Bases;
 
@@ -12,22 +9,6 @@ namespace Prometheus.Exceptions.Executor
     /// </summary>
     public class DataTypeException : RunTimeException
     {
-        /// <summary>
-        /// Generates an error for incompatible types.
-        /// </summary>
-        public static DataTypeException InvalidTypes(string pOperator, DataType pValue1, DataType pValue2)
-        {
-            return new DataTypeException(string.Format("Cannot apply operator '{0}' to operands of type '{1}' and '{2}'", pOperator, pValue1.GetType().Name, pValue2.GetType().Name));
-        }
-
-        /// <summary>
-        /// Generates an error for incompatible types.
-        /// </summary>
-        public static DataTypeException InvalidTypes(string pOperator, DataType pValue)
-        {
-            return new DataTypeException(string.Format("Cannot apply operator '{0}' to operand of type '{1}'", pOperator, pValue.GetType().Name));
-        }
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -55,6 +36,26 @@ namespace Prometheus.Exceptions.Executor
         public DataTypeException(string pMessage, Exception pInner)
             : base(pMessage, pInner)
         {
+        }
+
+        /// <summary>
+        /// Generates an error for incompatible types.
+        /// </summary>
+        public static DataTypeException InvalidTypes(string pOperator, DataType pValue1, DataType pValue2)
+        {
+            return
+                new DataTypeException(string.Format("Cannot apply operator '{0}' to operands of type '{1}' and '{2}'",
+                    pOperator, pValue1.GetType().Name, pValue2.GetType().Name));
+        }
+
+        /// <summary>
+        /// Generates an error for incompatible types.
+        /// </summary>
+        public static DataTypeException InvalidTypes(string pOperator, DataType pValue)
+        {
+            return
+                new DataTypeException(string.Format("Cannot apply operator '{0}' to operand of type '{1}'", pOperator,
+                    pValue.GetType().Name));
         }
     }
 }
