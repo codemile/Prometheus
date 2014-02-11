@@ -199,6 +199,14 @@ namespace Prometheus.Parser.Executors
 
                 case GrammarSymbol.ContinueControl:
                     throw new ContinueException();
+
+                case GrammarSymbol.ArrayLiteral:
+                    ArrayType array = new ArrayType();
+                    for (int i = 0, c = pParent.Children.Count; i < c; i++)
+                    {
+                        array.Values.Add(WalkDownChildren(pParent.Children[i]));
+                    }
+                    return array;
             }
 
 #if DEBUG

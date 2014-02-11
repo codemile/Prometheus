@@ -60,6 +60,7 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
+    <Compile Include="Nodes\Types\ArrayType.cs" />
     <Compile Include="Nodes\Types\BooleanType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
     <Compile Include="Nodes\Types\NumericType.cs" />

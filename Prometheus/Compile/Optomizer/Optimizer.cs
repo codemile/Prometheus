@@ -16,14 +16,15 @@ namespace Prometheus.Compile.Optomizer
     public class Optimizer
     {
         /// <summary>
-        /// Defines which symbols are used to only collection child symbols. The goal is to prevent the chaining
+        /// Defines which symbols are used to only collect child symbols. The goal is to prevent the chaining
         /// of collections that could be reduced to a single collection.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _arrays = new HashSet<GrammarSymbol>
                                                                  {
                                                                      GrammarSymbol.Statements,
                                                                      GrammarSymbol.ObjectDecls,
-                                                                     GrammarSymbol.Program
+                                                                     GrammarSymbol.Program,
+                                                                     GrammarSymbol.ArrayList
                                                                  };
 
         /// <summary>
@@ -38,7 +39,8 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.ObjectDecls,
                                                                    GrammarSymbol.FormalParameterList,
                                                                    GrammarSymbol.Arguments,
-                                                                   GrammarSymbol.BaseClass
+                                                                   GrammarSymbol.BaseClass,
+                                                                   GrammarSymbol.ArrayList
                                                                };
 
         /// <summary>
@@ -170,6 +172,16 @@ namespace Prometheus.Compile.Optomizer
                 }
                 pNode.Children.Clear();
                 pNode.Children.AddRange(newChildren);
+            }
+
+            // bring up children of a certain type
+            if (pNode.Type == GrammarSymbol.ArrayLiteral &&
+                pNode.Children.Count == 1 &&
+                pNode.Children[0].Type == GrammarSymbol.ArrayList)
+            {
+                List<Node> children = pNode.Children[0].Children;
+                pNode.Children.Clear();
+                pNode.Children.AddRange(children);
             }
 
             // check if a function call is to an internal method

@@ -32,8 +32,8 @@ MemberName		=  '.' {ID Head}{ID Tail}*
 
 StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"'
 StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* ['']
-Number			= [0123456789,]+
-Decimal			= [0123456789,]+ '.' [0123456789]+
+Number			= [0123456789]+
+Decimal			= [0123456789]+ '.' [0123456789]+
 Boolean			= true | false | on | off | yes | no | always | never
 RegExp			= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' ( 'g' | 'i' | 'm' )*
 Type			= object | model | observer
@@ -92,6 +92,7 @@ Comment Line  = '//'
 					| Number
 					| Decimal
 					| Boolean
+					| <Array Literal>
 					| <Qualified ID>
 					| <Function Expression>
 					| '(' <Expression> ')'
@@ -103,7 +104,11 @@ Comment Line  = '//'
 						| <Increment>
 						| <Decrement>
 
+<Array Literal>			::= '[' ']'
+						| '[' <Array List> ']'
 
+<Array List>			::= <Value>
+						| <Array List> ',' <Value>
 
 <Declare>			::= VAR Identifier
 					| VAR Identifier '=' <Expression>
