@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -92,18 +93,25 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.AddExpression)]
         public DataType Add(DataType pValue1, DataType pValue2)
         {
-            Type t1 = pValue1.Type;
-            Type t2 = pValue2.Type;
-            if (t1 == typeof (string) || t2 == typeof (string) ||
-                t1 == typeof (Node) || t2 == typeof (Node))
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
             {
-                return new DataType(string.Concat(pValue1.getString(), pValue2.getString()));
+                return new StringType(string.Concat(str1.Value,str2.Value));
             }
 
-            Type type = DataTypeConverter.BestNumericType(t1, t2);
-            return type == DataType.Integer
-                ? new DataType(pValue1.getInteger() + pValue2.getInteger())
-                : new DataType(pValue1.getPrecise() + pValue2.getPrecise());
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.Type == typeof (long))
+                {
+                    return new NumericType(num1.getLong() + num2.getLong());
+                }
+                return new NumericType(num1.getDouble() + num2.getDouble());
+            }
+
+            throw DataTypeException.InvalidTypes("+", pValue1, pValue2);
         }
 
         /// <summary>
@@ -112,7 +120,15 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.DivideExpression)]
         public DataType Div(DataType pValue1, DataType pValue2)
         {
-            return new DataType(pValue1.getPrecise() / pValue2.getPrecise());
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                // TODO: Throw divide by zero as a runtime exception
+                return new NumericType(num1.getDouble() / num2.getDouble());
+            }
+
+            throw DataTypeException.InvalidTypes("/", pValue1, pValue2);
         }
 
         /// <summary>
@@ -121,10 +137,18 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.MultiplyExpression)]
         public DataType Mul(DataType pValue1, DataType pValue2)
         {
-            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == DataType.Integer
-                ? new DataType(pValue1.getInteger() * pValue2.getInteger())
-                : new DataType(pValue1.getPrecise() * pValue2.getPrecise());
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                {
+                    return new NumericType(num1.getLong() * num2.getLong());
+                }
+                return new NumericType(num1.getDouble() * num2.getDouble());
+            }
+
+            throw DataTypeException.InvalidTypes("*", pValue1, pValue2);
         }
 
         /// <summary>
@@ -133,10 +157,18 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.SubExpression)]
         public DataType Sub(DataType pValue1, DataType pValue2)
         {
-            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == DataType.Integer
-                ? new DataType(pValue1.getInteger() - pValue2.getInteger())
-                : new DataType(pValue1.getPrecise() - pValue2.getPrecise());
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                {
+                    return new NumericType(num1.getLong() - num2.getLong());
+                }
+                return new NumericType(num1.getDouble() - num2.getDouble());
+            }
+
+            throw DataTypeException.InvalidTypes("-", pValue1, pValue2);
         }
     }
 }

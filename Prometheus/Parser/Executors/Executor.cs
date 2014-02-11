@@ -59,7 +59,7 @@ namespace Prometheus.Parser.Executors
                 values[i] = pArguments[i];
             }
 
-            return _internalLookup[pInternal].Execute(pArguments);
+            return _internalLookup[pInternal].Execute(values);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Prometheus.Parser.Executors
             switch (pParent.Type)
             {
                 case GrammarSymbol.FunctionExpression:
-                    return new DataType(pParent);
+                    return new FunctionType(pParent);
 
                 case GrammarSymbol.Program:
                 case GrammarSymbol.Block:

@@ -22,27 +22,27 @@ namespace Prometheus.Runtime
         /// Converts to lower case.
         /// </summary>
         [ExecuteInternal("lower")]
-        public DataType Lower(DataType pValue)
+        public StringType Lower(StringType pValue)
         {
-            return new DataType(pValue.getString().ToLower());
+            return new StringType(pValue.Value.ToLower());
         }
 
         /// <summary>
         /// Converts to trims spaces
         /// </summary>
         [ExecuteInternal("trim")]
-        public DataType Trim(DataType pValue)
+        public StringType Trim(StringType pValue)
         {
-            return new DataType(pValue.getString().Trim());
+            return new StringType(pValue.Value.Trim());
         }
 
         /// <summary>
         /// Converts to upper case.
         /// </summary>
         [ExecuteInternal("upper")]
-        public DataType Upper(DataType pValue)
+        public StringType Upper(StringType pValue)
         {
-            return new DataType(pValue.getString().ToUpper());
+            return new StringType(pValue.Value.ToUpper());
         }
     }
 }

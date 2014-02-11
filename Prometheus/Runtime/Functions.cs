@@ -36,7 +36,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1)
         {
-            return new DataType(new ArgumentListType {pArg1});
+            return new ArgumentListType(new[]{pArg1});
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2)
         {
-            return new DataType(new ArgumentListType {pArg1, pArg2});
+            return new ArgumentListType(new []{pArg1, pArg2});
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3)
         {
-            return new DataType(new ArgumentListType {pArg1, pArg2, pArg3});
+            return new ArgumentListType(new []{pArg1, pArg2, pArg3});
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4)
         {
-            return new DataType(new ArgumentListType {pArg1, pArg2, pArg3, pArg4});
+            return new ArgumentListType(new[]{pArg1, pArg2, pArg3, pArg4});
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4, DataType pArg5)
         {
-            return new DataType(new ArgumentListType {pArg1, pArg2, pArg3, pArg4, pArg5});
+            return new ArgumentListType(new[]{pArg1, pArg2, pArg3, pArg4, pArg5});
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ArgumentList)]
         public DataType Arguments(DataType pArg1, DataType pArg2, DataType pArg3, DataType pArg4, DataType pArg5, DataType pArg6)
         {
-            return new DataType(new ArgumentListType {pArg1, pArg2, pArg3, pArg4, pArg5, pArg6});
+            return new ArgumentListType(new[]{pArg1, pArg2, pArg3, pArg4, pArg5, pArg6});
         }
 
         /// <summary>
@@ -90,28 +90,28 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
         public DataType Call(DataType pClosure)
         {
-            return Call(pClosure, DataType.Undefined);
+            return Call(pClosure, new ArgumentListType());
         }
 
         /// <summary>
         /// Executes a closure a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public DataType Call(DataType pClosure, DataType pArguments)
+        public DataType Call(DataType pClosure, ArgumentListType pArguments)
         {
             try
             {
                 // calling base constructor
-                if (pClosure.Type == typeof (AliasType))
+                if (pClosure.GetType() == typeof (AliasType))
                 {
-                    AliasType a = pClosure.getAlias();
+                    AliasType a = (AliasType)pClosure;
                     Instance inst = Executor.Cursor.Heap.Get(a);
                     Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(inst.Constructor, pArguments);
                     return Executor.Execute(inst.Constructor, variables);
                 }
                 else
                 {
-                    ClosureType closureType = pClosure.getClosure();
+                    ClosureType closureType = (ClosureType)pClosure;
                     // empty function check
                     if (closureType.Function.Children.Count == 0)
                     {
@@ -132,10 +132,10 @@ namespace Prometheus.Runtime
         /// Executes an internal function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallInternal)]
-        public DataType CallInternal(DataType pIdentifier, DataType pArguments)
+        public DataType CallInternal(IdentifierType pIdentifier, ArgumentListType pArguments)
         {
-            string name = pIdentifier.getIdentifier().Name;
-            return Executor.Execute(name, pArguments.getArgumentList());
+            string name = pIdentifier.Name;
+            return Executor.Execute(name, pArguments.Arguments);
         }
 
         /// <summary>

@@ -1,24 +1,23 @@
-﻿using System.Globalization;
-using Prometheus.Nodes.Types.Bases;
+﻿using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
 {
     /// <summary>
-    /// Holds a reference to an object in the heap.
+    /// Boxes string values
     /// </summary>
-    public class AliasType : DataType
+    public class StringType : DataType
     {
         /// <summary>
-        /// Position of object in the heap.
+        /// String value
         /// </summary>
-        public readonly int Heap;
+        public readonly string Value;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public AliasType(int pHeap)
+        public StringType(string pValue)
         {
-            Heap = pHeap;
+            Value = pValue;
         }
 
         /// <summary>
@@ -29,7 +28,7 @@ namespace Prometheus.Nodes.Types
         /// </returns>
         public override string ToString()
         {
-            return Heap.ToString(CultureInfo.InvariantCulture);
+            return Value;
         }
     }
 }

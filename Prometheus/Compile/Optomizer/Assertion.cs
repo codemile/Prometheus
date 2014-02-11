@@ -60,7 +60,7 @@ namespace Prometheus.Compile.Optomizer
         /// <summary>
         /// Data must be of expected type.
         /// </summary>
-        public static T Get<T>(Node pNode, int pIndex)
+        public static T Get<T>(Node pNode, int pIndex) where T : DataType
         {
             if (pIndex >= pNode.Data.Count)
             {
@@ -73,17 +73,17 @@ namespace Prometheus.Compile.Optomizer
             }
             DataType dataType = pNode.Data[pIndex];
             Type type = typeof (T);
-            if (dataType.Type != type)
+            if (dataType.GetType() != type)
             {
                 throw new OptimizationException(
                     string.Format("Expected <{0}> data {1} to be type <{2}> but found <{3}> instead",
                         pNode.Type,
                         pIndex,
                         type.Name,
-                        dataType.Type.Name),
+                        dataType.GetType().Name),
                     pNode.Location);
             }
-            return (T)dataType.Get(type);
+            return (T)dataType;
         }
 
         /// <summary>

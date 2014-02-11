@@ -91,7 +91,7 @@ namespace Prometheus.Parser
                 {
                     throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pID));
                 }
-                AliasType a = memory.Get(pID.Parts[index]).getAlias();
+                AliasType a = (AliasType)memory.Get(pID.Parts[index]);
                 Instance inst = Heap.Get(a);
                 memory = inst.Members;
                 index++;

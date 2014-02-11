@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -96,11 +97,27 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.EqualOperator)]
         public DataType Equal(DataType pValue1, DataType pValue2)
         {
-            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == DataType.Integer
-                ? new DataType(pValue1.getInteger() == pValue2.getInteger())
-                : new DataType(Math.Abs(pValue1.getPrecise() - pValue2.getPrecise()) < DataType.PRECISE_EPSILON);
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
+            {
+                return new BooleanType(String.CompareOrdinal(str1.Value, str2.Value) == 0);
+            }
+
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                {
+                    return new BooleanType(num1.getLong() == num2.getLong());
+                }
+                return new BooleanType(Math.Abs(num1.getDouble() - num2.getDouble()) < double.Epsilon);
+            }
+
+            throw DataTypeException.InvalidTypes("==", pValue1, pValue2);
         }
+
 
         /// <summary>
         /// Greater Than
@@ -108,10 +125,25 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.GtOperator)]
         public DataType GreaterThan(DataType pValue1, DataType pValue2)
         {
-            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == DataType.Integer
-                ? new DataType(pValue1.getInteger() > pValue2.getInteger())
-                : new DataType(pValue1.getPrecise() > pValue2.getPrecise());
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
+            {
+                return new BooleanType(String.CompareOrdinal(str1.Value, str2.Value) > 0);
+            }
+
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                {
+                    return new BooleanType(num1.getLong() > num2.getLong());
+                }
+                return new BooleanType(num1.getDouble() > num2.getDouble());
+            }
+
+            throw DataTypeException.InvalidTypes(">", pValue1, pValue2);
         }
 
         /// <summary>
@@ -120,10 +152,25 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.GteOperator)]
         public DataType GreaterThanEqual(DataType pValue1, DataType pValue2)
         {
-            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == DataType.Integer
-                ? new DataType(pValue1.getInteger() >= pValue2.getInteger())
-                : new DataType(pValue1.getPrecise() >= pValue2.getPrecise());
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
+            {
+                return new BooleanType(String.CompareOrdinal(str1.Value, str2.Value) >= 0);
+            }
+
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                {
+                    return new BooleanType(num1.getLong() >= num2.getLong());
+                }
+                return new BooleanType(num1.getDouble() >= num2.getDouble());
+            }
+
+            throw DataTypeException.InvalidTypes(">=", pValue1, pValue2);
         }
 
         /// <summary>
@@ -132,10 +179,25 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.LtOperator)]
         public DataType LessThan(DataType pValue1, DataType pValue2)
         {
-            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == DataType.Integer
-                ? new DataType(pValue1.getInteger() < pValue2.getInteger())
-                : new DataType(pValue1.getPrecise() < pValue2.getPrecise());
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
+            {
+                return new BooleanType(String.CompareOrdinal(str1.Value, str2.Value) < 0);
+            }
+
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                {
+                    return new BooleanType(num1.getLong() < num2.getLong());
+                }
+                return new BooleanType(num1.getDouble() < num2.getDouble());
+            }
+
+            throw DataTypeException.InvalidTypes("<", pValue1, pValue2);
         }
 
         /// <summary>
@@ -144,10 +206,25 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.LteOperator)]
         public DataType LessThanEqual(DataType pValue1, DataType pValue2)
         {
-            Type type = DataTypeConverter.BestNumericType(pValue1.Type, pValue2.Type);
-            return type == DataType.Integer
-                ? new DataType(pValue1.getInteger() <= pValue2.getInteger())
-                : new DataType(pValue1.getPrecise() <= pValue2.getPrecise());
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
+            {
+                return new BooleanType(String.CompareOrdinal(str1.Value, str2.Value) <= 0);
+            }
+
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.Type == typeof(long))
+                {
+                    return new BooleanType(num1.getLong() <= num2.getLong());
+                }
+                return new BooleanType(num1.getDouble() <= num2.getDouble());
+            }
+
+            throw DataTypeException.InvalidTypes("<=", pValue1, pValue2);
         }
     }
 }

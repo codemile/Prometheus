@@ -40,13 +40,13 @@ namespace Prometheus.Nodes
                     // drop the quotes
                 case GrammarSymbol.StringDouble:
                 case GrammarSymbol.StringSingle:
-                    return new DataType(pValue.Substring(1, pValue.Length - 2));
+                    return new StringType(pValue.Substring(1, pValue.Length - 2));
 
                 case GrammarSymbol.Number:
-                    return new DataType(Convert.ToInt64(pValue));
+                    return new NumericType(Convert.ToInt64(pValue));
 
                 case GrammarSymbol.Decimal:
-                    return new DataType(Convert.ToDouble(pValue));
+                    return new NumericType(Convert.ToDouble(pValue));
 
                 case GrammarSymbol.Boolean:
                     pValue = pValue.ToLower();
@@ -56,22 +56,21 @@ namespace Prometheus.Nodes
                         case "on":
                         case "yes":
                         case "always":
-                            return new DataType(true);
+                            return new BooleanType(true);
                         case "false":
                         case "off":
                         case "no":
                         case "never":
-                            return new DataType(false);
+                            return new BooleanType(false);
                     }
                     break;
 
                 case GrammarSymbol.Identifier:
-                    //case GrammarSymbol.@this:
                 case GrammarSymbol.MemberName:
-                    return new DataType(new IdentifierType(pValue));
+                    return new IdentifierType(pValue);
 
                 case GrammarSymbol.Type:
-                    return new DataType(new StaticType(pValue));
+                    return new StaticType(pValue);
             }
 
             throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol),

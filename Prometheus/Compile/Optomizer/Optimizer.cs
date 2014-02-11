@@ -113,8 +113,8 @@ namespace Prometheus.Compile.Optomizer
                 return pNode;
             }
 
-            DataType id = pNode.Children[0].Data[0];
-            if (!_internalIds.Contains(id.getIdentifier().Name))
+            IdentifierType id = (IdentifierType)pNode.Children[0].Data[0];
+            if (!_internalIds.Contains(id.Name))
             {
                 return pNode;
             }
@@ -191,7 +191,8 @@ namespace Prometheus.Compile.Optomizer
             Assertion.Data(0, pNode);
             Assertion.Data(1, pNode.Children[0]);
 
-            List<string> path = new List<string> {pNode.Children[0].Data[0].getIdentifier().Name};
+            IdentifierType id = (IdentifierType)pNode.Children[0].Data[0];
+            List<string> path = new List<string> {id.Name};
 
             Node member = pNode.Children[1];
             while (true)
@@ -209,7 +210,7 @@ namespace Prometheus.Compile.Optomizer
             }
 
             QualifiedType q = new QualifiedType(path.ToArray());
-            pNode.Data.Add(new DataType(q));
+            pNode.Data.Add(q);
             pNode.Children.Clear();
 
             _modified = true;
@@ -234,7 +235,7 @@ namespace Prometheus.Compile.Optomizer
             {
                 Assertion.Data(1, pNode.Children[0]);
                 QualifiedType qualifiedType = Assertion.Get<QualifiedType>(pNode.Children[0], 0);
-                pNode.Data.Insert(0, new DataType(qualifiedType));
+                pNode.Data.Insert(0, qualifiedType);
                 pNode.Children.RemoveAt(0);
             }
 

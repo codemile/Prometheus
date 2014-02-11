@@ -6,7 +6,7 @@ namespace Prometheus.Nodes.Types
     /// Holds a reference to a function and the object that should be used
     /// as the "this" reference.
     /// </summary>
-    public class ClosureType
+    public class ClosureType : DataType
     {
         /// <summary>
         /// The function
@@ -16,14 +16,14 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Reference to "this"
         /// </summary>
-        public readonly DataType This;
+        public readonly AliasType This;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public ClosureType(AliasType pThis, Node pFunction)
         {
-            This = new DataType(pThis);
+            This = pThis;
             Function = pFunction;
         }
     }

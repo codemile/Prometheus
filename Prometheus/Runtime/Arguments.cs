@@ -11,20 +11,19 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Collects the arguments for a function from the node.
         /// </summary>
-        public static Dictionary<string, DataType> CollectArguments(Node pNode, DataType pArguments)
+        public static Dictionary<string, DataType> CollectArguments(Node pNode, ArgumentListType pArguments)
         {
             int argCount = pNode.Data.Count;
 
-            ArgumentListType listType = pArguments.getArgumentList();
-            if (listType.Count < argCount)
+            if (pArguments.Arguments.Count < argCount)
             {
-                listType.AddRange(Enumerable.Repeat(DataType.Undefined, argCount - listType.Count));
+                pArguments.Arguments.AddRange(Enumerable.Repeat(DataType.Undefined, argCount - pArguments.Arguments.Count));
             }
 
             Dictionary<string, DataType> variables = new Dictionary<string, DataType>(pNode.Data.Count);
             for (int i = 0; i < argCount; i++)
             {
-                variables.Add(pNode.Data[i].getIdentifier().Name, listType[i]);
+                variables.Add(((IdentifierType)pNode.Data[i]).Name, pArguments.Arguments[i]);
             }
             return variables;
         }

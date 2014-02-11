@@ -29,11 +29,10 @@ namespace Prometheus.Parser
 
                 using (executor.Cursor.Stack = new StackSpace(executor.Cursor, globals))
                 {
-                    DataType value = executor.Execute(pCode.Root, new Dictionary<string, DataType>()) ?? new DataType(-1);
+                    DataType value = executor.Execute(pCode.Root, new Dictionary<string, DataType>()) ?? new NumericType(-1);
 
-                    return (value.Type == typeof (UndefinedType))
-                        ? 0
-                        : (int)value.getInteger();
+                    NumericType num = value as NumericType;
+                    return (num != null) ? (int)num.getLong() : 0;
                 }
             }
         }

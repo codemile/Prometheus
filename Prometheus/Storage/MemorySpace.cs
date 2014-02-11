@@ -66,12 +66,13 @@ namespace Prometheus.Storage
             string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
             foreach (KeyValuePair<string, DataType> var in _storage)
             {
-                if (var.Value.Type == typeof (string))
+                StringType str = var.Value as StringType;
+                if (str != null)
                 {
-                    _logger.Fine("{0}{1} = \"{2}\"", indent, var.Key, var.Value.getString());
+                    _logger.Fine("{0}{1} = \"{2}\"", indent, var.Key, str.Value);
                     continue;
                 }
-                _logger.Fine("{0}{1} = {2}", indent, var.Key, var.Value.getString() ?? "undefined");
+                _logger.Fine("{0}{1} = {2}", indent, var.Key, var.ToString());
             }
         }
 

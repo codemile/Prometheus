@@ -50,6 +50,7 @@
     <Compile Include="Exceptions\Compiler\OptimizationException.cs" />
     <Compile Include="Exceptions\Executor\BreakException.cs" />
     <Compile Include="Exceptions\Executor\ContinueException.cs" />
+    <Compile Include="Exceptions\Executor\DataTypeException.cs" />
     <Compile Include="Exceptions\Executor\IdentifierException.cs" />
     <Compile Include="Exceptions\Executor\InvalidArgumentException.cs" />
     <Compile Include="Exceptions\Executor\ReturnException.cs" />
@@ -59,10 +60,14 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
+    <Compile Include="Nodes\Types\BooleanType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
+    <Compile Include="Nodes\Types\FunctionType.cs" />
+    <Compile Include="Nodes\Types\NumericType.cs" />
     <Compile Include="Nodes\Types\QualifiedType.cs" />
     <Compile Include="Nodes\Types\AliasType.cs" />
     <Compile Include="Nodes\Types\StaticType.cs" />
+    <Compile Include="Nodes\Types\StringType.cs" />
     <Compile Include="Objects\CreateInherited.cs" />
     <Compile Include="Objects\Declaration.cs" />
     <Compile Include="Objects\Instance.cs" />
@@ -74,7 +79,6 @@
     <Compile Include="Nodes\Types\ArgumentListType.cs" />
     <Compile Include="Nodes\Types\Bases\DataType.cs" />
     <Compile Include="Compile\Location.cs" />
-    <Compile Include="Nodes\DataTypeConverter.cs" />
     <Compile Include="Nodes\DataTypeFactory.cs" />
     <Compile Include="Nodes\Types\IdentifierType.cs" />
     <Compile Include="Nodes\Types\UndefinedType.cs" />

@@ -52,39 +52,5 @@ namespace Prometheus.Parser.Executors
                 throw;
             }
         }
-
-        /// <summary>
-        /// Executes a grammar method on this object.
-        /// </summary>
-        /// <param name="pValues">The arguments</param>
-        /// <returns>The output data</returns>
-        /// <exception cref="RunTimeException">Throws runtime exceptions from inner grammar objects.</exception>
-        public DataType Execute(List<DataType> pValues)
-        {
-            try
-            {
-                MethodInfo method = GetMethod(Executor.Cursor.Node, pValues.Count);
-
-                ParameterInfo[] infos = method.GetParameters();
-                object[] values = new object[pValues.Count];
-
-                for (int i = 0, c = pValues.Count; i < c; i++)
-                {
-                    values[i] = pValues[i].Get(infos[i].ParameterType);
-                }
-
-                object result = method.Invoke(this, values);
-
-                return new DataType(result);
-            }
-            catch (TargetInvocationException e)
-            {
-                if (e.InnerException is RunTimeException)
-                {
-                    throw e.InnerException;
-                }
-                throw;
-            }
-        }
     }
 }

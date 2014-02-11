@@ -46,7 +46,7 @@ namespace Prometheus.Storage
         public DataType Add(Instance pInstance)
         {
             _storage.Add(pInstance);
-            return new DataType(new AliasType(_storage.Count - 1));
+            return new AliasType(_storage.Count - 1);
         }
 
         /// <summary>

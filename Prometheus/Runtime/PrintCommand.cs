@@ -32,7 +32,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.PrintProc)]
         public DataType Print(DataType pValue)
         {
-            _logger.Fine(pValue.getString());
+            _logger.Fine(pValue.ToString());
 
             return DataType.Undefined;
         }
