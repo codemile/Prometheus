@@ -43,7 +43,7 @@ namespace Prometheus.Parser
             Node = null;
 
             Heap = new HeapSpace();
-            Packages = new NameSpace();
+            Packages = NameSpace.Create();
         }
 
         /// <summary>

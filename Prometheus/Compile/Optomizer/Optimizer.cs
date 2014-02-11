@@ -116,7 +116,7 @@ namespace Prometheus.Compile.Optomizer
             }
 
             IdentifierType id = (IdentifierType)pNode.Children[0].Data[0];
-            if (!_internalIds.Contains(id.Name))
+            if (!_internalIds.Contains(id.FullName))
             {
                 return pNode;
             }
@@ -204,7 +204,7 @@ namespace Prometheus.Compile.Optomizer
             Assertion.Data(1, pNode.Children[0]);
 
             IdentifierType id = (IdentifierType)pNode.Children[0].Data[0];
-            List<string> path = new List<string> {id.Name};
+            List<string> path = new List<string> {id.FullName};
 
             Node member = pNode.Children[1];
             while (true)
@@ -217,7 +217,7 @@ namespace Prometheus.Compile.Optomizer
                 Assertion.Data(1, member);
                 Assertion.Children(1, member);
 
-                path.Add(Assertion.Get<IdentifierType>(member, 0).Name.Substring(1));
+                path.Add(Assertion.Get<IdentifierType>(member, 0).FullName.Substring(1));
                 member = member.Children[0];
             }
 

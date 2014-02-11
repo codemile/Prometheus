@@ -31,7 +31,7 @@ namespace Prometheus.Parser.Executors
         /// </summary>
         protected override MethodInfo GetMethod(Node pNode, int pArgCount)
         {
-            string name = ((IdentifierType)pNode.Data[0]).Name;
+            string name = ((IdentifierType)pNode.Data[0]).FullName;
             return _methods[name][pArgCount];
         }
     }

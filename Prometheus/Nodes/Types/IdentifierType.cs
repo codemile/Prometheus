@@ -12,14 +12,44 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// the display name
         /// </summary>
-        public readonly string Name;
+        public readonly string FullName;
+
+        /// <summary>
+        /// A cache of the name parts.
+        /// </summary>
+        private string[] _parts;
+
+        /// <summary>
+        /// The member name only
+        /// </summary>
+        public string Name
+        {
+            get { return FullName == "" ? "" : _parts[_parts.Length - 1]; }
+        }
+
+        /// <summary>
+        /// The name broken into namespaces and member
+        /// </summary>
+        public string[] Parts
+        {
+            get { return _parts ?? (_parts = FullName.Split(new[] {'.'})); }
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public IdentifierType(string pName)
+        public IdentifierType(string pFullName)
         {
-            Name = pName.ToLower();
+            FullName = pFullName.ToLower();
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public IdentifierType(string[] pParts)
+        {
+            FullName = string.Join(".", pParts);
+            _parts = pParts;
         }
 
         /// <summary>
@@ -27,7 +57,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public override string ToString()
         {
-            return Name;
+            return FullName;
         }
     }
 }

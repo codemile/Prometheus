@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text;
+using Logging;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -16,6 +18,11 @@ namespace Prometheus.Objects
     public class ObjectGrammar : ExecutorGrammar
     {
         /// <summary>
+        /// Logging
+        /// </summary>
+        private static readonly Logger _logger = Logger.Create(typeof(ObjectGrammar));
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public ObjectGrammar(Executor pExecutor)
@@ -29,7 +36,12 @@ namespace Prometheus.Objects
         [ExecuteSymbol(GrammarSymbol.ListObjects)]
         public DataType ListObjects()
         {
-            Executor.Cursor.Packages.Print();
+            List<string> lines = new List<string>();
+            Executor.Cursor.Packages.Print(ref lines);
+            foreach (string line in lines)
+            {
+                _logger.Fine(line);
+            }
             return DataType.Undefined;
         }
 

@@ -24,7 +24,7 @@ namespace Prometheus.Runtime
             Dictionary<string, DataType> variables = new Dictionary<string, DataType>(pNode.Data.Count);
             for (int i = 0; i < argCount; i++)
             {
-                variables.Add(((IdentifierType)pNode.Data[i]).Name, pArguments.Arguments[i]);
+                variables.Add(((IdentifierType)pNode.Data[i]).FullName, pArguments.Arguments[i]);
             }
             return variables;
         }

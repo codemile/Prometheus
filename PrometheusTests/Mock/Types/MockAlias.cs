@@ -1,6 +1,6 @@
 ﻿using Prometheus.Nodes.Types;
 
-namespace PrometheusTest.Mock
+namespace PrometheusTest.Mock.Types
 {
     public static class MockAlias
     {

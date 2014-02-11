@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Logging;
 using Prometheus.Nodes.Types;
 using Prometheus.Objects;
@@ -17,6 +18,16 @@ namespace Prometheus.Storage
         private static readonly Logger _logger = Logger.Create(typeof (NameSpace));
 
         /// <summary>
+        /// The name of the root namespace for all namespaces
+        /// </summary>
+        public static readonly IdentifierType Global = new IdentifierType("global");
+
+        /// <summary>
+        /// The name of this namespace.
+        /// </summary>
+        public readonly IdentifierType Name;
+
+        /// <summary>
         /// The child namespaces of this space.
         /// </summary>
         private readonly Dictionary<string, NameSpace> _childSpaces;
@@ -25,6 +36,14 @@ namespace Prometheus.Storage
         /// All the declarations in this package.
         /// </summary>
         private readonly Dictionary<string, Declaration> _declarations;
+
+        /// <summary>
+        /// Checks if this namespace contains anything
+        /// </summary>
+        public bool isEmpty
+        {
+            get { return _childSpaces.Count == 0 && _declarations.Count == 0; }
+        }
 
         /// <summary>
         /// Walks the children until it finds the correct namespace to store this declaration.
@@ -52,6 +71,26 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
+        /// Walks the children creating namespaces.
+        /// </summary>
+        /// <param name="pIdentifier">The list of namespace names</param>
+        /// <param name="pIndex">Current index into parts</param>
+        /// <returns>True if successful, or False if not added.</returns>
+        private bool Declare(IdentifierType pIdentifier, int pIndex)
+        {
+            string name = pIdentifier.Parts[pIndex];
+
+            bool added = false;
+            if (!_childSpaces.ContainsKey(name))
+            {
+                _childSpaces.Add(name, new NameSpace(new IdentifierType(pIdentifier.Parts.Take(pIndex+1).ToArray())));
+                added = true;
+            }
+
+            return pIndex == pIdentifier.Parts.Length - 1 ? added : _childSpaces[name].Declare(pIdentifier, pIndex + 1);
+        }
+
+        /// <summary>
         /// Returns the definition of an object by searching this namespace and it's children.
         /// </summary>
         private Declaration Get(string pName)
@@ -75,8 +114,10 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        public NameSpace()
+        public NameSpace(IdentifierType pName)
         {
+            Name = pName;
+
             _declarations = new Dictionary<string, Declaration>();
             _childSpaces = new Dictionary<string, NameSpace>();
         }
@@ -95,6 +136,17 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
+        /// Creates the root namespace used by the parser.
+        /// </summary>
+        /// <returns></returns>
+        public static NameSpace Create()
+        {
+            NameSpace root = new NameSpace(new IdentifierType(""));
+            root.Declare(Global);
+            return root;
+        }
+
+        /// <summary>
         /// Adds an object declaration to this namespace, or a children space
         /// that matches the identifier for the declaration.
         /// </summary>
@@ -102,8 +154,27 @@ namespace Prometheus.Storage
         /// <returns>True if successful, or False if not added.</returns>
         public bool Add(Declaration pDecl)
         {
-            string[] parts = pDecl.Name.Name.Split(new[] {'.'});
-            return Add(pDecl, parts, 0);
+            return Add(pDecl, pDecl.Identifier.Parts, 0);
+        }
+
+        /// <summary>
+        /// Access a child package.
+        /// </summary>
+        /// <param name="pPackage">The name of the child</param>
+        /// <returns>The child package</returns>
+        public NameSpace Child(string pPackage)
+        {
+            return _childSpaces.ContainsKey(pPackage) ? _childSpaces[pPackage] : null;
+        }
+
+        /// <summary>
+        /// Declares namespaces
+        /// </summary>
+        /// <param name="pIdentifierType">The namespace without members</param>
+        /// <returns>True if successful, False if already exists.</returns>
+        public bool Declare(IdentifierType pIdentifierType)
+        {
+            return Declare(pIdentifierType, 0);
         }
 
         /// <summary>
@@ -123,25 +194,51 @@ namespace Prometheus.Storage
         /// <returns>The declaration or null.</returns>
         public Declaration Get(IdentifierType pIdentifierType)
         {
-            string[] parts = pIdentifierType.Name.Split(new[] {'.'});
-            return Get(parts, 0);
+            return Get(pIdentifierType.Parts, 0);
         }
 
         /// <summary>
         /// Prints a list of object declarations grouped by namespace.
         /// </summary>
+        /// <param name="pLines">The output string</param>
         /// <param name="pIndent">The current indent</param>
-        public void Print(int pIndent = 0)
+        public void Print(ref List<string> pLines, int pIndent = 0)
         {
-            string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
-            foreach (Declaration decl in _declarations.Values)
+            if (!string.IsNullOrEmpty(Name.FullName))
             {
-                _logger.Fine("{0}{1}", indent, decl.ToString());
+                pLines.Add(string.Format("{0}:",Name));
             }
-            foreach (NameSpace child in _childSpaces.Values)
+
+            pLines.AddRange(
+                _declarations
+                .Values
+                .OrderBy(pValue=>pValue)
+                .Select(pDecl=>string.Format("{0}:{1}", Name, pDecl.Identifier.Name)));
+
+            foreach (NameSpace child in _childSpaces.Values.OrderBy(pValue=>pValue.Name.FullName))
             {
-                child.Print(pIndent + 1);
+                child.Print(ref pLines, pIndent + 1);
             }
+        }
+
+        /// <summary>
+        /// Checks if a declaration exists in the current package.
+        /// </summary>
+        /// <param name="pName">The declaration</param>
+        /// <returns>True if exists</returns>
+        public bool isDeclaration(string pName)
+        {
+            return _declarations.ContainsKey(pName);
+        }
+
+        /// <summary>
+        /// Checks if a package exists.
+        /// </summary>
+        /// <param name="pPackage">The package name</param>
+        /// <returns>True if it exists</returns>
+        public bool isPackage(string pPackage)
+        {
+            return _childSpaces.ContainsKey(pPackage);
         }
     }
 }

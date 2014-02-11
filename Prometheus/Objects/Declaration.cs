@@ -24,15 +24,15 @@ namespace Prometheus.Objects
         /// <summary>
         /// The name of the object.
         /// </summary>
-        public readonly IdentifierType Name;
+        public readonly IdentifierType Identifier;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Declaration(Declaration pBase, IdentifierType pName, Node pObjDecl)
+        public Declaration(Declaration pBase, IdentifierType pIdentifier, Node pObjDecl)
         {
             Base = pBase;
-            Name = pName;
+            Identifier = pIdentifier;
 
             Constructor = new Node(GrammarSymbol.Statements, pObjDecl.Location);
             Constructor.Children.AddRange(pObjDecl.Children);
@@ -46,7 +46,7 @@ namespace Prometheus.Objects
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0}:{1}", Base ?? (object)"", Name);
+            return string.Format("{0}:{1}", Base ?? (object)"", Identifier);
         }
     }
 }

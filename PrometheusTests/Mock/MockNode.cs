@@ -1,6 +1,6 @@
-﻿using Prometheus.Compile;
-using Prometheus.Grammar;
+﻿using Prometheus.Grammar;
 using Prometheus.Nodes;
+using PrometheusTest.Mock.Compile;
 
 namespace PrometheusTest.Mock
 {
@@ -8,12 +8,12 @@ namespace PrometheusTest.Mock
     {
         public static Node Create()
         {
-            return new Node(GrammarSymbol.Statement, new Location("test.fire", "set mathew=3;", 1, 1));
+            return new Node(GrammarSymbol.Statement, new MockLocation());
         }
 
         public static Node Create(GrammarSymbol pSymbol)
         {
-            return new Node(pSymbol, new Location("test.fire", "set mathew=3;", 1, 1));
+            return new Node(pSymbol, new MockLocation());
         }
     }
 }
