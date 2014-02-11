@@ -40,7 +40,9 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.FormalParameterList,
                                                                    GrammarSymbol.Arguments,
                                                                    GrammarSymbol.BaseClass,
-                                                                   GrammarSymbol.ArrayList
+                                                                   GrammarSymbol.ArrayList,
+                                                                   GrammarSymbol.MemberList,
+                                                                   GrammarSymbol.ClassNameID
                                                                };
 
         /// <summary>
@@ -71,7 +73,8 @@ namespace Prometheus.Compile.Optomizer
         private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
                                                                     {
                                                                         GrammarSymbol.FormalParameterList,
-                                                                        GrammarSymbol.BaseClass
+                                                                        GrammarSymbol.BaseClass,
+                                                                        GrammarSymbol.MemberList
                                                                     };
 
         /// <summary>
@@ -241,7 +244,26 @@ namespace Prometheus.Compile.Optomizer
                 Qualify(pNode);
             }
 
+            if(pNode.Type == GrammarSymbol.ClassNameID &&
+               pNode.Data.Count > 0 &&
+               pNode.Children.Count == 0)
+            {
+                ClassName(pNode);
+            }
+
+            if (pNode.Type == GrammarSymbol.NewExpression &&
+                pNode.Children.Count == 1)
+            {
+                if (pNode.Children[0].Data.Count == 1 &&
+                    pNode.Children[0].Data[0].GetType() == typeof (ClassNameType))
+                {
+                    pNode.Data.Add(pNode.Children[0].Data[0]);
+                    pNode.Children[0].Data.Clear();
+                }
+            }
+
             if (_qualifiedData.Contains(pNode.Type) &&
+                pNode.Children.Count >= 1 &&
                 pNode.Children[0].Type == GrammarSymbol.QualifiedID &&
                 pNode.Children[0].Children.Count == 0)
             {
@@ -267,6 +289,31 @@ namespace Prometheus.Compile.Optomizer
             pNode.Reduce();
 
             return OptimizeNode(pNode);
+        }
+
+        /// <summary>
+        /// Converts the list of identifiers into a classname.
+        /// </summary>
+        /// <param name="pNode"></param>
+        private void ClassName(Node pNode)
+        {
+            Assertion.Children(0,pNode);
+            List<DataType> data = pNode.Data;
+
+            // bring last to top (the grammar puts first namespace last)
+            data.Insert(0,data.Last());
+            data.RemoveAt(data.Count-1);
+
+            QualifiedType package = QualifiedType.Global;
+            IdentifierType last = (IdentifierType)data[data.Count - 1];
+            if (data.Count > 1)
+            {
+                string[] namespaces = (from id in data.Take(data.Count - 1) select ((IdentifierType)id).Name).ToArray();
+                package = new QualifiedType(namespaces);
+            }
+            pNode.Data.Clear();
+            pNode.Data.Add(new ClassNameType(package, last));
+            _modified = true;
         }
 
         /// <summary>

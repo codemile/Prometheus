@@ -43,8 +43,10 @@ namespace Prometheus.Parser.Executors
             }
             catch (TargetInvocationException e)
             {
-                if (e.InnerException is RunTimeException)
+                RunTimeException inner = e.InnerException as RunTimeException;
+                if (inner != null)
                 {
+                    inner.Where = inner.Where ?? Executor.Cursor.Node.Location;
                     throw e.InnerException;
                 }
                 throw;

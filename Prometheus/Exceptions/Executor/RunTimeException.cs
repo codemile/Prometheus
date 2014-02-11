@@ -1,4 +1,5 @@
 ﻿using System;
+using Prometheus.Compile;
 using Prometheus.Nodes;
 
 namespace Prometheus.Exceptions.Executor
@@ -8,14 +9,6 @@ namespace Prometheus.Exceptions.Executor
     /// </summary>
     public class RunTimeException : PrometheusException
     {
-        /// <summary>
-        /// Formatting
-        /// </summary>
-        private static string Message(string pMessage, Node pNode)
-        {
-            return string.Format("{0} {1}", pMessage, pNode.Location);
-        }
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -38,7 +31,7 @@ namespace Prometheus.Exceptions.Executor
         /// <param name="pMessage">Exception message</param>
         /// <param name="pNode">The node the error relates to</param>
         protected RunTimeException(string pMessage, Node pNode)
-            : base(Message(pMessage, pNode))
+            : base(pMessage, pNode.Location)
         {
         }
 

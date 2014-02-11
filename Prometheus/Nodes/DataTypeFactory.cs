@@ -66,8 +66,10 @@ namespace Prometheus.Nodes
                     break;
 
                 case GrammarSymbol.Identifier:
-                case GrammarSymbol.MemberName:
                     return new IdentifierType(pValue);
+
+                case GrammarSymbol.MemberName:
+                    return new IdentifierType(pValue.Substring(1));
 
                 case GrammarSymbol.Type:
                     return new StaticType(pValue);

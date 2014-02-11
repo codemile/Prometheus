@@ -1,3 +1,7 @@
-var x = ["house","dig","wag"];
-var y = 3;
+object test {
+};
+
+var x= new global.test();
+
 vars;
+objects;

@@ -53,6 +53,7 @@
     <Compile Include="Exceptions\Executor\DataTypeException.cs" />
     <Compile Include="Exceptions\Executor\IdentifierException.cs" />
     <Compile Include="Exceptions\Executor\InvalidArgumentException.cs" />
+    <Compile Include="Exceptions\Executor\NameSpaceException.cs" />
     <Compile Include="Exceptions\Executor\ReturnException.cs" />
     <Compile Include="Exceptions\Executor\RunTimeException.cs" />
     <Compile Include="Exceptions\Executor\IdentifierInnerException.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Exceptions\PrometheusException.cs" />
     <Compile Include="Nodes\Types\ArrayType.cs" />
     <Compile Include="Nodes\Types\BooleanType.cs" />
+    <Compile Include="Nodes\Types\ClassNameType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
     <Compile Include="Nodes\Types\NumericType.cs" />
     <Compile Include="Nodes\Types\QualifiedType.cs" />

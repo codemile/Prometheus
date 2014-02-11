@@ -28,7 +28,7 @@
 ! ===================================================================
 
 Identifier		= {ID Head}{ID Tail}*
-MemberName		=  '.' {ID Head}{ID Tail}*       
+MemberName		=  '.' {ID Head}{ID Tail}*
 
 StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"'
 StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* ['']
@@ -82,10 +82,11 @@ Comment Line  = '//'
 <Valid ID>			::= Identifier
 
 <Qualified ID>		::= <Valid ID> <Member List>
-	 
+
+<ClassName ID>		::= Identifier <Member List>
+
 <Member List>		::= <Member List> MemberName
 					|  !Zero or more 
-
 
 <Value>				::= StringDouble
 					| StringSingle
@@ -190,7 +191,7 @@ Comment Line  = '//'
 <Call Expression>		::= <Qualified ID> <Arguments>
 						| <Call Expression> <Arguments>			! chaining
 
-<New Expression>		::= 'new' <Qualified ID> <Arguments>
+<New Expression>		::= 'new' <ClassName ID> <Arguments>
 
 ! This is not used by the grammar. The compiler uses to mark calls to internal methods.
 <CallInternal>			::= ! matches nothing

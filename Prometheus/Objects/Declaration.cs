@@ -8,14 +8,9 @@ namespace Prometheus.Objects
     /// <summary>
     /// Holds the definition of an object.
     /// </summary>
-    [DebuggerDisplay("{Name}")]
+    [DebuggerDisplay("{ClassName}")]
     public class Declaration
     {
-        /// <summary>
-        /// The namespace this declaration is in.
-        /// </summary>
-        public readonly QualifiedType NameSpace;
-
         /// <summary>
         /// The base class of the object.
         /// </summary>
@@ -27,17 +22,16 @@ namespace Prometheus.Objects
         public readonly Node Constructor;
 
         /// <summary>
-        /// The name of the object.
+        /// The name of the class this declaration creates.
         /// </summary>
-        public readonly IdentifierType Identifier;
+        public readonly ClassNameType ClassName;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Declaration(QualifiedType pNameSpace, IdentifierType pName, Declaration pBase, Node pObjDecl)
+        public Declaration(ClassNameType pClassName, Declaration pBase, Node pObjDecl)
         {
-            NameSpace = pNameSpace;
-            Identifier = pName;
+            ClassName = pClassName;
             Base = pBase;
 
             Constructor = new Node(GrammarSymbol.Statements, pObjDecl.Location);
@@ -52,7 +46,7 @@ namespace Prometheus.Objects
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0}:{1}", Base ?? (object)"", Identifier);
+            return ClassName.ToString();
         }
     }
 }

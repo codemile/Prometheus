@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
 using Prometheus.Objects;
 using Prometheus.Storage;
@@ -16,9 +17,9 @@ namespace PrometheusTest.Storage
             NameSpace ns = NameSpace.Create();
             ns.Declare(new QualifiedType("package"));
             Assert.IsTrue(ns.Add(new MockDeclaration(new QualifiedType("package"), new IdentifierType("x"))));
-            Declaration decl = ns.Get(new QualifiedType("package.x"));
+            Declaration decl = ns.Get(new ClassNameType(new QualifiedType("package"), new IdentifierType("x")));
             Assert.IsNotNull(decl);
-            Assert.AreEqual("x", decl.Identifier.Name);
+            Assert.AreEqual("x", decl.ClassName.Identifier.Name);
         }
 
         [TestMethod]
@@ -26,9 +27,9 @@ namespace PrometheusTest.Storage
         {
             NameSpace ns = NameSpace.Create();
             Assert.IsTrue(ns.Add(new MockDeclaration(QualifiedType.Global, new IdentifierType("x"))));
-            Declaration decl = ns.Get(new QualifiedType("global.x"));
+            Declaration decl = ns.Get(new ClassNameType(QualifiedType.Global, new IdentifierType("x")));
             Assert.IsNotNull(decl);
-            Assert.AreEqual("x", decl.Identifier.Name);
+            Assert.AreEqual("x", decl.ClassName.Identifier.Name);
         }
 
         [TestMethod]
@@ -59,22 +60,24 @@ namespace PrometheusTest.Storage
         public void Get_IdentifierType_0()
         {
             NameSpace ns = NameSpace.Create();
-            Assert.IsNull(ns.Get(new QualifiedType("global.x")));
+            Assert.IsNull(ns.Get(new ClassNameType(QualifiedType.Global, new IdentifierType("x"))));
 
             Assert.IsTrue(ns.Add(new MockDeclaration(QualifiedType.Global,new IdentifierType("x"))));
             Assert.IsFalse(ns.Add(new MockDeclaration(QualifiedType.Global, new IdentifierType("x"))));
 
-            Declaration decl = ns.Get(new QualifiedType("global.x"));
+            Declaration decl = ns.Get(new ClassNameType(QualifiedType.Global, new IdentifierType("x")));
             Assert.IsNotNull(decl);
-            Assert.AreEqual("global", decl.NameSpace.FullName);
-            Assert.AreEqual("x", decl.Identifier.Name);
+            Assert.AreEqual("global", decl.ClassName.NameSpace.FullName);
+            Assert.AreEqual("x", decl.ClassName.Identifier.Name);
         }
 
         [TestMethod]
+        [ExpectedException(typeof(NameSpaceException))]
         public void Get_QualifiedType_1()
         {
             NameSpace ns = NameSpace.Create();
-            Assert.IsNull(ns.Get(new QualifiedType("x")));
+            ns.Get(new ClassNameType(QualifiedType.Global, new IdentifierType("x")));
+            Assert.Fail();
         }
 
         [TestMethod]

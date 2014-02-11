@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Prometheus.Exceptions.Compiler;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
 
@@ -34,7 +35,7 @@ namespace Prometheus.Nodes.Types
 #if DEBUG
             if (Name.Contains("."))
             {
-                throw new UnexpectedErrorException(string.Format("Qualifier used as identifier <{0}>", pName));
+                throw new InternalErrorException(string.Format("Qualifier used as identifier <{0}>", pName));
             }
 #endif
         }
@@ -44,7 +45,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public override string ToString()
         {
-            return Name;
+            return "#"+Name;
         }
     }
 }

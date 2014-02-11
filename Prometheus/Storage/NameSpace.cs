@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
 using Prometheus.Objects;
 
@@ -59,7 +60,7 @@ namespace Prometheus.Storage
                 return _childSpaces.ContainsKey(package) && _childSpaces[package].Add(pParts, pDecl, pIndex + 1);
             }
 
-            string name = pDecl.Identifier.Name;
+            string name = pDecl.ClassName.Identifier.Name;
             if (_declarations.ContainsKey(name))
             {
                 return false;
@@ -95,19 +96,6 @@ namespace Prometheus.Storage
         private Declaration Get(string pName)
         {
             return _declarations.ContainsKey(pName) ? _declarations[pName] : null;
-        }
-
-        /// <summary>
-        /// Finds a declaration in this namespace or it's children.
-        /// </summary>
-        private Declaration Get(string[] pParts, int pIndex)
-        {
-            if (pIndex >= pParts.Length)
-            {
-                return null;
-            }
-            string name = pParts[pIndex];
-            return _childSpaces.ContainsKey(name) ? _childSpaces[name].Get(pParts, pIndex + 1) : Get(name);
         }
 
         /// <summary>
@@ -153,7 +141,7 @@ namespace Prometheus.Storage
         /// <returns>True if successful, or False if not added.</returns>
         public bool Add(Declaration pDecl)
         {
-            return Add(pDecl.NameSpace.Parts, pDecl, 0);
+            return Add(pDecl.ClassName.NameSpace.Parts, pDecl, 0);
         }
 
         /// <summary>
@@ -179,11 +167,50 @@ namespace Prometheus.Storage
         /// <summary>
         /// Gets the declaration of an object.
         /// </summary>
-        /// <param name="pQualifiedType">The identifier</param>
+        /// <param name="pClassName">The identifier</param>
         /// <returns>The declaration or null.</returns>
-        public Declaration Get(QualifiedType pQualifiedType)
+        public Declaration Get(ClassNameType pClassName)
         {
-            return Get(pQualifiedType.Parts, 0);
+            NameSpace package = Get(pClassName.NameSpace.Parts,0);
+            if (package == null)
+            {
+                throw new NameSpaceException(string.Format("Package <{0}> not found",
+                    pClassName.NameSpace.FullName));
+            }
+            Declaration decl = package.Get(pClassName.Identifier);
+            if (decl == null)
+            {
+                throw new NameSpaceException(string.Format("Package <{0}> does not contain <{1}>",
+                    pClassName.NameSpace.FullName, pClassName.Identifier.Name));
+            }
+            return decl;
+        }
+
+        /// <summary>
+        /// Finds a declaration in this namespace or it's children.
+        /// </summary>
+        private NameSpace Get(string[] pParts, int pIndex)
+        {
+            if (pIndex == pParts.Length)
+            {
+                return this;
+            }
+            string name = pParts[pIndex];
+            return _childSpaces.ContainsKey(name) ? _childSpaces[name].Get(pParts, pIndex + 1) : null;
+        }
+
+        /// <summary>
+        /// Finds a class declaration
+        /// </summary>
+        /// <param name="pIdentifier">The name of the class</param>
+        /// <returns>The declaration</returns>
+        private Declaration Get(IdentifierType pIdentifier)
+        {
+            if (_declarations.ContainsKey(pIdentifier.Name))
+            {
+                return _declarations[pIdentifier.Name];
+            }
+            return null;
         }
 
         /// <summary>
@@ -202,7 +229,7 @@ namespace Prometheus.Storage
                 _declarations
                 .Values
                 .OrderBy(pValue=>pValue)
-                .Select(pDecl=>string.Format("{0}:{1}", Name, pDecl.Identifier.Name)));
+                .Select(pDecl=>string.Format("{0}:{1}", Name, pDecl.ClassName.Identifier.Name)));
 
             foreach (NameSpace child in _childSpaces.Values.OrderBy(pValue=>pValue.Name.FullName))
             {

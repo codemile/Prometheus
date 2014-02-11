@@ -48,18 +48,18 @@ namespace Prometheus.Objects
         /// <summary>
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(QualifiedType pIdentifier)
+        public DataType New(ClassNameType pClassName)
         {
-            return New(pIdentifier, DataType.Undefined);
+            return New(pClassName, DataType.Undefined);
         }
 
         /// <summary>
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(QualifiedType pIdentifier, DataType pArguments)
+        public DataType New(ClassNameType pClassName, DataType pArguments)
         {
-            Declaration decl = Executor.Cursor.Packages.Get(pIdentifier);
+            Declaration decl = Executor.Cursor.Packages.Get(pClassName);
 
             CreateInherited created = new CreateInherited(Executor.Cursor.Heap, decl);
 
@@ -87,27 +87,27 @@ namespace Prometheus.Objects
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(DataType pBaseType, IdentifierType pIdentifier)
+        public DataType ObjectDeclare(DataType pBaseClass, IdentifierType pIdentifier)
         {
             Node obj = Executor.Cursor.Node;
             Declaration baseDecl = null;
-            if (pBaseType.GetType() == typeof (StaticType))
+            if (pBaseClass.GetType() == typeof (StaticType))
             {
-                StaticType type = (StaticType)pBaseType;
+                StaticType type = (StaticType)pBaseClass;
                 baseDecl = null; // TODO: Add an instance of a default object base.
             }
-            else if (pBaseType.GetType() == typeof (QualifiedType))
+            else if (pBaseClass.GetType() == typeof (ClassNameType))
             {
-                QualifiedType baseType = (QualifiedType)pBaseType;
+                ClassNameType baseType = (ClassNameType)pBaseClass;
                 baseDecl = Executor.Cursor.Packages.Get(baseType);
             }
             else
             {
                 throw new UnexpectedErrorException(
-                    string.Format("Can not declare object of base type <{0}>", pBaseType.GetType().FullName), obj);
+                    string.Format("Can not declare object of base type <{0}>", pBaseClass.GetType().FullName), obj);
             }
 
-            Declaration decl = new Declaration(QualifiedType.Global, pIdentifier, baseDecl, obj);
+            Declaration decl = new Declaration(new ClassNameType(QualifiedType.Global, pIdentifier), baseDecl, obj);
 
             // TODO: Need to find the current namespace to declare an object.
 

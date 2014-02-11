@@ -7,6 +7,7 @@ using Logging;
 using Logging.Writers;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Parser;
 
 namespace Fire
@@ -59,7 +60,7 @@ namespace Fire
             }
             catch (PrometheusException e)
             {
-                _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
+                _logger.Error(e.Format().Replace("{", "{{").Replace("}", "}}"));
             }
 
             return -1;

@@ -1,5 +1,4 @@
-﻿using System;
-using Prometheus.Compile;
+﻿using Prometheus.Compile;
 
 namespace Prometheus.Exceptions.Compiler
 {
@@ -14,10 +13,10 @@ namespace Prometheus.Exceptions.Compiler
         }
 
         /// <summary>
-        /// Wraps around another exception.
+        /// Throw a message.
         /// </summary>
-        public InternalErrorException(string pMessage, Location pLocation, Exception pInnerException)
-            : base(pMessage, pLocation, pInnerException)
+        public InternalErrorException(string pMessage)
+            : base(pMessage)
         {
         }
 

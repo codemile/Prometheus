@@ -6,13 +6,13 @@ namespace Prometheus.Nodes.Types
     /// <summary>
     /// Holds the multi-part names that reference a variable in memory.
     /// </summary>
-    [DebuggerDisplay("{_fullName}")]
+    [DebuggerDisplay("{FullName}")]
     public class QualifiedType : DataType
     {
         /// <summary>
         /// The global namespace
         /// </summary>
-        public static QualifiedType Global = new QualifiedType("global");
+        public static readonly QualifiedType Global = new QualifiedType("global");
 
         /// <summary>
         /// the packages and member name

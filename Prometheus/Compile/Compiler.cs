@@ -4,6 +4,7 @@ using System.Reflection;
 using GOLD;
 using Logging;
 using Prometheus.Compile.Optomizer;
+using Prometheus.Exceptions;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Nodes;
 using Prometheus.Properties;
@@ -59,15 +60,22 @@ namespace Prometheus.Compile
                 int y = _parser.CurrentPosition().Column + 1;
                 Location location = new Location(pFileName, _lines[x - 1].Trim(), x, y);
 
-                if (!CreateNode(response, location))
+                try
                 {
-                    continue;
+                    if (!CreateNode(response, location))
+                    {
+                        continue;
+                    }
+                    Reduction reduction = _parser.CurrentReduction as Reduction;
+                    _parser.CurrentReduction = (reduction != null)
+                        ? _factory.Create(reduction, location)
+                        : _parser.CurrentReduction;
                 }
-
-                Reduction reduction = _parser.CurrentReduction as Reduction;
-                _parser.CurrentReduction = (reduction != null)
-                    ? _factory.Create(reduction, location)
-                    : _parser.CurrentReduction;
+                catch (PrometheusException e)
+                {
+                    e.Where = e.Where ?? location;
+                    throw;
+                }
             }
 
             Node node = _parser.CurrentReduction as Node;
