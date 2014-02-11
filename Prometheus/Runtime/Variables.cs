@@ -78,7 +78,7 @@ namespace Prometheus.Runtime
         public DataType Declare(IdentifierType pIdentifier, DataType pValue)
         {
             pValue = CreateClosure(pValue);
-            Executor.Cursor.Stack.Create(pIdentifier.FullName, pValue);
+            Executor.Cursor.Stack.Create(pIdentifier.Name, pValue);
             return pValue;
         }
 

@@ -10,22 +10,51 @@ namespace Prometheus.Nodes.Types
     public class QualifiedType : DataType
     {
         /// <summary>
-        /// The parts of the name
+        /// The global namespace
         /// </summary>
-        public readonly string[] Parts;
+        public static QualifiedType Global = new QualifiedType("global");
 
         /// <summary>
-        /// The original name
+        /// the packages and member name
         /// </summary>
-        private readonly string _fullName;
+        public readonly string FullName;
+
+        /// <summary>
+        /// A cache of the name parts.
+        /// </summary>
+        private string[] _parts;
+
+        /// <summary>
+        /// The member name only
+        /// </summary>
+        public string Name
+        {
+            get { return FullName == "" ? "" : _parts[_parts.Length - 1]; }
+        }
+
+        /// <summary>
+        /// The name broken into namespaces and member
+        /// </summary>
+        public string[] Parts
+        {
+            get { return _parts ?? (_parts = FullName.Split(new[] {'.'})); }
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public QualifiedType(string pFullName)
+        {
+            FullName = pFullName.ToLower();
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public QualifiedType(string[] pParts)
         {
-            _fullName = string.Join(".", pParts);
-            Parts = pParts;
+            FullName = string.Join(".", pParts);
+            _parts = pParts;
         }
 
         /// <summary>
@@ -33,7 +62,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public override string ToString()
         {
-            return _fullName;
+            return FullName;
         }
     }
 }

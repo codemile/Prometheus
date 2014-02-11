@@ -8,8 +8,8 @@ namespace PrometheusTest.Mock.Objects
         /// <summary>
         /// Constructor
         /// </summary>
-        public MockDeclaration(IdentifierType pIdentifier)
-            : base(null, pIdentifier, MockNode.Create())
+        public MockDeclaration(QualifiedType pNameSpace, IdentifierType pName)
+            : base(pNameSpace, pName, null, MockNode.Create())
         {
         }
     }

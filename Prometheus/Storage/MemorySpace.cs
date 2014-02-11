@@ -24,6 +24,14 @@ namespace Prometheus.Storage
         private readonly Dictionary<string, DataType> _storage;
 
         /// <summary>
+        /// True if storage is empty.
+        /// </summary>
+        public bool isEmpty
+        {
+            get { return _storage.Count == 0; }
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MemorySpace()
@@ -34,7 +42,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        protected MemorySpace(Dictionary<string, DataType> pStorage)
+        public MemorySpace(Dictionary<string, DataType> pStorage)
         {
             _storage = pStorage;
         }
@@ -50,7 +58,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Derived classes will handle the lookup of an identifier.
         /// </summary>
-        /// <param name="pName">The identifier to get</param>
+        /// <param name="pName">The name to get</param>
         /// <returns>The data</returns>
         public virtual DataType Get(string pName)
         {
@@ -66,12 +74,6 @@ namespace Prometheus.Storage
             string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
             foreach (KeyValuePair<string, DataType> var in _storage)
             {
-                StringType str = var.Value as StringType;
-                if (str != null)
-                {
-                    _logger.Fine("{0}{1} = \"{2}\"", indent, var.Key, str.Value);
-                    continue;
-                }
                 _logger.Fine("{0}{1} = {2}", indent, var.Key, var.ToString());
             }
         }
@@ -79,9 +81,9 @@ namespace Prometheus.Storage
         /// <summary>
         /// Derived classes will handle the setting.
         /// </summary>
-        /// <param name="pName">The identifier to set</param>
+        /// <param name="pName">The name to set</param>
         /// <param name="pDataType">The data</param>
-        /// <returns>True if identifier exists</returns>
+        /// <returns>True if name exists</returns>
         public virtual bool Set(string pName, DataType pDataType)
         {
             if (!_storage.ContainsKey(pName))
@@ -95,7 +97,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Removes a variable from the current scope.
         /// </summary>
-        /// <param name="pName">The identifier to remove</param>
+        /// <param name="pName">The name to remove</param>
         public virtual bool Unset(string pName)
         {
             if (!_storage.ContainsKey(pName))
@@ -107,10 +109,10 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
-        /// Assigns a value to an identifier. Creates the a new
+        /// Assigns a value to a name. Creates the a new
         /// variable if required.
         /// </summary>
-        /// <param name="pName">The identifier to create</param>
+        /// <param name="pName">The name to create</param>
         /// <param name="pDataType">The data to assign</param>
         public void Assign(string pName, DataType pDataType)
         {
@@ -127,7 +129,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Creates a new variable in the current scope.
         /// </summary>
-        /// <param name="pName">The identifier to create</param>
+        /// <param name="pName">The name to create</param>
         /// <param name="pDataType">The data to assign</param>
         public void Create(string pName, DataType pDataType)
         {
@@ -137,6 +139,16 @@ namespace Prometheus.Storage
                 throw new IdentifierInnerException(string.Format(Errors.IdentifierAlreadyDefined, pName));
             }
             _storage.Add(pName, pDataType);
+        }
+
+        /// <summary>
+        /// Checks if the storage contains a variable.
+        /// </summary>
+        /// <param name="pName">The name to create</param>
+        /// <returns>True if exists</returns>
+        public bool Has(string pName)
+        {
+            return _storage.ContainsKey(pName);
         }
     }
 }

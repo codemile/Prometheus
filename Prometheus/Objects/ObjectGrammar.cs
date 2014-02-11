@@ -48,7 +48,7 @@ namespace Prometheus.Objects
         /// <summary>
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(IdentifierType pIdentifier)
+        public DataType New(QualifiedType pIdentifier)
         {
             return New(pIdentifier, DataType.Undefined);
         }
@@ -57,7 +57,7 @@ namespace Prometheus.Objects
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(IdentifierType pIdentifier, DataType pArguments)
+        public DataType New(QualifiedType pIdentifier, DataType pArguments)
         {
             Declaration decl = Executor.Cursor.Packages.Get(pIdentifier);
 
@@ -77,7 +77,7 @@ namespace Prometheus.Objects
             finally
             {
                 Executor.Cursor.Stack = prevMemory;
-                created.Inst.Members.Unset("this");
+                created.Inst.Members.Unset(IdentifierType.This.Name);
             }
 
             return created.Alias;
@@ -107,7 +107,10 @@ namespace Prometheus.Objects
                     string.Format("Can not declare object of base type <{0}>", pBaseType.GetType().FullName), obj);
             }
 
-            Declaration decl = new Declaration(baseDecl, pIdentifier, obj);
+            Declaration decl = new Declaration(QualifiedType.Global, pIdentifier, baseDecl, obj);
+
+            // TODO: Need to find the current namespace to declare an object.
+
             Executor.Cursor.Packages.Add(decl);
 
             return DataType.Undefined;

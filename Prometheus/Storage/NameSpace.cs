@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Logging;
 using Prometheus.Nodes.Types;
 using Prometheus.Objects;
 
@@ -13,19 +12,19 @@ namespace Prometheus.Storage
     public class NameSpace : IDisposable
     {
         /// <summary>
-        /// Logging
+        /// The name of the root namespace for all namespaces
         /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof (NameSpace));
+        public static readonly QualifiedType Empty = new QualifiedType("empty");
 
         /// <summary>
         /// The name of the root namespace for all namespaces
         /// </summary>
-        public static readonly IdentifierType Global = new IdentifierType("global");
+        public static readonly QualifiedType Global = new QualifiedType("global");
 
         /// <summary>
         /// The name of this namespace.
         /// </summary>
-        public readonly IdentifierType Name;
+        public readonly QualifiedType Name;
 
         /// <summary>
         /// The child namespaces of this space.
@@ -52,15 +51,15 @@ namespace Prometheus.Storage
         /// <param name="pParts">The list of namespace names</param>
         /// <param name="pIndex">Current index into parts</param>
         /// <returns>True if successful, or False if not added.</returns>
-        private bool Add(Declaration pDecl, IList<string> pParts, int pIndex)
+        private bool Add(IList<string> pParts, Declaration pDecl, int pIndex)
         {
-            string name = pParts[pIndex];
-
-            if (pIndex != pParts.Count - 1)
+            if (pIndex != pParts.Count)
             {
-                return _childSpaces.ContainsKey(name) && _childSpaces[name].Add(pDecl, pParts, pIndex + 1);
+                string package = pParts[pIndex];
+                return _childSpaces.ContainsKey(package) && _childSpaces[package].Add(pParts, pDecl, pIndex + 1);
             }
 
+            string name = pDecl.Identifier.Name;
             if (_declarations.ContainsKey(name))
             {
                 return false;
@@ -73,21 +72,21 @@ namespace Prometheus.Storage
         /// <summary>
         /// Walks the children creating namespaces.
         /// </summary>
-        /// <param name="pIdentifier">The list of namespace names</param>
+        /// <param name="pType">The list of namespace names</param>
         /// <param name="pIndex">Current index into parts</param>
         /// <returns>True if successful, or False if not added.</returns>
-        private bool Declare(IdentifierType pIdentifier, int pIndex)
+        private bool Declare(QualifiedType pType, int pIndex)
         {
-            string name = pIdentifier.Parts[pIndex];
+            string name = pType.Parts[pIndex];
 
             bool added = false;
             if (!_childSpaces.ContainsKey(name))
             {
-                _childSpaces.Add(name, new NameSpace(new IdentifierType(pIdentifier.Parts.Take(pIndex+1).ToArray())));
+                _childSpaces.Add(name, new NameSpace(new QualifiedType(pType.Parts.Take(pIndex + 1).ToArray())));
                 added = true;
             }
 
-            return pIndex == pIdentifier.Parts.Length - 1 ? added : _childSpaces[name].Declare(pIdentifier, pIndex + 1);
+            return pIndex == pType.Parts.Length - 1 ? added : _childSpaces[name].Declare(pType, pIndex + 1);
         }
 
         /// <summary>
@@ -114,7 +113,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        public NameSpace(IdentifierType pName)
+        public NameSpace(QualifiedType pName)
         {
             Name = pName;
 
@@ -141,7 +140,7 @@ namespace Prometheus.Storage
         /// <returns></returns>
         public static NameSpace Create()
         {
-            NameSpace root = new NameSpace(new IdentifierType(""));
+            NameSpace root = new NameSpace(new QualifiedType(""));
             root.Declare(Global);
             return root;
         }
@@ -154,7 +153,7 @@ namespace Prometheus.Storage
         /// <returns>True if successful, or False if not added.</returns>
         public bool Add(Declaration pDecl)
         {
-            return Add(pDecl, pDecl.Identifier.Parts, 0);
+            return Add(pDecl.NameSpace.Parts, pDecl, 0);
         }
 
         /// <summary>
@@ -168,13 +167,13 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
-        /// Declares namespaces
+        /// Declares a namespaces
         /// </summary>
-        /// <param name="pIdentifierType">The namespace without members</param>
+        /// <param name="pType">The namespace without members</param>
         /// <returns>True if successful, False if already exists.</returns>
-        public bool Declare(IdentifierType pIdentifierType)
+        public bool Declare(QualifiedType pType)
         {
-            return Declare(pIdentifierType, 0);
+            return Declare(pType, 0);
         }
 
         /// <summary>
@@ -185,16 +184,6 @@ namespace Prometheus.Storage
         public Declaration Get(QualifiedType pQualifiedType)
         {
             return Get(pQualifiedType.Parts, 0);
-        }
-
-        /// <summary>
-        /// Gets the declaration of an object.
-        /// </summary>
-        /// <param name="pIdentifierType">The identifier</param>
-        /// <returns>The declaration or null.</returns>
-        public Declaration Get(IdentifierType pIdentifierType)
-        {
-            return Get(pIdentifierType.Parts, 0);
         }
 
         /// <summary>

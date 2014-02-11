@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 
@@ -46,11 +47,11 @@ namespace Prometheus.Objects
             Instance inst = new Instance(pDecl.Constructor);
             DataType alias = _heap.Add(inst);
 
-            inst.Members.Create("this", alias);
+            inst.Members.Create(IdentifierType.This.Name, alias);
 
             if (baseInst.Value != null)
             {
-                inst.Members.Create("base", baseInst.Value);
+                inst.Members.Create(IdentifierType.Base.Name, baseInst.Value);
             }
 
             return new KeyValuePair<Instance, DataType>(inst, alias);

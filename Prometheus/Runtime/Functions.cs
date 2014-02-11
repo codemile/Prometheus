@@ -137,7 +137,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.CallInternal)]
         public DataType CallInternal(IdentifierType pIdentifier, ArgumentListType pArguments)
         {
-            string name = pIdentifier.FullName;
+            string name = pIdentifier.Name;
             return Executor.Execute(name, pArguments.Arguments);
         }
 

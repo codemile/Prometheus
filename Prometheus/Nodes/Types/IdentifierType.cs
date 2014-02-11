@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -10,46 +11,32 @@ namespace Prometheus.Nodes.Types
     public class IdentifierType : DataType
     {
         /// <summary>
+        /// Reference to "this"
+        /// </summary>
+        public static readonly IdentifierType This = new IdentifierType("this");
+
+        /// <summary>
+        /// Reference to "base"
+        /// </summary>
+        public static readonly IdentifierType Base = new IdentifierType("base");
+
+        /// <summary>
         /// the display name
         /// </summary>
-        public readonly string FullName;
-
-        /// <summary>
-        /// A cache of the name parts.
-        /// </summary>
-        private string[] _parts;
-
-        /// <summary>
-        /// The member name only
-        /// </summary>
-        public string Name
-        {
-            get { return FullName == "" ? "" : _parts[_parts.Length - 1]; }
-        }
-
-        /// <summary>
-        /// The name broken into namespaces and member
-        /// </summary>
-        public string[] Parts
-        {
-            get { return _parts ?? (_parts = FullName.Split(new[] {'.'})); }
-        }
+        public readonly string Name;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public IdentifierType(string pFullName)
+        public IdentifierType(string pName)
         {
-            FullName = pFullName.ToLower();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public IdentifierType(string[] pParts)
-        {
-            FullName = string.Join(".", pParts);
-            _parts = pParts;
+            Name = pName.ToLower();
+#if DEBUG
+            if (Name.Contains("."))
+            {
+                throw new UnexpectedErrorException(string.Format("Qualifier used as identifier <{0}>", pName));
+            }
+#endif
         }
 
         /// <summary>
@@ -57,7 +44,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public override string ToString()
         {
-            return FullName;
+            return Name;
         }
     }
 }

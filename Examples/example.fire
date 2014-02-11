@@ -1,2 +1,3 @@
 var x = ["house","dig","wag"];
-print x;
+var y = 3;
+vars;

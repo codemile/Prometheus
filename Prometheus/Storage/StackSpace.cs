@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
+using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser;
 using Prometheus.Properties;
@@ -59,7 +60,7 @@ namespace Prometheus.Storage
         /// Looks for the identifier in the current scope, and
         /// all parent scopes.
         /// </summary>
-        /// <param name="pName">The identifier to find</param>
+        /// <param name="pName">The name to find</param>
         /// <returns>The data object or Null if not found.</returns>
         public override DataType Get(string pName)
         {
@@ -91,7 +92,7 @@ namespace Prometheus.Storage
         /// Looks for the identifier in the current scope, and
         /// all parent scopes.
         /// </summary>
-        /// <param name="pIdentifier">The identifier to find</param>
+        /// <param name="pName">The identifier to find</param>
         /// <param name="pDataType">The data to assign to the identifier</param>
         public override bool Set(string pName, DataType pDataType)
         {

@@ -109,7 +109,7 @@ namespace Prometheus.Grammar
 		@FormalParameterList_Comma_Identifier = 98,      // <Formal Parameter List> ::= <Formal Parameter List> ',' Identifier
 		@CallExpression = 99,                            // <Call Expression> ::= <Qualified ID> <Arguments>
 		@CallExpression2 = 100,                          // <Call Expression> ::= <Call Expression> <Arguments>
-		@NewExpression_new_Identifier = 101,             // <New Expression> ::= new Identifier <Arguments>
+		@NewExpression_new = 101,                        // <New Expression> ::= new <Qualified ID> <Arguments>
 		@CallInternal = 102,                             // <CallInternal> ::= 
 		@Arguments_LParen_RParen = 103,                  // <Arguments> ::= '(' ')'
 		@Arguments_LParen_RParen2 = 104,                 // <Arguments> ::= '(' <Argument List> ')'

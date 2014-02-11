@@ -190,7 +190,7 @@ Comment Line  = '//'
 <Call Expression>		::= <Qualified ID> <Arguments>
 						| <Call Expression> <Arguments>			! chaining
 
-<New Expression>		::= 'new' Identifier <Arguments>
+<New Expression>		::= 'new' <Qualified ID> <Arguments>
 
 ! This is not used by the grammar. The compiler uses to mark calls to internal methods.
 <CallInternal>			::= ! matches nothing

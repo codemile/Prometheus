@@ -12,6 +12,11 @@ namespace Prometheus.Objects
     public class Declaration
     {
         /// <summary>
+        /// The namespace this declaration is in.
+        /// </summary>
+        public readonly QualifiedType NameSpace;
+
+        /// <summary>
         /// The base class of the object.
         /// </summary>
         public readonly Declaration Base;
@@ -29,10 +34,11 @@ namespace Prometheus.Objects
         /// <summary>
         /// Constructor
         /// </summary>
-        public Declaration(Declaration pBase, IdentifierType pIdentifier, Node pObjDecl)
+        public Declaration(QualifiedType pNameSpace, IdentifierType pName, Declaration pBase, Node pObjDecl)
         {
+            NameSpace = pNameSpace;
+            Identifier = pName;
             Base = pBase;
-            Identifier = pIdentifier;
 
             Constructor = new Node(GrammarSymbol.Statements, pObjDecl.Location);
             Constructor.Children.AddRange(pObjDecl.Children);
