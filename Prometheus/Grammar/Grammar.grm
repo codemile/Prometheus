@@ -46,9 +46,62 @@ Comment End   = '*/'
 Comment Line  = '//'
 
 ! ===================================================================
-! Math Expressions
+! Program Structure
 ! ===================================================================
-<Expression>  ::= <GtOperator>
+<Program>		::= <Object Decls>
+				| <Object Decls> <Statements>
+				| <Statements>
+				| !Nothing
+
+<Block>			::= '{' <Statements> '}'
+				|  '{' '}'
+
+<Statement or Block>	::= <Statement>
+						| <Block>
+
+<Statements>	::= <Statement>
+				| <Statements> <Statement>
+				| <Block>
+
+<Statement>		::= <FlowControl>
+				| <Variable Statements> <End>
+				| <Procedure> <End>
+				| <Call Expression> <End>
+				| <New Expression> <End>
+				| <End>
+
+! ===========================================================================
+! End of statement marker
+! ===========================================================================
+
+<End>				::= ';'
+
+<End Opt>			::= <End>
+					| ! Nothing
+
+<Block or End>		::= <Block>
+					|  <End>
+
+
+! ===================================================================
+! Expressions
+! ===================================================================
+<Expression>  ::= <SearchChain>
+
+! ===================================================================
+! Search Operators
+! ===================================================================
+
+<SearchChain>			::= <ContainsTerm>
+
+<ContainsTerm>			::= <ContainsTerm> 'CONTAINS' <BooleanChain>
+						| <ContainsTerm> 'HAS' <BooleanChain> | <BooleanChain>
+
+! ===================================================================
+! Boolean Operators
+! ===================================================================
+
+<BooleanChain>			::= <GtOperator>
 
 <GtOperator>			::= <GtOperator> '>' <LtOperator> | <LtOperator>
 <LtOperator>			::= <LtOperator> '<' <GteOperator> | <GteOperator>
@@ -56,9 +109,18 @@ Comment Line  = '//'
 <LteOperator>			::= <LteOperator> '<=' <EqualOperator> | <EqualOperator>
 
 <EqualOperator>			::= <EqualOperator> '==' <NotEqualOperator> | <NotEqualOperator>
-<NotEqualOperator>		::= <NotEqualOperator> '!=' <AndOperator> | <NotEqualOperator> '<>' <AndOperator> | <AndOperator>
-<AndOperator>			::= <AndOperator> AND <OrOperator> | <AndOperator> '&&' <OrOperator> | <OrOperator>
-<OrOperator>			::= <OrOperator> OR <AddExpression> | <OrOperator> '||' <AddExpression> | <AddExpression>
+<NotEqualOperator>		::= <NotEqualOperator> '!=' <AndOperator> 
+						| <NotEqualOperator> '<>' <AndOperator> | <AndOperator>
+<AndOperator>			::= <AndOperator> 'AND' <OrOperator> 
+						| <AndOperator> '&&' <OrOperator> | <OrOperator>
+<OrOperator>			::= <OrOperator> 'OR' <MathChain> 
+						| <OrOperator> '||' <MathChain> | <MathChain>
+
+! ===================================================================
+! Math Operators
+! ===================================================================
+
+<MathChain>				::= <AddExpression>
 
 <AddExpression>			::= <AddExpression> '+' <SubExpression> | <SubExpression> 
 <SubExpression>			::= <SubExpression> '-' <MultiplyExpression> | <MultiplyExpression> 
@@ -119,43 +181,6 @@ Comment Line  = '//'
 <Increment>			::= <Qualified ID> '++'
 <Decrement>			::= <Qualified ID> '--'
 
-! ===========================================================================
-! End of statement marker
-! ===========================================================================
-
-<End>				::= ';'
-
-<End Opt>			::= <End>
-					| ! Nothing
-
-<Block or End>		::= <Block>
-					|  <End>
-
-! ===================================================================
-! Statements
-! ===================================================================
-<Program>		::= <Object Decls>
-				| <Object Decls> <Statements>
-				| <Statements>
-				| !Nothing
-
-<Block>			::= '{' <Statements> '}'
-				|  '{' '}'
-
-<Statement or Block>	::= <Statement>
-						| <Block>
-
-<Statements>	::= <Statement>
-				| <Statements> <Statement>
-				| <Block>
-
-<Statement>		::= <FlowControl>
-				| <Variable Statements> <End>
-				| <Procedure> <End>
-				| <Call Expression> <End>
-				| <New Expression> <End>
-				| <End>
-
 ! ===================================================================
 ! Packages
 ! ===================================================================
@@ -173,13 +198,13 @@ Comment Line  = '//'
 ! Objects
 ! ===================================================================
 
-<Object Decls>	::= <Object Decl>
-				| <Object Decls> <Object Decl>
+<Object Decls>			::= <Object Decl>
+						| <Object Decls> <Object Decl>
 
-<Object Decl>	::= 'object' <BaseClass ID> <ConstructParams List> <Block> <End>
+<Object Decl>			::= 'object' <BaseClass ID> <ConstructParams List> <Block> <End>
 
-<BaseClass ID>	::= <ClassName ID> '::' Identifier
-				| Identifier
+<BaseClass ID>			::= <ClassName ID> '::' Identifier
+						| Identifier
 
 <ConstructParams List>	::= '(' ')'
 						| '(' <Formal Parameter List> ')'
@@ -192,13 +217,13 @@ Comment Line  = '//'
 !!! Not used (yet)
 !!!<Function Declaration>	::= 'function' Identifier <Formal Parameters> <Block>
 
-<Function Expression>	::= 'function' <Formal Parameters> <Block>
+<Function Expression>		::= 'function' <Formal Parameters> <Block>
 
-<Formal Parameters>		::= '(' ')'
-						| '(' <Formal Parameter List> ')'
+<Formal Parameters>			::= '(' ')'
+							| '(' <Formal Parameter List> ')'
 
-<Formal Parameter List> ::= Identifier
-						| <Formal Parameter List> ',' Identifier
+<Formal Parameter List>		::= Identifier
+							| <Formal Parameter List> ',' Identifier
 
 ! ===================================================================
 ! Formal Expressions
@@ -209,7 +234,7 @@ Comment Line  = '//'
 
 <New Expression>		::= 'new' <ClassName ID> <Arguments>
 
-! This is not used by the grammar. The compiler uses to mark calls to internal methods.
+! This is not used by the grammar. The optimizer uses it to mark calls to internal methods.
 <CallInternal>			::= ! matches nothing
 
 <Arguments>				::= '(' ')'

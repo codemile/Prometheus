@@ -8,6 +8,16 @@ namespace Prometheus.Nodes.Types
     public class BooleanType : DataType
     {
         /// <summary>
+        /// False constant.
+        /// </summary>
+        public static readonly BooleanType False = new BooleanType(false);
+
+        /// <summary>
+        /// True constant.
+        /// </summary>
+        public static readonly BooleanType True = new BooleanType(true);
+
+        /// <summary>
         /// The value
         /// </summary>
         public readonly bool Value;

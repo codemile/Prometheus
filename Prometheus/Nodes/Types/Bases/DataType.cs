@@ -35,5 +35,16 @@ namespace Prometheus.Nodes.Types.Bases
 
             throw new DataTypeException(string.Format("Cannot convert <{0}> to boolean", GetType().FullName));
         }
+
+        /// <summary>
+        /// Returns an array type. Creating a new type if required.
+        /// </summary>
+        /// <returns>An array collection</returns>
+        public ArrayType ToArray()
+        {
+            return (GetType() == typeof (ArrayType)) 
+                ? (ArrayType)this 
+                : new ArrayType(this);
+        }
     }
 }

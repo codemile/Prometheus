@@ -74,6 +74,7 @@
     <Compile Include="Objects\Declaration.cs" />
     <Compile Include="Objects\Instance.cs" />
     <Compile Include="Objects\Reference.cs" />
+    <Compile Include="Runtime\SearchOperators.cs" />
     <Compile Include="Storage\NameSpace.cs" />
     <Compile Include="Parser\Executors\Attributes\ExecuteAttribute.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
