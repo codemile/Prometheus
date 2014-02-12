@@ -30,12 +30,12 @@
 Identifier		= {ID Head}{ID Tail}*
 MemberName		=  '.' {ID Head}{ID Tail}*
 
-StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"'
-StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* ['']
+StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"' [icf]*
+StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* [''] [icf]*
 Number			= [0123456789]+
 Decimal			= [0123456789]+ '.' [0123456789]+
 Boolean			= true | false | on | off | yes | no | always | never
-RegExp			= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' ( 'g' | 'i' | 'm' )*
+RegExp			= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' [gim]*
 
 ! ===================================================================
 ! Comments

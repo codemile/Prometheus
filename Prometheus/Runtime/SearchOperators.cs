@@ -1,4 +1,5 @@
-﻿using Prometheus.Exceptions.Executor;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
@@ -20,42 +21,21 @@ namespace Prometheus.Runtime
         {
         }
 
-        private StringType ToString(string pOperator, DataType pData)
-        {
-            StringType str = pData as StringType;
-            if (str == null)
-            {
-                throw DataTypeException.InvalidTypes(pOperator, pData);
-            }
-            return str;
-        }
-
         /// <summary>
         /// Processes a boolean result for searches.
         /// </summary>
-        /// <param name="pHaystack">What to search in</param>
-        /// <param name="pNeedle">The terms to find</param>
+        /// <param name="pHaystacks">What to search in</param>
+        /// <param name="pNeedles">The terms to find</param>
         /// <returns>Boolean result</returns>
         [ExecuteSymbol(GrammarSymbol.ContainsTerm)]
-        public DataType Contains(DataType pHaystack, DataType pNeedle)
+        public DataType Contains(DataType pHaystacks, DataType pNeedles)
         {
-            ArrayType haystacks = pHaystack.ToArray();
-            ArrayType needles = pNeedle.ToArray();
+            IEnumerable<iSearchHaystack> haystacks = DataType.ToArray<iSearchHaystack>(pHaystacks);
+            IEnumerable<iSearchNeedle> needles = DataType.ToArray<iSearchNeedle>(pNeedles);
 
-            foreach (DataType haystack in haystacks)
-            {
-                StringType hay = ToString("contains",haystack);
-                foreach (DataType needle in needles)
-                {
-                    StringType ndle = ToString("contains", needle);
-                    if (hay.Value.Contains(ndle.Value))
-                    {
-                        return BooleanType.True;
-                    }
-                }
-            }
-
-            return BooleanType.False;
+            return needles.Any(pNeedle=>haystacks.Any(pStack=>pStack.Contains(pNeedle)))
+                ? BooleanType.True
+                : BooleanType.False;
         }
     }
 }

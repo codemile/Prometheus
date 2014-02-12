@@ -52,6 +52,7 @@
     <Compile Include="Mock\MockNode.cs" />
     <Compile Include="Mock\Objects\MockDeclaration.cs" />
     <Compile Include="Mock\Types\MockType.cs" />
+    <Compile Include="Nodes\DataTypeFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\HeapSpaceTests.cs" />
     <Compile Include="Storage\MemorySpaceTests.cs" />

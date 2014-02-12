@@ -61,14 +61,16 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
+    <Compile Include="Nodes\RegexFactory.cs" />
     <Compile Include="Nodes\Types\ArrayType.cs" />
+    <Compile Include="Nodes\Types\Bases\iSearchHaystack.cs" />
+    <Compile Include="Nodes\Types\Bases\iSearchNeedle.cs" />
     <Compile Include="Nodes\Types\BooleanType.cs" />
     <Compile Include="Nodes\Types\ClassNameType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
     <Compile Include="Nodes\Types\NumericType.cs" />
     <Compile Include="Nodes\Types\QualifiedType.cs" />
     <Compile Include="Nodes\Types\AliasType.cs" />
-    <Compile Include="Nodes\Types\StaticType.cs" />
     <Compile Include="Nodes\Types\StringType.cs" />
     <Compile Include="Objects\CreateInherited.cs" />
     <Compile Include="Objects\Declaration.cs" />

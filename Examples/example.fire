@@ -1,1 +1,1 @@
-print "Hello World" contains ["world","house"];
+print "Hello word" contains 'word'i;

@@ -91,12 +91,7 @@ namespace Prometheus.Objects
         {
             Node obj = Executor.Cursor.Node;
             Declaration baseDecl = null;
-            if (pBaseClass.GetType() == typeof (StaticType))
-            {
-                StaticType type = (StaticType)pBaseClass;
-                baseDecl = null; // TODO: Add an instance of a default object base.
-            }
-            else if (pBaseClass.GetType() == typeof (ClassNameType))
+            if (pBaseClass.GetType() == typeof (ClassNameType))
             {
                 ClassNameType baseType = (ClassNameType)pBaseClass;
                 baseDecl = Executor.Cursor.Packages.Get(baseType);

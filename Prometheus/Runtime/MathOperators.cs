@@ -96,7 +96,7 @@ namespace Prometheus.Runtime
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
             {
-                return new StringType(string.Concat(str1.Value, str2.Value));
+                return new StringType(str1, str2);
             }
 
             NumericType num1 = pValue1 as NumericType;
