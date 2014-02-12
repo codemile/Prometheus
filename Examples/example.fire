@@ -1,7 +1,10 @@
-object test {
+object Button {
 };
 
-var x= new global.test();
+object Button::CheckBox {
+};
+
+var x= new CheckBox();
 
 vars;
 objects;

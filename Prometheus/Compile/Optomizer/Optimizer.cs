@@ -39,7 +39,7 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.ObjectDecls,
                                                                    GrammarSymbol.FormalParameterList,
                                                                    GrammarSymbol.Arguments,
-                                                                   GrammarSymbol.BaseClass,
+                                                                   GrammarSymbol.BaseClassID,
                                                                    GrammarSymbol.ArrayList,
                                                                    GrammarSymbol.MemberList,
                                                                    GrammarSymbol.ClassNameID
@@ -73,7 +73,7 @@ namespace Prometheus.Compile.Optomizer
         private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
                                                                     {
                                                                         GrammarSymbol.FormalParameterList,
-                                                                        GrammarSymbol.BaseClass,
+                                                                        GrammarSymbol.BaseClassID,
                                                                         GrammarSymbol.MemberList
                                                                     };
 
@@ -246,6 +246,7 @@ namespace Prometheus.Compile.Optomizer
 
             if(pNode.Type == GrammarSymbol.ClassNameID &&
                pNode.Data.Count > 0 &&
+               pNode.Data[0].GetType() != typeof (ClassNameType) &&
                pNode.Children.Count == 0)
             {
                 ClassName(pNode);

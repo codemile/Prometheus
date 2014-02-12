@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -7,6 +8,7 @@ namespace Prometheus.Nodes.Types
     /// Refers to a string that defines a static type (int, object, class, etc..)
     /// </summary>
     [DebuggerDisplay("{Name}")]
+    [Obsolete]
     public class StaticType : DataType
     {
         /// <summary>

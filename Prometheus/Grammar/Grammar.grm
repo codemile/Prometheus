@@ -5,12 +5,12 @@
 !
 ! ----------------------------------------------------------------------------
 
-"Name"     = 'Prometheus Grammar'
-"Author"   = 'ThinkingMedia'
-"Version"  = '1.0'
-"About"    = 'Scripting language for processing documents.'
-"Case Sensitive" = 'False'
-"Start Symbol" = <Program>
+"Name"				= 'Prometheus Grammar'
+"Author"			= 'ThinkingMedia'
+"Version"			= '1.0'
+"About"				= 'Scripting language for processing documents.'
+"Case Sensitive"	= 'False'
+"Start Symbol"		= <Program>
 
 ! ===================================================================
 ! Character Sets
@@ -36,7 +36,6 @@ Number			= [0123456789]+
 Decimal			= [0123456789]+ '.' [0123456789]+
 Boolean			= true | false | on | off | yes | no | always | never
 RegExp			= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' ( 'g' | 'i' | 'm' )*
-Type			= object | model | observer
 
 ! ===================================================================
 ! Comments
@@ -158,28 +157,45 @@ Comment Line  = '//'
 				| <End>
 
 ! ===================================================================
+! Packages
+! ===================================================================
+
+!<Import Decls>		::= <Import Decl>
+!					| <Import Decls> <Import Decl>
+
+!<Import Decl>		::= 'use' Identifier <Member List> <End>
+				
+
+!<Member List>		::= <Member List> MemberName
+!					|  !Zero or more 
+
+! ===================================================================
 ! Objects
 ! ===================================================================
 
 <Object Decls>	::= <Object Decl>
 				| <Object Decls> <Object Decl>
 
-<Object Decl>	::= <Base Class> Identifier <Block> <End>
-				| <Base Class> Identifier '(' ')' <Block> <End>
-				| <Base Class> Identifier '(' <Formal Parameter List> ')' <Block> <End>
+<Object Decl>	::= 'object' <BaseClass ID> <ConstructParams List> <Block> <End>
 
-<Base Class>	::= Type
-				| <Qualified ID>
+<BaseClass ID>	::= <ClassName ID> '::' Identifier
+				| Identifier
+
+<ConstructParams List>	::= '(' ')'
+						| '(' <Formal Parameter List> ')'
+						| ! none
 
 ! ===================================================================
 ! Functions
 ! ===================================================================
 
-<Function Declaration>	::= 'function' Identifier '(' <Formal Parameter List> ')' <Block>
-						| 'function' Identifier '(' ')' <Block>
+!!! Not used (yet)
+!!!<Function Declaration>	::= 'function' Identifier <Formal Parameters> <Block>
 
-<Function Expression>	::= 'function' '(' ')' <Block>
-						| 'function' '(' <Formal Parameter List> ')' <Block>
+<Function Expression>	::= 'function' <Formal Parameters> <Block>
+
+<Formal Parameters>		::= '(' ')'
+						| '(' <Formal Parameter List> ')'
 
 <Formal Parameter List> ::= Identifier
 						| <Formal Parameter List> ',' Identifier

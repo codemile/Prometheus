@@ -97,15 +97,15 @@ namespace Prometheus.Grammar
 		@Statement6 = 86,                                // <Statement> ::= <End>
 		@ObjectDecls = 87,                               // <Object Decls> ::= <Object Decl>
 		@ObjectDecls2 = 88,                              // <Object Decls> ::= <Object Decls> <Object Decl>
-		@ObjectDecl_Identifier = 89,                     // <Object Decl> ::= <Base Class> Identifier <Block> <End>
-		@ObjectDecl_Identifier_LParen_RParen = 90,       // <Object Decl> ::= <Base Class> Identifier '(' ')' <Block> <End>
-		@ObjectDecl_Identifier_LParen_RParen2 = 91,      // <Object Decl> ::= <Base Class> Identifier '(' <Formal Parameter List> ')' <Block> <End>
-		@BaseClass_Type = 92,                            // <Base Class> ::= Type
-		@BaseClass = 93,                                 // <Base Class> ::= <Qualified ID>
-		@FunctionDeclaration_function_Identifier_LParen_RParen = 94,  // <Function Declaration> ::= function Identifier '(' <Formal Parameter List> ')' <Block>
-		@FunctionDeclaration_function_Identifier_LParen_RParen2 = 95,  // <Function Declaration> ::= function Identifier '(' ')' <Block>
-		@FunctionExpression_function_LParen_RParen = 96,  // <Function Expression> ::= function '(' ')' <Block>
-		@FunctionExpression_function_LParen_RParen2 = 97,  // <Function Expression> ::= function '(' <Formal Parameter List> ')' <Block>
+		@ObjectDecl_object = 89,                         // <Object Decl> ::= object <BaseClass ID> <ConstructParams List> <Block> <End>
+		@BaseClassID_ColonColon_Identifier = 90,         // <BaseClass ID> ::= <ClassName ID> '::' Identifier
+		@BaseClassID_Identifier = 91,                    // <BaseClass ID> ::= Identifier
+		@ConstructParamsList_LParen_RParen = 92,         // <ConstructParams List> ::= '(' ')'
+		@ConstructParamsList_LParen_RParen2 = 93,        // <ConstructParams List> ::= '(' <Formal Parameter List> ')'
+		@ConstructParamsList = 94,                       // <ConstructParams List> ::= 
+		@FunctionExpression_function = 95,               // <Function Expression> ::= function <Formal Parameters> <Block>
+		@FormalParameters_LParen_RParen = 96,            // <Formal Parameters> ::= '(' ')'
+		@FormalParameters_LParen_RParen2 = 97,           // <Formal Parameters> ::= '(' <Formal Parameter List> ')'
 		@FormalParameterList_Identifier = 98,            // <Formal Parameter List> ::= Identifier
 		@FormalParameterList_Comma_Identifier = 99,      // <Formal Parameter List> ::= <Formal Parameter List> ',' Identifier
 		@CallExpression = 100,                           // <Call Expression> ::= <Qualified ID> <Arguments>
