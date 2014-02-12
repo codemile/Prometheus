@@ -21,59 +21,16 @@ namespace Prometheus.Nodes
                                                                     {
                                                                         GrammarSymbol.StringDouble,
                                                                         GrammarSymbol.StringSingle,
+                                                                        GrammarSymbol.RegExpSlash,
+                                                                        GrammarSymbol.RegExpPipe,
                                                                         GrammarSymbol.Number,
                                                                         GrammarSymbol.Decimal,
                                                                         GrammarSymbol.Boolean,
                                                                         GrammarSymbol.Identifier,
-                                                                        //GrammarSymbol.Type,
                                                                         GrammarSymbol.QualifiedID,
                                                                         GrammarSymbol.ValidID,
                                                                         GrammarSymbol.MemberName
                                                                     };
-
-        /// <summary>
-        /// Takes a raw string value from the grammar and creates a string type.  Supports inline 
-        /// flags and different types of quote marks.
-        /// </summary>
-        /// <param name="pValue">The raw string</param>
-        /// <returns>The string object</returns>
-        /// <exception cref="UnexpectedErrorException">If empty string</exception>
-        public static StringType CreateString(string pValue)
-        {
-#if DEBUG
-            if (string.IsNullOrWhiteSpace(pValue))
-            {
-                throw new UnexpectedErrorException("Unexpected empty string.");
-            }
-#endif
-            StringType.eMODE mode = pValue[0] == '"' ? StringType.eMODE.ANYWHERE : StringType.eMODE.WORD_BOUNDARIES;
-            StringType.eFLAGS flags = StringType.eFLAGS.NONE;
-
-            string str = pValue.Substring(1);
-            int tail = 1;
-            for (int i = str.Length-1; i > 0; i--)
-            {
-                if (str[i] == '"' || str[i] == '\'')
-                    break;
-                switch (str[i])
-                {
-                    case 'i':
-                        flags |= StringType.eFLAGS.IGNORE_CASE;
-                        break;
-                    case 'c':
-                        flags |= StringType.eFLAGS.NO_CACHING;
-                        break;
-                    case 'f':
-                        flags |= StringType.eFLAGS.MATCH_FIRST;
-                        break;
-                    default:
-                        continue;
-                }
-                tail++;
-            }
-            str = str.Substring(0, str.Length - tail);
-            return new StringType(str, mode, flags);
-        }
 
         /// <summary>
         /// Creates a data object and adjusts the value is needed.
@@ -85,6 +42,8 @@ namespace Prometheus.Nodes
                     // drop the quotes
                 case GrammarSymbol.StringDouble:
                 case GrammarSymbol.StringSingle:
+                case GrammarSymbol.RegExpSlash:
+                case GrammarSymbol.RegExpPipe:
                     return CreateString(pValue);
 
                 case GrammarSymbol.Number:
@@ -119,6 +78,51 @@ namespace Prometheus.Nodes
 
             throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol),
                 pLocation);
+        }
+
+        /// <summary>
+        /// Takes a raw string value from the grammar and creates a string type.  Supports inline
+        /// flags and different types of quote marks.
+        /// </summary>
+        /// <param name="pValue">The raw string</param>
+        /// <returns>The string object</returns>
+        /// <exception cref="UnexpectedErrorException">If empty string</exception>
+        public static StringType CreateString(string pValue)
+        {
+#if DEBUG
+            if (string.IsNullOrWhiteSpace(pValue))
+            {
+                throw new UnexpectedErrorException("Unexpected empty string.");
+            }
+#endif
+            StringType.eMODE mode = pValue[0] == '"' || pValue[0] == '/' ? StringType.eMODE.ANYWHERE : StringType.eMODE.WORD_BOUNDARIES;
+            bool regex = pValue[0] == '/' || pValue[0] == '|';
+            StringType.eFLAGS flags = StringType.eFLAGS.NONE;
+
+            string str = pValue.Substring(1);
+            int tail = 1;
+            for (int i = str.Length - 1; i > 0; i--)
+            {
+                if (str[i] == 'i')
+                {
+                    flags |= StringType.eFLAGS.IGNORE_CASE;
+                }
+                else if (str[i] == 'c')
+                {
+                    flags |= StringType.eFLAGS.NO_CACHING;
+                }
+                else if (str[i] == 'f')
+                {
+                    flags |= StringType.eFLAGS.MATCH_FIRST;
+                }
+                else
+                {
+                    break;
+                }
+                tail++;
+            }
+            str = str.Substring(0, str.Length - tail);
+            return new StringType(regex, str, mode, flags);
         }
 
         /// <summary>

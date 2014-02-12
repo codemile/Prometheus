@@ -60,7 +60,7 @@ namespace Fire
             }
             catch (PrometheusException e)
             {
-                _logger.Error(e.Format().Replace("{", "{{").Replace("}", "}}"));
+                _logger.Error("Error: "+e.Format().Replace("{", "{{").Replace("}", "}}"));
             }
 
             return -1;

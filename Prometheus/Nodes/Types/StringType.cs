@@ -70,6 +70,11 @@ namespace Prometheus.Nodes.Types
         private Regex _regex;
 
         /// <summary>
+        /// Handle this string as a regex
+        /// </summary>
+        private readonly bool _isRegex;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public StringType(string pValue)
@@ -82,8 +87,9 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public StringType(string pValue, eMODE pMode, eFLAGS pFlags)
+        public StringType(bool pIsRegex, string pValue, eMODE pMode, eFLAGS pFlags)
         {
+            _isRegex = pIsRegex;
             Value = pValue;
             Mode = pMode;
             Flags = pFlags;
@@ -134,7 +140,12 @@ namespace Prometheus.Nodes.Types
         /// <returns>True if found</returns>
         public bool isFound(string pHaystack)
         {
-            if (Mode == eMODE.ANYWHERE)
+            if (_regex != null)
+            {
+                return _regex.IsMatch(pHaystack);
+            }
+
+            if (Mode == eMODE.ANYWHERE && !_isRegex)
             {
                 StringComparison c = (Flags & eFLAGS.IGNORE_CASE) == eFLAGS.IGNORE_CASE
                     ? StringComparison.CurrentCultureIgnoreCase
@@ -142,15 +153,18 @@ namespace Prometheus.Nodes.Types
                 return pHaystack.IndexOf(Value, c) >= 0;
             }
 
-            if (_regex == null)
-            {
-                string str = ((Flags & eFLAGS.IGNORE_CASE) == eFLAGS.IGNORE_CASE
-                        ? "(?is)"
-                        : "(?s)")
-                        + RegexFactory.WordBoundaries(Value);
+            string str = ((Flags & eFLAGS.IGNORE_CASE) == eFLAGS.IGNORE_CASE ? "(?is)" : "(?s)");
 
-                _regex = new Regex(str);
+            if (Mode == eMODE.WORD_BOUNDARIES)
+            {
+                str += RegexFactory.WordBoundaries(Value);
             }
+            else
+            {
+                str += Value;
+            }
+
+            _regex = new Regex(str);
 
             return _regex.IsMatch(pHaystack);
         }

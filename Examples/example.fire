@@ -1,1 +1,1 @@
-print "Hello word" contains 'word'i;
+print "Hello World" contains [|wor[l]?d|i,"Hello"];

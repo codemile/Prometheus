@@ -33,7 +33,7 @@ namespace Prometheus.Exceptions.Compiler
             SymbolList symbolList = pParser.ExpectedSymbols();
             if (symbolList == null)
             {
-                return string.Format("Syntax error: Unexpected token {0} ", found);
+                return string.Format("Syntax - Unexpected token {0} ", found);
             }
 
             List<string> message = new List<string>();
@@ -77,7 +77,7 @@ namespace Prometheus.Exceptions.Compiler
                 }
             }
 
-            return string.Format("Syntax error: Was expecting {0} but found '{1}' instead",
+            return string.Format("Syntax - Was expecting {0} but found '{1}' instead",
                 string.Join(", or ", expecting), found);
         }
 

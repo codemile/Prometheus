@@ -32,10 +32,12 @@ MemberName		=  '.' {ID Head}{ID Tail}*
 
 StringDouble	= '"' ( {DoubleString Chars} | '\' {Printable} )* '"' [icf]*
 StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* [''] [icf]*
+RegExpSlash		= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' [icf]*
+RegExpPipe		= '|' ({RegExp Chars} | '\' {Non Terminator})+ '|' [icf]*
+
 Number			= [0123456789]+
 Decimal			= [0123456789]+ '.' [0123456789]+
 Boolean			= true | false | on | off | yes | no | always | never
-RegExp			= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' [gim]*
 
 ! ===================================================================
 ! Comments
@@ -151,6 +153,8 @@ Comment Line  = '//'
 
 <Value>				::= StringDouble
 					| StringSingle
+					| RegExpSlash
+					| RegExpPipe
 					| Number
 					| Decimal
 					| Boolean
