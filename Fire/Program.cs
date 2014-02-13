@@ -7,7 +7,6 @@ using Logging;
 using Logging.Writers;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
-using Prometheus.Exceptions.Executor;
 using Prometheus.Parser;
 
 namespace Fire
@@ -52,7 +51,9 @@ namespace Fire
                 TargetCode code = prometheus.Compile(filename, source);
 
                 Parser parser = new Parser();
-                return Parser.Run(code);
+                parser.CreateString("global","test","Hello World");
+                parser.CreateObject("global","options",options);
+                return parser.Run(code);
             }
             catch (FireException e)
             {
@@ -60,7 +61,7 @@ namespace Fire
             }
             catch (PrometheusException e)
             {
-                _logger.Error("Error: "+e.Format().Replace("{", "{{").Replace("}", "}}"));
+                _logger.Error("Error: " + e.Format().Replace("{", "{{").Replace("}", "}}"));
             }
 
             return -1;

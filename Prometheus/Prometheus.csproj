@@ -54,6 +54,7 @@
     <Compile Include="Exceptions\Executor\IdentifierException.cs" />
     <Compile Include="Exceptions\Executor\InvalidArgumentException.cs" />
     <Compile Include="Exceptions\Executor\NameSpaceException.cs" />
+    <Compile Include="Exceptions\Executor\ObjectSpaceException.cs" />
     <Compile Include="Exceptions\Executor\ReturnException.cs" />
     <Compile Include="Exceptions\Executor\RunTimeException.cs" />
     <Compile Include="Exceptions\Executor\IdentifierInnerException.cs" />
@@ -77,6 +78,8 @@
     <Compile Include="Objects\Instance.cs" />
     <Compile Include="Objects\Reference.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
+    <Compile Include="Storage\iMemoryDump.cs" />
+    <Compile Include="Storage\iMemorySpace.cs" />
     <Compile Include="Storage\NameSpace.cs" />
     <Compile Include="Parser\Executors\Attributes\ExecuteAttribute.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
@@ -90,7 +93,9 @@
     <Compile Include="Parser\Cursor.cs" />
     <Compile Include="Parser\Executors\Executor.cs" />
     <Compile Include="Storage\HeapSpace.cs" />
-    <Compile Include="Storage\MemorySpace.cs" />
+    <Compile Include="Storage\ObjectSpace.cs" />
+    <Compile Include="Storage\MemoryItem.cs" />
+    <Compile Include="Storage\StorageSpace.cs" />
     <Compile Include="Storage\StackSpace.cs" />
     <Compile Include="Parser\Executors\Attributes\ExecuteInternal.cs" />
     <Compile Include="Parser\Executors\Attributes\ExecuteSymbol.cs" />

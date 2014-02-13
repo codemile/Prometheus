@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
@@ -12,7 +13,7 @@ namespace Prometheus.Storage
     /// to limit their scope.
     /// Each stack gets a ID counter from the previous stack.
     /// </summary>
-    public class StackSpace : MemorySpace
+    public class StackSpace : StorageSpace
     {
         /// <summary>
         /// The parser's cursor
@@ -22,7 +23,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// The parent scope
         /// </summary>
-        private MemorySpace _parent;
+        private iMemorySpace _parent;
 
         /// <summary>
         /// Constructor
@@ -79,13 +80,11 @@ namespace Prometheus.Storage
         /// <summary>
         /// Prints a list of all variables.
         /// </summary>
-        public override void Print(int pIndent = 0)
+        public override IEnumerable<MemoryItem> Dump(int pIndent = 0)
         {
-            if (_parent != null)
-            {
-                _parent.Print(pIndent + 1);
-            }
-            base.Print(pIndent);
+            return _parent == null 
+                ? base.Dump(pIndent) 
+                : _parent.Dump(pIndent + 1).Union(base.Dump(pIndent));
         }
 
         /// <summary>

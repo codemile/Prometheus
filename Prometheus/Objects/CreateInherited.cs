@@ -25,12 +25,12 @@ namespace Prometheus.Objects
         /// <summary>
         /// The alias reference
         /// </summary>
-        public DataType Alias;
+        public readonly DataType Alias;
 
         /// <summary>
         /// The new instance of the object
         /// </summary>
-        public Instance Inst;
+        public readonly Instance Inst;
 
         /// <summary>
         /// Walks the inheritance of declarations creating each from the
@@ -44,14 +44,14 @@ namespace Prometheus.Objects
                 baseInst = CreateAll(pDecl.Base);
             }
 
-            Instance inst = new Instance(pDecl.Constructor);
+            Instance inst = new Instance(pDecl.ClassName, pDecl.Constructor);
             DataType alias = _heap.Add(inst);
 
-            inst.Members.Create(IdentifierType.This.Name, alias);
+            inst.GetMembers().Create(IdentifierType.This.Name, alias);
 
             if (baseInst.Value != null)
             {
-                inst.Members.Create(IdentifierType.Base.Name, baseInst.Value);
+                inst.GetMembers().Create(IdentifierType.Base.Name, baseInst.Value);
             }
 
             return new KeyValuePair<Instance, DataType>(inst, alias);

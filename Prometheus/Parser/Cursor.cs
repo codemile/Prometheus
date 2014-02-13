@@ -32,7 +32,7 @@ namespace Prometheus.Parser
         /// <summary>
         /// The current stack of local variables.
         /// </summary>
-        public MemorySpace Stack;
+        public iMemorySpace Stack;
 
         /// <summary>
         /// Constructor
@@ -65,8 +65,8 @@ namespace Prometheus.Parser
         /// </summary>
         public DataType Get(QualifiedType pID)
         {
-            MemorySpace memory = Resolve(pID);
-            DataType dataType = memory.Get(pID.Parts[pID.Parts.Length - 1]);
+            iMemorySpace storage = Resolve(pID);
+            DataType dataType = storage.Get(pID.Parts[pID.Parts.Length - 1]);
             if (dataType == null)
             {
                 throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pID));
@@ -79,24 +79,24 @@ namespace Prometheus.Parser
         /// </summary>
         /// <param name="pID">The qualified ID</param>
         /// <returns></returns>
-        public MemorySpace Resolve(QualifiedType pID)
+        public iMemorySpace Resolve(QualifiedType pID)
         {
-            MemorySpace memory = Stack;
+            iMemorySpace storage = Stack;
             int index = 0;
             int count = pID.Parts.Length - 1;
             while (index < count)
             {
-                DataType dataType = memory.Get(pID.Parts[index]);
+                DataType dataType = storage.Get(pID.Parts[index]);
                 if (dataType == null)
                 {
                     throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pID));
                 }
-                AliasType a = (AliasType)memory.Get(pID.Parts[index]);
+                AliasType a = (AliasType)storage.Get(pID.Parts[index]);
                 Instance inst = Heap.Get(a);
-                memory = inst.Members;
+                storage = inst.GetMembers();
                 index++;
             }
-            return memory;
+            return storage;
         }
 
         /// <summary>
@@ -104,8 +104,8 @@ namespace Prometheus.Parser
         /// </summary>
         public void Set(QualifiedType pID, DataType pValue)
         {
-            MemorySpace memory = Resolve(pID);
-            memory.Assign(pID.Parts[pID.Parts.Length - 1], pValue);
+            iMemorySpace storage = Resolve(pID);
+            storage.Assign(pID.Parts[pID.Parts.Length - 1], pValue);
         }
     }
 }

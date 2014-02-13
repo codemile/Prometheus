@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -31,6 +33,25 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public ClassNameType(string pClassName)
+        {
+            string[] parts = pClassName.Split(new[] { '.' });
+            NameSpace = new QualifiedType(parts.Take(parts.Length-1).ToArray());
+            Identifier = new IdentifierType(parts[parts.Length-1]);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ClassNameType(Type pType)
+            : this(pType.FullName)
+        {
+            
+        }
+
+        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>
@@ -38,7 +59,8 @@ namespace Prometheus.Nodes.Types
         /// </returns>
         public override string ToString()
         {
-            return string.Format("@{0}:{1}", NameSpace, Identifier);
+            //return string.Format("@{0}:{1}", NameSpace, Identifier);
+            return string.Format("{0}.{1}", NameSpace, Identifier);
         }
     }
 }

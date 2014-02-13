@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Prometheus.Nodes.Types.Bases;
+using Prometheus.Storage;
 
 namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Holds an array of values.
     /// </summary>
-    public class ArrayType : DataType, IList<DataType>
+    public class ArrayType : DataType, IList<DataType>, iMemoryDump
     {
         /// <summary>
         /// Values
@@ -52,6 +54,16 @@ namespace Prometheus.Nodes.Types
         public override string ToString()
         {
             return "[" + string.Join(",", from value in Values select value.ToString()) + "]";
+        }
+
+        /// <summary>
+        /// Derived classes will handle the printing.
+        /// </summary>
+        /// <param name="pIndent">Line indent</param>
+        public IEnumerable<MemoryItem> Dump(int pIndent = 0)
+        {
+            int count = 0;
+            return from item in Values select new MemoryItem { Level = pIndent, Name = (count++).ToString(CultureInfo.InvariantCulture), Data = item };
         }
 
         /// <summary>

@@ -46,6 +46,24 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
+        /// Adds a node as a child.
+        /// </summary>
+        public Node Add(Node pChild)
+        {
+            Children.Add(pChild);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds data to the node.
+        /// </summary>
+        public Node Add(DataType pData)
+        {
+            Data.Add(pData);
+            return this;
+        }
+
+        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>

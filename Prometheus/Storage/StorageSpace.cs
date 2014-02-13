@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Logging;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Properties;
 
@@ -11,12 +10,12 @@ namespace Prometheus.Storage
     /// <summary>
     /// Base class for variable storage.
     /// </summary>
-    public class MemorySpace : IDisposable
+    public class StorageSpace : iMemorySpace
     {
         /// <summary>
         /// Logging
         /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof (MemorySpace));
+        private static readonly Logger _logger = Logger.Create(typeof (StorageSpace));
 
         /// <summary>
         /// Storage of variable values.
@@ -34,7 +33,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        public MemorySpace()
+        public StorageSpace()
             : this(new Dictionary<string, DataType>())
         {
         }
@@ -42,7 +41,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        public MemorySpace(Dictionary<string, DataType> pStorage)
+        public StorageSpace(Dictionary<string, DataType> pStorage)
         {
             _storage = pStorage;
         }
@@ -63,19 +62,6 @@ namespace Prometheus.Storage
         public virtual DataType Get(string pName)
         {
             return _storage.ContainsKey(pName) ? _storage[pName] : null;
-        }
-
-        /// <summary>
-        /// Derived classes will handle the printing.
-        /// </summary>
-        /// <param name="pIndent">Line indent</param>
-        public virtual void Print(int pIndent = 0)
-        {
-            string indent = string.Format("{0}> ", " ".PadLeft(pIndent));
-            foreach (KeyValuePair<string, DataType> var in _storage)
-            {
-                _logger.Fine("{0}{1} = {2}", indent, var.Key, var.ToString());
-            }
         }
 
         /// <summary>
@@ -149,6 +135,15 @@ namespace Prometheus.Storage
         public bool Has(string pName)
         {
             return _storage.ContainsKey(pName);
+        }
+
+        /// <summary>
+        /// Derived classes will handle the printing.
+        /// </summary>
+        /// <param name="pIndent">Line indent</param>
+        public virtual IEnumerable<MemoryItem> Dump(int pIndent = 0)
+        {
+            return from item in _storage select new MemoryItem {Level = pIndent, Name = item.Key, Data = item.Value};
         }
     }
 }

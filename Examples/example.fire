@@ -1,1 +1,16 @@
-print "Hello World" contains [|wor[l]?d|i,"Hello"];
+object test {
+	this.title = "House";
+};
+
+var t = new test();
+
+this.x = /wow/if;
+this.Stuff = [1,2,/3/,t];
+
+//print t.title;
+//print options.debug;
+
+vars;
+//objects;
+
+print options.filename;

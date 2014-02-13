@@ -63,12 +63,12 @@ namespace Prometheus.Objects
 
             CreateInherited created = new CreateInherited(Executor.Cursor.Heap, decl);
 
-            MemorySpace prevMemory = Executor.Cursor.Stack;
-            Executor.Cursor.Stack = created.Inst.Members;
+            iMemorySpace prevStorage = Executor.Cursor.Stack;
+            Executor.Cursor.Stack = created.Inst.GetMembers();
 
             try
             {
-                Executor.Execute(created.Inst.Constructor, new Dictionary<string, DataType>());
+                Executor.Execute(created.Inst.GetConstructor(), new Dictionary<string, DataType>());
             }
             catch (ReturnException)
             {
@@ -76,8 +76,8 @@ namespace Prometheus.Objects
             }
             finally
             {
-                Executor.Cursor.Stack = prevMemory;
-                created.Inst.Members.Unset(IdentifierType.This.Name);
+                Executor.Cursor.Stack = prevStorage;
+                created.Inst.GetMembers().Unset(IdentifierType.This.Name);
             }
 
             return created.Alias;
@@ -106,6 +106,22 @@ namespace Prometheus.Objects
 
             // TODO: Need to find the current namespace to declare an object.
 
+            Executor.Cursor.Packages.Add(decl);
+
+            return DataType.Undefined;
+        }
+
+        /// <summary>
+        /// Declares a new object type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
+        public DataType ObjectDeclare(IdentifierType pIdentifier)
+        {
+            Node obj = Executor.Cursor.Node;
+            Declaration baseDecl = null;
+            Declaration decl = new Declaration(new ClassNameType(QualifiedType.Global, pIdentifier), null, obj);
+
+            // TODO: Need to find the current namespace to declare an object.
             Executor.Cursor.Packages.Add(decl);
 
             return DataType.Undefined;

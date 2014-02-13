@@ -1,7 +1,9 @@
-﻿using Prometheus.Exceptions.Executor;
+﻿using Logging;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
+using Prometheus.Objects;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
@@ -13,6 +15,44 @@ namespace Prometheus.Runtime
     /// </summary>
     public class Variables : ExecutorGrammar
     {
+        /// <summary>
+        /// Logging
+        /// </summary>
+        private static readonly Logger _logger = Logger.Create(typeof (Variables));
+
+        /// <summary>
+        /// Prints a memory space recursively for object instances.
+        /// </summary>
+        private static void Print(HeapSpace pHead, iMemoryDump pMemory, int pIndent)
+        {
+            foreach (MemoryItem item in pMemory.Dump(pIndent))
+            {
+                string indent = "";
+                if (item.Level > 0)
+                {
+                    indent = " ".PadLeft(pIndent + item.Level);
+                }
+                AliasType alias = item.Data as AliasType;
+                if (alias != null)
+                {
+                    Instance inst = pHead.Get(alias);
+                    _logger.Fine("{0}{1} = {2}::{3}[",indent,item.Name,inst.ClassName,alias.Heap);
+                    Print(pHead, inst.GetMembers(), pIndent + 1);
+                    _logger.Fine("{0}]", indent);
+                    continue;
+                }
+                ArrayType array = item.Data as ArrayType;
+                if (array != null)
+                {
+                    _logger.Fine("{0}{1} = array({2})[", indent, item.Name, array.Values.Count);
+                    Print(pHead, array, pIndent + 1);
+                    _logger.Fine("{0}]", indent);
+                    continue;
+                }
+                _logger.Fine("{0}{1} = {2}", indent, item.Name, item.Data);
+            }
+        }
+
         /// <summary>
         /// Will convert a function expression into a closure function with a reference
         /// to the current "this" object.
@@ -56,8 +96,8 @@ namespace Prometheus.Runtime
         public DataType Dec(QualifiedType pQualified)
         {
             string member = pQualified.Parts[pQualified.Parts.Length - 1];
-            MemorySpace memory = Executor.Cursor.Resolve(pQualified);
-            DataType d = memory.Get(member);
+            iMemorySpace storage = Executor.Cursor.Resolve(pQualified);
+            DataType d = storage.Get(member);
             NumericType num = d as NumericType;
             if (num != null)
             {
@@ -100,8 +140,8 @@ namespace Prometheus.Runtime
         public DataType Inc(QualifiedType pQualified)
         {
             string member = pQualified.Parts[pQualified.Parts.Length - 1];
-            MemorySpace memory = Executor.Cursor.Resolve(pQualified);
-            DataType d = memory.Get(member);
+            iMemorySpace storage = Executor.Cursor.Resolve(pQualified);
+            DataType d = storage.Get(member);
             NumericType num = d as NumericType;
             if (num != null)
             {
@@ -118,7 +158,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ListVars)]
         public DataType ListVars()
         {
-            Executor.Cursor.Stack.Print();
+            Print(Executor.Cursor.Heap, Executor.Cursor.Stack, 0);
             return DataType.Undefined;
         }
 

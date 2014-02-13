@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compile\CompilerTests.cs" />
+    <Compile Include="Compile\Optomizer\OptimizerTests.cs" />
     <Compile Include="Mock\Compile\MockLocation.cs" />
     <Compile Include="Mock\Types\MockAlias.cs" />
     <Compile Include="Mock\MockCommand.cs" />

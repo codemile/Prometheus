@@ -45,7 +45,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public override string ToString()
         {
-            return "#"+Name;
+            return Name;
         }
     }
 }

@@ -120,7 +120,19 @@ namespace Prometheus.Nodes.Types
         /// </returns>
         public override string ToString()
         {
-            return Value;
+            string quotes;
+            if (_isRegex)
+            {
+                quotes = (Mode == eMODE.ANYWHERE) ? "/" : "|";
+            }
+            else
+            {
+                quotes = (Mode == eMODE.ANYWHERE) ? "\"" : "'";
+            }
+            string flags = Flags.HasFlag(eFLAGS.IGNORE_CASE) ? "i" : "";
+            flags += Flags.HasFlag(eFLAGS.NO_CACHING) ? "c" : "";
+            flags += Flags.HasFlag(eFLAGS.MATCH_FIRST) ? "f" : "";
+            return string.Format("{0}{1}{0}{2}", quotes, Value, flags);
         }
 
         /// <summary>

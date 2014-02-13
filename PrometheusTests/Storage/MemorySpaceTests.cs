@@ -12,7 +12,7 @@ namespace PrometheusTest.Storage
         [TestMethod]
         public void Assign()
         {
-            MemorySpace ms = new MemorySpace();
+            StorageSpace ms = new StorageSpace();
             Assert.IsFalse(ms.Has("x"));
             ms.Assign("x", new MockType("Hello World"));
             Assert.IsTrue(ms.Has("x"));
@@ -24,7 +24,7 @@ namespace PrometheusTest.Storage
         [TestMethod]
         public void Create()
         {
-            MemorySpace ms = new MemorySpace();
+            StorageSpace ms = new StorageSpace();
             ms.Create("x", DataType.Undefined);
             Assert.IsTrue(ms.Has("x"));
         }
@@ -32,7 +32,7 @@ namespace PrometheusTest.Storage
         [TestMethod]
         public void Dispose()
         {
-            MemorySpace ms = new MemorySpace();
+            StorageSpace ms = new StorageSpace();
             ms.Create("x", DataType.Undefined);
             Assert.IsFalse(ms.isEmpty);
             ms.Dispose();
@@ -42,7 +42,7 @@ namespace PrometheusTest.Storage
         [TestMethod]
         public void Get()
         {
-            MemorySpace ms = new MemorySpace();
+            StorageSpace ms = new StorageSpace();
             ms.Create("x", DataType.Undefined);
             Assert.IsTrue(ms.Set("x", new MockType("Hello World")));
             MockType value = (MockType)ms.Get("x");
@@ -53,7 +53,7 @@ namespace PrometheusTest.Storage
         [TestMethod]
         public void MemorySpace_0()
         {
-            MemorySpace ms = new MemorySpace();
+            StorageSpace ms = new StorageSpace();
             Assert.IsTrue(ms.isEmpty);
         }
 
@@ -61,7 +61,7 @@ namespace PrometheusTest.Storage
         public void MemorySpace_1()
         {
             Dictionary<string, DataType> data = new Dictionary<string, DataType> {{"x", new MockType("Hello World")}};
-            MemorySpace ms = new MemorySpace(data);
+            StorageSpace ms = new StorageSpace(data);
             Assert.IsFalse(ms.isEmpty);
         }
 
@@ -73,7 +73,7 @@ namespace PrometheusTest.Storage
         [TestMethod]
         public void Set()
         {
-            MemorySpace ms = new MemorySpace();
+            StorageSpace ms = new StorageSpace();
             Assert.IsFalse(ms.Set("x", new MockType("Hello World")));
             ms.Create("x", DataType.Undefined);
             Assert.IsTrue(ms.Set("x", new MockType("Hello World")));
@@ -82,7 +82,7 @@ namespace PrometheusTest.Storage
         [TestMethod]
         public void Unset()
         {
-            MemorySpace ms = new MemorySpace();
+            StorageSpace ms = new StorageSpace();
             ms.Create("x", DataType.Undefined);
             Assert.IsTrue(ms.Has("x"));
             Assert.IsTrue(ms.Unset("x"));

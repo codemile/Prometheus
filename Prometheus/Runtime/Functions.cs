@@ -107,9 +107,9 @@ namespace Prometheus.Runtime
                 {
                     AliasType a = (AliasType)pClosure;
                     Instance inst = Executor.Cursor.Heap.Get(a);
-                    Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(inst.Constructor,
+                    Dictionary<string, DataType> variables = Runtime.Arguments.CollectArguments(inst.GetConstructor(),
                         pArguments);
-                    return Executor.Execute(inst.Constructor, variables);
+                    return Executor.Execute(inst.GetConstructor(), variables);
                 }
                 else
                 {

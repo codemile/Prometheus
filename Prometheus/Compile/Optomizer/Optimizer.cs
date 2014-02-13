@@ -38,6 +38,7 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.Statements,
                                                                    GrammarSymbol.ObjectDecls,
                                                                    GrammarSymbol.FormalParameterList,
+                                                                   GrammarSymbol.ConstructParamsList,
                                                                    GrammarSymbol.Arguments,
                                                                    GrammarSymbol.BaseClassID,
                                                                    GrammarSymbol.ArrayList,
@@ -82,6 +83,9 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         private Executor _executor;
 
+        /// <summary>
+        /// The identifiers of objects that are implemented internally.
+        /// </summary>
         private HashSet<string> _internalIds;
 
         /// <summary>
@@ -94,7 +98,7 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         /// <param name="pParent">The parent node</param>
         /// <param name="pChild">The child node</param>
-        private static void ShiftData(Node pParent, Node pChild)
+        public static void ShiftData(Node pParent, Node pChild)
         {
             for (int i = 0, c = pChild.Data.Count; i < c; i++)
             {
@@ -110,7 +114,7 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         /// <param name="pNode">The node to inspect</param>
         /// <returns>The node</returns>
-        private Node CallInternal(Node pNode)
+        public Node CallInternal(Node pNode)
         {
             if (pNode.Children.Count == 0 ||
                 pNode.Children[0].Type == GrammarSymbol.QualifiedID)
@@ -138,7 +142,7 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         /// <param name="pNode">The node to optimize</param>
         /// <returns>Same node, a new node or null.</returns>
-        private Node OptimizeNode(Node pNode)
+        public Node OptimizeNode(Node pNode)
         {
             // promote a single child up the tree if the current node does no work
             if (_promote.Contains(pNode.Type) &&
@@ -200,7 +204,7 @@ namespace Prometheus.Compile.Optomizer
         /// Converts the child nodes into a data reference to a qualifier ID.
         /// </summary>
         /// <param name="pNode"></param>
-        private void Qualify(Node pNode)
+        public static void Qualify(Node pNode)
         {
             Assertion.Children(2, pNode);
             Assertion.Data(0, pNode);
@@ -220,15 +224,13 @@ namespace Prometheus.Compile.Optomizer
                 Assertion.Data(1, member);
                 Assertion.Children(1, member);
 
-                path.Add(Assertion.Get<IdentifierType>(member, 0).Name.Substring(1));
+                path.Add(Assertion.Get<IdentifierType>(member, 0).Name);
                 member = member.Children[0];
             }
 
             QualifiedType q = new QualifiedType(path.ToArray());
             pNode.Data.Add(q);
             pNode.Children.Clear();
-
-            _modified = true;
         }
 
         /// <summary>
@@ -236,12 +238,13 @@ namespace Prometheus.Compile.Optomizer
         /// children that are modified, or remove children if a recursive call
         /// returns null for that child.
         /// </summary>
-        private Node WalkBranch(Node pNode)
+        public Node WalkBranch(Node pNode)
         {
             if (pNode.Type == GrammarSymbol.QualifiedID &&
                 pNode.Children.Count != 0)
             {
                 Qualify(pNode);
+                _modified = true;
             }
 
             if(pNode.Type == GrammarSymbol.ClassNameID &&
@@ -250,6 +253,7 @@ namespace Prometheus.Compile.Optomizer
                pNode.Children.Count == 0)
             {
                 ClassName(pNode);
+                _modified = true;
             }
 
             if (pNode.Type == GrammarSymbol.NewExpression &&
@@ -296,7 +300,7 @@ namespace Prometheus.Compile.Optomizer
         /// Converts the list of identifiers into a classname.
         /// </summary>
         /// <param name="pNode"></param>
-        private void ClassName(Node pNode)
+        public static void ClassName(Node pNode)
         {
             Assertion.Children(0,pNode);
             List<DataType> data = pNode.Data;
@@ -314,7 +318,6 @@ namespace Prometheus.Compile.Optomizer
             }
             pNode.Data.Clear();
             pNode.Data.Add(new ClassNameType(package, last));
-            _modified = true;
         }
 
         /// <summary>

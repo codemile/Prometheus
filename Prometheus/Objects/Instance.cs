@@ -1,4 +1,7 @@
-﻿using Prometheus.Nodes;
+﻿using Prometheus.Compile;
+using Prometheus.Grammar;
+using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Storage;
 
 namespace Prometheus.Objects
@@ -9,28 +12,77 @@ namespace Prometheus.Objects
     public class Instance
     {
         /// <summary>
-        /// Members of this object
-        /// </summary>
-        public readonly MemorySpace Members;
-
-        /// <summary>
         /// The constructor method for this instance.
         /// </summary>
-        public Node Constructor;
+        private readonly Node _constructor;
+
+        /// <summary>
+        /// Members of this object
+        /// </summary>
+        private readonly iMemorySpace _members;
 
         /// <summary>
         /// The number of references to this instance.
         /// </summary>
-        public int References;
+        private int _references;
+
+        /// <summary>
+        /// The class that created this instance.
+        /// </summary>
+        public readonly ClassNameType ClassName;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Instance(Node pConstructor)
+        public Instance(ClassNameType pClassName, iMemorySpace pMembers)
         {
-            Constructor = pConstructor;
-            References = 0;
-            Members = new MemorySpace();
+            ClassName = pClassName;
+            _constructor = new Node(GrammarSymbol.Statements, Location.None);
+            _references = 0;
+            _members = pMembers;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Instance(ClassNameType pClassName, Node pConstructor = null)
+        {
+            ClassName = pClassName;
+            _constructor = pConstructor;
+            _references = 0;
+            _members = new StorageSpace();
+        }
+
+        /// <summary>
+        /// Adds a reference count
+        /// </summary>
+        public void AddRef()
+        {
+            _references++;
+        }
+
+        /// <summary>
+        /// Removes a reference count
+        /// </summary>
+        public void DecRef()
+        {
+            _references--;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public Node GetConstructor()
+        {
+            return _constructor;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public iMemorySpace GetMembers()
+        {
+            return _members;
         }
     }
 }
