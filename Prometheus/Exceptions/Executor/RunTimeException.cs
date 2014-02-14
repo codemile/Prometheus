@@ -20,7 +20,7 @@ namespace Prometheus.Exceptions.Executor
         /// Constructor
         /// </summary>
         /// <param name="pMessage">Exception message</param>
-        protected RunTimeException(string pMessage)
+        public RunTimeException(string pMessage)
             : base(pMessage)
         {
         }

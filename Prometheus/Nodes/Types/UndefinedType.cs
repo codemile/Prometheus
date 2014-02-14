@@ -10,6 +10,11 @@ namespace Prometheus.Nodes.Types
     public class UndefinedType : DataType
     {
         /// <summary>
+        /// Represents an undefined data type.
+        /// </summary>
+        public static readonly UndefinedType Undefined = new UndefinedType();
+
+        /// <summary>
         /// Debug message
         /// </summary>
         public override string ToString()

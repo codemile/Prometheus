@@ -42,7 +42,7 @@ namespace Prometheus.Objects
             {
                 _logger.Fine(line);
             }
-            return DataType.Undefined;
+            return UndefinedType.Undefined;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Prometheus.Objects
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
         public DataType New(ClassNameType pClassName)
         {
-            return New(pClassName, DataType.Undefined);
+            return New(pClassName, UndefinedType.Undefined);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Prometheus.Objects
 
             Executor.Cursor.Packages.Add(decl);
 
-            return DataType.Undefined;
+            return UndefinedType.Undefined;
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Prometheus.Objects
             // TODO: Need to find the current namespace to declare an object.
             Executor.Cursor.Packages.Add(decl);
 
-            return DataType.Undefined;
+            return UndefinedType.Undefined;
         }
     }
 }

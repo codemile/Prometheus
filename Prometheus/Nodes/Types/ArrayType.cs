@@ -13,6 +13,11 @@ namespace Prometheus.Nodes.Types
     public class ArrayType : DataType, IList<DataType>, iMemoryDump
     {
         /// <summary>
+        /// An empty array constant
+        /// </summary>
+        public static readonly ArrayType Empty = new ArrayType();
+
+        /// <summary>
         /// Values
         /// </summary>
         public readonly List<DataType> Values;

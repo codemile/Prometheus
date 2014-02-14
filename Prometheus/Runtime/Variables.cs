@@ -101,9 +101,9 @@ namespace Prometheus.Runtime
             NumericType num = d as NumericType;
             if (num != null)
             {
-                return num.Type == typeof (long)
-                    ? new NumericType(num.getLong() + 1)
-                    : new NumericType(num.getDouble() + 1);
+                return num.isLong
+                    ? new NumericType(num.Long + 1)
+                    : new NumericType(num.Double + 1);
             }
             throw DataTypeException.InvalidTypes("++", d);
         }
@@ -130,7 +130,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Declare)]
         public DataType Declare(IdentifierType pIdentifier)
         {
-            return Declare(pIdentifier, DataType.Undefined);
+            return Declare(pIdentifier, UndefinedType.Undefined);
         }
 
         /// <summary>
@@ -145,9 +145,9 @@ namespace Prometheus.Runtime
             NumericType num = d as NumericType;
             if (num != null)
             {
-                return num.Type == typeof (long)
-                    ? new NumericType(num.getLong() - 1)
-                    : new NumericType(num.getDouble() - 1);
+                return num.isLong
+                    ? new NumericType(num.Long - 1)
+                    : new NumericType(num.Double - 1.0);
             }
             throw DataTypeException.InvalidTypes("--", d);
         }
@@ -159,7 +159,7 @@ namespace Prometheus.Runtime
         public DataType ListVars()
         {
             Print(Executor.Cursor.Heap, Executor.Cursor.Stack, 0);
-            return DataType.Undefined;
+            return UndefinedType.Undefined;
         }
 
         /// <summary>
@@ -180,6 +180,74 @@ namespace Prometheus.Runtime
         public DataType Value(DataType pValue)
         {
             return pValue;
+        }
+
+        /// <summary>
+        /// Returns the value in an array accessed by an index offset.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ArrayOperator)]
+        public DataType ArrayAccess(QualifiedType pId, ArrayType pElements)
+        {
+            ArrayType array = getArray(pId);
+            DataType result = UndefinedType.Undefined;
+            for (int i = 0, c = pElements.Count; i < c; i++)
+            {
+                if (i != 0)
+                {
+                    array = result as ArrayType;
+                    if (array == null)
+                    {
+                        throw new InvalidIndexException(string.Format("Cannot apply indexing to an expression of type <{0}>",
+                            result.GetType()));
+                    }
+                }
+                int index = getArrayIndex(pElements.Values[i]);
+                if (index < 0 || index >= array.Count)
+                {
+                    throw new InvalidIndexException(string.Format("Index parameter is out of range <{0}>",index));
+                }
+                result = array.Values[index];
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// When using a DataType to access an index of an array. This ensures it's an integer
+        /// value.
+        /// </summary>
+        /// <param name="pValue"></param>
+        /// <returns></returns>
+        private static int getArrayIndex(DataType pValue)
+        {
+            NumericType num = pValue as NumericType;
+            if (num == null)
+            {
+                throw new InvalidIndexException(string.Format("Cannot access array using index of type <{0}>", pValue.GetType()));
+            }
+            if (num.isDouble)
+            {
+                throw new InvalidIndexException("Cannot access array using index of type <float>");
+            }
+            return (int)num.Long;
+        }
+
+        /// <summary>
+        /// Access the identifier as an array type.
+        /// </summary>
+        /// <param name="pId">The identifier</param>
+        /// <returns>The array object</returns>
+        private ArrayType getArray(QualifiedType pId)
+        {
+            // an ID or array
+            DataType data = Executor.Cursor.Get(pId);
+            ArrayType array = data as ArrayType;
+            if (array == null)
+            {
+                throw new InvalidIndexException(string.Format("Cannot apply indexing to an expression of type <{0}>",
+                    data.GetType()));
+            }
+            return array;
         }
     }
 }

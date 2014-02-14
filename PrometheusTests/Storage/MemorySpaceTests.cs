@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 using PrometheusTest.Mock.Types;
@@ -25,7 +26,7 @@ namespace PrometheusTest.Storage
         public void Create()
         {
             StorageSpace ms = new StorageSpace();
-            ms.Create("x", DataType.Undefined);
+            ms.Create("x", UndefinedType.Undefined);
             Assert.IsTrue(ms.Has("x"));
         }
 
@@ -33,7 +34,7 @@ namespace PrometheusTest.Storage
         public void Dispose()
         {
             StorageSpace ms = new StorageSpace();
-            ms.Create("x", DataType.Undefined);
+            ms.Create("x", UndefinedType.Undefined);
             Assert.IsFalse(ms.isEmpty);
             ms.Dispose();
             Assert.IsTrue(ms.isEmpty);
@@ -43,7 +44,7 @@ namespace PrometheusTest.Storage
         public void Get()
         {
             StorageSpace ms = new StorageSpace();
-            ms.Create("x", DataType.Undefined);
+            ms.Create("x", UndefinedType.Undefined);
             Assert.IsTrue(ms.Set("x", new MockType("Hello World")));
             MockType value = (MockType)ms.Get("x");
             Assert.IsNotNull(value);
@@ -75,7 +76,7 @@ namespace PrometheusTest.Storage
         {
             StorageSpace ms = new StorageSpace();
             Assert.IsFalse(ms.Set("x", new MockType("Hello World")));
-            ms.Create("x", DataType.Undefined);
+            ms.Create("x", UndefinedType.Undefined);
             Assert.IsTrue(ms.Set("x", new MockType("Hello World")));
         }
 
@@ -83,7 +84,7 @@ namespace PrometheusTest.Storage
         public void Unset()
         {
             StorageSpace ms = new StorageSpace();
-            ms.Create("x", DataType.Undefined);
+            ms.Create("x", UndefinedType.Undefined);
             Assert.IsTrue(ms.Has("x"));
             Assert.IsTrue(ms.Unset("x"));
             Assert.IsFalse(ms.Has("x"));

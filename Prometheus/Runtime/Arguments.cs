@@ -6,25 +6,28 @@ using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Runtime
 {
-    public class Arguments
+    /// <summary>
+    /// Factory class for function arguments.
+    /// </summary>
+    public static class Arguments
     {
         /// <summary>
         /// Collects the arguments for a function from the node.
         /// </summary>
-        public static Dictionary<string, DataType> CollectArguments(Node pNode, ArgumentListType pArguments)
+        public static Dictionary<string, DataType> CollectArguments(Node pNode, ArrayType pArguments)
         {
             int argCount = pNode.Data.Count;
 
-            if (pArguments.Arguments.Count < argCount)
+            if (pArguments.Values.Count < argCount)
             {
-                pArguments.Arguments.AddRange(Enumerable.Repeat(DataType.Undefined,
-                    argCount - pArguments.Arguments.Count));
+                pArguments.Values.AddRange(Enumerable.Repeat(UndefinedType.Undefined,
+                    argCount - pArguments.Values.Count));
             }
 
             Dictionary<string, DataType> variables = new Dictionary<string, DataType>(pNode.Data.Count);
             for (int i = 0; i < argCount; i++)
             {
-                variables.Add(((IdentifierType)pNode.Data[i]).Name, pArguments.Arguments[i]);
+                variables.Add(((IdentifierType)pNode.Data[i]).Name, pArguments.Values[i]);
             }
             return variables;
         }

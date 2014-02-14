@@ -155,7 +155,7 @@ namespace Prometheus.Storage
             {
                 return new NumericType((double)value);
             }
-            return DataType.Undefined;
+            return UndefinedType.Undefined;
         }
 
         /// <summary>

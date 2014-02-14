@@ -50,7 +50,7 @@ namespace Fire
                 TargetCode code = prometheus.Compile(filename, source);
 
                 Parser parser = new Parser();
-                parser.CreateString("global","test","Hello World");
+                parser.Create("test","Hello World");
                 parser.CreateObject("global","options",options);
                 return parser.Run(code);
             }

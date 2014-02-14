@@ -45,7 +45,10 @@ namespace Prometheus.Runtime
                                   GrammarSymbol.LtOperator,
                                   GrammarSymbol.GteOperator,
                                   GrammarSymbol.LteOperator,
-                                  GrammarSymbol.EqualOperator
+                                  GrammarSymbol.EqualOperator,
+                                  GrammarSymbol.NotEqualOperator,
+                                  GrammarSymbol.AndOperator,
+                                  GrammarSymbol.OrOperator
                               };
         }
 
@@ -86,6 +89,15 @@ namespace Prometheus.Runtime
                 case GrammarSymbol.EqualOperator:
                     reduced.Data.Add(Equal(valueA, valueB));
                     break;
+                case GrammarSymbol.NotEqualOperator:
+                    reduced.Data.Add(NotEqual(valueA, valueB));
+                    break;
+                case GrammarSymbol.AndOperator:
+                    reduced.Data.Add(AndOp(valueA, valueB));
+                    break;
+                case GrammarSymbol.OrOperator:
+                    reduced.Data.Add(OrOp(valueA, valueB));
+                    break;
             }
 
             return reduced;
@@ -97,25 +109,96 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.EqualOperator)]
         public DataType Equal(DataType pValue1, DataType pValue2)
         {
+            return new BooleanType(InnerEq(pValue1, pValue2));
+        }
+
+        /// <summary>
+        /// Not equal
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.NotEqualOperator)]
+        public DataType NotEqual(DataType pValue1, DataType pValue2)
+        {
+            return new BooleanType(!InnerEq(pValue1, pValue2));
+        }
+
+        /// <summary>
+        /// Used to recursively compare arrays.
+        /// </summary>
+        private static bool InnerEq(DataType pValue1, DataType pValue2)
+        {
+            // same object reference
+            if (pValue1 == pValue2)
+            {
+                return true;
+            }
+
+            // compare strings
             StringType str1 = pValue1 as StringType;
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
             {
-                return new BooleanType(String.CompareOrdinal(str1.Value, str2.Value) == 0);
+                return String.CompareOrdinal(str1.Value, str2.Value) == 0;
             }
 
+            // compare numbers
             NumericType num1 = pValue1 as NumericType;
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof (long))
+                if (num1.Type == num2.Type && num1.isLong)
                 {
-                    return new BooleanType(num1.getLong() == num2.getLong());
+                    return num1.Long == num2.Long;
                 }
-                return new BooleanType(Math.Abs(num1.getDouble() - num2.getDouble()) < double.Epsilon);
+                return Math.Abs(num1.Double - num2.Double) < double.Epsilon;
             }
 
-            throw DataTypeException.InvalidTypes("==", pValue1, pValue2);
+            // compare boolean
+            BooleanType bool1 = pValue1 as BooleanType;
+            BooleanType bool2 = pValue2 as BooleanType;
+            if (bool1 != null && bool2 != null)
+            {
+                return bool1.Value == bool2.Value;
+            }
+
+            // compare pointers
+            AliasType alias1 = pValue1 as AliasType;
+            AliasType alias2 = pValue2 as AliasType;
+            if (alias1 != null && alias2 != null)
+            {
+                return alias1.Heap == alias2.Heap;
+            }
+
+            // compare with undefined
+            UndefinedType undefined1 = pValue1 as UndefinedType;
+            UndefinedType undefined2 = pValue2 as UndefinedType;
+            if (undefined1 != null && undefined2 != null)
+            {
+                return true;
+            }
+            if (undefined1 != null || undefined2 != null)
+            {
+                return false;
+            }
+
+            // TODO: This might get stuck in a recursion loop if the array contains a reference to the same array twice
+            // compare array
+            ArrayType array1 = pValue1 as ArrayType;
+            ArrayType array2 = pValue2 as ArrayType;
+            if (array1 != null && array2 != null)
+            {
+                if (array1.Count != array2.Count)
+                {
+                    return false;
+                }
+                bool result = true;
+                for (int i = 0, c = array1.Count; i < c; i++)
+                {
+                    result &= InnerEq(array1[i], array2[i]);
+                }
+                return result;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -137,9 +220,9 @@ namespace Prometheus.Runtime
             {
                 if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
-                    return new BooleanType(num1.getLong() > num2.getLong());
+                    return new BooleanType(num1.Long > num2.Long);
                 }
-                return new BooleanType(num1.getDouble() > num2.getDouble());
+                return new BooleanType(num1.Double > num2.Double);
             }
 
             throw DataTypeException.InvalidTypes(">", pValue1, pValue2);
@@ -164,9 +247,9 @@ namespace Prometheus.Runtime
             {
                 if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
-                    return new BooleanType(num1.getLong() >= num2.getLong());
+                    return new BooleanType(num1.Long >= num2.Long);
                 }
-                return new BooleanType(num1.getDouble() >= num2.getDouble());
+                return new BooleanType(num1.Double >= num2.Double);
             }
 
             throw DataTypeException.InvalidTypes(">=", pValue1, pValue2);
@@ -191,9 +274,9 @@ namespace Prometheus.Runtime
             {
                 if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
-                    return new BooleanType(num1.getLong() < num2.getLong());
+                    return new BooleanType(num1.Long < num2.Long);
                 }
-                return new BooleanType(num1.getDouble() < num2.getDouble());
+                return new BooleanType(num1.Double < num2.Double);
             }
 
             throw DataTypeException.InvalidTypes("<", pValue1, pValue2);
@@ -218,12 +301,197 @@ namespace Prometheus.Runtime
             {
                 if (num1.Type == num2.Type && num1.Type == typeof (long))
                 {
-                    return new BooleanType(num1.getLong() <= num2.getLong());
+                    return new BooleanType(num1.Long <= num2.Long);
                 }
-                return new BooleanType(num1.getDouble() <= num2.getDouble());
+                return new BooleanType(num1.Double <= num2.Double);
             }
 
             throw DataTypeException.InvalidTypes("<=", pValue1, pValue2);
         }
+
+        /// <summary>
+        /// AND operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.AndOperator)]
+        public DataType AndOp(DataType pValue1, DataType pValue2)
+        {
+            BooleanType bool1 = pValue1 as BooleanType;
+            BooleanType bool2 = pValue2 as BooleanType;
+            if (bool1 != null && bool2 != null)
+            {
+                return new BooleanType(bool1.Value && bool2.Value);
+            }
+
+            throw DataTypeException.InvalidTypes("AND", pValue1, pValue2);
+        }
+
+        /// <summary>
+        /// OR operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.OrOperator)]
+        public DataType OrOp(DataType pValue1, DataType pValue2)
+        {
+            BooleanType bool1 = pValue1 as BooleanType;
+            BooleanType bool2 = pValue2 as BooleanType;
+            if (bool1 != null && bool2 != null)
+            {
+                return new BooleanType(bool1.Value || bool2.Value);
+            }
+
+            throw DataTypeException.InvalidTypes("OR", pValue1, pValue2);
+        }
+
+        /// <summary>
+        /// Not operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.NotOperator)]
+        public DataType Equal(DataType pValue1)
+        {
+            BooleanType bool1 = pValue1 as BooleanType;
+            if (bool1 != null)
+            {
+                return new BooleanType(!bool1.Value);
+            }
+
+            throw DataTypeException.InvalidTypes("NOT", pValue1);
+        }
+
+        /// <summary>
+        /// ~ operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.BitInvertOperator)]
+        public DataType Bitwise(DataType pValue)
+        {
+            NumericType num = pValue as NumericType;
+            if (num != null && num.isLong)
+            {
+                return new NumericType(~num.Long);
+            }
+
+            throw DataTypeException.InvalidTypes("~", pValue);
+        }
+
+        /// <summary>
+        /// + operator
+        /// 
+        /// Doesn't change the value, but can only work on numeric types.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PlusOperator)]
+        public DataType Plus(DataType pValue)
+        {
+            NumericType num = pValue as NumericType;
+            if (num != null)
+            {
+                return num;
+            }
+            throw DataTypeException.InvalidTypes("+", pValue);
+        }
+
+        /// <summary>
+        /// - operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.NegOperator)]
+        public DataType Negative(DataType pValue)
+        {
+            NumericType num = pValue as NumericType;
+            if (num != null)
+            {
+                return num.isLong
+                    ? new NumericType(-num.Long)
+                    : new NumericType(-num.Double);
+            }
+            throw DataTypeException.InvalidTypes("-", pValue);
+        }
+
+        /// <summary>
+        /// x++ operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PostIncOperator)]
+        public DataType PostInc(DataType pValue)
+        {
+            QualifiedType id = pValue as QualifiedType;
+            if (id != null)
+            {
+                NumericType num = Executor.Cursor.Get(id) as NumericType;
+                if (num != null)
+                {
+                    num = num.isLong
+                        ? new NumericType(num.Long+1)
+                        : new NumericType(num.Double+1.0);
+                    Executor.Cursor.Set(id, num);
+                    return num;
+                }
+            }
+
+            throw DataTypeException.InvalidTypes("-", pValue);
+        }
+
+        /// <summary>
+        /// ++x operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PreIncOperator)]
+        public DataType PreInc(DataType pValue)
+        {
+            QualifiedType id = pValue as QualifiedType;
+            if (id != null)
+            {
+                NumericType num = Executor.Cursor.Get(id) as NumericType;
+                if (num != null)
+                {
+                    Executor.Cursor.Set(id, num.isLong
+                        ? new NumericType(num.Long + 1)
+                        : new NumericType(num.Double + 1.0));
+                    return num;
+                }
+            }
+
+            throw DataTypeException.InvalidTypes("-", pValue);
+        }
+
+        /// <summary>
+        /// x-- operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PostDecOperator)]
+        public DataType PostDec(DataType pValue)
+        {
+            QualifiedType id = pValue as QualifiedType;
+            if (id != null)
+            {
+                NumericType num = Executor.Cursor.Get(id) as NumericType;
+                if (num != null)
+                {
+                    num = num.isLong
+                        ? new NumericType(num.Long - 1)
+                        : new NumericType(num.Double - 1.0);
+                    Executor.Cursor.Set(id, num);
+                    return num;
+                }
+            }
+
+            throw DataTypeException.InvalidTypes("-", pValue);
+        }
+
+        /// <summary>
+        /// --x operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PreDecOperator)]
+        public DataType PreDec(DataType pValue)
+        {
+            QualifiedType id = pValue as QualifiedType;
+            if (id != null)
+            {
+                NumericType num = Executor.Cursor.Get(id) as NumericType;
+                if (num != null)
+                {
+                    Executor.Cursor.Set(id, num.isLong
+                        ? new NumericType(num.Long - 1)
+                        : new NumericType(num.Double - 1.0));
+                    return num;
+                }
+            }
+
+            throw DataTypeException.InvalidTypes("-", pValue);
+        }
+
     }
 }

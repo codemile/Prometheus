@@ -93,7 +93,7 @@ namespace Prometheus.Parser.Executors
                     {
                         WalkDownChildren(pParent.Children[i]);
                     }
-                    return DataType.Undefined;
+                    return UndefinedType.Undefined;
                 }
 
                 case GrammarSymbol.IfControl:
@@ -103,7 +103,7 @@ namespace Prometheus.Parser.Executors
                         DataType exp = WalkDownChildren(pParent.Children[0]);
                         if (!exp.getBool())
                         {
-                            return DataType.Undefined;
+                            return UndefinedType.Undefined;
                         }
                         using (Cursor.Stack = new StackSpace(Cursor))
                         {
@@ -134,7 +134,7 @@ namespace Prometheus.Parser.Executors
                 case GrammarSymbol.DoUntilControl:
                 {
 #if DEBUG
-                    AssertChildren(pParent, 2);
+                    ExecutorAssert.Children(pParent, 2);
 #endif
                     try
                     {
@@ -154,14 +154,14 @@ namespace Prometheus.Parser.Executors
                     catch (BreakException)
                     {
                     }
-                    return DataType.Undefined;
+                    return UndefinedType.Undefined;
                 }
 
                 case GrammarSymbol.LoopWhileControl:
                 case GrammarSymbol.LoopUntilControl:
                 {
 #if DEBUG
-                    AssertChildren(pParent, 2);
+                    ExecutorAssert.Children(pParent, 2);
 #endif
                     try
                     {
@@ -181,17 +181,17 @@ namespace Prometheus.Parser.Executors
                     catch (BreakException)
                     {
                     }
-                    return DataType.Undefined;
+                    return UndefinedType.Undefined;
                 }
 
                 case GrammarSymbol.ForControl:
                 case GrammarSymbol.ForStepControl:
                 {
 #if DEBUG
-                    AssertChildren(pParent, (pParent.Type == GrammarSymbol.ForControl) ? 3 : 4);
-                    AssertData(pParent, 1);
+                    ExecutorAssert.Children(pParent, (pParent.Type == GrammarSymbol.ForControl) ? 3 : 4);
+                    ExecutorAssert.Data(pParent, 1);
 #endif
-                    return DataType.Undefined;
+                    return UndefinedType.Undefined;
                 }
 
                 case GrammarSymbol.BreakControl:
@@ -201,16 +201,28 @@ namespace Prometheus.Parser.Executors
                     throw new ContinueException();
 
                 case GrammarSymbol.ArrayLiteral:
+                case GrammarSymbol.ArrayIndexList:
+                case GrammarSymbol.ArgumentList:
+                case GrammarSymbol.Parameters:
                     ArrayType array = new ArrayType();
                     for (int i = 0, c = pParent.Children.Count; i < c; i++)
                     {
-                        array.Values.Add(WalkDownChildren(pParent.Children[i]));
+#if DEBUG
+                        if (pParent.Type == GrammarSymbol.Parameters)
+                        {
+                            ExecutorAssert.Data(pParent.Children[i], 1);
+                            ExecutorAssert.DataType(pParent.Children[i], 0, typeof(IdentifierType));
+                        }
+#endif
+                        array.Values.Add(pParent.Type == GrammarSymbol.Parameters
+                            ? pParent.Children[i].Data[0]
+                            : WalkDownChildren(pParent.Children[i]));
                     }
                     return array;
             }
 
 #if DEBUG
-            AssertNode(pParent);
+            ExecutorAssert.Node(_grammarLookup, pParent);
 #endif
 
             // root of a constructor function, execute children for new objects only.
@@ -270,49 +282,6 @@ namespace Prometheus.Parser.Executors
                 throw new IdentifierException(e.Message, pNode);
             }
         }
-
-#if DEBUG
-        /// <summary>
-        /// Checks that a node has the required number of children.
-        /// </summary>
-        /// <param name="pNode">The node to check.</param>
-        /// <param name="pChildCount">The expected number of children.</param>
-        private static void AssertChildren(Node pNode, int pChildCount)
-        {
-            if (pNode.Children.Count != pChildCount)
-            {
-                throw new AssertionException(
-                    string.Format("Invalid child count. Expected <{0}> Found <{1}>", pChildCount, pNode.Children.Count),
-                    pNode);
-            }
-        }
-
-        /// <summary>
-        /// Checks that a node has the required number of data elements.
-        /// </summary>
-        /// <param name="pNode">The node to check.</param>
-        /// <param name="pDataCount">The expected number of children.</param>
-        private static void AssertData(Node pNode, int pDataCount)
-        {
-            if (pNode.Data.Count != pDataCount)
-            {
-                throw new AssertionException(
-                    string.Format("Invalid data count. Expected <{0}> Found <{1}>", pDataCount, pNode.Data.Count), pNode);
-            }
-        }
-
-        /// <summary>
-        /// Validates that the node is structured as expected.
-        /// </summary>
-        /// <param name="pNode">The node to validate</param>
-        private void AssertNode(Node pNode)
-        {
-            if (!_grammarLookup.ContainsKey(pNode.Type))
-            {
-                throw new AssertionException(string.Format("Symbol <{0}> is not implemented", pNode.Type), pNode);
-            }
-        }
-#endif
 
         /// <summary>
         /// Performs optimization of a node

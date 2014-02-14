@@ -52,8 +52,10 @@
     <Compile Include="Exceptions\Executor\BreakException.cs" />
     <Compile Include="Exceptions\Executor\ContinueException.cs" />
     <Compile Include="Exceptions\Executor\DataTypeException.cs" />
+    <Compile Include="Exceptions\Executor\DivideByZeroPrometheusException.cs" />
     <Compile Include="Exceptions\Executor\IdentifierException.cs" />
     <Compile Include="Exceptions\Executor\InvalidArgumentException.cs" />
+    <Compile Include="Exceptions\Executor\InvalidIndexException.cs" />
     <Compile Include="Exceptions\Executor\NameSpaceException.cs" />
     <Compile Include="Exceptions\Executor\ObjectSpaceException.cs" />
     <Compile Include="Exceptions\Executor\ReturnException.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Objects\Declaration.cs" />
     <Compile Include="Objects\Instance.cs" />
     <Compile Include="Objects\Reference.cs" />
+    <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
     <Compile Include="Sources\Reader.cs" />
     <Compile Include="Storage\iMemoryDump.cs" />
@@ -86,7 +89,6 @@
     <Compile Include="Parser\Executors\Attributes\ExecuteAttribute.cs" />
     <Compile Include="Grammar\GrammarRule.cs" />
     <Compile Include="Grammar\GrammarSymbol.cs" />
-    <Compile Include="Nodes\Types\ArgumentListType.cs" />
     <Compile Include="Nodes\Types\Bases\DataType.cs" />
     <Compile Include="Compile\Location.cs" />
     <Compile Include="Nodes\DataTypeFactory.cs" />

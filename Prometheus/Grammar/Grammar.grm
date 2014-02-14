@@ -127,16 +127,51 @@ Comment Line  = '//'
 <AddExpression>			::= <AddExpression> '+' <SubExpression> | <SubExpression> 
 <SubExpression>			::= <SubExpression> '-' <MultiplyExpression> | <MultiplyExpression> 
 <MultiplyExpression>    ::= <MultiplyExpression> '*' <DivideExpression>  | <DivideExpression> 
-<DivideExpression>		::= <DivideExpression> '/' <UnaryOperator>  | <UnaryOperator> 
+<DivideExpression>		::= <DivideExpression> '/' <RemainderExpression>  | <RemainderExpression>
+<RemainderExpression>	::= <RemainderExpression> '%' <UnaryChain>  | <UnaryChain>
 
-<UnaryOperator>			::= '--' <Qualified ID>
-						 | '++' <Qualified ID>
-						 | '-' <Value>
-						 | '+' <Value>
-						 | '!' <Value>
-						 | '~' <Value>
-						 | NOT <Value>
-						 | <Value>
+
+! ===================================================================
+! Unary Operators
+! ===================================================================
+
+<UnaryChain>			::= <NotOperator>
+
+<NotOperator>			::= '!' <Value>
+						| 'NOT' <Value>
+						| <BitInvertOperator>
+
+<BitInvertOperator>		::= '~' <Value>
+						| <NegOperator>
+
+<NegOperator>			::= '-' <Value>
+						| <PlusOperator>
+
+<PlusOperator>			::= '+' <Value>
+						| <PreDecOperator>
+
+<PreDecOperator>		::= '--' <Qualified ID>
+						| <PostDecOperator>
+
+<PostDecOperator>		::= <Qualified ID> '--'
+						| <PreIncOperator>
+
+<PreIncOperator>		::= '++' <Qualified ID>
+						| <PostIncOperator>
+
+<PostIncOperator>		::= <Qualified ID> '++'
+						| <ArrayOperator>
+
+! ===================================================================
+! Array Operators
+! ===================================================================
+
+<ArrayOperator>			::= <Qualified ID> <Array Index List>
+						| <Value>
+
+
+<Array Index List>		::= '[' <Value> ']'
+						| <Array Index List> '[' <Value> ']'
 
 ! ===================================================================
 ! Variables And Primitives
@@ -205,29 +240,28 @@ Comment Line  = '//'
 <Object Decls>			::= <Object Decl>
 						| <Object Decls> <Object Decl>
 
-<Object Decl>			::= 'object' <BaseClass ID> <ConstructParams List> <Block> <End>
+<Object Decl>			::= 'object' <BaseClass ID> <Parameters> <Block> <End>
 
 <BaseClass ID>			::= <ClassName ID> '::' Identifier
 						| Identifier
-
-<ConstructParams List>	::= '(' ')'
-						| '(' <Formal Parameter List> ')'
-						| ! none
 
 ! ===================================================================
 ! Functions
 ! ===================================================================
 
 !!! Not used (yet)
-!!!<Function Declaration>	::= 'function' Identifier <Formal Parameters> <Block>
+!!!<Function Declaration>	::= 'function' Identifier <Parameters> <Block>
 
-<Function Expression>		::= 'function' <Formal Parameters> <Block>
+<Function Expression>		::= 'function' <Parameters> <Block>
 
-<Formal Parameters>			::= '(' ')'
-							| '(' <Formal Parameter List> ')'
+<Parameters>				::= '(' ')'
+							| '(' <Parameter List> ')'
+							| ! none
 
-<Formal Parameter List>		::= Identifier
-							| <Formal Parameter List> ',' Identifier
+<Parameter List>			::= <Parameter Name>
+							| <Parameter List> ',' <Parameter Name>
+
+<Parameter Name>			::= Identifier
 
 ! ===================================================================
 ! Formal Expressions

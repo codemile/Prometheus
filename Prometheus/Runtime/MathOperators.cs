@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
@@ -43,7 +44,8 @@ namespace Prometheus.Runtime
                                GrammarSymbol.AddExpression,
                                GrammarSymbol.SubExpression,
                                GrammarSymbol.MultiplyExpression,
-                               GrammarSymbol.DivideExpression
+                               GrammarSymbol.DivideExpression,
+                               GrammarSymbol.RemainderExpression
                            };
         }
 
@@ -81,6 +83,9 @@ namespace Prometheus.Runtime
                 case GrammarSymbol.DivideExpression:
                     reduced.Data.Add(Div(valueA, valueB));
                     break;
+                case GrammarSymbol.RemainderExpression:
+                    reduced.Data.Add(Remainder(valueA, valueB));
+                    break;
             }
 
             return reduced;
@@ -103,11 +108,9 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof (long))
-                {
-                    return new NumericType(num1.getLong() + num2.getLong());
-                }
-                return new NumericType(num1.getDouble() + num2.getDouble());
+                return num1.isLong
+                    ? new NumericType(num1.Long + num2.Long)
+                    : new NumericType(num1.Double + num2.Double);
             }
 
             throw DataTypeException.InvalidTypes("+", pValue1, pValue2);
@@ -123,8 +126,14 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                // TODO: Throw divide by zero as a runtime exception
-                return new NumericType(num1.getDouble() / num2.getDouble());
+                try
+                {
+                    return new NumericType(num1.Double / num2.Double);
+                }
+                catch (DivideByZeroException e)
+                {
+                    throw new DivideByZeroPrometheusException(e.Message,e);
+                }
             }
 
             throw DataTypeException.InvalidTypes("/", pValue1, pValue2);
@@ -140,11 +149,9 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof (long))
-                {
-                    return new NumericType(num1.getLong() * num2.getLong());
-                }
-                return new NumericType(num1.getDouble() * num2.getDouble());
+                return num1.isLong
+                    ? new NumericType(num1.Long * num2.Long)
+                    : new NumericType(num1.Double * num2.Double);
             }
 
             throw DataTypeException.InvalidTypes("*", pValue1, pValue2);
@@ -160,14 +167,30 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                if (num1.Type == num2.Type && num1.Type == typeof (long))
-                {
-                    return new NumericType(num1.getLong() - num2.getLong());
-                }
-                return new NumericType(num1.getDouble() - num2.getDouble());
+                return num1.isLong
+                    ? new NumericType(num1.Long - num2.Long)
+                    : new NumericType(num1.Double - num2.Double);
             }
 
             throw DataTypeException.InvalidTypes("-", pValue1, pValue2);
+        }
+
+        /// <summary>
+        /// Remainder
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.RemainderExpression)]
+        public DataType Remainder(DataType pValue1, DataType pValue2)
+        {
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                return num1.isLong
+                    ? new NumericType(num1.Long % num2.Long)
+                    : new NumericType(num1.Double % num2.Double);
+            }
+
+            throw DataTypeException.InvalidTypes("%", pValue1, pValue2);
         }
     }
 }

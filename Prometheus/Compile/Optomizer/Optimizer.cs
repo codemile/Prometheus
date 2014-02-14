@@ -16,15 +16,20 @@ namespace Prometheus.Compile.Optomizer
     public class Optimizer
     {
         /// <summary>
-        /// Defines which symbols are used to only collect child symbols. The goal is to prevent the chaining
-        /// of collections that could be reduced to a single collection.
+        /// Collapses collection symbols to a single array
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _arrays = new HashSet<GrammarSymbol>
                                                                  {
                                                                      GrammarSymbol.Statements,
                                                                      GrammarSymbol.ObjectDecls,
                                                                      GrammarSymbol.Program,
-                                                                     GrammarSymbol.ArrayList
+                                                                     GrammarSymbol.ArrayList,
+                                                                     GrammarSymbol.Parameters,
+                                                                     GrammarSymbol.Arguments,
+                                                                     //GrammarSymbol.ArrayIndexList
+                                                                    GrammarSymbol.ParameterList,
+                                                                    GrammarSymbol.ArrayIndexList,
+                                                                    GrammarSymbol.ArgumentList
                                                                  };
 
         /// <summary>
@@ -37,11 +42,12 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.Statement,
                                                                    GrammarSymbol.Statements,
                                                                    GrammarSymbol.ObjectDecls,
-                                                                   GrammarSymbol.FormalParameterList,
-                                                                   GrammarSymbol.ConstructParamsList,
-                                                                   GrammarSymbol.Arguments,
+                                                                   //GrammarSymbol.FormalParameterList,
+                                                                   //GrammarSymbol.ConstructParamsList,
+                                                                   //GrammarSymbol.Arguments,
                                                                    GrammarSymbol.BaseClassID,
                                                                    GrammarSymbol.ArrayList,
+                                                                   //GrammarSymbol.ArrayIndexList,
                                                                    GrammarSymbol.MemberList,
                                                                    GrammarSymbol.ClassNameID
                                                                };
@@ -65,7 +71,12 @@ namespace Prometheus.Compile.Optomizer
         private static readonly HashSet<GrammarSymbol> _qualifiedData = new HashSet<GrammarSymbol>
                                                                         {
                                                                             GrammarSymbol.Assignment,
-                                                                            GrammarSymbol.ObjectDecl
+                                                                            GrammarSymbol.ObjectDecl,
+                                                                            GrammarSymbol.PostIncOperator,
+                                                                            GrammarSymbol.PreIncOperator,
+                                                                            GrammarSymbol.PostDecOperator,
+                                                                            GrammarSymbol.PreDecOperator,
+                                                                            GrammarSymbol.ArrayOperator
                                                                         };
 
         /// <summary>
@@ -73,7 +84,6 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        GrammarSymbol.FormalParameterList,
                                                                         GrammarSymbol.BaseClassID,
                                                                         GrammarSymbol.MemberList
                                                                     };
@@ -100,12 +110,15 @@ namespace Prometheus.Compile.Optomizer
         /// <param name="pChild">The child node</param>
         public static void ShiftData(Node pParent, Node pChild)
         {
+/*
             for (int i = 0, c = pChild.Data.Count; i < c; i++)
             {
                 // this reverses the order so that the data is is the same order
                 // as the original parameters in the source code
                 pParent.Data.Insert(0, pChild.Data[i]);
             }
+*/
+            pParent.Data.AddRange(pChild.Data);
             pChild.Data.Clear();
         }
 
@@ -153,7 +166,8 @@ namespace Prometheus.Compile.Optomizer
             }
 
             // drop an empty node
-            if ((_drop.Contains(pNode.Type) || _arrays.Contains(pNode.Type)) &&
+            if ((_drop.Contains(pNode.Type) 
+                || _arrays.Contains(pNode.Type)) &&
                 pNode.Children.Count == 0 &&
                 pNode.Data.Count == 0)
             {

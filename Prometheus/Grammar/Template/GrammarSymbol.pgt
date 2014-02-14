@@ -9,6 +9,10 @@
 
 namespace Prometheus.Grammar
 {
+	// ReSharper disable UnusedMember.Global
+	// ReSharper disable CSharpWarnings::CS1591
+	// ReSharper disable InconsistentNaming
+
 	/// <summary>
 	/// This enum is generated at compile time by the GOLD template generator.
 	///

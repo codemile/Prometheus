@@ -26,7 +26,7 @@ namespace PrometheusTest.Mock
         {
             Debug.WriteLine(pValue.ToString());
 
-            return DataType.Undefined;
+            return UndefinedType.Undefined;
         }
     }
 }

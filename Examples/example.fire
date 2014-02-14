@@ -1,16 +1,6 @@
-object test {
-	this.title = "House";
+object Test {
+	this.title = "Hello";
 };
-
-var t = new test();
-
-this.x = /wow/if;
-this.Stuff = [1,2,/3/,t];
-
-//print t.title;
-//print options.debug;
-
-vars;
-//objects;
-
-print options.filename;
+var q = new Test();
+var x = [q];
+print x[1].title;

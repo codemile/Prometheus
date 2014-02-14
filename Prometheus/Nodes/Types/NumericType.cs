@@ -19,6 +19,38 @@ namespace Prometheus.Nodes.Types
         public readonly object Value;
 
         /// <summary>
+        /// Access as double
+        /// </summary>
+        public double Double
+        {
+            get { return (double)Value; }
+        }
+
+        /// <summary>
+        /// Access as long
+        /// </summary>
+        public long Long
+        {
+            get { return (long)Value; }
+        }
+
+        /// <summary>
+        /// is double type
+        /// </summary>
+        public bool isDouble
+        {
+            get { return Value is double; }
+        }
+
+        /// <summary>
+        /// is long type
+        /// </summary>
+        public bool isLong
+        {
+            get { return Value is long; }
+        }
+
+        /// <summary>
         /// Long constructor
         /// </summary>
         public NumericType(long pValue)
@@ -45,22 +77,6 @@ namespace Prometheus.Nodes.Types
         public override string ToString()
         {
             return Value.ToString();
-        }
-
-        /// <summary>
-        /// Access as double
-        /// </summary>
-        public double getDouble()
-        {
-            return (double)Value;
-        }
-
-        /// <summary>
-        /// Access as long
-        /// </summary>
-        public long getLong()
-        {
-            return (long)Value;
         }
     }
 }
