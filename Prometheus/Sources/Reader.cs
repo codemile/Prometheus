@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using Fire.Exceptions;
+using Prometheus.Exceptions.Compiler;
 
-namespace Fire.Sources
+namespace Prometheus.Sources
 {
     public static class Reader
     {
@@ -14,7 +14,7 @@ namespace Fire.Sources
         {
             if (!File.Exists(pFileName))
             {
-                throw new SourceCodeException("Could not open file: {0}", pFileName);
+                throw new SourceCodeException(string.Format("Could not open file: {0}", pFileName));
             }
 
             using (StreamReader reader = new StreamReader(pFileName))
@@ -25,7 +25,7 @@ namespace Fire.Sources
                 }
                 catch (IOException)
                 {
-                    throw new SourceCodeException("Unable to read file: {0}", pFileName);
+                    throw new SourceCodeException(string.Format("Unable to read file: {0}", pFileName));
                 }
             }
         }

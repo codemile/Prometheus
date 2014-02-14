@@ -1,13 +1,12 @@
 ﻿using System.Reflection;
-using Fire.Exceptions;
 using Fire.Properties;
-using Fire.Sources;
 using GemsCLI;
 using Logging;
 using Logging.Writers;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
 using Prometheus.Parser;
+using Prometheus.Sources;
 
 namespace Fire
 {
@@ -54,10 +53,6 @@ namespace Fire
                 parser.CreateString("global","test","Hello World");
                 parser.CreateObject("global","options",options);
                 return parser.Run(code);
-            }
-            catch (FireException e)
-            {
-                _logger.Error(e.Message.Replace("{", "{{").Replace("}", "}}"));
             }
             catch (PrometheusException e)
             {

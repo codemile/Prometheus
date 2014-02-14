@@ -48,6 +48,7 @@
     <Compile Include="Compile\Optomizer\Optimizer.cs" />
     <Compile Include="Compile\SourceReader.cs" />
     <Compile Include="Exceptions\Compiler\OptimizationException.cs" />
+    <Compile Include="Exceptions\Compiler\SourceCodeException.cs" />
     <Compile Include="Exceptions\Executor\BreakException.cs" />
     <Compile Include="Exceptions\Executor\ContinueException.cs" />
     <Compile Include="Exceptions\Executor\DataTypeException.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Objects\Instance.cs" />
     <Compile Include="Objects\Reference.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
+    <Compile Include="Sources\Reader.cs" />
     <Compile Include="Storage\iMemoryDump.cs" />
     <Compile Include="Storage\iMemorySpace.cs" />
     <Compile Include="Storage\NameSpace.cs" />
