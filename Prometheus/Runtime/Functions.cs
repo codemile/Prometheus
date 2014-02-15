@@ -26,52 +26,33 @@ namespace Prometheus.Runtime
         /// Executes an identify as a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public DataType Call(DataType pClosure)
+        public DataType Call(QualifiedType pId)
         {
-/*
-            return Call(pClosure, ArrayType.Empty);
-*/
-            throw new NotImplementedException();
+            return Call(pId, ArrayType.Empty);
         }
 
         /// <summary>
         /// Executes a closure a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public DataType Call(DataType pClosure, ArrayType pArguments)
+        public DataType Call(QualifiedType pId, ArrayType pArguments)
         {
-            throw new NotImplementedException();
-            /*
-                        try
-                        {
-                            // calling base constructor
-                            if (pClosure.GetType() == typeof (AliasType))
-                            {
-                                AliasType a = (AliasType)pClosure;
-                                Instance inst = Executor.Cursor.Heap.Get(a);
-                                Dictionary<string, DataType> variables = Arguments.CollectArguments(inst.GetConstructor(),
-                                    pArguments);
-                                return Executor.Execute(inst.GetConstructor(), variables);
-                            }
-                            else
-                            {
-                                ClosureType closureType = (ClosureType)pClosure;
-                                // empty function check
-                                if (closureType.Function.Children.Count == 0)
-                                {
-                                    return UndefinedType.Undefined;
-                                }
-                                Dictionary<string, DataType> variables = Arguments.CollectArguments(closureType.Function,
-                                    pArguments);
-                                variables.Add("this", closureType.This);
-                                return Executor.Execute(closureType.Function.Children[0], variables);
-                            }
-                        }
-                        catch (ReturnException returnData)
-                        {
-                            return returnData.Value;
-                        }
-            */
+            try
+            {
+                ClosureType func = Executor.Cursor.Get<ClosureType>(pId);
+                // empty function check
+                if (func.Function.Children.Count == 0)
+                {
+                    return UndefinedType.Undefined;
+                }
+                Dictionary<string, DataType> variables = Arguments.CollectArguments(func.Function,pArguments);
+                variables.Add("this", func.This);
+                return Executor.Execute(func.Function.Children[0], variables);
+            }
+            catch (ReturnException returnData)
+            {
+                return returnData.Value;
+            }
         }
 
         /// <summary>

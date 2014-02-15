@@ -1,6 +1,5 @@
-object Test() {
-	print "constructed";
+var x = function() {
+	return "hello world";
 };
-var x = new Test();
 
-vars;
+print x();
