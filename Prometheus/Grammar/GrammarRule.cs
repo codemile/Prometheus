@@ -83,47 +83,47 @@ namespace Prometheus.Grammar
 		@PreIncOperator_PlusPlus = 72,                   // <PreIncOperator> ::= '++' <Qualified ID>
 		@PreIncOperator = 73,                            // <PreIncOperator> ::= <PostIncOperator>
 		@PostIncOperator_PlusPlus = 74,                  // <PostIncOperator> ::= <Qualified ID> '++'
-		@PostIncOperator = 75,                           // <PostIncOperator> ::= <ArrayOperator>
-		@ArrayOperator = 76,                             // <ArrayOperator> ::= <Qualified ID> <Array Index List>
-		@ArrayOperator2 = 77,                            // <ArrayOperator> ::= <Value>
-		@ArrayIndexList_LBracket_RBracket = 78,          // <Array Index List> ::= '[' <Value> ']'
-		@ArrayIndexList_LBracket_RBracket2 = 79,         // <Array Index List> ::= <Array Index List> '[' <Value> ']'
-		@ValidID_Identifier = 80,                        // <Valid ID> ::= Identifier
-		@QualifiedID = 81,                               // <Qualified ID> ::= <Valid ID> <Member List>
-		@ClassNameID_Identifier = 82,                    // <ClassName ID> ::= Identifier <Member List>
-		@MemberList_MemberName = 83,                     // <Member List> ::= <Member List> MemberName
-		@MemberList = 84,                                // <Member List> ::= 
-		@Value_StringDouble = 85,                        // <Value> ::= StringDouble
-		@Value_StringSingle = 86,                        // <Value> ::= StringSingle
-		@Value_RegExpSlash = 87,                         // <Value> ::= RegExpSlash
-		@Value_RegExpPipe = 88,                          // <Value> ::= RegExpPipe
-		@Value_Number = 89,                              // <Value> ::= Number
-		@Value_Decimal = 90,                             // <Value> ::= Decimal
-		@Value_Boolean = 91,                             // <Value> ::= Boolean
-		@Value = 92,                                     // <Value> ::= <Array Literal>
-		@Value2 = 93,                                    // <Value> ::= <Qualified ID>
-		@Value3 = 94,                                    // <Value> ::= <Function Expression>
-		@Value_LParen_RParen = 95,                       // <Value> ::= '(' <Expression> ')'
-		@Value4 = 96,                                    // <Value> ::= <Call Expression>
-		@VariableStatements = 97,                        // <Variable Statements> ::= <Declare>
-		@VariableStatements2 = 98,                       // <Variable Statements> ::= <Assignment>
-		@VariableStatements3 = 99,                       // <Variable Statements> ::= <Increment>
-		@VariableStatements4 = 100,                      // <Variable Statements> ::= <Decrement>
-		@ArrayLiteral_LBracket_RBracket = 101,           // <Array Literal> ::= '[' ']'
-		@ArrayLiteral_LBracket_RBracket2 = 102,          // <Array Literal> ::= '[' <Array List> ']'
-		@ArrayList = 103,                                // <Array List> ::= <Value>
-		@ArrayList_Comma = 104,                          // <Array List> ::= <Array List> ',' <Value>
-		@Declare_VAR_Identifier = 105,                   // <Declare> ::= VAR Identifier
-		@Declare_VAR_Identifier_Eq = 106,                // <Declare> ::= VAR Identifier '=' <Expression>
-		@Declare_VAR_Identifier_Eq2 = 107,               // <Declare> ::= VAR Identifier '=' <New Expression>
-		@Assignment_Eq = 108,                            // <Assignment> ::= <Qualified ID> '=' <Expression>
-		@Increment_PlusPlus = 109,                       // <Increment> ::= <Qualified ID> '++'
-		@Decrement_MinusMinus = 110,                     // <Decrement> ::= <Qualified ID> '--'
-		@ObjectDecls = 111,                              // <Object Decls> ::= <Object Decl>
-		@ObjectDecls2 = 112,                             // <Object Decls> ::= <Object Decls> <Object Decl>
-		@ObjectDecl_object = 113,                        // <Object Decl> ::= object <BaseClass ID> <Parameters> <Block> <End>
-		@BaseClassID_ColonColon_Identifier = 114,        // <BaseClass ID> ::= <ClassName ID> '::' Identifier
-		@BaseClassID_Identifier = 115,                   // <BaseClass ID> ::= Identifier
+		@PostIncOperator = 75,                           // <PostIncOperator> ::= <Value>
+		@ValidID_Identifier = 76,                        // <Valid ID> ::= Identifier
+		@MemberID_MemberName = 77,                       // <Member ID> ::= MemberName
+		@QualifiedID = 78,                               // <Qualified ID> ::= <Valid ID> <Qualified List>
+		@QualifiedList = 79,                             // <Qualified List> ::= <Member ID> <Qualified List>
+		@QualifiedList_LBracket_RBracket = 80,           // <Qualified List> ::= '[' <Value> ']' <Qualified List>
+		@QualifiedList2 = 81,                            // <Qualified List> ::= 
+		@MemberList_MemberName = 82,                     // <Member List> ::= <Member List> MemberName
+		@MemberList = 83,                                // <Member List> ::= 
+		@Value_StringDouble = 84,                        // <Value> ::= StringDouble
+		@Value_StringSingle = 85,                        // <Value> ::= StringSingle
+		@Value_RegExpSlash = 86,                         // <Value> ::= RegExpSlash
+		@Value_RegExpPipe = 87,                          // <Value> ::= RegExpPipe
+		@Value_Number = 88,                              // <Value> ::= Number
+		@Value_Decimal = 89,                             // <Value> ::= Decimal
+		@Value_Boolean = 90,                             // <Value> ::= Boolean
+		@Value = 91,                                     // <Value> ::= <Array Literal>
+		@Value2 = 92,                                    // <Value> ::= <Qualified ID>
+		@Value3 = 93,                                    // <Value> ::= <Function Expression>
+		@Value_LParen_RParen = 94,                       // <Value> ::= '(' <Expression> ')'
+		@Value4 = 95,                                    // <Value> ::= <Call Expression>
+		@VariableStatements = 96,                        // <Variable Statements> ::= <Declare>
+		@VariableStatements2 = 97,                       // <Variable Statements> ::= <Assignment>
+		@VariableStatements3 = 98,                       // <Variable Statements> ::= <Increment>
+		@VariableStatements4 = 99,                       // <Variable Statements> ::= <Decrement>
+		@ArrayLiteral_LBracket_RBracket = 100,           // <Array Literal> ::= '[' ']'
+		@ArrayLiteral_LBracket_RBracket2 = 101,          // <Array Literal> ::= '[' <Array Literal List> ']'
+		@ArrayLiteralList = 102,                         // <Array Literal List> ::= <Value>
+		@ArrayLiteralList_Comma = 103,                   // <Array Literal List> ::= <Array Literal List> ',' <Value>
+		@Declare_VAR_Identifier = 104,                   // <Declare> ::= VAR Identifier
+		@Declare_VAR_Identifier_Eq = 105,                // <Declare> ::= VAR Identifier '=' <Expression>
+		@Declare_VAR_Identifier_Eq2 = 106,               // <Declare> ::= VAR Identifier '=' <New Expression>
+		@Assignment_Eq = 107,                            // <Assignment> ::= <Qualified ID> '=' <Expression>
+		@Increment_PlusPlus = 108,                       // <Increment> ::= <Qualified ID> '++'
+		@Decrement_MinusMinus = 109,                     // <Decrement> ::= <Qualified ID> '--'
+		@ObjectDecls = 110,                              // <Object Decls> ::= <Object Decl>
+		@ObjectDecls2 = 111,                             // <Object Decls> ::= <Object Decls> <Object Decl>
+		@ObjectDecl_object = 112,                        // <Object Decl> ::= object <BaseClass ID> <Parameters> <Block> <End>
+		@ObjectConstructor = 113,                        // <Object Constructor> ::= 
+		@BaseClassID_ColonColon = 114,                   // <BaseClass ID> ::= <Qualified ID> '::' <Qualified ID>
+		@BaseClassID = 115,                              // <BaseClass ID> ::= <Qualified ID>
 		@FunctionExpression_function = 116,              // <Function Expression> ::= function <Parameters> <Block>
 		@Parameters_LParen_RParen = 117,                 // <Parameters> ::= '(' ')'
 		@Parameters_LParen_RParen2 = 118,                // <Parameters> ::= '(' <Parameter List> ')'
@@ -133,7 +133,7 @@ namespace Prometheus.Grammar
 		@ParameterName_Identifier = 122,                 // <Parameter Name> ::= Identifier
 		@CallExpression = 123,                           // <Call Expression> ::= <Qualified ID> <Arguments>
 		@CallExpression2 = 124,                          // <Call Expression> ::= <Call Expression> <Arguments>
-		@NewExpression_new = 125,                        // <New Expression> ::= new <ClassName ID> <Arguments>
+		@NewExpression_new = 125,                        // <New Expression> ::= new <Qualified ID> <Arguments>
 		@CallInternal = 126,                             // <CallInternal> ::= 
 		@Arguments_LParen_RParen = 127,                  // <Arguments> ::= '(' ')'
 		@Arguments_LParen_RParen2 = 128,                 // <Arguments> ::= '(' <Argument List> ')'
@@ -166,15 +166,13 @@ namespace Prometheus.Grammar
 		@Procedure6 = 155,                               // <Procedure> ::= <PrintProc>
 		@Procedure7 = 156,                               // <Procedure> ::= <ReturnProc>
 		@Procedure8 = 157,                               // <Procedure> ::= <ListVars>
-		@Procedure9 = 158,                               // <Procedure> ::= <ListObjects>
-		@UnsetProc_UNSET = 159,                          // <UnsetProc> ::= UNSET <Qualified ID>
-		@RejectProc_REJECT = 160,                        // <RejectProc> ::= REJECT <Expression>
-		@AcceptProc_ACCEPT = 161,                        // <AcceptProc> ::= ACCEPT <Expression>
-		@ScopeProc_SCOPE = 162,                          // <ScopeProc> ::= SCOPE <Expression>
-		@IncludeProc_INCLUDE = 163,                      // <IncludeProc> ::= INCLUDE <Expression>
-		@PrintProc_PRINT = 164,                          // <PrintProc> ::= PRINT <Expression>
-		@ReturnProc_RETURN = 165,                        // <ReturnProc> ::= RETURN <Expression>
-		@ListVars_VARS = 166,                            // <ListVars> ::= VARS
-		@ListObjects_OBJECTS = 167                       // <ListObjects> ::= OBJECTS
+		@UnsetProc_UNSET = 158,                          // <UnsetProc> ::= UNSET <Qualified ID>
+		@RejectProc_REJECT = 159,                        // <RejectProc> ::= REJECT <Expression>
+		@AcceptProc_ACCEPT = 160,                        // <AcceptProc> ::= ACCEPT <Expression>
+		@ScopeProc_SCOPE = 161,                          // <ScopeProc> ::= SCOPE <Expression>
+		@IncludeProc_INCLUDE = 162,                      // <IncludeProc> ::= INCLUDE <Expression>
+		@PrintProc_PRINT = 163,                          // <PrintProc> ::= PRINT <Expression>
+		@ReturnProc_RETURN = 164,                        // <ReturnProc> ::= RETURN <Expression>
+		@ListVars_VARS = 165                             // <ListVars> ::= VARS
 	}
 }

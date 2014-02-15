@@ -14,12 +14,12 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Reference to "this"
         /// </summary>
-        public static readonly IdentifierType This = new IdentifierType("this");
+        public const string THIS = "this";
 
         /// <summary>
         /// Reference to "base"
         /// </summary>
-        public static readonly IdentifierType Base = new IdentifierType("base");
+        public const string BASE = "base";
 
         /// <summary>
         /// the display name

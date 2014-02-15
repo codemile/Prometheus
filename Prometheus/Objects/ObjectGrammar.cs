@@ -18,11 +18,6 @@ namespace Prometheus.Objects
     public class ObjectGrammar : ExecutorGrammar
     {
         /// <summary>
-        /// Logging
-        /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof(ObjectGrammar));
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public ObjectGrammar(Executor pExecutor)
@@ -31,44 +26,36 @@ namespace Prometheus.Objects
         }
 
         /// <summary>
-        /// Lists object declarations.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.ListObjects)]
-        public DataType ListObjects()
-        {
-            List<string> lines = new List<string>();
-            Executor.Cursor.Packages.Print(ref lines);
-            foreach (string line in lines)
-            {
-                _logger.Fine(line);
-            }
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(ClassNameType pClassName)
+        public DataType New(QualifiedType pId)
         {
-            return New(pClassName, UndefinedType.Undefined);
+            return New(pId, UndefinedType.Undefined);
         }
 
         /// <summary>
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(ClassNameType pClassName, DataType pArguments)
+        public DataType New(QualifiedType pId, DataType pArguments)
         {
-            Declaration decl = Executor.Cursor.Packages.Get(pClassName);
+            DeclarationType decl = Executor.Cursor.Get<DeclarationType>(pId);
 
-            CreateInherited created = new CreateInherited(Executor.Cursor.Heap, decl);
+            CreateInherited created = new CreateInherited(Executor.Cursor, decl);
 
             iMemorySpace prevStorage = Executor.Cursor.Stack;
             Executor.Cursor.Stack = created.Inst.GetMembers();
 
             try
             {
-                Executor.Execute(created.Inst.GetConstructor(), new Dictionary<string, DataType>());
+                Dictionary<string, DataType> variables = new Dictionary<string, DataType>
+                                                         {
+                                                             {
+                                                                 IdentifierType.THIS,
+                                                                 created.Alias
+                                                             }
+                                                         };
+                Executor.Execute(decl.Constructor.Function, variables);
             }
             catch (ReturnException)
             {
@@ -77,7 +64,6 @@ namespace Prometheus.Objects
             finally
             {
                 Executor.Cursor.Stack = prevStorage;
-                created.Inst.GetMembers().Unset(IdentifierType.This.Name);
             }
 
             return created.Alias;
@@ -86,45 +72,34 @@ namespace Prometheus.Objects
         /// <summary>
         /// Declares a new object type
         /// </summary>
+/*
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(DataType pBaseClass, IdentifierType pIdentifier)
+        public DataType ObjectDeclare(QualifiedType pBaseClass, IdentifierType pIdentifier)
         {
-            Node obj = Executor.Cursor.Node;
-            Declaration baseDecl = null;
-            if (pBaseClass.GetType() == typeof (ClassNameType))
-            {
-                ClassNameType baseType = (ClassNameType)pBaseClass;
-                baseDecl = Executor.Cursor.Packages.Get(baseType);
-            }
-            else
+            DataType baseType = Executor.Cursor.Resolve(pBaseClass).Read();
+            if (baseType.GetType() != typeof (DeclarationType))
             {
                 throw new UnexpectedErrorException(
-                    string.Format("Can not declare object of base type <{0}>", pBaseClass.GetType().FullName), obj);
+                    string.Format("Base object <{0}> can not be used in declaration of new object type", baseType.GetType().Name));
             }
 
-            Declaration decl = new Declaration(new ClassNameType(QualifiedType.Global, pIdentifier), baseDecl, obj);
+            DeclarationType decl = new DeclarationType(pBaseClass, Executor.Cursor.Node);
+            Executor.Cursor.Stack.Create(pIdentifier.Name,decl);
 
-            // TODO: Need to find the current namespace to declare an object.
-
-            Executor.Cursor.Packages.Add(decl);
-
-            return UndefinedType.Undefined;
+            return decl;
         }
+*/
 
         /// <summary>
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(IdentifierType pIdentifier)
+        public DataType ObjectDeclare(QualifiedType pObjectName, ClosureType pConstructor)
         {
-            Node obj = Executor.Cursor.Node;
-            Declaration baseDecl = null;
-            Declaration decl = new Declaration(new ClassNameType(QualifiedType.Global, pIdentifier), null, obj);
-
-            // TODO: Need to find the current namespace to declare an object.
-            Executor.Cursor.Packages.Add(decl);
-
-            return UndefinedType.Undefined;
+            IdentifierType name = pObjectName.Members[0].Cast<IdentifierType>();
+            DeclarationType decl = new DeclarationType(pConstructor);
+            Executor.Cursor.Stack.Create(name.Name, decl);
+            return decl;
         }
     }
 }

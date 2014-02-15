@@ -36,7 +36,7 @@ namespace Prometheus.Runtime
                 if (alias != null)
                 {
                     Instance inst = pHead.Get(alias);
-                    _logger.Fine("{0}{1} = {2}::{3}[",indent,item.Name,inst.ClassName,alias.Heap);
+                    _logger.Fine("{0}{1} = object::{2}[",indent,item.Name,alias.Heap);
                     Print(pHead, inst.GetMembers(), pIndent + 1);
                     _logger.Fine("{0}]", indent);
                     continue;
@@ -54,17 +54,24 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Will convert a function expression into a closure function with a reference
-        /// to the current "this" object.
+        /// Resolves the assignment value to a data type that
+        /// can be assigned.
         /// </summary>
-        private DataType CreateClosure(DataType pValue)
+        private DataType ResolveToValue(DataType pValue)
         {
+            QualifiedType id = pValue as QualifiedType;
+            if (id != null)
+            {
+                return Executor.Cursor.Resolve(id).Read();
+            }
+
             ClosureType func = pValue as ClosureType;
             if (func == null || func.isCompiled())
             {
                 return pValue;
             }
-            AliasType _this = (AliasType)Executor.Cursor.Stack.Get("this");
+
+            AliasType _this = (AliasType)Executor.Cursor.Stack.Get(IdentifierType.THIS);
             return new ClosureType(_this, func.Function);
         }
 
@@ -77,35 +84,33 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Assigns a value to an Identifier
+        /// = Assigns a value to an Identifier
         /// </summary>
-        /// <param name="pQualified">The variable name</param>
+        /// <param name="pId">The variable name</param>
         /// <param name="pValue">The value to assign</param>
         [ExecuteSymbol(GrammarSymbol.Assignment)]
-        public DataType Assignment(QualifiedType pQualified, DataType pValue)
+        public DataType Assignment(QualifiedType pId, DataType pValue)
         {
-            pValue = CreateClosure(pValue);
-            Executor.Cursor.Set(pQualified, pValue);
-            return pValue;
+            DataType value = ResolveToValue(pValue);
+            Executor.Cursor.Resolve(pId).Write(value);
+            return value;
         }
 
         /// <summary>
         /// Decrement
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.Decrement)]
-        public DataType Dec(QualifiedType pQualified)
+        public DataType Dec(QualifiedType pId)
         {
-            string member = pQualified.Parts[pQualified.Parts.Length - 1];
-            iMemorySpace storage = Executor.Cursor.Resolve(pQualified);
-            DataType d = storage.Get(member);
-            NumericType num = d as NumericType;
-            if (num != null)
+            NumericType num = Executor.Cursor.Resolve(pId).Read() as NumericType;
+            if (num == null)
             {
-                return num.isLong
-                    ? new NumericType(num.Long + 1)
-                    : new NumericType(num.Double + 1);
+                throw DataTypeException.InvalidTypes("--", pId);
             }
-            throw DataTypeException.InvalidTypes("++", d);
+
+            return num.isLong
+                ? new NumericType(num.Long - 1)
+                : new NumericType(num.Double - 1.0);
         }
 
         /// <summary>
@@ -117,7 +122,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Declare)]
         public DataType Declare(IdentifierType pIdentifier, DataType pValue)
         {
-            pValue = CreateClosure(pValue);
+            pValue = ResolveToValue(pValue);
             Executor.Cursor.Stack.Create(pIdentifier.Name, pValue);
             return pValue;
         }
@@ -137,19 +142,16 @@ namespace Prometheus.Runtime
         /// Increment
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.Increment)]
-        public DataType Inc(QualifiedType pQualified)
+        public DataType Inc(QualifiedType pId)
         {
-            string member = pQualified.Parts[pQualified.Parts.Length - 1];
-            iMemorySpace storage = Executor.Cursor.Resolve(pQualified);
-            DataType d = storage.Get(member);
-            NumericType num = d as NumericType;
-            if (num != null)
+            NumericType num = Executor.Cursor.Resolve(pId).Read() as NumericType;
+            if (num == null)
             {
-                return num.isLong
-                    ? new NumericType(num.Long - 1)
-                    : new NumericType(num.Double - 1.0);
+                throw DataTypeException.InvalidTypes("++", pId);
             }
-            throw DataTypeException.InvalidTypes("--", d);
+            return num.isLong
+                ? new NumericType(num.Long + 1)
+                : new NumericType(num.Double + 1.0);
         }
 
         /// <summary>
@@ -165,28 +167,19 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Returns the value of a variable.
         /// </summary>
-        /// <param name="pQualifier">The variable name</param>
+        /// <param name="pId">The variable name</param>
         /// <returns>The value or undefined.</returns>
         [ExecuteSymbol(GrammarSymbol.QualifiedID)]
-        public DataType Qualified(QualifiedType pQualifier)
+        public DataType Qualified(QualifiedType pId)
         {
-            return Executor.Cursor.Get(pQualifier);
-        }
-
-        /// <summary>
-        /// Returns the value of data stored in the source code.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.Value)]
-        public DataType Value(DataType pValue)
-        {
-            return pValue;
+            return Executor.Cursor.Resolve(pId).Read();
         }
 
         /// <summary>
         /// Returns the value in an array accessed by an index offset.
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.ArrayOperator)]
-        public DataType ArrayAccess(QualifiedType pId, ArrayType pElements)
+/*
+        public DataType ArrayAccess(QualifiedOldType pId, ArrayType pElements)
         {
             ArrayType array = getArray(pId);
             DataType result = UndefinedType.Undefined;
@@ -211,6 +204,7 @@ namespace Prometheus.Runtime
 
             return result;
         }
+*/
 
         /// <summary>
         /// When using a DataType to access an index of an array. This ensures it's an integer
@@ -218,6 +212,7 @@ namespace Prometheus.Runtime
         /// </summary>
         /// <param name="pValue"></param>
         /// <returns></returns>
+/*
         private static int getArrayIndex(DataType pValue)
         {
             NumericType num = pValue as NumericType;
@@ -231,13 +226,15 @@ namespace Prometheus.Runtime
             }
             return (int)num.Long;
         }
+*/
 
         /// <summary>
         /// Access the identifier as an array type.
         /// </summary>
         /// <param name="pId">The identifier</param>
         /// <returns>The array object</returns>
-        private ArrayType getArray(QualifiedType pId)
+/*
+        private ArrayType getArray(QualifiedOldType pId)
         {
             // an ID or array
             DataType data = Executor.Cursor.Get(pId);
@@ -249,5 +246,6 @@ namespace Prometheus.Runtime
             }
             return array;
         }
+*/
     }
 }

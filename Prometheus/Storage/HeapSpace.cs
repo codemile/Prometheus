@@ -10,6 +10,7 @@ namespace Prometheus.Storage
     /// <summary>
     /// Stores all the objects
     /// </summary>
+    [Obsolete("Objects will be stored on the stack.")]
     public class HeapSpace : IDisposable
     {
         /// <summary>
@@ -43,7 +44,7 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pInstance">The instance of the object.</param>
         /// <returns>An alias pointing to the object.</returns>
-        public DataType Add(Instance pInstance)
+        public AliasType Add(Instance pInstance)
         {
             _storage.Add(pInstance);
             return new AliasType(_storage.Count - 1);

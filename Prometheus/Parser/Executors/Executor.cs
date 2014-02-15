@@ -82,6 +82,18 @@ namespace Prometheus.Parser.Executors
         {
             switch (pParent.Type)
             {
+                // these are just holds for constant values
+                case GrammarSymbol.ValidID:
+                case GrammarSymbol.Value:
+                case GrammarSymbol.MemberID:
+#if DEBUG
+                    ExecutorAssert.Data(pParent,1);
+#endif
+                    return pParent.Data[0];
+
+                case GrammarSymbol.ObjectConstructor:
+                    return new ClosureType(pParent.FirstChild());
+
                 case GrammarSymbol.FunctionExpression:
                     return new ClosureType(pParent);
 
@@ -201,10 +213,12 @@ namespace Prometheus.Parser.Executors
                     throw new ContinueException();
 
                 case GrammarSymbol.ArrayLiteral:
-                case GrammarSymbol.ArrayIndexList:
                 case GrammarSymbol.ArgumentList:
                 case GrammarSymbol.Parameters:
-                    ArrayType array = new ArrayType();
+                case GrammarSymbol.QualifiedID:
+                    IList<DataType> array = pParent.Type == GrammarSymbol.QualifiedID
+                        ? (IList<DataType>)new QualifiedType()
+                        : new ArrayType();
                     for (int i = 0, c = pParent.Children.Count; i < c; i++)
                     {
 #if DEBUG
@@ -214,22 +228,19 @@ namespace Prometheus.Parser.Executors
                             ExecutorAssert.DataType(pParent.Children[i], 0, typeof(IdentifierType));
                         }
 #endif
-                        array.Values.Add(pParent.Type == GrammarSymbol.Parameters
+                        array.Add(pParent.Type == GrammarSymbol.Parameters
                             ? pParent.Children[i].Data[0]
                             : WalkDownChildren(pParent.Children[i]));
                     }
-                    return array;
+                    return (DataType)array;
             }
 
 #if DEBUG
             ExecutorAssert.Node(_grammarLookup, pParent);
 #endif
 
-            // root of a constructor function, execute children for new objects only.
-            bool executeChildren = pParent.Type != GrammarSymbol.ObjectDecl;
-
             int dCount = pParent.Data.Count;
-            int cChild = executeChildren ? pParent.Children.Count : 0;
+            int cChild = pParent.Children.Count;
             object[] values = new object[cChild + dCount];
             for (int i = 0, c = dCount; i < c; i++)
             {

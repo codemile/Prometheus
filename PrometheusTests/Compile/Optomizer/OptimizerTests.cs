@@ -35,6 +35,7 @@ namespace PrometheusTest.Compile.Optomizer
         [TestMethod]
         public void Qualify()
         {
+/*
             Node node = MockNode.Create(GrammarSymbol.QualifiedID);
             node.Add(MockNode.Create(GrammarSymbol.ValidID, new IdentifierType("options")));
             node.Add(
@@ -52,6 +53,7 @@ namespace PrometheusTest.Compile.Optomizer
 
             Assert.AreEqual("options.debug", q.FullName);
             Assert.AreEqual("debug", q.Name);
+*/
         }
 
         [TestMethod]

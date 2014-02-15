@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Prometheus.Compile;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types.Bases;
@@ -46,6 +47,15 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public Node(GrammarSymbol pType, Location pLocation, IEnumerable<Node> pChildren)
+            : this(pType, pLocation)
+        {
+            Children.AddRange(pChildren);
+        }
+
+        /// <summary>
         /// Adds a node as a child.
         /// </summary>
         public Node Add(Node pChild)
@@ -82,6 +92,40 @@ namespace Prometheus.Nodes
         {
             Children.RemoveAll(pChild=>pChild == null);
             Data.RemoveAll(pData=>pData == null);
+        }
+
+        /// <summary>
+        /// Checks if this node has a child of a given symbol type.
+        /// </summary>
+        /// <param name="pSymbol">The symbol to check</param>
+        /// <returns>True if found</returns>
+        public bool HasChild(GrammarSymbol pSymbol)
+        {
+            return Children.Any(pChild=>pChild.Type == pSymbol);
+        }
+
+        /// <summary>
+        /// Access the first child node.
+        /// </summary>
+        public Node FirstChild()
+        {
+            return Children[0];
+        }
+
+        /// <summary>
+        /// Finds the first child of the given type, or returns Null.
+        /// </summary>
+        public Node FindChild(GrammarSymbol pSymbol)
+        {
+            return Children.FirstOrDefault(pNode=>pNode.Type == pSymbol);
+        }
+
+        /// <summary>
+        /// Access the last child node.
+        /// </summary>
+        public Node LastChild()
+        {
+            return Children[Children.Count - 1];
         }
     }
 }

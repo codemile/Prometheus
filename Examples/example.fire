@@ -1,6 +1,4 @@
-object Test {
-	this.title = "Hello";
+object Test() {
+	print "constructed";
 };
-var q = new Test();
-var x = [q];
-print x[1].title;
+var x = new Test();

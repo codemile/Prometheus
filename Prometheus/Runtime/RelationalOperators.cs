@@ -410,20 +410,24 @@ namespace Prometheus.Runtime
         public DataType PostInc(DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
-            if (id != null)
+            if (id == null)
             {
-                NumericType num = Executor.Cursor.Get(id) as NumericType;
-                if (num != null)
-                {
-                    num = num.isLong
-                        ? new NumericType(num.Long+1)
-                        : new NumericType(num.Double+1.0);
-                    Executor.Cursor.Set(id, num);
-                    return num;
-                }
+                throw DataTypeException.InvalidTypes("-", pValue);
             }
 
-            throw DataTypeException.InvalidTypes("-", pValue);
+            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("-", pValue);
+            }
+
+            num = num.isLong
+                ? new NumericType(num.Long+1)
+                : new NumericType(num.Double+1.0);
+            pointer.Write(num);
+
+            return num;
         }
 
         /// <summary>
@@ -433,19 +437,22 @@ namespace Prometheus.Runtime
         public DataType PreInc(DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
-            if (id != null)
+            if (id == null)
             {
-                NumericType num = Executor.Cursor.Get(id) as NumericType;
-                if (num != null)
-                {
-                    Executor.Cursor.Set(id, num.isLong
-                        ? new NumericType(num.Long + 1)
-                        : new NumericType(num.Double + 1.0));
-                    return num;
-                }
+                throw DataTypeException.InvalidTypes("-", pValue);
             }
 
-            throw DataTypeException.InvalidTypes("-", pValue);
+            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("-", pValue);
+            }
+
+            pointer.Write(num.isLong
+                ? new NumericType(num.Long + 1)
+                : new NumericType(num.Double + 1.0));
+            return num;
         }
 
         /// <summary>
@@ -455,20 +462,23 @@ namespace Prometheus.Runtime
         public DataType PostDec(DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
-            if (id != null)
+            if (id == null)
             {
-                NumericType num = Executor.Cursor.Get(id) as NumericType;
-                if (num != null)
-                {
-                    num = num.isLong
-                        ? new NumericType(num.Long - 1)
-                        : new NumericType(num.Double - 1.0);
-                    Executor.Cursor.Set(id, num);
-                    return num;
-                }
+                throw DataTypeException.InvalidTypes("-", pValue);
             }
 
-            throw DataTypeException.InvalidTypes("-", pValue);
+            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("-", pValue);
+            }
+
+            num = num.isLong
+                ? new NumericType(num.Long - 1)
+                : new NumericType(num.Double - 1.0);
+            pointer.Write(num);
+            return num;
         }
 
         /// <summary>
@@ -478,19 +488,22 @@ namespace Prometheus.Runtime
         public DataType PreDec(DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
-            if (id != null)
+            if (id == null)
             {
-                NumericType num = Executor.Cursor.Get(id) as NumericType;
-                if (num != null)
-                {
-                    Executor.Cursor.Set(id, num.isLong
-                        ? new NumericType(num.Long - 1)
-                        : new NumericType(num.Double - 1.0));
-                    return num;
-                }
+                throw DataTypeException.InvalidTypes("-", pValue);
             }
 
-            throw DataTypeException.InvalidTypes("-", pValue);
+            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("-", pValue);
+            }
+
+            pointer.Write(num.isLong
+                ? new NumericType(num.Long - 1)
+                : new NumericType(num.Double - 1.0));
+            return num;
         }
 
     }

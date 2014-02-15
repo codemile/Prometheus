@@ -160,28 +160,20 @@ Comment Line  = '//'
 						| <PostIncOperator>
 
 <PostIncOperator>		::= <Qualified ID> '++'
-						| <ArrayOperator>
-
-! ===================================================================
-! Array Operators
-! ===================================================================
-
-<ArrayOperator>			::= <Qualified ID> <Array Index List>
 						| <Value>
-
-
-<Array Index List>		::= '[' <Value> ']'
-						| <Array Index List> '[' <Value> ']'
 
 ! ===================================================================
 ! Variables And Primitives
 ! ===================================================================
 
 <Valid ID>			::= Identifier
+<Member ID>			::= MemberName
 
-<Qualified ID>		::= <Valid ID> <Member List>
+<Qualified ID>		::= <Valid ID> <Qualified List>
 
-<ClassName ID>		::= Identifier <Member List>
+<Qualified List>	::= <Member ID> <Qualified List>
+					| '[' <Value> ']' <Qualified List>
+					| ! zero or more
 
 <Member List>		::= <Member List> MemberName
 					|  !Zero or more 
@@ -199,17 +191,16 @@ Comment Line  = '//'
 					| '(' <Expression> ')'
 					| <Call Expression>
 
-
 <Variable Statements>	::= <Declare>
 						| <Assignment>
 						| <Increment>
 						| <Decrement>
 
 <Array Literal>			::= '[' ']'
-						| '[' <Array List> ']'
+						| '[' <Array Literal List> ']'
 
-<Array List>			::= <Value>
-						| <Array List> ',' <Value>
+<Array Literal List>	::= <Value>
+						| <Array Literal List> ',' <Value>
 
 <Declare>			::= VAR Identifier
 					| VAR Identifier '=' <Expression>
@@ -242,8 +233,10 @@ Comment Line  = '//'
 
 <Object Decl>			::= 'object' <BaseClass ID> <Parameters> <Block> <End>
 
-<BaseClass ID>			::= <ClassName ID> '::' Identifier
-						| Identifier
+<Object Constructor>	::= ! place holder used by optimizer to create constructor function.
+
+<BaseClass ID>			::= <Qualified ID> '::' <Qualified ID>
+						| <Qualified ID>
 
 ! ===================================================================
 ! Functions
@@ -270,7 +263,7 @@ Comment Line  = '//'
 <Call Expression>		::= <Qualified ID> <Arguments>
 						| <Call Expression> <Arguments>			! chaining
 
-<New Expression>		::= 'new' <ClassName ID> <Arguments>
+<New Expression>		::= 'new' <Qualified ID> <Arguments>
 
 ! This is not used by the grammar. The optimizer uses it to mark calls to internal methods.
 <CallInternal>			::= ! matches nothing
@@ -321,7 +314,6 @@ Comment Line  = '//'
 					| <PrintProc>
 					| <ReturnProc>
 					| <ListVars>
-					| <ListObjects>
 
 <UnsetProc>			::= UNSET <Qualified ID>
 <RejectProc>		::= REJECT <Expression>
@@ -331,4 +323,3 @@ Comment Line  = '//'
 <PrintProc>			::= PRINT <Expression>
 <ReturnProc>		::= RETURN <Expression>
 <ListVars>			::= VARS
-<ListObjects>		::= OBJECTS

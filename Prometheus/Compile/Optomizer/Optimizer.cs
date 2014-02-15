@@ -23,13 +23,12 @@ namespace Prometheus.Compile.Optomizer
                                                                      GrammarSymbol.Statements,
                                                                      GrammarSymbol.ObjectDecls,
                                                                      GrammarSymbol.Program,
-                                                                     GrammarSymbol.ArrayList,
                                                                      GrammarSymbol.Parameters,
                                                                      GrammarSymbol.Arguments,
-                                                                     //GrammarSymbol.ArrayIndexList
-                                                                    GrammarSymbol.ParameterList,
-                                                                    GrammarSymbol.ArrayIndexList,
-                                                                    GrammarSymbol.ArgumentList
+                                                                     GrammarSymbol.ArrayLiteralList,
+                                                                     GrammarSymbol.ParameterList,
+                                                                     GrammarSymbol.ArgumentList,
+                                                                     GrammarSymbol.QualifiedList
                                                                  };
 
         /// <summary>
@@ -38,18 +37,12 @@ namespace Prometheus.Compile.Optomizer
         private static readonly HashSet<GrammarSymbol> _drop = new HashSet<GrammarSymbol>
                                                                {
                                                                    GrammarSymbol.End,
-                                                                   GrammarSymbol.Block,
+                                                                   //GrammarSymbol.Block,
                                                                    GrammarSymbol.Statement,
                                                                    GrammarSymbol.Statements,
                                                                    GrammarSymbol.ObjectDecls,
-                                                                   //GrammarSymbol.FormalParameterList,
-                                                                   //GrammarSymbol.ConstructParamsList,
-                                                                   //GrammarSymbol.Arguments,
                                                                    GrammarSymbol.BaseClassID,
-                                                                   GrammarSymbol.ArrayList,
-                                                                   //GrammarSymbol.ArrayIndexList,
-                                                                   GrammarSymbol.MemberList,
-                                                                   GrammarSymbol.ClassNameID
+                                                                   GrammarSymbol.MemberList
                                                                };
 
         /// <summary>
@@ -62,7 +55,8 @@ namespace Prometheus.Compile.Optomizer
                                                                       GrammarSymbol.Statement,
                                                                       GrammarSymbol.ObjectDecls,
                                                                       GrammarSymbol.Value,
-                                                                      GrammarSymbol.Arguments
+                                                                      GrammarSymbol.Arguments,
+                                                                      GrammarSymbol.QualifiedList
                                                                   };
 
         /// <summary>
@@ -75,8 +69,7 @@ namespace Prometheus.Compile.Optomizer
                                                                             GrammarSymbol.PostIncOperator,
                                                                             GrammarSymbol.PreIncOperator,
                                                                             GrammarSymbol.PostDecOperator,
-                                                                            GrammarSymbol.PreDecOperator,
-                                                                            GrammarSymbol.ArrayOperator
+                                                                            GrammarSymbol.PreDecOperator
                                                                         };
 
         /// <summary>
@@ -104,6 +97,25 @@ namespace Prometheus.Compile.Optomizer
         private bool _modified;
 
         /// <summary>
+        /// Converts the child nodes into a data reference to a qualifier ID.
+        /// </summary>
+        /// <param name="pNode"></param>
+        public void Qualify(Node pNode)
+        {
+            for (int i = 0, c = pNode.Children.Count; i < c; i++)
+            {
+                Node child = pNode.Children[i];
+                if (child.Type == GrammarSymbol.QualifiedList)
+                {
+                    pNode.Children.AddRange(child.Children);
+                    pNode.Children[i] = null;
+                    _modified = true;
+                }
+            }
+            pNode.Reduce();
+        }
+
+        /// <summary>
         /// Moves the data from the child to the parent.
         /// </summary>
         /// <param name="pParent">The parent node</param>
@@ -129,8 +141,8 @@ namespace Prometheus.Compile.Optomizer
         /// <returns>The node</returns>
         public Node CallInternal(Node pNode)
         {
-            if (pNode.Children.Count == 0 ||
-                pNode.Children[0].Type == GrammarSymbol.QualifiedID)
+            if (pNode.Children.Count == 0
+                || pNode.Children[0].Type == GrammarSymbol.QualifiedID)
             {
                 return pNode;
             }
@@ -151,25 +163,54 @@ namespace Prometheus.Compile.Optomizer
         }
 
         /// <summary>
+        /// Performs optimization of a node tree.
+        /// </summary>
+        /// <param name="pRoot">The root node</param>
+        /// <returns>A node to used as the new root node.</returns>
+        public Node Optimize(Node pRoot)
+        {
+            using (_executor = new Executor())
+            {
+                _internalIds = new HashSet<string>(_executor.GetInternalIds());
+
+                do
+                {
+                    _modified = false;
+                    pRoot = WalkBranch(pRoot);
+                } while (_modified);
+
+                return pRoot;
+            }
+        }
+
+        /// <summary>
         /// Performs optimization of a single node.
         /// </summary>
         /// <param name="pNode">The node to optimize</param>
         /// <returns>Same node, a new node or null.</returns>
         public Node OptimizeNode(Node pNode)
         {
+            // change MemberID nodes to ValidID nodes (so Identifier is one type only).
+            if (pNode.Type == GrammarSymbol.MemberID)
+            {
+                Node valid = new Node(GrammarSymbol.ValidID, pNode.Location);
+                valid.Data.AddRange(pNode.Data);
+                valid.Children.AddRange(pNode.Children);
+                return valid;
+            }
+
             // promote a single child up the tree if the current node does no work
-            if (_promote.Contains(pNode.Type) &&
-                pNode.Children.Count == 1 &&
-                pNode.Data.Count == 0)
+            if (_promote.Contains(pNode.Type)
+                && pNode.Children.Count == 1
+                && pNode.Data.Count == 0)
             {
                 return pNode.Children[0];
             }
 
             // drop an empty node
-            if ((_drop.Contains(pNode.Type) 
-                || _arrays.Contains(pNode.Type)) &&
-                pNode.Children.Count == 0 &&
-                pNode.Data.Count == 0)
+            if ((_drop.Contains(pNode.Type) || _arrays.Contains(pNode.Type))
+                && pNode.Children.Count == 0
+                && pNode.Data.Count == 0)
             {
                 return null;
             }
@@ -196,9 +237,9 @@ namespace Prometheus.Compile.Optomizer
             }
 
             // bring up children of a certain type
-            if (pNode.Type == GrammarSymbol.ArrayLiteral &&
-                pNode.Children.Count == 1 &&
-                pNode.Children[0].Type == GrammarSymbol.ArrayList)
+            if (pNode.Type == GrammarSymbol.ArrayLiteral
+                && pNode.Children.Count == 1
+                && pNode.Children[0].Type == GrammarSymbol.ArrayLiteralList)
             {
                 List<Node> children = pNode.Children[0].Children;
                 pNode.Children.Clear();
@@ -215,80 +256,48 @@ namespace Prometheus.Compile.Optomizer
         }
 
         /// <summary>
-        /// Converts the child nodes into a data reference to a qualifier ID.
-        /// </summary>
-        /// <param name="pNode"></param>
-        public static void Qualify(Node pNode)
-        {
-            Assertion.Children(2, pNode);
-            Assertion.Data(0, pNode);
-            Assertion.Data(1, pNode.Children[0]);
-
-            IdentifierType id = (IdentifierType)pNode.Children[0].Data[0];
-            List<string> path = new List<string> {id.Name};
-
-            Node member = pNode.Children[1];
-            while (true)
-            {
-                if (member.Data.Count == 0)
-                {
-                    Assertion.Children(0, member);
-                    break;
-                }
-                Assertion.Data(1, member);
-                Assertion.Children(1, member);
-
-                path.Add(Assertion.Get<IdentifierType>(member, 0).Name);
-                member = member.Children[0];
-            }
-
-            QualifiedType q = new QualifiedType(path.ToArray());
-            pNode.Data.Add(q);
-            pNode.Children.Clear();
-        }
-
-        /// <summary>
         /// Process all the nodes in the tree by walking all branches. Update any
         /// children that are modified, or remove children if a recursive call
         /// returns null for that child.
         /// </summary>
         public Node WalkBranch(Node pNode)
         {
-            if (pNode.Type == GrammarSymbol.QualifiedID &&
-                pNode.Children.Count != 0)
+            if (pNode.Type == GrammarSymbol.QualifiedID
+                && pNode.Children.Count != 0)
             {
                 Qualify(pNode);
-                _modified = true;
             }
 
-            if(pNode.Type == GrammarSymbol.ClassNameID &&
-               pNode.Data.Count > 0 &&
-               pNode.Data[0].GetType() != typeof (ClassNameType) &&
-               pNode.Children.Count == 0)
+            // TODO: Move constructor nodes to a Constructor symbol node for object declarations.
+            if (pNode.Type == GrammarSymbol.ObjectDecl
+                && !pNode.HasChild(GrammarSymbol.ObjectConstructor))
             {
-                ClassName(pNode);
-                _modified = true;
+                Node block = pNode.FindChild(GrammarSymbol.Block);
+                pNode.Children.Remove(block);
+                pNode.Children.Add(new Node(GrammarSymbol.ObjectConstructor, block.Location, new[]{block}));
             }
 
-            if (pNode.Type == GrammarSymbol.NewExpression &&
-                pNode.Children.Count == 1)
+/*
+            if (pNode.Type == GrammarSymbol.NewExpression
+                && pNode.Children.Count == 1)
             {
-                if (pNode.Children[0].Data.Count == 1 &&
-                    pNode.Children[0].Data[0].GetType() == typeof (ClassNameType))
+                if (pNode.Children[0].Data.Count == 1
+                    && pNode.Children[0].Data[0].GetType() == typeof (ClassNameType))
                 {
                     pNode.Data.Add(pNode.Children[0].Data[0]);
                     pNode.Children[0].Data.Clear();
                 }
             }
+*/
 
-            if (_qualifiedData.Contains(pNode.Type) &&
-                pNode.Children.Count >= 1 &&
-                pNode.Children[0].Type == GrammarSymbol.QualifiedID &&
-                pNode.Children[0].Children.Count == 0)
+            if (_qualifiedData.Contains(pNode.Type)
+                && pNode.Children.Count >= 1
+                && pNode.Children[0].Type == GrammarSymbol.QualifiedID
+                && pNode.Children[0].Children.Count == 0)
             {
                 Assertion.Data(1, pNode.Children[0]);
-                QualifiedType qualifiedType = Assertion.Get<QualifiedType>(pNode.Children[0], 0);
-                pNode.Data.Insert(0, qualifiedType);
+                QualifiedType qualifiedOldType = Assertion.Get<QualifiedType>(pNode.Children[0], 0);
+                pNode.Data.Insert(0, qualifiedOldType);
                 pNode.Children.RemoveAt(0);
             }
 
@@ -298,7 +307,8 @@ namespace Prometheus.Compile.Optomizer
 
                 if (_shiftData.Contains(child.Type))
                 {
-                    ShiftData(pNode, child);
+                    pNode.Data.AddRange(child.Data);
+                    pNode.Data.Clear();
                 }
 
                 pNode.Children[i] = WalkBranch(child);
@@ -308,51 +318,6 @@ namespace Prometheus.Compile.Optomizer
             pNode.Reduce();
 
             return OptimizeNode(pNode);
-        }
-
-        /// <summary>
-        /// Converts the list of identifiers into a classname.
-        /// </summary>
-        /// <param name="pNode"></param>
-        public static void ClassName(Node pNode)
-        {
-            Assertion.Children(0,pNode);
-            List<DataType> data = pNode.Data;
-
-            // bring last to top (the grammar puts first namespace last)
-            data.Insert(0,data.Last());
-            data.RemoveAt(data.Count-1);
-
-            QualifiedType package = QualifiedType.Global;
-            IdentifierType last = (IdentifierType)data[data.Count - 1];
-            if (data.Count > 1)
-            {
-                string[] namespaces = (from id in data.Take(data.Count - 1) select ((IdentifierType)id).Name).ToArray();
-                package = new QualifiedType(namespaces);
-            }
-            pNode.Data.Clear();
-            pNode.Data.Add(new ClassNameType(package, last));
-        }
-
-        /// <summary>
-        /// Performs optimization of a node tree.
-        /// </summary>
-        /// <param name="pRoot">The root node</param>
-        /// <returns>A node to used as the new root node.</returns>
-        public Node Optimize(Node pRoot)
-        {
-            using (_executor = new Executor())
-            {
-                _internalIds = new HashSet<string>(_executor.GetInternalIds());
-
-                do
-                {
-                    _modified = false;
-                    pRoot = WalkBranch(pRoot);
-                } while (_modified);
-
-                return pRoot;
-            }
         }
     }
 }

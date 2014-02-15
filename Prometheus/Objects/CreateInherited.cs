@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Storage;
+using Prometheus.Parser;
 
 namespace Prometheus.Objects
 {
@@ -18,11 +19,6 @@ namespace Prometheus.Objects
             null);
 
         /// <summary>
-        /// The storage of objects
-        /// </summary>
-        private readonly HeapSpace _heap;
-
-        /// <summary>
         /// The alias reference
         /// </summary>
         public readonly DataType Alias;
@@ -36,22 +32,29 @@ namespace Prometheus.Objects
         /// Walks the inheritance of declarations creating each from the
         /// bottom up.
         /// </summary>
-        private KeyValuePair<Instance, DataType> CreateAll(Declaration pDecl)
+        private KeyValuePair<Instance, DataType> CreateAll(Cursor pCursor, DeclarationType pDecl)
         {
             KeyValuePair<Instance, DataType> baseInst = _empty;
             if (pDecl.Base != null)
             {
-                baseInst = CreateAll(pDecl.Base);
+                DataType baseData = pCursor.Resolve(pDecl.Base).Read();
+                DeclarationType baseType = baseData as DeclarationType;
+                if (baseType == null)
+                {
+                    throw new IdentifierInnerException(
+                        string.Format("Expected base declaration type but found <{0}> instead", baseData.GetType().Name));
+                }
+                baseInst = CreateAll(pCursor, baseType);
             }
 
-            Instance inst = new Instance(pDecl.ClassName, pDecl.Constructor);
-            DataType alias = _heap.Add(inst);
+            Instance inst = new Instance();
+            AliasType alias = pCursor.Heap.Add(inst);
 
-            inst.GetMembers().Create(IdentifierType.This.Name, alias);
+            //inst.GetMembers().Create(IdentifierType.THIS, alias);
 
             if (baseInst.Value != null)
             {
-                inst.GetMembers().Create(IdentifierType.Base.Name, baseInst.Value);
+                //inst.GetMembers().Create(IdentifierType.BASE, baseInst.Value);
             }
 
             return new KeyValuePair<Instance, DataType>(inst, alias);
@@ -60,11 +63,9 @@ namespace Prometheus.Objects
         /// <summary>
         /// Constructor
         /// </summary>
-        public CreateInherited(HeapSpace pHeap, Declaration pDecl)
+        public CreateInherited(Cursor pCursor, DeclarationType pDecl)
         {
-            _heap = pHeap;
-
-            KeyValuePair<Instance, DataType> inst = CreateAll(pDecl);
+            KeyValuePair<Instance, DataType> inst = CreateAll(pCursor, pDecl);
             Inst = inst.Key;
             Alias = inst.Value;
         }

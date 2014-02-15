@@ -27,7 +27,6 @@ namespace Prometheus.Nodes
                                                                         GrammarSymbol.Decimal,
                                                                         GrammarSymbol.Boolean,
                                                                         GrammarSymbol.Identifier,
-                                                                        GrammarSymbol.QualifiedID,
                                                                         GrammarSymbol.ValidID,
                                                                         GrammarSymbol.MemberName
                                                                     };

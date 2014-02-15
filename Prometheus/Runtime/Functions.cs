@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
@@ -27,7 +28,10 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
         public DataType Call(DataType pClosure)
         {
+/*
             return Call(pClosure, ArrayType.Empty);
+*/
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -36,35 +40,38 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
         public DataType Call(DataType pClosure, ArrayType pArguments)
         {
-            try
-            {
-                // calling base constructor
-                if (pClosure.GetType() == typeof (AliasType))
-                {
-                    AliasType a = (AliasType)pClosure;
-                    Instance inst = Executor.Cursor.Heap.Get(a);
-                    Dictionary<string, DataType> variables = Arguments.CollectArguments(inst.GetConstructor(),
-                        pArguments);
-                    return Executor.Execute(inst.GetConstructor(), variables);
-                }
-                else
-                {
-                    ClosureType closureType = (ClosureType)pClosure;
-                    // empty function check
-                    if (closureType.Function.Children.Count == 0)
-                    {
-                        return UndefinedType.Undefined;
-                    }
-                    Dictionary<string, DataType> variables = Arguments.CollectArguments(closureType.Function,
-                        pArguments);
-                    variables.Add("this", closureType.This);
-                    return Executor.Execute(closureType.Function.Children[0], variables);
-                }
-            }
-            catch (ReturnException returnData)
-            {
-                return returnData.Value;
-            }
+            throw new NotImplementedException();
+            /*
+                        try
+                        {
+                            // calling base constructor
+                            if (pClosure.GetType() == typeof (AliasType))
+                            {
+                                AliasType a = (AliasType)pClosure;
+                                Instance inst = Executor.Cursor.Heap.Get(a);
+                                Dictionary<string, DataType> variables = Arguments.CollectArguments(inst.GetConstructor(),
+                                    pArguments);
+                                return Executor.Execute(inst.GetConstructor(), variables);
+                            }
+                            else
+                            {
+                                ClosureType closureType = (ClosureType)pClosure;
+                                // empty function check
+                                if (closureType.Function.Children.Count == 0)
+                                {
+                                    return UndefinedType.Undefined;
+                                }
+                                Dictionary<string, DataType> variables = Arguments.CollectArguments(closureType.Function,
+                                    pArguments);
+                                variables.Add("this", closureType.This);
+                                return Executor.Execute(closureType.Function.Children[0], variables);
+                            }
+                        }
+                        catch (ReturnException returnData)
+                        {
+                            return returnData.Value;
+                        }
+            */
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -6,6 +7,7 @@ namespace Prometheus.Nodes.Types
     /// <summary>
     /// Holds a reference to an object in the heap.
     /// </summary>
+    [Obsolete("Just use Instance as a DataType")]
     public class AliasType : DataType
     {
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Prometheus.Compile;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Objects;
@@ -113,14 +114,14 @@ namespace Prometheus.Parser
                 Dictionary<string, DataType> globals = new Dictionary<string, DataType>(_customVaraibles);
 
                 // create root object (the default "this" reference)
-                DataType _this = executor.Cursor.Heap.Add(new Instance(new ClassNameType("prometheus.root")));
+                DataType _this = executor.Cursor.Heap.Add(new Instance());
                 globals.Add("this", _this);
 
                 foreach (KeyValuePair<string, object> customObject in _customObjects)
                 {
                     ObjectSpace objSpace = new ObjectSpace(customObject.Value);
                     DataType alias =
-                        executor.Cursor.Heap.Add(new Instance(new ClassNameType(customObject.Value.GetType()), objSpace));
+                        executor.Cursor.Heap.Add(new Instance(objSpace));
                     globals.Add(customObject.Key, alias);
                 }
 

@@ -3,8 +3,6 @@ using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Objects;
-using Prometheus.Properties;
 using Prometheus.Storage;
 
 namespace Prometheus.Parser
@@ -18,11 +16,6 @@ namespace Prometheus.Parser
         /// The storage of all objects.
         /// </summary>
         public readonly HeapSpace Heap;
-
-        /// <summary>
-        /// All the object declarations.
-        /// </summary>
-        public readonly NameSpace Packages;
 
         /// <summary>
         /// The current node being executed.
@@ -43,7 +36,6 @@ namespace Prometheus.Parser
             Node = null;
 
             Heap = new HeapSpace();
-            Packages = NameSpace.Create();
         }
 
         /// <summary>
@@ -56,56 +48,88 @@ namespace Prometheus.Parser
                 Stack.Dispose();
             }
             Heap.Dispose();
-            Packages.Dispose();
             Node = null;
         }
 
         /// <summary>
-        /// Gets the value for a qualified identifier.
+        /// Results to a specific DataType
         /// </summary>
-        public DataType Get(QualifiedType pID)
+        public T Get<T>(QualifiedType pID) where T : DataType
         {
-            iMemorySpace storage = Resolve(pID);
-            DataType dataType = storage.Get(pID.Parts[pID.Parts.Length - 1]);
-            if (dataType == null)
+            DataType value = Resolve(pID).Read();
+            T result = value as T;
+            if (result == null)
             {
-                throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pID));
+                throw new IdentifierInnerException(
+                    string.Format("Expected <{0}> but found <{1}> instead", typeof(T).Name, value.GetType().Name));
             }
-            return dataType;
+            return result;
         }
 
         /// <summary>
-        /// Resolves the path to a qualified data member.
+        /// Finds a reference to a variable in memory for read/write access.
         /// </summary>
-        /// <param name="pID">The qualified ID</param>
-        /// <returns></returns>
-        public iMemorySpace Resolve(QualifiedType pID)
+        public iVariablePointer Resolve(QualifiedType pID)
         {
-            iMemorySpace storage = Stack;
-            int index = 0;
-            int count = pID.Parts.Length - 1;
-            while (index < count)
+            iMemorySpace stack = Stack;
+            DataType member = null;
+            iVariablePointer pointer = null;
+            int last = pID.Count - 1;
+            for (int i = 0, c = pID.Count; i < c; i++)
             {
-                DataType dataType = storage.Get(pID.Parts[index]);
-                if (dataType == null)
+                // follow member references to objects
+                AliasType alias = member as AliasType;
+                if (alias != null)
                 {
-                    throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pID));
+                    stack = Heap.Get(alias).GetMembers();
                 }
-                AliasType a = (AliasType)storage.Get(pID.Parts[index]);
-                Instance inst = Heap.Get(a);
-                storage = inst.GetMembers();
-                index++;
-            }
-            return storage;
-        }
+                // first has to be id
+                IdentifierType id = pID[i] as IdentifierType;
+                if (id != null)
+                {
+                    if (i == last)
+                    {
+                        pointer = new MemoryPointer(stack, id.Name);
+                        break;
+                    }
+                    member = stack.Get(id.Name);
+                    continue;
+                }
 
-        /// <summary>
-        /// Sets a value for a qualified identifier.
-        /// </summary>
-        public void Set(QualifiedType pID, DataType pValue)
-        {
-            iMemorySpace storage = Resolve(pID);
-            storage.Assign(pID.Parts[pID.Parts.Length - 1], pValue);
+                NumericType num = pID[i] as NumericType;
+                if (member == null || num == null)
+                {
+                    throw new IdentifierInnerException(string.Format("Expecting identifier but found <{0}> instead",
+                        pID[i].GetType().Name));
+                }
+
+                // must be an array reference
+                ArrayType array = member as ArrayType;
+                if (!num.isLong || array == null)
+                {
+                    throw new InvalidIndexException(string.Format("Cannot apply indexing <{0}> to a type of <{1}>",
+                        num.GetType().Name, member.GetType().Name));
+                }
+
+                int index = (int)num.Long;
+                if (index < 0 || index >= array.Count)
+                {
+                    throw new InvalidIndexException(string.Format("Index parameter is out of range <{0}>", index));
+                }
+                if (i == last)
+                {
+                    pointer = new ArrayPointer(array, index);
+                    break;
+                }
+                member = array[index];
+            }
+
+            if (pointer == null)
+            {
+                throw new IdentifierInnerException("Unable to resolve reference.");
+            }
+
+            return pointer;
         }
     }
 }
