@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Logging;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Properties;
@@ -12,11 +11,6 @@ namespace Prometheus.Storage
     /// </summary>
     public class StorageSpace : iMemorySpace
     {
-        /// <summary>
-        /// Logging
-        /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof (StorageSpace));
-
         /// <summary>
         /// Storage of variable values.
         /// </summary>

@@ -2,3 +2,5 @@ object Test() {
 	print "constructed";
 };
 var x = new Test();
+
+vars;

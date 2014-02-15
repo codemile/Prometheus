@@ -97,7 +97,7 @@ namespace Prometheus.Objects
         public DataType ObjectDeclare(QualifiedType pObjectName, ClosureType pConstructor)
         {
             IdentifierType name = pObjectName.Members[0].Cast<IdentifierType>();
-            DeclarationType decl = new DeclarationType(pConstructor);
+            DeclarationType decl = new DeclarationType(pObjectName, pConstructor);
             Executor.Cursor.Stack.Create(name.Name, decl);
             return decl;
         }

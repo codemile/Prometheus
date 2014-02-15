@@ -64,7 +64,6 @@ namespace Prometheus.Exceptions.Compiler
                             expecting.Add("end of group");
                             break;
                         case SymbolType.Error:
-                            // TODO: Can this type be a syntax error?
                             expecting.Add("error");
                             break;
                         case SymbolType.End:

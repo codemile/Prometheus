@@ -268,7 +268,6 @@ namespace Prometheus.Compile.Optomizer
                 Qualify(pNode);
             }
 
-            // TODO: Move constructor nodes to a Constructor symbol node for object declarations.
             if (pNode.Type == GrammarSymbol.ObjectDecl
                 && !pNode.HasChild(GrammarSymbol.ObjectConstructor))
             {
@@ -276,19 +275,6 @@ namespace Prometheus.Compile.Optomizer
                 pNode.Children.Remove(block);
                 pNode.Children.Add(new Node(GrammarSymbol.ObjectConstructor, block.Location, new[]{block}));
             }
-
-/*
-            if (pNode.Type == GrammarSymbol.NewExpression
-                && pNode.Children.Count == 1)
-            {
-                if (pNode.Children[0].Data.Count == 1
-                    && pNode.Children[0].Data[0].GetType() == typeof (ClassNameType))
-                {
-                    pNode.Data.Add(pNode.Children[0].Data[0]);
-                    pNode.Children[0].Data.Clear();
-                }
-            }
-*/
 
             if (_qualifiedData.Contains(pNode.Type)
                 && pNode.Children.Count >= 1

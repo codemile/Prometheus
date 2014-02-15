@@ -36,7 +36,7 @@ namespace Prometheus.Runtime
                 if (alias != null)
                 {
                     Instance inst = pHead.Get(alias);
-                    _logger.Fine("{0}{1} = object::{2}[",indent,item.Name,alias.Heap);
+                    _logger.Fine("{0}{1} = instance::{2}[",indent,item.Name,alias.Heap);
                     Print(pHead, inst.GetMembers(), pIndent + 1);
                     _logger.Fine("{0}]", indent);
                     continue;
