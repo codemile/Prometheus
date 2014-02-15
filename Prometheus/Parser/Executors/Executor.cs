@@ -82,7 +82,7 @@ namespace Prometheus.Parser.Executors
         {
             switch (pParent.Type)
             {
-                // these are just holds for constant values
+                // these are just holders for constant values
                 case GrammarSymbol.ValidID:
                 case GrammarSymbol.Value:
                 case GrammarSymbol.MemberID:
@@ -91,7 +91,8 @@ namespace Prometheus.Parser.Executors
 #endif
                     return pParent.Data[0];
 
-                case GrammarSymbol.ObjectConstructor:
+                case GrammarSymbol.ObjectBlock:
+                case GrammarSymbol.FunctionBlock:
                     return new ClosureType(pParent.FirstChild());
 
                 case GrammarSymbol.FunctionExpression:

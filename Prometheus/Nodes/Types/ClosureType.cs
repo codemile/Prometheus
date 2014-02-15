@@ -43,5 +43,13 @@ namespace Prometheus.Nodes.Types
         {
             return This != null;
         }
+
+        /// <summary>
+        /// Returns "function"
+        /// </summary>
+        public override string ToString()
+        {
+            return "function";
+        }
     }
 }

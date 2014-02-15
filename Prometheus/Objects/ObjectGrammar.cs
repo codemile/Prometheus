@@ -101,5 +101,15 @@ namespace Prometheus.Objects
             Executor.Cursor.Stack.Create(name.Name, decl);
             return decl;
         }
+
+        /// <summary>
+        /// Declares a new function type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
+        public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
+        {
+            Executor.Cursor.Stack.Create(pFuncName.Name, pFunc);
+            return UndefinedType.Undefined;
+        }
     }
 }

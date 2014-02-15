@@ -45,6 +45,15 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
+        public QualifiedType(IdentifierType pIdentifier)
+            : this()
+        {
+            Members.Add(pIdentifier);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public QualifiedType()
         {
             Members = new List<DataType>();

@@ -67,6 +67,7 @@ Comment Line  = '//'
 
 <Statement>		::= <FlowControl>
 				| <Variable Statements> <End>
+				| <Function Decl> <End>
 				| <Procedure> <End>
 				| <Call Expression> <End>
 				| <New Expression> <End>
@@ -232,8 +233,7 @@ Comment Line  = '//'
 						| <Object Decls> <Object Decl>
 
 <Object Decl>			::= 'object' <BaseClass ID> <Parameters> <Block> <End>
-
-<Object Constructor>	::= ! place holder used by optimizer to create constructor function.
+<Object Block>			::= ! place holder used by optimizer to create constructor function.
 
 <BaseClass ID>			::= <Qualified ID> '::' <Qualified ID>
 						| <Qualified ID>
@@ -242,8 +242,8 @@ Comment Line  = '//'
 ! Functions
 ! ===================================================================
 
-!!! Not used (yet)
-!!!<Function Declaration>	::= 'function' Identifier <Parameters> <Block>
+<Function Decl>				::= 'function' Identifier <Parameters> <Block>
+<Function Block>			::= ! place holder used by optimizer to create functions.
 
 <Function Expression>		::= 'function' <Parameters> <Block>
 

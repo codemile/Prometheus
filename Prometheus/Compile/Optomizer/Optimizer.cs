@@ -82,6 +82,17 @@ namespace Prometheus.Compile.Optomizer
                                                                     };
 
         /// <summary>
+        /// Declaration types that contain an executable block of code (like a function or object constructor). The block
+        /// of code is parented to a new node of the value type. This allows that block of code to be stored, and not executed
+        /// by the parser until the declaration is used.
+        /// </summary>
+        private static readonly Dictionary<GrammarSymbol,GrammarSymbol> _declarations = new Dictionary<GrammarSymbol, GrammarSymbol>
+                                                                                        {
+                                                                                            {GrammarSymbol.ObjectDecl, GrammarSymbol.ObjectBlock},
+                                                                                            {GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock}
+                                                                                        }; 
+
+        /// <summary>
         /// Used to perform optimization
         /// </summary>
         private Executor _executor;
@@ -268,12 +279,12 @@ namespace Prometheus.Compile.Optomizer
                 Qualify(pNode);
             }
 
-            if (pNode.Type == GrammarSymbol.ObjectDecl
-                && !pNode.HasChild(GrammarSymbol.ObjectConstructor))
+            if (_declarations.ContainsKey(pNode.Type)
+                && !pNode.HasChild(_declarations[pNode.Type]))
             {
                 Node block = pNode.FindChild(GrammarSymbol.Block);
                 pNode.Children.Remove(block);
-                pNode.Children.Add(new Node(GrammarSymbol.ObjectConstructor, block.Location, new[]{block}));
+                pNode.Children.Add(new Node(_declarations[pNode.Type], block.Location, new[] { block }));
             }
 
             if (_qualifiedData.Contains(pNode.Type)
