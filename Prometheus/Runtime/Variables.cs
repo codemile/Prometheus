@@ -66,7 +66,7 @@ namespace Prometheus.Runtime
             }
 
             InstanceType _this = (InstanceType)Executor.Cursor.Stack.Get(IdentifierType.THIS);
-            return new ClosureType(_this, func.Function);
+            return new ClosureType(_this, func);
         }
 
         /// <summary>

@@ -51,6 +51,22 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Creates a deep copy of an array.
+        /// </summary>
+        public ArrayType Clone()
+        {
+            ArrayType copy = new ArrayType();
+            for (int i = 0, c = Values.Count; i < c; i++)
+            {
+                DataType value = Values[i];
+                ArrayType arrValue = value as ArrayType;
+                value = (arrValue == null) ? value : arrValue.Clone();
+                copy.Add(value);
+            }
+            return copy;
+        }
+
+        /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>

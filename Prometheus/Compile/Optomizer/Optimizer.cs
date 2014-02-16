@@ -36,19 +36,13 @@ namespace Prometheus.Compile.Optomizer
         /// of code is parented to a new node of the value type. This allows that block of code to be stored, and not executed
         /// by the parser until the declaration is used.
         /// </summary>
-        private static readonly Dictionary<GrammarSymbol, GrammarSymbol> _declarations = new Dictionary
-            <GrammarSymbol, GrammarSymbol>
-                                                                                         {
-                                                                                             {
-                                                                                                 GrammarSymbol.ObjectDecl,
-                                                                                                 GrammarSymbol.ObjectBlock
-                                                                                             },
-                                                                                             {
-                                                                                                 GrammarSymbol.FunctionDecl,
-                                                                                                 GrammarSymbol
-                                                                                                 .FunctionBlock
-                                                                                             }
-                                                                                         };
+        private static readonly Dictionary<GrammarSymbol, GrammarSymbol> _declarations =
+            new Dictionary
+                <GrammarSymbol, GrammarSymbol>
+            {
+                {GrammarSymbol.ObjectDecl, GrammarSymbol.ObjectBlock},
+                {GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock}
+            };
 
         /// <summary>
         /// These nodes can be dropped from the tree, if they have no child and no data.
@@ -78,6 +72,15 @@ namespace Prometheus.Compile.Optomizer
                                                                   };
 
         /// <summary>
+        /// These nodes are removed but their child are kept and inserted into the same position as the removed node.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _remove = new HashSet<GrammarSymbol>
+                                                                  {
+                                                                      GrammarSymbol.BaseClassID
+                                                                  };
+
+/*
+        /// <summary>
         /// These nodes have a child QualifiedID node's data assigned to them.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _qualifiedData = new HashSet<GrammarSymbol>
@@ -89,6 +92,7 @@ namespace Prometheus.Compile.Optomizer
                                                                             GrammarSymbol.PostDecOperator,
                                                                             GrammarSymbol.PreDecOperator
                                                                         };
+*/
 
         /// <summary>
         /// These nodes have their data moved to their parents.
@@ -175,7 +179,7 @@ namespace Prometheus.Compile.Optomizer
                 do
                 {
                     _modified = false;
-                    pRoot = WalkBranch(pRoot) ?? new Node(GrammarSymbol.Statements,Location.None);
+                    pRoot = WalkBranch(pRoot) ?? new Node(GrammarSymbol.Statements, Location.None);
                 } while (_modified);
 
                 return pRoot;
@@ -286,6 +290,18 @@ namespace Prometheus.Compile.Optomizer
                 Qualify(pNode);
             }
 
+            foreach (GrammarSymbol promote in _remove)
+            {
+                Node remove = pNode.FindChild(promote);
+                if (remove == null)
+                {
+                    continue;
+                }
+                pNode.Children.InsertRange(pNode.Children.IndexOf(remove), remove.Children);
+                pNode.Children.Remove(remove);
+                _modified = true;
+            }
+
             if (_declarations.ContainsKey(pNode.Type)
                 && !pNode.HasChild(_declarations[pNode.Type]))
             {
@@ -294,6 +310,7 @@ namespace Prometheus.Compile.Optomizer
                 pNode.Children.Add(new Node(_declarations[pNode.Type], block.Location, new[] {block}));
             }
 
+/*
             if (_qualifiedData.Contains(pNode.Type)
                 && pNode.Children.Count >= 1
                 && pNode.Children[0].Type == GrammarSymbol.QualifiedID
@@ -304,6 +321,7 @@ namespace Prometheus.Compile.Optomizer
                 pNode.Data.Insert(0, qualifiedOldType);
                 pNode.Children.RemoveAt(0);
             }
+*/
 
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {

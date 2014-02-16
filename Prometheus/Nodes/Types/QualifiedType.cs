@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -29,6 +30,20 @@ namespace Prometheus.Nodes.Types
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Assumes there is only one member, and can be converted to an identifier.
+        /// </summary>
+        public IdentifierType ToIdentifier()
+        {
+#if DEBUG
+            if (Members.Count != 1)
+            {
+                throw new IdentifierInnerException("Cannot convert qualified reference to single identifier.");
+            }
+#endif
+            return Members[0].Cast<IdentifierType>();
         }
 
         /// <summary>

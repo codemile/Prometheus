@@ -21,6 +21,26 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Declares a new function type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
+        public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
+        {
+            Executor.Cursor.Stack.Create(pFuncName.Name, pFunc);
+            return UndefinedType.Undefined;
+        }
+
+        /// <summary>
+        /// Declares a new function type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
+        public DataType FunctionDeclare(IdentifierType pFuncName, IEnumerable<DataType> pParameters, ClosureType pFunc)
+        {
+            Executor.Cursor.Stack.Create(pFuncName.Name, new ClosureType(pFunc.Function, pParameters));
+            return UndefinedType.Undefined;
+        }
+
+        /// <summary>
         /// Executes an identify as a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]

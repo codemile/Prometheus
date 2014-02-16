@@ -1,5 +1,11 @@
-object Test(arg1) {
+object House(arg1) {
+	print "House";
 	print arg1;
+};
+
+object House::Test(arg1) {
+	var y = arg1+"Mouse";
+	base(y);
 };
 
 var x = new Test("hello");

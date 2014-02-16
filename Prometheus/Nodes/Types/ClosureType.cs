@@ -30,10 +30,11 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public ClosureType(InstanceType pThis, Node pFunction)
+        public ClosureType(InstanceType pThis, ClosureType pFunction)
         {
             This = pThis;
-            Function = pFunction;
+            Function = pFunction.Function;
+            Parameters = pFunction.Parameters.Clone();
         }
 
         /// <summary>
@@ -42,15 +43,16 @@ namespace Prometheus.Nodes.Types
         public ClosureType(Node pFunction)
         {
             Function = pFunction;
+            Parameters = new ArrayType();
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ClosureType(Node pFunction, ArrayType pParameters)
+        public ClosureType(Node pFunction, IEnumerable<DataType> pParameters)
+            : this(pFunction)
         {
-            Parameters = pParameters;
-            Function = pFunction;
+            Parameters.Values.AddRange(pParameters);
         }
 
         /// <summary>

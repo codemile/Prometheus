@@ -20,22 +20,16 @@ namespace Prometheus.Runtime
         /// </summary>
         private InstanceType CreateInstance(DeclarationType pDecl)
         {
-            InstanceType baseInst = null;
-            if (pDecl.Base != null)
+            InstanceType inst = new InstanceType();
+            if (pDecl.Base == null)
             {
-                DeclarationType baseType = Executor.Cursor.Get<DeclarationType>(pDecl.Base);
-                baseInst = CreateInstance(baseType);
+                return inst;
             }
 
-            InstanceType inst = new InstanceType();
-
-            /*
-                        inst.GetMembers().Create(IdentifierType.THIS, inst);
-                        if (baseInst != null)
-                        {
-                            inst.GetMembers().Create(IdentifierType.BASE, baseInst);
-                        }
-            */
+            DeclarationType baseType = Executor.Cursor.Get<DeclarationType>(pDecl.Base);
+            InstanceType baseInst = CreateInstance(baseType);
+            ClosureType baseFunc = new ClosureType(baseInst,baseType.Constructor);
+            inst.GetMembers().Create(IdentifierType.BASE, baseFunc);
 
             return inst;
         }
@@ -46,26 +40,6 @@ namespace Prometheus.Runtime
         public ObjectGrammar(Executor pExecutor)
             : base(pExecutor)
         {
-        }
-
-        /// <summary>
-        /// Declares a new function type
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
-        {
-            Executor.Cursor.Stack.Create(pFuncName.Name, pFunc);
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
-        /// Declares a new function type
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(IdentifierType pFuncName, ArrayType pParameters, ClosureType pFunc)
-        {
-            Executor.Cursor.Stack.Create(pFuncName.Name, new ClosureType(pFunc.Function, pParameters));
-            return UndefinedType.Undefined;
         }
 
         /// <summary>
@@ -130,6 +104,17 @@ namespace Prometheus.Runtime
             IdentifierType name = pObjectName.Members[0].Cast<IdentifierType>();
             DeclarationType decl = new DeclarationType(pObjectName, new ClosureType(pConstructor.Function, pParameters));
             Executor.Cursor.Stack.Create(name.Name, decl);
+            return decl;
+        }
+
+        /// <summary>
+        /// Declares a new object type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
+        public DataType ObjectDeclare(QualifiedType pBaseName, QualifiedType pObjectName, ArrayType pParameters, ClosureType pConstructor)
+        {
+            DeclarationType decl = new DeclarationType(pBaseName, pObjectName, new ClosureType(pConstructor.Function, pParameters));
+            Executor.Cursor.Stack.Create(pObjectName.ToIdentifier().Name, decl);
             return decl;
         }
     }
