@@ -15,28 +15,6 @@ namespace Prometheus.Exceptions
         public Location Where;
 
         /// <summary>
-        /// Formats the message.
-        /// </summary>
-        public string Format()
-        {
-            if (Where == null)
-            {
-                return Message;
-            }
-
-            List<string> message = new List<string>
-                                   {
-                                       string.Format("{0} {1}", Message, Where),
-                                       "",
-                                       Where.Line,
-                                       "^".PadLeft(Where.Column)
-                                   };
-
-            return string.Join(Environment.NewLine, message);
-        }
-
-
-        /// <summary>
         /// Constructor
         /// </summary>
         protected PrometheusException()
@@ -83,6 +61,27 @@ namespace Prometheus.Exceptions
             : base(pMessage, pInner)
         {
             Where = pLocation;
+        }
+
+        /// <summary>
+        /// Formats the message.
+        /// </summary>
+        public string Format()
+        {
+            if (Where == null)
+            {
+                return Message;
+            }
+
+            List<string> message = new List<string>
+                                   {
+                                       string.Format("{0} {1}", Message, Where),
+                                       "",
+                                       Where.Line,
+                                       "^".PadLeft(Where.Column)
+                                   };
+
+            return string.Join(Environment.NewLine, message);
         }
     }
 }

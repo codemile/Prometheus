@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Objects;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
@@ -45,9 +43,9 @@ namespace Prometheus.Runtime
                 {
                     return UndefinedType.Undefined;
                 }
-                Dictionary<string, DataType> variables = Arguments.CollectArguments(func.Function,pArguments);
+                Dictionary<string, DataType> variables = Arguments.CollectArguments(func.Function, pArguments);
                 variables.Add("this", func.This);
-                return Executor.Execute(func.Function.Children[0], variables);
+                return Executor.Execute(func.Function, variables);
             }
             catch (ReturnException returnData)
             {

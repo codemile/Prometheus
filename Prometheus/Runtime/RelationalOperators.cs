@@ -22,6 +22,86 @@ namespace Prometheus.Runtime
         private readonly HashSet<GrammarSymbol> _compareSymbols;
 
         /// <summary>
+        /// Used to recursively compare arrays.
+        /// </summary>
+        private static bool InnerEq(DataType pValue1, DataType pValue2)
+        {
+            // same object reference
+            if (pValue1 == pValue2)
+            {
+                return true;
+            }
+
+            // compare strings
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
+            {
+                return String.CompareOrdinal(str1.Value, str2.Value) == 0;
+            }
+
+            // compare numbers
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                if (num1.Type == num2.Type && num1.isLong)
+                {
+                    return num1.Long == num2.Long;
+                }
+                return Math.Abs(num1.Double - num2.Double) < double.Epsilon;
+            }
+
+            // compare boolean
+            BooleanType bool1 = pValue1 as BooleanType;
+            BooleanType bool2 = pValue2 as BooleanType;
+            if (bool1 != null && bool2 != null)
+            {
+                return bool1.Value == bool2.Value;
+            }
+
+            // compare pointers
+            InstanceType inst1 = pValue1 as InstanceType;
+            InstanceType inst2 = pValue2 as InstanceType;
+            if (inst1 != null && inst2 != null)
+            {
+                return inst1 == inst2;
+            }
+
+            // compare with undefined
+            UndefinedType undefined1 = pValue1 as UndefinedType;
+            UndefinedType undefined2 = pValue2 as UndefinedType;
+            if (undefined1 != null && undefined2 != null)
+            {
+                return true;
+            }
+            if (undefined1 != null || undefined2 != null)
+            {
+                return false;
+            }
+
+            // TODO: This might get stuck in a recursion loop if the array contains a reference to the same array twice
+            // compare array
+            ArrayType array1 = pValue1 as ArrayType;
+            ArrayType array2 = pValue2 as ArrayType;
+            if (array1 != null && array2 != null)
+            {
+                if (array1.Count != array2.Count)
+                {
+                    return false;
+                }
+                bool result = true;
+                for (int i = 0, c = array1.Count; i < c; i++)
+                {
+                    result &= InnerEq(array1[i], array2[i]);
+                }
+                return result;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Checks if a node performs math operations on two constant values.
         /// </summary>
         /// <param name="pNode">The node to check</param>
@@ -104,6 +184,37 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// AND operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.AndOperator)]
+        public DataType AndOp(DataType pValue1, DataType pValue2)
+        {
+            BooleanType bool1 = pValue1 as BooleanType;
+            BooleanType bool2 = pValue2 as BooleanType;
+            if (bool1 != null && bool2 != null)
+            {
+                return new BooleanType(bool1.Value && bool2.Value);
+            }
+
+            throw DataTypeException.InvalidTypes("AND", pValue1, pValue2);
+        }
+
+        /// <summary>
+        /// ~ operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.BitInvertOperator)]
+        public DataType Bitwise(DataType pValue)
+        {
+            NumericType num = pValue as NumericType;
+            if (num != null && num.isLong)
+            {
+                return new NumericType(~num.Long);
+            }
+
+            throw DataTypeException.InvalidTypes("~", pValue);
+        }
+
+        /// <summary>
         /// Equal
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.EqualOperator)]
@@ -113,92 +224,18 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Not equal
+        /// Not operator
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.NotEqualOperator)]
-        public DataType NotEqual(DataType pValue1, DataType pValue2)
+        [ExecuteSymbol(GrammarSymbol.NotOperator)]
+        public DataType Equal(DataType pValue1)
         {
-            return new BooleanType(!InnerEq(pValue1, pValue2));
-        }
-
-        /// <summary>
-        /// Used to recursively compare arrays.
-        /// </summary>
-        private static bool InnerEq(DataType pValue1, DataType pValue2)
-        {
-            // same object reference
-            if (pValue1 == pValue2)
-            {
-                return true;
-            }
-
-            // compare strings
-            StringType str1 = pValue1 as StringType;
-            StringType str2 = pValue2 as StringType;
-            if (str1 != null && str2 != null)
-            {
-                return String.CompareOrdinal(str1.Value, str2.Value) == 0;
-            }
-
-            // compare numbers
-            NumericType num1 = pValue1 as NumericType;
-            NumericType num2 = pValue2 as NumericType;
-            if (num1 != null && num2 != null)
-            {
-                if (num1.Type == num2.Type && num1.isLong)
-                {
-                    return num1.Long == num2.Long;
-                }
-                return Math.Abs(num1.Double - num2.Double) < double.Epsilon;
-            }
-
-            // compare boolean
             BooleanType bool1 = pValue1 as BooleanType;
-            BooleanType bool2 = pValue2 as BooleanType;
-            if (bool1 != null && bool2 != null)
+            if (bool1 != null)
             {
-                return bool1.Value == bool2.Value;
+                return new BooleanType(!bool1.Value);
             }
 
-            // compare pointers
-            AliasType alias1 = pValue1 as AliasType;
-            AliasType alias2 = pValue2 as AliasType;
-            if (alias1 != null && alias2 != null)
-            {
-                return alias1.Heap == alias2.Heap;
-            }
-
-            // compare with undefined
-            UndefinedType undefined1 = pValue1 as UndefinedType;
-            UndefinedType undefined2 = pValue2 as UndefinedType;
-            if (undefined1 != null && undefined2 != null)
-            {
-                return true;
-            }
-            if (undefined1 != null || undefined2 != null)
-            {
-                return false;
-            }
-
-            // TODO: This might get stuck in a recursion loop if the array contains a reference to the same array twice
-            // compare array
-            ArrayType array1 = pValue1 as ArrayType;
-            ArrayType array2 = pValue2 as ArrayType;
-            if (array1 != null && array2 != null)
-            {
-                if (array1.Count != array2.Count)
-                {
-                    return false;
-                }
-                bool result = true;
-                for (int i = 0, c = array1.Count; i < c; i++)
-                {
-                    result &= InnerEq(array1[i], array2[i]);
-                }
-                return result;
-            }
-
-            return false;
+            throw DataTypeException.InvalidTypes("NOT", pValue1);
         }
 
         /// <summary>
@@ -310,19 +347,28 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// AND operator
+        /// - operator
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.AndOperator)]
-        public DataType AndOp(DataType pValue1, DataType pValue2)
+        [ExecuteSymbol(GrammarSymbol.NegOperator)]
+        public DataType Negative(DataType pValue)
         {
-            BooleanType bool1 = pValue1 as BooleanType;
-            BooleanType bool2 = pValue2 as BooleanType;
-            if (bool1 != null && bool2 != null)
+            NumericType num = pValue as NumericType;
+            if (num != null)
             {
-                return new BooleanType(bool1.Value && bool2.Value);
+                return num.isLong
+                    ? new NumericType(-num.Long)
+                    : new NumericType(-num.Double);
             }
+            throw DataTypeException.InvalidTypes("-", pValue);
+        }
 
-            throw DataTypeException.InvalidTypes("AND", pValue1, pValue2);
+        /// <summary>
+        /// Not equal
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.NotEqualOperator)]
+        public DataType NotEqual(DataType pValue1, DataType pValue2)
+        {
+            return new BooleanType(!InnerEq(pValue1, pValue2));
         }
 
         /// <summary>
@@ -342,38 +388,7 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Not operator
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.NotOperator)]
-        public DataType Equal(DataType pValue1)
-        {
-            BooleanType bool1 = pValue1 as BooleanType;
-            if (bool1 != null)
-            {
-                return new BooleanType(!bool1.Value);
-            }
-
-            throw DataTypeException.InvalidTypes("NOT", pValue1);
-        }
-
-        /// <summary>
-        /// ~ operator
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.BitInvertOperator)]
-        public DataType Bitwise(DataType pValue)
-        {
-            NumericType num = pValue as NumericType;
-            if (num != null && num.isLong)
-            {
-                return new NumericType(~num.Long);
-            }
-
-            throw DataTypeException.InvalidTypes("~", pValue);
-        }
-
-        /// <summary>
         /// + operator
-        /// 
         /// Doesn't change the value, but can only work on numeric types.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PlusOperator)]
@@ -385,74 +400,6 @@ namespace Prometheus.Runtime
                 return num;
             }
             throw DataTypeException.InvalidTypes("+", pValue);
-        }
-
-        /// <summary>
-        /// - operator
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.NegOperator)]
-        public DataType Negative(DataType pValue)
-        {
-            NumericType num = pValue as NumericType;
-            if (num != null)
-            {
-                return num.isLong
-                    ? new NumericType(-num.Long)
-                    : new NumericType(-num.Double);
-            }
-            throw DataTypeException.InvalidTypes("-", pValue);
-        }
-
-        /// <summary>
-        /// x++ operator
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.PostIncOperator)]
-        public DataType PostInc(DataType pValue)
-        {
-            QualifiedType id = pValue as QualifiedType;
-            if (id == null)
-            {
-                throw DataTypeException.InvalidTypes("-", pValue);
-            }
-
-            iVariablePointer pointer = Executor.Cursor.Resolve(id);
-            NumericType num = pointer.Read() as NumericType;
-            if (num == null)
-            {
-                throw DataTypeException.InvalidTypes("-", pValue);
-            }
-
-            num = num.isLong
-                ? new NumericType(num.Long+1)
-                : new NumericType(num.Double+1.0);
-            pointer.Write(num);
-
-            return num;
-        }
-
-        /// <summary>
-        /// ++x operator
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.PreIncOperator)]
-        public DataType PreInc(DataType pValue)
-        {
-            QualifiedType id = pValue as QualifiedType;
-            if (id == null)
-            {
-                throw DataTypeException.InvalidTypes("-", pValue);
-            }
-
-            iVariablePointer pointer = Executor.Cursor.Resolve(id);
-            NumericType num = pointer.Read() as NumericType;
-            if (num == null)
-            {
-                throw DataTypeException.InvalidTypes("-", pValue);
-            }
-
-            pointer.Write(num.isLong
-                ? new NumericType(num.Long + 1)
-                : new NumericType(num.Double + 1.0));
-            return num;
         }
 
         /// <summary>
@@ -482,6 +429,33 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// x++ operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PostIncOperator)]
+        public DataType PostInc(DataType pValue)
+        {
+            QualifiedType id = pValue as QualifiedType;
+            if (id == null)
+            {
+                throw DataTypeException.InvalidTypes("-", pValue);
+            }
+
+            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("-", pValue);
+            }
+
+            num = num.isLong
+                ? new NumericType(num.Long + 1)
+                : new NumericType(num.Double + 1.0);
+            pointer.Write(num);
+
+            return num;
+        }
+
+        /// <summary>
         /// --x operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PreDecOperator)]
@@ -506,5 +480,29 @@ namespace Prometheus.Runtime
             return num;
         }
 
+        /// <summary>
+        /// ++x operator
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PreIncOperator)]
+        public DataType PreInc(DataType pValue)
+        {
+            QualifiedType id = pValue as QualifiedType;
+            if (id == null)
+            {
+                throw DataTypeException.InvalidTypes("-", pValue);
+            }
+
+            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("-", pValue);
+            }
+
+            pointer.Write(num.isLong
+                ? new NumericType(num.Long + 1)
+                : new NumericType(num.Double + 1.0));
+            return num;
+        }
     }
 }

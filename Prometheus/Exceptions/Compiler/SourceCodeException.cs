@@ -1,7 +1,4 @@
-﻿using System;
-using Prometheus.Compile;
-
-namespace Prometheus.Exceptions.Compiler
+﻿namespace Prometheus.Exceptions.Compiler
 {
     public class SourceCodeException : CompilerException
     {

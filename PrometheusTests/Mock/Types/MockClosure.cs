@@ -8,7 +8,7 @@ namespace PrometheusTest.Mock.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public MockClosure(AliasType pThis, Node pFunction)
+        public MockClosure(InstanceType pThis, Node pFunction)
             : base(pThis, pFunction)
         {
         }

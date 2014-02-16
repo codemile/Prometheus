@@ -16,7 +16,7 @@ namespace PrometheusTest.Nodes
         public void CreateString_0()
         {
             StringType str = DataTypeFactory.CreateString("\"Hello World\"");
-            Assert.AreEqual("Hello World",str.Value);
+            Assert.AreEqual("Hello World", str.Value);
             Assert.AreEqual(StringType.eMODE.ANYWHERE, str.Mode);
         }
 
@@ -69,9 +69,9 @@ namespace PrometheusTest.Nodes
             StringType str = DataTypeFactory.CreateString("\"Hello\"ic");
             Assert.AreEqual("Hello", str.Value);
             Assert.AreEqual(StringType.eMODE.ANYWHERE, str.Mode);
-            Assert.AreEqual((int)StringType.eFLAGS.NO_CACHING 
-                | (int)StringType.eFLAGS.IGNORE_CASE
-                ,str.Flags);
+            Assert.AreEqual((int)StringType.eFLAGS.NO_CACHING
+                            | (int)StringType.eFLAGS.IGNORE_CASE
+                , str.Flags);
         }
 
         [TestMethod]
@@ -80,9 +80,9 @@ namespace PrometheusTest.Nodes
             StringType str = DataTypeFactory.CreateString("\"Hello\"icf");
             Assert.AreEqual("Hello", str.Value);
             Assert.AreEqual(StringType.eMODE.ANYWHERE, str.Mode);
-            Assert.AreEqual((int)StringType.eFLAGS.MATCH_FIRST 
-                | (int)StringType.eFLAGS.IGNORE_CASE
-                | (int)StringType.eFLAGS.NO_CACHING
+            Assert.AreEqual((int)StringType.eFLAGS.MATCH_FIRST
+                            | (int)StringType.eFLAGS.IGNORE_CASE
+                            | (int)StringType.eFLAGS.NO_CACHING
                 , str.Flags);
         }
 

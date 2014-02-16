@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Storage

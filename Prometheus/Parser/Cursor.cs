@@ -13,11 +13,6 @@ namespace Prometheus.Parser
     public class Cursor : IDisposable
     {
         /// <summary>
-        /// The storage of all objects.
-        /// </summary>
-        public readonly HeapSpace Heap;
-
-        /// <summary>
         /// The current node being executed.
         /// </summary>
         public Node Node;
@@ -34,8 +29,6 @@ namespace Prometheus.Parser
         {
             Stack = null;
             Node = null;
-
-            Heap = new HeapSpace();
         }
 
         /// <summary>
@@ -47,7 +40,6 @@ namespace Prometheus.Parser
             {
                 Stack.Dispose();
             }
-            Heap.Dispose();
             Node = null;
         }
 
@@ -61,7 +53,7 @@ namespace Prometheus.Parser
             if (result == null)
             {
                 throw new IdentifierInnerException(
-                    string.Format("Expected <{0}> but found <{1}> instead", typeof(T).Name, value.GetType().Name));
+                    string.Format("Expected <{0}> but found <{1}> instead", typeof (T).Name, value.GetType().Name));
             }
             return result;
         }
@@ -78,10 +70,10 @@ namespace Prometheus.Parser
             for (int i = 0, c = pID.Count; i < c; i++)
             {
                 // follow member references to objects
-                AliasType alias = member as AliasType;
-                if (alias != null)
+                InstanceType inst = member as InstanceType;
+                if (inst != null)
                 {
-                    stack = Heap.Get(alias).GetMembers();
+                    stack = inst.GetMembers();
                 }
                 // first has to be id
                 IdentifierType id = pID[i] as IdentifierType;

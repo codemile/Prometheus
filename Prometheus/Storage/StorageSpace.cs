@@ -55,6 +55,12 @@ namespace Prometheus.Storage
         /// <returns>The data</returns>
         public virtual DataType Get(string pName)
         {
+/*
+            if (!_storage.ContainsKey(pName))
+            {
+                throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
+            }
+*/
             return _storage.ContainsKey(pName) ? _storage[pName] : null;
         }
 

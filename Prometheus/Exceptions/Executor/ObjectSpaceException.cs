@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Prometheus.Exceptions.Executor
+﻿namespace Prometheus.Exceptions.Executor
 {
     public class ObjectSpaceException : RunTimeException
     {
@@ -19,9 +14,8 @@ namespace Prometheus.Exceptions.Executor
         /// Constructor
         /// </summary>
         public ObjectSpaceException(string pMessage, object pRef)
-            : base(Format(pMessage,pRef))
+            : base(Format(pMessage, pRef))
         {
-            
         }
     }
 }

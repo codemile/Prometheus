@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser;
 using Prometheus.Properties;
@@ -58,6 +57,16 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
+        /// Prints a list of all variables.
+        /// </summary>
+        public override IEnumerable<MemoryItem> Dump(int pIndent = 0)
+        {
+            return _parent == null
+                ? base.Dump(pIndent)
+                : _parent.Dump(pIndent + 1).Union(base.Dump(pIndent));
+        }
+
+        /// <summary>
         /// Looks for the identifier in the current scope, and
         /// all parent scopes.
         /// </summary>
@@ -75,16 +84,6 @@ namespace Prometheus.Storage
                 return _parent.Get(pName);
             }
             throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
-        }
-
-        /// <summary>
-        /// Prints a list of all variables.
-        /// </summary>
-        public override IEnumerable<MemoryItem> Dump(int pIndent = 0)
-        {
-            return _parent == null 
-                ? base.Dump(pIndent) 
-                : _parent.Dump(pIndent + 1).Union(base.Dump(pIndent));
         }
 
         /// <summary>

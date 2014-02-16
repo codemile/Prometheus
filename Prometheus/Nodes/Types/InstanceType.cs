@@ -1,11 +1,12 @@
-﻿using Prometheus.Storage;
+﻿using Prometheus.Nodes.Types.Bases;
+using Prometheus.Storage;
 
-namespace Prometheus.Objects
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Holds the data associated with an instance of an object.
     /// </summary>
-    public class Instance
+    public class InstanceType : DataType
     {
         /// <summary>
         /// Members of this object
@@ -15,7 +16,7 @@ namespace Prometheus.Objects
         /// <summary>
         /// Constructor
         /// </summary>
-        public Instance(iMemorySpace pMembers)
+        public InstanceType(iMemorySpace pMembers)
         {
             _members = pMembers;
         }
@@ -23,7 +24,7 @@ namespace Prometheus.Objects
         /// <summary>
         /// Constructor
         /// </summary>
-        public Instance()
+        public InstanceType()
         {
             _members = new StorageSpace();
         }

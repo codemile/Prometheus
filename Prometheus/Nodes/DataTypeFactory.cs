@@ -94,7 +94,9 @@ namespace Prometheus.Nodes
                 throw new UnexpectedErrorException("Unexpected empty string.");
             }
 #endif
-            StringType.eMODE mode = pValue[0] == '"' || pValue[0] == '/' ? StringType.eMODE.ANYWHERE : StringType.eMODE.WORD_BOUNDARIES;
+            StringType.eMODE mode = pValue[0] == '"' || pValue[0] == '/'
+                ? StringType.eMODE.ANYWHERE
+                : StringType.eMODE.WORD_BOUNDARIES;
             bool regex = pValue[0] == '/' || pValue[0] == '|';
             StringType.eFLAGS flags = StringType.eFLAGS.NONE;
 

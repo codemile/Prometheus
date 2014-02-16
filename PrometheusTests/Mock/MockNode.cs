@@ -25,7 +25,7 @@ namespace PrometheusTest.Mock
             return new Node(pSymbol, new MockLocation());
         }
 
-        public static Node Create(GrammarSymbol pSymbol,DataType pData)
+        public static Node Create(GrammarSymbol pSymbol, DataType pData)
         {
             Node node = Create(pSymbol);
             node.Data.Add(pData);

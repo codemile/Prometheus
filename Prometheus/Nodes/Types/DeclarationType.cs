@@ -10,14 +10,14 @@ namespace Prometheus.Nodes.Types
     public class DeclarationType : DataType
     {
         /// <summary>
-        /// The name of the object
-        /// </summary>
-        public readonly QualifiedType ClassName;
-
-        /// <summary>
         /// The base class of the object.
         /// </summary>
         public readonly QualifiedType Base;
+
+        /// <summary>
+        /// The name of the object
+        /// </summary>
+        public readonly QualifiedType ClassName;
 
         /// <summary>
         /// The constructor function.
@@ -55,7 +55,7 @@ namespace Prometheus.Nodes.Types
             {
                 return "object::" + ClassName;
             }
-            return Base+"::"+ClassName;
+            return Base + "::" + ClassName;
         }
     }
 }

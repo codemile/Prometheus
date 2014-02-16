@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Prometheus.Exceptions.Executor
+﻿namespace Prometheus.Exceptions.Executor
 {
     /// <summary>
     /// Invalid access to an array

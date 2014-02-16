@@ -1,9 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prometheus.Compile;
 using Prometheus.Compile.Optomizer;
-using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Nodes.Types;
 using PrometheusTest.Mock;
 using PrometheusTest.Mock.Types;
 
@@ -62,9 +59,9 @@ namespace PrometheusTest.Compile.Optomizer
             Node parent = MockNode.Create();
             Node child = MockNode.Create(new MockType("Hello World"));
 
-            Optimizer.ShiftData(parent,child);
+            Optimizer.ShiftData(parent, child);
 
-            Assert.AreEqual(0,child.Data.Count);
+            Assert.AreEqual(0, child.Data.Count);
             Assert.AreEqual(1, parent.Data.Count);
             Assert.AreEqual("Hello World", ((MockType)parent.Data[0]).Value);
         }

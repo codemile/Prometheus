@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Prometheus.Compile;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Objects;
 using Prometheus.Parser.Executors;
 using Prometheus.Storage;
 
@@ -17,28 +15,28 @@ namespace Prometheus.Parser
     public class Parser
     {
         /// <summary>
-        /// List of types that can be converted to long without lose of precision.
-        /// </summary>
-        private static readonly HashSet<Type> _longTypes = new HashSet<Type>
-                                                              {
-                                                                  typeof(Byte),
-                                                                  typeof(SByte),
-                                                                  typeof(Int16),
-                                                                  typeof(Int32),
-                                                                  typeof(Int64),
-                                                                  typeof(UInt16),
-                                                                  typeof(UInt32),
-                                                                  typeof(UInt64)
-                                                              };
-
-        /// <summary>
         /// List of types that can be converted to double without lose of precision.
         /// </summary>
         private static readonly HashSet<Type> _doubleTypes = new HashSet<Type>
-                                                              {
-                                                                  typeof(float),
-                                                                  typeof(double)
-                                                              };
+                                                             {
+                                                                 typeof (float),
+                                                                 typeof (double)
+                                                             };
+
+        /// <summary>
+        /// List of types that can be converted to long without lose of precision.
+        /// </summary>
+        private static readonly HashSet<Type> _longTypes = new HashSet<Type>
+                                                           {
+                                                               typeof (Byte),
+                                                               typeof (SByte),
+                                                               typeof (Int16),
+                                                               typeof (Int32),
+                                                               typeof (Int64),
+                                                               typeof (UInt16),
+                                                               typeof (UInt32),
+                                                               typeof (UInt64)
+                                                           };
 
         /// <summary>
         /// A list of objects to inject
@@ -85,8 +83,8 @@ namespace Prometheus.Parser
             else if (pValue is Regex)
             {
                 Regex regex = (Regex)pValue;
-                StringType.eFLAGS flags = regex.Options.HasFlag(RegexOptions.IgnoreCase) 
-                    ? StringType.eFLAGS.IGNORE_CASE 
+                StringType.eFLAGS flags = regex.Options.HasFlag(RegexOptions.IgnoreCase)
+                    ? StringType.eFLAGS.IGNORE_CASE
                     : StringType.eFLAGS.NONE;
                 _customVaraibles.Add(pName, new StringType(true, regex.ToString(), StringType.eMODE.ANYWHERE, flags));
             }
@@ -114,15 +112,12 @@ namespace Prometheus.Parser
                 Dictionary<string, DataType> globals = new Dictionary<string, DataType>(_customVaraibles);
 
                 // create root object (the default "this" reference)
-                DataType _this = executor.Cursor.Heap.Add(new Instance());
-                globals.Add("this", _this);
+                globals.Add("this", new InstanceType());
 
                 foreach (KeyValuePair<string, object> customObject in _customObjects)
                 {
                     ObjectSpace objSpace = new ObjectSpace(customObject.Value);
-                    DataType alias =
-                        executor.Cursor.Heap.Add(new Instance(objSpace));
-                    globals.Add(customObject.Key, alias);
+                    globals.Add(customObject.Key, new InstanceType(objSpace));
                 }
 
                 using (executor.Cursor.Stack = new StackSpace(executor.Cursor, globals))

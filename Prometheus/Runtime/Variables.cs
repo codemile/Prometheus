@@ -3,7 +3,6 @@ using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Objects;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
@@ -23,7 +22,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Prints a memory space recursively for object instances.
         /// </summary>
-        private static void Print(HeapSpace pHead, iMemoryDump pMemory, int pIndent)
+        private static void Print(iMemoryDump pMemory, int pIndent)
         {
             foreach (MemoryItem item in pMemory.Dump(pIndent))
             {
@@ -32,12 +31,11 @@ namespace Prometheus.Runtime
                 {
                     indent = " ".PadLeft(pIndent + item.Level);
                 }
-                AliasType alias = item.Data as AliasType;
-                if (alias != null)
+                InstanceType inst = item.Data as InstanceType;
+                if (inst != null)
                 {
-                    Instance inst = pHead.Get(alias);
-                    _logger.Fine("{0}{1} = instance::{2}[",indent,item.Name,alias.Heap);
-                    Print(pHead, inst.GetMembers(), pIndent + 1);
+                    _logger.Fine("{0}{1} = instance[", indent, item.Name);
+                    Print(inst.GetMembers(), pIndent + 1);
                     _logger.Fine("{0}]", indent);
                     continue;
                 }
@@ -45,7 +43,7 @@ namespace Prometheus.Runtime
                 if (array != null)
                 {
                     _logger.Fine("{0}{1} = array({2})[", indent, item.Name, array.Values.Count);
-                    Print(pHead, array, pIndent + 1);
+                    Print(array, pIndent + 1);
                     _logger.Fine("{0}]", indent);
                     continue;
                 }
@@ -66,12 +64,12 @@ namespace Prometheus.Runtime
             }
 
             ClosureType func = pValue as ClosureType;
-            if (func == null || func.isCompiled())
+            if (func == null || func.HasThis())
             {
                 return pValue;
             }
 
-            AliasType _this = (AliasType)Executor.Cursor.Stack.Get(IdentifierType.THIS);
+            InstanceType _this = (InstanceType)Executor.Cursor.Stack.Get(IdentifierType.THIS);
             return new ClosureType(_this, func.Function);
         }
 
@@ -160,7 +158,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ListVars)]
         public DataType ListVars()
         {
-            Print(Executor.Cursor.Heap, Executor.Cursor.Stack, 0);
+            Print(Executor.Cursor.Stack, 0);
             return UndefinedType.Undefined;
         }
 

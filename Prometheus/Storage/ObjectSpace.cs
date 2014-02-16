@@ -70,7 +70,7 @@ namespace Prometheus.Storage
             PropertyInfo info = GetInfo(pName);
             if (!info.CanWrite)
             {
-                throw new ObjectSpaceException(string.Format("Cannot write <{0}> property for", info.Name),_ref);
+                throw new ObjectSpaceException(string.Format("Cannot write <{0}> property for", info.Name), _ref);
             }
             return info;
         }
@@ -174,7 +174,8 @@ namespace Prometheus.Storage
         /// <param name="pIndent">Line indent</param>
         public IEnumerable<MemoryItem> Dump(int pIndent = 0)
         {
-            return from prop in _properties select new MemoryItem{Name=prop.Key, Data = Get(prop.Key), Level = pIndent};
+            return from prop in _properties
+                   select new MemoryItem {Name = prop.Key, Data = Get(prop.Key), Level = pIndent};
         }
 
         /// <summary>

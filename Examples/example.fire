@@ -1,7 +1,0 @@
-var x = function() {
-	return "hello world";
-};
-
-vars;
-
-print x();

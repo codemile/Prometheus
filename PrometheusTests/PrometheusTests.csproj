@@ -48,7 +48,6 @@
     <Compile Include="Compile\CompilerTests.cs" />
     <Compile Include="Compile\Optomizer\OptimizerTests.cs" />
     <Compile Include="Mock\Compile\MockLocation.cs" />
-    <Compile Include="Mock\Types\MockAlias.cs" />
     <Compile Include="Mock\MockCommand.cs" />
     <Compile Include="Mock\MockNode.cs" />
     <Compile Include="Mock\Objects\MockDeclarationType.cs" />
@@ -56,7 +55,6 @@
     <Compile Include="Mock\Types\MockType.cs" />
     <Compile Include="Nodes\DataTypeFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\HeapSpaceTests.cs" />
     <Compile Include="Storage\MemorySpaceTests.cs" />
     <Compile Include="Storage\StackSpaceTests.cs" />
   </ItemGroup>

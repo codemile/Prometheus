@@ -11,21 +11,6 @@ namespace Prometheus.Nodes.Types
     public class StringType : DataType, iSearchNeedle, iSearchHaystack
     {
         /// <summary>
-        /// The matching mode
-        /// </summary>
-        public enum eMODE
-        {
-            /// <summary>
-            /// Anywhere in the haystack
-            /// </summary>
-            ANYWHERE,
-            /// <summary>
-            /// Between word boundaries only
-            /// </summary>
-            WORD_BOUNDARIES
-        }
-
-        /// <summary>
         /// Compile flags
         /// </summary>
         [Flags]
@@ -35,14 +20,17 @@ namespace Prometheus.Nodes.Types
             /// No flags
             /// </summary>
             NONE = 0,
+
             /// <summary>
             /// Ignore text case
             /// </summary>
             IGNORE_CASE = 1 << 0,
+
             /// <summary>
             /// Except to term change so don't cache
             /// </summary>
             NO_CACHING = 1 << 1,
+
             /// <summary>
             /// Only match first position
             /// </summary>
@@ -50,14 +38,20 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
-        /// String value
-        /// </summary>
-        public readonly string Value;
-
-        /// <summary>
         /// The matching mode
         /// </summary>
-        public readonly eMODE Mode;
+        public enum eMODE
+        {
+            /// <summary>
+            /// Anywhere in the haystack
+            /// </summary>
+            ANYWHERE,
+
+            /// <summary>
+            /// Between word boundaries only
+            /// </summary>
+            WORD_BOUNDARIES
+        }
 
         /// <summary>
         /// The matching flags
@@ -65,14 +59,24 @@ namespace Prometheus.Nodes.Types
         public readonly eFLAGS Flags;
 
         /// <summary>
-        /// The compiled version of this string as a search term.
+        /// The matching mode
         /// </summary>
-        private Regex _regex;
+        public readonly eMODE Mode;
+
+        /// <summary>
+        /// String value
+        /// </summary>
+        public readonly string Value;
 
         /// <summary>
         /// Handle this string as a regex
         /// </summary>
         private readonly bool _isRegex;
+
+        /// <summary>
+        /// The compiled version of this string as a search term.
+        /// </summary>
+        private Regex _regex;
 
         /// <summary>
         /// Constructor
@@ -110,29 +114,6 @@ namespace Prometheus.Nodes.Types
             Value = pValue1.Value + pValue2.Value;
             Mode = pValue1.Mode;
             Flags = pValue1.Flags & pValue2.Flags;
-        }
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        public override string ToString()
-        {
-            string quotes;
-            if (_isRegex)
-            {
-                quotes = (Mode == eMODE.ANYWHERE) ? "/" : "|";
-            }
-            else
-            {
-                quotes = (Mode == eMODE.ANYWHERE) ? "\"" : "'";
-            }
-            string flags = Flags.HasFlag(eFLAGS.IGNORE_CASE) ? "i" : "";
-            flags += Flags.HasFlag(eFLAGS.NO_CACHING) ? "c" : "";
-            flags += Flags.HasFlag(eFLAGS.MATCH_FIRST) ? "f" : "";
-            return string.Format("{0}{1}{0}{2}", quotes, Value, flags);
         }
 
         /// <summary>
@@ -179,6 +160,29 @@ namespace Prometheus.Nodes.Types
             _regex = new Regex(str);
 
             return _regex.IsMatch(pHaystack);
+        }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            string quotes;
+            if (_isRegex)
+            {
+                quotes = (Mode == eMODE.ANYWHERE) ? "/" : "|";
+            }
+            else
+            {
+                quotes = (Mode == eMODE.ANYWHERE) ? "\"" : "'";
+            }
+            string flags = Flags.HasFlag(eFLAGS.IGNORE_CASE) ? "i" : "";
+            flags += Flags.HasFlag(eFLAGS.NO_CACHING) ? "c" : "";
+            flags += Flags.HasFlag(eFLAGS.MATCH_FIRST) ? "f" : "";
+            return string.Format("{0}{1}{0}{2}", quotes, Value, flags);
         }
     }
 }

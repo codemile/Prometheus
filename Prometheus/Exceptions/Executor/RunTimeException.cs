@@ -1,5 +1,4 @@
 ﻿using System;
-using Prometheus.Compile;
 using Prometheus.Nodes;
 
 namespace Prometheus.Exceptions.Executor

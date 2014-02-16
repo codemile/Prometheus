@@ -33,43 +33,34 @@ namespace Prometheus.Parser.Executors
         private readonly Dictionary<string, ExecutorInternal> _internalLookup;
 
         /// <summary>
-        /// Constructor
+        /// Executes the base implementation of the node. This is where the parser
+        /// transitions from walking the node tree to executing C# code for a grammar
+        /// command.
         /// </summary>
-        public Executor()
+        /// <param name="pNode">The node to execute</param>
+        /// <param name="pBase">The object that implements the node</param>
+        /// <returns>The returning data</returns>
+        private DataType ExecuteBase(Node pNode, ExecutorBase pBase)
         {
-            Cursor = new Cursor();
-
-            _grammarLookup =
-                ObjectFactory.CreateLookupTable<GrammarSymbol, ExecutorGrammar, ExecuteSymbol>(new object[] {this});
-            _internalLookup =
-                ObjectFactory.CreateLookupTable<string, ExecutorInternal, ExecuteInternal>(new object[] {this});
-        }
-
-        /// <summary>
-        /// Executes an internal API function.
-        /// </summary>
-        /// <param name="pInternal">Name of the API to call</param>
-        /// <param name="pArguments">The arguments</param>
-        /// <returns>The resulting data</returns>
-        public DataType Execute(string pInternal, List<DataType> pArguments)
-        {
-            object[] values = new object[pArguments.Count];
-            for (int i = 0, c = pArguments.Count; i < c; i++)
+            int dCount = pNode.Data.Count;
+            object[] values = new object[pNode.Children.Count + dCount];
+            for (int i = 0, c = dCount; i < c; i++)
             {
-                values[i] = pArguments[i];
+                values[i] = pNode.Data[i];
+            }
+            for (int i = 0, j = dCount, c = pNode.Children.Count; i < c; i++, j++)
+            {
+                values[j] = WalkDownChildren(pNode.Children[i]);
             }
 
-            return _internalLookup[pInternal].Execute(values);
-        }
-
-        /// <summary>
-        /// Executes a node
-        /// </summary>
-        public DataType Execute(Node pNode, Dictionary<string, DataType> pVariables)
-        {
-            using (Cursor.Stack = new StackSpace(Cursor, pVariables))
+            try
             {
-                return WalkDownChildren(pNode);
+                Cursor.Node = pNode;
+                return pBase.Execute(values);
+            }
+            catch (IdentifierInnerException e)
+            {
+                throw new IdentifierException(e.Message, pNode);
             }
         }
 
@@ -82,21 +73,19 @@ namespace Prometheus.Parser.Executors
         {
             switch (pParent.Type)
             {
-                // these are just holders for constant values
+                    // these are just holders for constant values
                 case GrammarSymbol.ValidID:
                 case GrammarSymbol.Value:
                 case GrammarSymbol.MemberID:
 #if DEBUG
-                    ExecutorAssert.Data(pParent,1);
+                    ExecutorAssert.Data(pParent, 1);
 #endif
                     return pParent.Data[0];
 
                 case GrammarSymbol.ObjectBlock:
                 case GrammarSymbol.FunctionBlock:
-                    return new ClosureType(pParent.FirstChild());
-
                 case GrammarSymbol.FunctionExpression:
-                    return new ClosureType(pParent);
+                    return new ClosureType(pParent.FirstChild());
 
                 case GrammarSymbol.Program:
                 case GrammarSymbol.Block:
@@ -226,7 +215,7 @@ namespace Prometheus.Parser.Executors
                         if (pParent.Type == GrammarSymbol.Parameters)
                         {
                             ExecutorAssert.Data(pParent.Children[i], 1);
-                            ExecutorAssert.DataType(pParent.Children[i], 0, typeof(IdentifierType));
+                            ExecutorAssert.DataType(pParent.Children[i], 0, typeof (IdentifierType));
                         }
 #endif
                         array.Add(pParent.Type == GrammarSymbol.Parameters
@@ -264,35 +253,61 @@ namespace Prometheus.Parser.Executors
         }
 
         /// <summary>
-        /// Executes the base implementation of the node. This is where the parser
-        /// transitions from walking the node tree to executing C# code for a grammar
-        /// command.
+        /// Constructor
         /// </summary>
-        /// <param name="pNode">The node to execute</param>
-        /// <param name="pBase">The object that implements the node</param>
-        /// <returns>The returning data</returns>
-        private DataType ExecuteBase(Node pNode, ExecutorBase pBase)
+        public Executor()
         {
-            int dCount = pNode.Data.Count;
-            object[] values = new object[pNode.Children.Count + dCount];
-            for (int i = 0, c = dCount; i < c; i++)
+            Cursor = new Cursor();
+
+            _grammarLookup =
+                ObjectFactory.CreateLookupTable<GrammarSymbol, ExecutorGrammar, ExecuteSymbol>(new object[] {this});
+            _internalLookup =
+                ObjectFactory.CreateLookupTable<string, ExecutorInternal, ExecuteInternal>(new object[] {this});
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Cursor.Dispose();
+        }
+
+        /// <summary>
+        /// Executes an internal API function.
+        /// </summary>
+        /// <param name="pInternal">Name of the API to call</param>
+        /// <param name="pArguments">The arguments</param>
+        /// <returns>The resulting data</returns>
+        public DataType Execute(string pInternal, List<DataType> pArguments)
+        {
+            object[] values = new object[pArguments.Count];
+            for (int i = 0, c = pArguments.Count; i < c; i++)
             {
-                values[i] = pNode.Data[i];
-            }
-            for (int i = 0, j = dCount, c = pNode.Children.Count; i < c; i++, j++)
-            {
-                values[j] = WalkDownChildren(pNode.Children[i]);
+                values[i] = pArguments[i];
             }
 
-            try
+            return _internalLookup[pInternal].Execute(values);
+        }
+
+        /// <summary>
+        /// Executes a node
+        /// </summary>
+        public DataType Execute(Node pNode, Dictionary<string, DataType> pVariables)
+        {
+            using (Cursor.Stack = new StackSpace(Cursor, pVariables))
             {
-                Cursor.Node = pNode;
-                return pBase.Execute(values);
+                return WalkDownChildren(pNode);
             }
-            catch (IdentifierInnerException e)
-            {
-                throw new IdentifierException(e.Message, pNode);
-            }
+        }
+
+        /// <summary>
+        /// Returns a list of internal API functions that are reserved words.
+        /// </summary>
+        /// <returns>A collection of internal names.</returns>
+        public IEnumerable<string> GetInternalIds()
+        {
+            return _internalLookup.Keys.ToList();
         }
 
         /// <summary>
@@ -317,23 +332,6 @@ namespace Prometheus.Parser.Executors
             }
 
             return pNode;
-        }
-
-        /// <summary>
-        /// Returns a list of internal API functions that are reserved words.
-        /// </summary>
-        /// <returns>A collection of internal names.</returns>
-        public IEnumerable<string> GetInternalIds()
-        {
-            return _internalLookup.Keys.ToList();
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Cursor.Dispose();
         }
     }
 }

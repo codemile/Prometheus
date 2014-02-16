@@ -132,7 +132,7 @@ namespace Prometheus.Runtime
                 }
                 catch (DivideByZeroException e)
                 {
-                    throw new DivideByZeroPrometheusException(e.Message,e);
+                    throw new DivideByZeroPrometheusException(e.Message, e);
                 }
             }
 
@@ -158,24 +158,6 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Subtraction
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.SubExpression)]
-        public DataType Sub(DataType pValue1, DataType pValue2)
-        {
-            NumericType num1 = pValue1 as NumericType;
-            NumericType num2 = pValue2 as NumericType;
-            if (num1 != null && num2 != null)
-            {
-                return num1.isLong
-                    ? new NumericType(num1.Long - num2.Long)
-                    : new NumericType(num1.Double - num2.Double);
-            }
-
-            throw DataTypeException.InvalidTypes("-", pValue1, pValue2);
-        }
-
-        /// <summary>
         /// Remainder
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.RemainderExpression)]
@@ -191,6 +173,24 @@ namespace Prometheus.Runtime
             }
 
             throw DataTypeException.InvalidTypes("%", pValue1, pValue2);
+        }
+
+        /// <summary>
+        /// Subtraction
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.SubExpression)]
+        public DataType Sub(DataType pValue1, DataType pValue2)
+        {
+            NumericType num1 = pValue1 as NumericType;
+            NumericType num2 = pValue2 as NumericType;
+            if (num1 != null && num2 != null)
+            {
+                return num1.isLong
+                    ? new NumericType(num1.Long - num2.Long)
+                    : new NumericType(num1.Double - num2.Double);
+            }
+
+            throw DataTypeException.InvalidTypes("-", pValue1, pValue2);
         }
     }
 }

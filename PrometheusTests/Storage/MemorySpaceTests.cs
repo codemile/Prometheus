@@ -19,7 +19,7 @@ namespace PrometheusTest.Storage
             Assert.IsTrue(ms.Has("x"));
 
             MockType data = (MockType)ms.Get("x");
-            Assert.AreEqual("Hello World",data.Value);
+            Assert.AreEqual("Hello World", data.Value);
         }
 
         [TestMethod]

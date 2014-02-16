@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Text;
-using Logging;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
 
-namespace Prometheus.Objects
+namespace Prometheus.Runtime
 {
     /// <summary>
     /// Handles grammar related to declaring objects.
@@ -18,11 +15,47 @@ namespace Prometheus.Objects
     public class ObjectGrammar : ExecutorGrammar
     {
         /// <summary>
+        /// Walks the inheritance of declarations creating each from the
+        /// bottom up.
+        /// </summary>
+        private InstanceType CreateInstance(DeclarationType pDecl)
+        {
+            InstanceType baseInst = null;
+            if (pDecl.Base != null)
+            {
+                DeclarationType baseType = Executor.Cursor.Get<DeclarationType>(pDecl.Base);
+                baseInst = CreateInstance(baseType);
+            }
+
+            InstanceType inst = new InstanceType();
+
+            /*
+                        inst.GetMembers().Create(IdentifierType.THIS, inst);
+                        if (baseInst != null)
+                        {
+                            inst.GetMembers().Create(IdentifierType.BASE, baseInst);
+                        }
+            */
+
+            return inst;
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public ObjectGrammar(Executor pExecutor)
             : base(pExecutor)
         {
+        }
+
+        /// <summary>
+        /// Declares a new function type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
+        public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
+        {
+            Executor.Cursor.Stack.Create(pFuncName.Name, pFunc);
+            return UndefinedType.Undefined;
         }
 
         /// <summary>
@@ -40,20 +73,16 @@ namespace Prometheus.Objects
         public DataType New(QualifiedType pId, DataType pArguments)
         {
             DeclarationType decl = Executor.Cursor.Get<DeclarationType>(pId);
-
-            CreateInherited created = new CreateInherited(Executor.Cursor, decl);
+            InstanceType inst = CreateInstance(decl);
 
             iMemorySpace prevStorage = Executor.Cursor.Stack;
-            Executor.Cursor.Stack = created.Inst.GetMembers();
+            Executor.Cursor.Stack = inst.GetMembers();
 
             try
             {
                 Dictionary<string, DataType> variables = new Dictionary<string, DataType>
                                                          {
-                                                             {
-                                                                 IdentifierType.THIS,
-                                                                 created.Alias
-                                                             }
+                                                             {IdentifierType.THIS, inst}
                                                          };
                 Executor.Execute(decl.Constructor.Function, variables);
             }
@@ -66,13 +95,10 @@ namespace Prometheus.Objects
                 Executor.Cursor.Stack = prevStorage;
             }
 
-            return created.Alias;
+            return inst;
         }
 
-        /// <summary>
-        /// Declares a new object type
-        /// </summary>
-/*
+        /*
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
         public DataType ObjectDeclare(QualifiedType pBaseClass, IdentifierType pIdentifier)
         {
@@ -93,6 +119,9 @@ namespace Prometheus.Objects
         /// <summary>
         /// Declares a new object type
         /// </summary>
+        /// <summary>
+        /// Declares a new object type
+        /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
         public DataType ObjectDeclare(QualifiedType pObjectName, ClosureType pConstructor)
         {
@@ -100,16 +129,6 @@ namespace Prometheus.Objects
             DeclarationType decl = new DeclarationType(pObjectName, pConstructor);
             Executor.Cursor.Stack.Create(name.Name, decl);
             return decl;
-        }
-
-        /// <summary>
-        /// Declares a new function type
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
-        {
-            Executor.Cursor.Stack.Create(pFuncName.Name, pFunc);
-            return UndefinedType.Undefined;
         }
     }
 }

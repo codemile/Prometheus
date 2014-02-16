@@ -56,6 +56,17 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format("'{0}' {1}", Type, Location);
+        }
+
+        /// <summary>
         /// Adds a node as a child.
         /// </summary>
         public Node Add(Node pChild)
@@ -74,24 +85,19 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
-        /// Returns a string that represents the current object.
+        /// Finds the first child of the given type, or returns Null.
         /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        public override string ToString()
+        public Node FindChild(GrammarSymbol pSymbol)
         {
-            return string.Format("'{0}' {1}", Type, Location);
+            return Children.FirstOrDefault(pNode=>pNode.Type == pSymbol);
         }
 
         /// <summary>
-        /// Call after removing any data or children by setting their
-        /// entry in the list to null. This will remove those items.
+        /// Access the first child node.
         /// </summary>
-        public void Reduce()
+        public Node FirstChild()
         {
-            Children.RemoveAll(pChild=>pChild == null);
-            Data.RemoveAll(pData=>pData == null);
+            return Children[0];
         }
 
         /// <summary>
@@ -105,27 +111,21 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
-        /// Access the first child node.
-        /// </summary>
-        public Node FirstChild()
-        {
-            return Children[0];
-        }
-
-        /// <summary>
-        /// Finds the first child of the given type, or returns Null.
-        /// </summary>
-        public Node FindChild(GrammarSymbol pSymbol)
-        {
-            return Children.FirstOrDefault(pNode=>pNode.Type == pSymbol);
-        }
-
-        /// <summary>
         /// Access the last child node.
         /// </summary>
         public Node LastChild()
         {
             return Children[Children.Count - 1];
+        }
+
+        /// <summary>
+        /// Call after removing any data or children by setting their
+        /// entry in the list to null. This will remove those items.
+        /// </summary>
+        public void Reduce()
+        {
+            Children.RemoveAll(pChild=>pChild == null);
+            Data.RemoveAll(pData=>pData == null);
         }
     }
 }

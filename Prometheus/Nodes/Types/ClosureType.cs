@@ -17,12 +17,12 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Reference to "this"
         /// </summary>
-        public readonly AliasType This;
+        public readonly InstanceType This;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ClosureType(AliasType pThis, Node pFunction)
+        public ClosureType(InstanceType pThis, Node pFunction)
         {
             This = pThis;
             Function = pFunction;
@@ -37,19 +37,19 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
-        /// True if this closure has been compiled.
-        /// </summary>
-        public bool isCompiled()
-        {
-            return This != null;
-        }
-
-        /// <summary>
         /// Returns "function"
         /// </summary>
         public override string ToString()
         {
             return "function";
+        }
+
+        /// <summary>
+        /// True if this closure has been compiled.
+        /// </summary>
+        public bool HasThis()
+        {
+            return This != null;
         }
     }
 }

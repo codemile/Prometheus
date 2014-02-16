@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Prometheus.Exceptions.Compiler;
-using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -12,14 +11,14 @@ namespace Prometheus.Nodes.Types
     public class IdentifierType : DataType
     {
         /// <summary>
-        /// Reference to "this"
-        /// </summary>
-        public const string THIS = "this";
-
-        /// <summary>
         /// Reference to "base"
         /// </summary>
         public const string BASE = "base";
+
+        /// <summary>
+        /// Reference to "this"
+        /// </summary>
+        public const string THIS = "this";
 
         /// <summary>
         /// the display name

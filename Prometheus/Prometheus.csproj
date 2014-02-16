@@ -73,13 +73,10 @@
     <Compile Include="Nodes\Types\BooleanType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
     <Compile Include="Nodes\Types\NumericType.cs" />
-    <Compile Include="Nodes\Types\AliasType.cs" />
     <Compile Include="Nodes\Types\QualifiedType.cs" />
     <Compile Include="Nodes\Types\StringType.cs" />
-    <Compile Include="Objects\CreateInherited.cs" />
     <Compile Include="Nodes\Types\DeclarationType.cs" />
-    <Compile Include="Objects\Instance.cs" />
-    <Compile Include="Objects\Reference.cs" />
+    <Compile Include="Nodes\Types\InstanceType.cs" />
     <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
@@ -97,7 +94,6 @@
     <Compile Include="Nodes\Types\UndefinedType.cs" />
     <Compile Include="Parser\Cursor.cs" />
     <Compile Include="Parser\Executors\Executor.cs" />
-    <Compile Include="Storage\HeapSpace.cs" />
     <Compile Include="Storage\ObjectSpace.cs" />
     <Compile Include="Storage\MemoryItem.cs" />
     <Compile Include="Storage\StorageSpace.cs" />
@@ -112,7 +108,7 @@
     <Compile Include="Runtime\Arguments.cs" />
     <Compile Include="Runtime\Functions.cs" />
     <Compile Include="Runtime\MathOperators.cs" />
-    <Compile Include="Objects\ObjectGrammar.cs" />
+    <Compile Include="Runtime\ObjectGrammar.cs" />
     <Compile Include="Runtime\RelationalOperators.cs" />
     <Compile Include="Runtime\StringManipulation.cs" />
     <Compile Include="Parser\Parser.cs" />

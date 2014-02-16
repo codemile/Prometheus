@@ -1,4 +1,6 @@
-﻿using Prometheus.Nodes.Types.Bases;
+﻿using Prometheus.Exceptions.Executor;
+using Prometheus.Nodes.Types.Bases;
+using Prometheus.Properties;
 
 namespace Prometheus.Storage
 {
@@ -31,7 +33,12 @@ namespace Prometheus.Storage
         /// </summary>
         public DataType Read()
         {
-            return _space.Get(_id);
+            DataType value = _space.Get(_id);
+            if (value == null)
+            {
+                throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, _id));
+            }
+            return value;
         }
 
         /// <summary>
@@ -39,7 +46,12 @@ namespace Prometheus.Storage
         /// </summary>
         public bool Write(DataType pValue)
         {
-            return _space.Set(_id, pValue);
+            if (_space is StackSpace)
+            {
+                return _space.Set(_id, pValue);
+            }
+            _space.Assign(_id, pValue);
+            return true;
         }
     }
 }

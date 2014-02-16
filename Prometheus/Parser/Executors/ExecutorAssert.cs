@@ -51,7 +51,8 @@ namespace Prometheus.Parser.Executors
             if (pNode.Data[pIndex].GetType() != pType)
             {
                 throw new AssertionException(
-                    string.Format("Invalid data type. Expected <{0}> Found <{1}>", pType.FullName, pNode.Data[pIndex].GetType().FullName), pNode);
+                    string.Format("Invalid data type. Expected <{0}> Found <{1}>", pType.FullName,
+                        pNode.Data[pIndex].GetType().FullName), pNode);
             }
         }
 

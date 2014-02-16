@@ -32,6 +32,25 @@ namespace Prometheus.Compile.Optomizer
                                                                  };
 
         /// <summary>
+        /// Declaration types that contain an executable block of code (like a function or object constructor). The block
+        /// of code is parented to a new node of the value type. This allows that block of code to be stored, and not executed
+        /// by the parser until the declaration is used.
+        /// </summary>
+        private static readonly Dictionary<GrammarSymbol, GrammarSymbol> _declarations = new Dictionary
+            <GrammarSymbol, GrammarSymbol>
+                                                                                         {
+                                                                                             {
+                                                                                                 GrammarSymbol.ObjectDecl,
+                                                                                                 GrammarSymbol.ObjectBlock
+                                                                                             },
+                                                                                             {
+                                                                                                 GrammarSymbol.FunctionDecl,
+                                                                                                 GrammarSymbol
+                                                                                                 .FunctionBlock
+                                                                                             }
+                                                                                         };
+
+        /// <summary>
         /// These nodes can be dropped from the tree, if they have no child and no data.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _drop = new HashSet<GrammarSymbol>
@@ -82,17 +101,6 @@ namespace Prometheus.Compile.Optomizer
                                                                     };
 
         /// <summary>
-        /// Declaration types that contain an executable block of code (like a function or object constructor). The block
-        /// of code is parented to a new node of the value type. This allows that block of code to be stored, and not executed
-        /// by the parser until the declaration is used.
-        /// </summary>
-        private static readonly Dictionary<GrammarSymbol,GrammarSymbol> _declarations = new Dictionary<GrammarSymbol, GrammarSymbol>
-                                                                                        {
-                                                                                            {GrammarSymbol.ObjectDecl, GrammarSymbol.ObjectBlock},
-                                                                                            {GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock}
-                                                                                        }; 
-
-        /// <summary>
         /// Used to perform optimization
         /// </summary>
         private Executor _executor;
@@ -106,25 +114,6 @@ namespace Prometheus.Compile.Optomizer
         /// Was the node tree modified
         /// </summary>
         private bool _modified;
-
-        /// <summary>
-        /// Converts the child nodes into a data reference to a qualifier ID.
-        /// </summary>
-        /// <param name="pNode"></param>
-        public void Qualify(Node pNode)
-        {
-            for (int i = 0, c = pNode.Children.Count; i < c; i++)
-            {
-                Node child = pNode.Children[i];
-                if (child.Type == GrammarSymbol.QualifiedList)
-                {
-                    pNode.Children.AddRange(child.Children);
-                    pNode.Children[i] = null;
-                    _modified = true;
-                }
-            }
-            pNode.Reduce();
-        }
 
         /// <summary>
         /// Moves the data from the child to the parent.
@@ -267,6 +256,25 @@ namespace Prometheus.Compile.Optomizer
         }
 
         /// <summary>
+        /// Converts the child nodes into a data reference to a qualifier ID.
+        /// </summary>
+        /// <param name="pNode"></param>
+        public void Qualify(Node pNode)
+        {
+            for (int i = 0, c = pNode.Children.Count; i < c; i++)
+            {
+                Node child = pNode.Children[i];
+                if (child.Type == GrammarSymbol.QualifiedList)
+                {
+                    pNode.Children.AddRange(child.Children);
+                    pNode.Children[i] = null;
+                    _modified = true;
+                }
+            }
+            pNode.Reduce();
+        }
+
+        /// <summary>
         /// Process all the nodes in the tree by walking all branches. Update any
         /// children that are modified, or remove children if a recursive call
         /// returns null for that child.
@@ -284,7 +292,7 @@ namespace Prometheus.Compile.Optomizer
             {
                 Node block = pNode.FindChild(GrammarSymbol.Block);
                 pNode.Children.Remove(block);
-                pNode.Children.Add(new Node(_declarations[pNode.Type], block.Location, new[] { block }));
+                pNode.Children.Add(new Node(_declarations[pNode.Type], block.Location, new[] {block}));
             }
 
             if (_qualifiedData.Contains(pNode.Type)
