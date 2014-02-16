@@ -107,7 +107,7 @@ namespace Prometheus.Parser.Executors
                         {
                             return UndefinedType.Undefined;
                         }
-                        using (Cursor.Stack = new StackSpace(Cursor))
+                        using (Cursor.Stack = new CursorSpace(Cursor))
                         {
                             return WalkDownChildren(pParent.Children[1]);
                         }
@@ -117,12 +117,12 @@ namespace Prometheus.Parser.Executors
                         DataType _if = WalkDownChildren(pParent.Children[0]);
                         if (_if.getBool())
                         {
-                            using (Cursor.Stack = new StackSpace(Cursor))
+                            using (Cursor.Stack = new CursorSpace(Cursor))
                             {
                                 return WalkDownChildren(pParent.Children[1]);
                             }
                         }
-                        using (Cursor.Stack = new StackSpace(Cursor))
+                        using (Cursor.Stack = new CursorSpace(Cursor))
                         {
                             return WalkDownChildren(pParent.Children[2]);
                         }
@@ -295,7 +295,7 @@ namespace Prometheus.Parser.Executors
         /// </summary>
         public DataType Execute(Node pNode, Dictionary<string, DataType> pVariables)
         {
-            using (Cursor.Stack = new StackSpace(Cursor, pVariables))
+            using (Cursor.Stack = new CursorSpace(Cursor, pVariables))
             {
                 return WalkDownChildren(pNode);
             }

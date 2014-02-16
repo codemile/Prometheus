@@ -1,11 +1,13 @@
-object House(arg1) {
-	print "House";
-	print arg1;
+object House() {
+	this.foo = function() {
+		print "Hello World";
+	};
 };
 
-object House::Test(arg1) {
-	var y = arg1+"Mouse";
-	base(y);
+object House::Test() {
+	base();
 };
 
-var x = new Test("hello");
+var x = new Test();
+vars;
+x.foo();

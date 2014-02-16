@@ -2,45 +2,46 @@
 using System.Linq;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Parser;
 using Prometheus.Properties;
 
 namespace Prometheus.Storage
 {
     /// <summary>
-    /// Executing blocks place their variables into this class
-    /// to limit their scope.
-    /// Each stack gets a ID counter from the previous stack.
+    /// A chain of storage spaces. When an identifier is not found
+    /// in the current space the parent space is search. This search
+    /// will walk up the chain all the way to the root to declare
+    /// an identifier as not found.
     /// </summary>
     public class StackSpace : StorageSpace
     {
         /// <summary>
-        /// The parser's cursor
-        /// </summary>
-        private Cursor _cursor;
-
-        /// <summary>
         /// The parent scope
         /// </summary>
-        private iMemorySpace _parent;
+        protected iMemorySpace Parent;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public StackSpace(Cursor pCursor)
+        public StackSpace()
         {
-            _cursor = pCursor;
-            _parent = _cursor.Stack;
+            Parent = null;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public StackSpace(Cursor pCursor, Dictionary<string, DataType> pStorage)
+        public StackSpace(iMemorySpace pParent)
+        {
+            Parent = pParent;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public StackSpace(iMemorySpace pParent, Dictionary<string, DataType> pStorage)
             : base(pStorage)
         {
-            _cursor = pCursor;
-            _parent = _cursor.Stack;
+            Parent = pParent;
         }
 
         /// <summary>
@@ -48,11 +49,7 @@ namespace Prometheus.Storage
         /// </summary>
         public override void Dispose()
         {
-            _cursor.Stack = _parent;
-
-            _cursor = null;
-            _parent = null;
-
+            Parent = null;
             base.Dispose();
         }
 
@@ -61,9 +58,9 @@ namespace Prometheus.Storage
         /// </summary>
         public override IEnumerable<MemoryItem> Dump(int pIndent = 0)
         {
-            return _parent == null
+            return Parent == null
                 ? base.Dump(pIndent)
-                : _parent.Dump(pIndent + 1).Union(base.Dump(pIndent));
+                : Parent.Dump(pIndent + 1).Union(base.Dump(pIndent));
         }
 
         /// <summary>
@@ -79,9 +76,9 @@ namespace Prometheus.Storage
             {
                 return d;
             }
-            if (_parent != null)
+            if (Parent != null)
             {
-                return _parent.Get(pName);
+                return Parent.Get(pName);
             }
             throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
         }
@@ -98,9 +95,9 @@ namespace Prometheus.Storage
             {
                 return true;
             }
-            if (_parent != null)
+            if (Parent != null)
             {
-                return _parent.Set(pName, pDataType);
+                return Parent.Set(pName, pDataType);
             }
             throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
         }

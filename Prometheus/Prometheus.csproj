@@ -96,8 +96,9 @@
     <Compile Include="Parser\Executors\Executor.cs" />
     <Compile Include="Storage\ObjectSpace.cs" />
     <Compile Include="Storage\MemoryItem.cs" />
-    <Compile Include="Storage\StorageSpace.cs" />
     <Compile Include="Storage\StackSpace.cs" />
+    <Compile Include="Storage\StorageSpace.cs" />
+    <Compile Include="Storage\CursorSpace.cs" />
     <Compile Include="Parser\Executors\Attributes\ExecuteInternal.cs" />
     <Compile Include="Parser\Executors\Attributes\ExecuteSymbol.cs" />
     <Compile Include="Parser\Executors\ExecutorBase.cs" />

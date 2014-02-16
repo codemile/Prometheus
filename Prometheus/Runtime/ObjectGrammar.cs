@@ -18,16 +18,17 @@ namespace Prometheus.Runtime
         /// Walks the inheritance of declarations creating each from the
         /// bottom up.
         /// </summary>
-        private InstanceType CreateInstance(DeclarationType pDecl)
+        private InstanceType CreateInstance(StackSpace pSpace, DeclarationType pDecl)
         {
-            InstanceType inst = new InstanceType();
+            InstanceType inst = new InstanceType(pSpace);
             if (pDecl.Base == null)
             {
                 return inst;
             }
 
             DeclarationType baseType = Executor.Cursor.Get<DeclarationType>(pDecl.Base);
-            InstanceType baseInst = CreateInstance(baseType);
+            StackSpace baseSpace = new StackSpace(pSpace);
+            InstanceType baseInst = CreateInstance(baseSpace, baseType);
             ClosureType baseFunc = new ClosureType(baseInst,baseType.Constructor);
             inst.GetMembers().Create(IdentifierType.BASE, baseFunc);
 
@@ -58,7 +59,10 @@ namespace Prometheus.Runtime
         public DataType New(QualifiedType pId, ArrayType pArguments)
         {
             DeclarationType decl = Executor.Cursor.Get<DeclarationType>(pId);
-            InstanceType inst = CreateInstance(decl);
+
+            StackSpace objSpace = new StackSpace();
+
+            InstanceType inst = CreateInstance(objSpace, decl);
 
             iMemorySpace prevStorage = Executor.Cursor.Stack;
             Executor.Cursor.Stack = inst.GetMembers();

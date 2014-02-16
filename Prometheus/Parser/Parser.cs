@@ -120,7 +120,7 @@ namespace Prometheus.Parser
                     globals.Add(customObject.Key, new InstanceType(objSpace));
                 }
 
-                using (executor.Cursor.Stack = new StackSpace(executor.Cursor, globals))
+                using (executor.Cursor.Stack = new CursorSpace(executor.Cursor, globals))
                 {
                     DataType value = executor.Execute(pCode.Root, new Dictionary<string, DataType>()) ??
                                      new NumericType(-1);

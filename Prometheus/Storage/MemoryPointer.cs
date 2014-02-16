@@ -46,7 +46,7 @@ namespace Prometheus.Storage
         /// </summary>
         public bool Write(DataType pValue)
         {
-            if (_space is StackSpace)
+            if (_space is CursorSpace)
             {
                 return _space.Set(_id, pValue);
             }

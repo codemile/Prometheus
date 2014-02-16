@@ -23,7 +23,6 @@ namespace Prometheus.Compile.Optomizer
                                                                      GrammarSymbol.Statements,
                                                                      GrammarSymbol.ObjectDecls,
                                                                      GrammarSymbol.Program,
-                                                                     GrammarSymbol.Parameters,
                                                                      GrammarSymbol.Arguments,
                                                                      GrammarSymbol.ArrayLiteralList,
                                                                      GrammarSymbol.ParameterList,
