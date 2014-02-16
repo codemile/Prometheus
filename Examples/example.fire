@@ -1,0 +1,5 @@
+object Test(arg1) {
+	print arg1;
+};
+
+var x = new Test("hello");

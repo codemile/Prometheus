@@ -57,11 +57,7 @@ namespace Prometheus.Runtime
         /// </summary>
         private DataType ResolveToValue(DataType pValue)
         {
-            QualifiedType id = pValue as QualifiedType;
-            if (id != null)
-            {
-                return Executor.Cursor.Resolve(id).Read();
-            }
+            pValue = Resolve(pValue);
 
             ClosureType func = pValue as ClosureType;
             if (func == null || func.HasThis())

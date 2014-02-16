@@ -203,7 +203,7 @@ namespace Prometheus.Parser.Executors
                     throw new ContinueException();
 
                 case GrammarSymbol.ArrayLiteral:
-                case GrammarSymbol.ArgumentList:
+                case GrammarSymbol.Arguments:
                 case GrammarSymbol.Parameters:
                 case GrammarSymbol.QualifiedID:
                     IList<DataType> array = pParent.Type == GrammarSymbol.QualifiedID

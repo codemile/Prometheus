@@ -74,7 +74,6 @@ namespace Prometheus.Compile.Optomizer
                                                                       GrammarSymbol.Statement,
                                                                       GrammarSymbol.ObjectDecls,
                                                                       GrammarSymbol.Value,
-                                                                      GrammarSymbol.Arguments,
                                                                       GrammarSymbol.QualifiedList
                                                                   };
 
@@ -176,7 +175,7 @@ namespace Prometheus.Compile.Optomizer
                 do
                 {
                     _modified = false;
-                    pRoot = WalkBranch(pRoot);
+                    pRoot = WalkBranch(pRoot) ?? new Node(GrammarSymbol.Statements,Location.None);
                 } while (_modified);
 
                 return pRoot;

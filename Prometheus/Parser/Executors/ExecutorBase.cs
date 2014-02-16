@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Parser.Executors
@@ -28,6 +29,24 @@ namespace Prometheus.Parser.Executors
         /// implements this feature.
         /// </summary>
         protected abstract MethodInfo GetMethod(Node pNode, int pArgCount);
+
+        /// <summary>
+        /// Resolves a data reference to get the value it points to.
+        /// </summary>
+        protected DataType Resolve(DataType pValue)
+        {
+            QualifiedType id = pValue as QualifiedType;
+            return id == null ? pValue : Executor.Cursor.Resolve(id).Read();
+        }
+
+        /// <summary>
+        /// Resolves a data reference to get the value it points to.
+        /// </summary>
+        protected T Resolve<T>(DataType pValue) where T : DataType
+        {
+            QualifiedType id = pValue as QualifiedType;
+            return id == null ? (T)pValue : Executor.Cursor.Get<T>(id);
+        }
 
         /// <summary>
         /// Executes a method on this object that matches the argument types.

@@ -189,6 +189,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.AndOperator)]
         public DataType AndOp(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             BooleanType bool1 = pValue1 as BooleanType;
             BooleanType bool2 = pValue2 as BooleanType;
             if (bool1 != null && bool2 != null)
@@ -205,6 +208,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.BitInvertOperator)]
         public DataType Bitwise(DataType pValue)
         {
+            pValue = Resolve(pValue);
+
             NumericType num = pValue as NumericType;
             if (num != null && num.isLong)
             {
@@ -220,6 +225,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.EqualOperator)]
         public DataType Equal(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             return new BooleanType(InnerEq(pValue1, pValue2));
         }
 
@@ -229,6 +237,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.NotOperator)]
         public DataType Equal(DataType pValue1)
         {
+            pValue1 = Resolve(pValue1);
+
             BooleanType bool1 = pValue1 as BooleanType;
             if (bool1 != null)
             {
@@ -244,6 +254,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.GtOperator)]
         public DataType GreaterThan(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             StringType str1 = pValue1 as StringType;
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
@@ -271,6 +284,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.GteOperator)]
         public DataType GreaterThanEqual(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             StringType str1 = pValue1 as StringType;
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
@@ -298,6 +314,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.LtOperator)]
         public DataType LessThan(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             StringType str1 = pValue1 as StringType;
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
@@ -325,6 +344,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.LteOperator)]
         public DataType LessThanEqual(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             StringType str1 = pValue1 as StringType;
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
@@ -352,6 +374,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.NegOperator)]
         public DataType Negative(DataType pValue)
         {
+            pValue = Resolve(pValue);
+
             NumericType num = pValue as NumericType;
             if (num != null)
             {
@@ -368,6 +392,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.NotEqualOperator)]
         public DataType NotEqual(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             return new BooleanType(!InnerEq(pValue1, pValue2));
         }
 
@@ -377,6 +404,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.OrOperator)]
         public DataType OrOp(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             BooleanType bool1 = pValue1 as BooleanType;
             BooleanType bool2 = pValue2 as BooleanType;
             if (bool1 != null && bool2 != null)
@@ -394,6 +424,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.PlusOperator)]
         public DataType Plus(DataType pValue)
         {
+            pValue = Resolve(pValue);
+
             NumericType num = pValue as NumericType;
             if (num != null)
             {
@@ -408,6 +440,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.PostDecOperator)]
         public DataType PostDec(DataType pValue)
         {
+            pValue = Resolve(pValue);
+
             QualifiedType id = pValue as QualifiedType;
             if (id == null)
             {
@@ -434,6 +468,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.PostIncOperator)]
         public DataType PostInc(DataType pValue)
         {
+            pValue = Resolve(pValue);
+
             QualifiedType id = pValue as QualifiedType;
             if (id == null)
             {
@@ -461,6 +497,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.PreDecOperator)]
         public DataType PreDec(DataType pValue)
         {
+            pValue = Resolve(pValue);
+
             QualifiedType id = pValue as QualifiedType;
             if (id == null)
             {
@@ -486,6 +524,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.PreIncOperator)]
         public DataType PreInc(DataType pValue)
         {
+            pValue = Resolve(pValue);
+
             QualifiedType id = pValue as QualifiedType;
             if (id == null)
             {

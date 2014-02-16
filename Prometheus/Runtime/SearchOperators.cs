@@ -30,6 +30,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ContainsTerm)]
         public DataType Contains(DataType pHaystacks, DataType pNeedles)
         {
+            pHaystacks = Resolve(pHaystacks);
+            pNeedles = Resolve(pNeedles);
+
             IEnumerable<iSearchHaystack> haystacks = DataType.ToArray<iSearchHaystack>(pHaystacks);
             IEnumerable<iSearchNeedle> needles = DataType.ToArray<iSearchNeedle>(pNeedles);
 

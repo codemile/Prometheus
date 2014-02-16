@@ -97,6 +97,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.AddExpression)]
         public DataType Add(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             StringType str1 = pValue1 as StringType;
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
@@ -122,6 +125,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.DivideExpression)]
         public DataType Div(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             NumericType num1 = pValue1 as NumericType;
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
@@ -145,6 +151,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.MultiplyExpression)]
         public DataType Mul(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             NumericType num1 = pValue1 as NumericType;
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
@@ -163,6 +172,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.RemainderExpression)]
         public DataType Remainder(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             NumericType num1 = pValue1 as NumericType;
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
@@ -181,6 +193,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.SubExpression)]
         public DataType Sub(DataType pValue1, DataType pValue2)
         {
+            pValue1 = Resolve(pValue1);
+            pValue2 = Resolve(pValue2);
+
             NumericType num1 = pValue1 as NumericType;
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)

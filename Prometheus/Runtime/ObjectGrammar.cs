@@ -59,18 +59,29 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Declares a new function type
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(QualifiedType pId)
+        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
+        public DataType FunctionDeclare(IdentifierType pFuncName, ArrayType pParameters, ClosureType pFunc)
         {
-            return New(pId, UndefinedType.Undefined);
+            Executor.Cursor.Stack.Create(pFuncName.Name, new ClosureType(pFunc.Function, pParameters));
+            return UndefinedType.Undefined;
         }
 
         /// <summary>
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(QualifiedType pId, DataType pArguments)
+        public DataType New(QualifiedType pId)
+        {
+            return New(pId, ArrayType.Empty);
+        }
+
+        /// <summary>
+        /// Instantiates an object instance and returns a reference to that object.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.NewExpression)]
+        public DataType New(QualifiedType pId, ArrayType pArguments)
         {
             DeclarationType decl = Executor.Cursor.Get<DeclarationType>(pId);
             InstanceType inst = CreateInstance(decl);
@@ -80,11 +91,14 @@ namespace Prometheus.Runtime
 
             try
             {
-                Dictionary<string, DataType> variables = new Dictionary<string, DataType>
-                                                         {
-                                                             {IdentifierType.THIS, inst}
-                                                         };
-                Executor.Execute(decl.Constructor.Function, variables);
+                DataType[] arguments = new DataType[pArguments.Count];
+                for (int i = 0, c = arguments.Length; i < c ;i++)
+                {
+                    arguments[i] = Resolve(pArguments[i]);
+                }
+                Dictionary<string, DataType> dataTypes = decl.Constructor.CreateArguments(arguments);
+                dataTypes.Add(IdentifierType.THIS, inst);
+                Executor.Execute(decl.Constructor.Function, dataTypes);
             }
             catch (ReturnException)
             {
@@ -98,35 +112,23 @@ namespace Prometheus.Runtime
             return inst;
         }
 
-        /*
-        [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(QualifiedType pBaseClass, IdentifierType pIdentifier)
-        {
-            DataType baseType = Executor.Cursor.Resolve(pBaseClass).Read();
-            if (baseType.GetType() != typeof (DeclarationType))
-            {
-                throw new UnexpectedErrorException(
-                    string.Format("Base object <{0}> can not be used in declaration of new object type", baseType.GetType().Name));
-            }
-
-            DeclarationType decl = new DeclarationType(pBaseClass, Executor.Cursor.Node);
-            Executor.Cursor.Stack.Create(pIdentifier.Name,decl);
-
-            return decl;
-        }
-*/
-
-        /// <summary>
-        /// Declares a new object type
-        /// </summary>
         /// <summary>
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
         public DataType ObjectDeclare(QualifiedType pObjectName, ClosureType pConstructor)
         {
+            return ObjectDeclare(pObjectName, ArrayType.Empty, pConstructor);
+        }
+
+        /// <summary>
+        /// Declares a new object type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
+        public DataType ObjectDeclare(QualifiedType pObjectName, ArrayType pParameters, ClosureType pConstructor)
+        {
             IdentifierType name = pObjectName.Members[0].Cast<IdentifierType>();
-            DeclarationType decl = new DeclarationType(pObjectName, pConstructor);
+            DeclarationType decl = new DeclarationType(pObjectName, new ClosureType(pConstructor.Function, pParameters));
             Executor.Cursor.Stack.Create(name.Name, decl);
             return decl;
         }

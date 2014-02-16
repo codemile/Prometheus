@@ -1,4 +1,7 @@
-﻿using Prometheus.Nodes.Types.Bases;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
+using Prometheus.Exceptions.Executor;
+using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
 {
@@ -15,6 +18,11 @@ namespace Prometheus.Nodes.Types
         public readonly Node Function;
 
         /// <summary>
+        /// The function parameters
+        /// </summary>
+        public readonly ArrayType Parameters;
+
+        /// <summary>
         /// Reference to "this"
         /// </summary>
         public readonly InstanceType This;
@@ -29,10 +37,19 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
-        /// Un-compiled closure
+        /// Constructor
         /// </summary>
         public ClosureType(Node pFunction)
         {
+            Function = pFunction;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ClosureType(Node pFunction, ArrayType pParameters)
+        {
+            Parameters = pParameters;
             Function = pFunction;
         }
 
@@ -50,6 +67,34 @@ namespace Prometheus.Nodes.Types
         public bool HasThis()
         {
             return This != null;
+        }
+
+        /// <summary>
+        /// Creates the variables to be sent when executing the function.
+        /// </summary>
+        public Dictionary<string, DataType> CreateArguments(DataType[] pArgs)
+        {
+            if (pArgs.Length != Parameters.Count)
+            {
+                throw new InvalidArgumentException(string.Format(
+                    "Function was expecting {0} parameters but was past {1} instead.", Parameters.Count,
+                    pArgs.Length));
+            }
+
+            Dictionary<string, DataType> variables = new Dictionary<string, DataType>();
+
+            for (int i = 0, c = pArgs.Length; i < c; i++)
+            {
+                IdentifierType name = (IdentifierType)Parameters[i];
+                variables.Add(name.Name, pArgs[i]);
+            }
+
+            if (This != null)
+            {
+                variables.Add(IdentifierType.THIS, This);
+            }
+
+            return variables;
         }
     }
 }

@@ -43,9 +43,14 @@ namespace Prometheus.Runtime
                 {
                     return UndefinedType.Undefined;
                 }
-                Dictionary<string, DataType> variables = Arguments.CollectArguments(func.Function, pArguments);
-                variables.Add("this", func.This);
-                return Executor.Execute(func.Function, variables);
+                // resolve the argument
+                DataType[] arguments = new DataType[pArguments.Count];
+                for(int i=0, c = arguments.Length; i < c; i++)
+                {
+                    arguments[i] = Resolve(pArguments[i]);
+                }
+                // call the function
+                return Executor.Execute(func.Function, func.CreateArguments(arguments));
             }
             catch (ReturnException returnData)
             {
