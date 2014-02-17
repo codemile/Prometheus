@@ -84,6 +84,7 @@ namespace Prometheus.Parser.Executors
 
                 case GrammarSymbol.ObjectBlock:
                 case GrammarSymbol.FunctionBlock:
+                case GrammarSymbol.TestBlock:
                 case GrammarSymbol.FunctionExpression:
                     return new ClosureType(pParent.FirstChild());
 
@@ -203,8 +204,9 @@ namespace Prometheus.Parser.Executors
                     throw new ContinueException();
 
                 case GrammarSymbol.ArrayLiteral:
-                case GrammarSymbol.Arguments:
-                case GrammarSymbol.Parameters:
+                case GrammarSymbol.ArgumentArray:
+                case GrammarSymbol.ParameterArray:
+                case GrammarSymbol.TestSuiteArray:
                 case GrammarSymbol.QualifiedID:
                     IList<DataType> array = pParent.Type == GrammarSymbol.QualifiedID
                         ? (IList<DataType>)new QualifiedType()
@@ -212,13 +214,13 @@ namespace Prometheus.Parser.Executors
                     for (int i = 0, c = pParent.Children.Count; i < c; i++)
                     {
 #if DEBUG
-                        if (pParent.Type == GrammarSymbol.Parameters)
+                        if (pParent.Type == GrammarSymbol.ParameterArray)
                         {
                             ExecutorAssert.Data(pParent.Children[i], 1);
                             ExecutorAssert.DataType(pParent.Children[i], 0, typeof (IdentifierType));
                         }
 #endif
-                        array.Add(pParent.Type == GrammarSymbol.Parameters
+                        array.Add(pParent.Type == GrammarSymbol.ParameterArray
                             ? pParent.Children[i].Data[0]
                             : WalkDownChildren(pParent.Children[i]));
                     }
@@ -255,9 +257,9 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// Constructor
         /// </summary>
-        public Executor()
+        public Executor(Cursor pCursor)
         {
-            Cursor = new Cursor();
+            Cursor = pCursor;
 
             _grammarLookup =
                 ObjectFactory.CreateLookupTable<GrammarSymbol, ExecutorGrammar, ExecuteSymbol>(new object[] {this});
@@ -293,8 +295,9 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// Executes a node
         /// </summary>
-        public DataType Execute(Node pNode, Dictionary<string, DataType> pVariables)
+        public DataType Execute(Node pNode, Dictionary<string, DataType> pVariables = null)
         {
+            pVariables = pVariables ?? new Dictionary<string, DataType>();
             using (Cursor.Stack = new CursorSpace(Cursor, pVariables))
             {
                 return WalkDownChildren(pNode);

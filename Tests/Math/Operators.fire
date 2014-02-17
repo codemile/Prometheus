@@ -1,0 +1,8 @@
+tests;
+
+test Add {
+	assert 1+1 == 2;
+	assert "abc" + "123" == "abc123";
+	assert 1.2 + 0.3 = 1.5;
+	assert [1,2,3] + [4,5,6] == [1,2,3,4,5,6];
+};

@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Prometheus.Compile;
+using Prometheus.Exceptions.Executor;
+using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -47,6 +51,74 @@ namespace Prometheus.Parser
         /// A list of variables to inject
         /// </summary>
         private readonly Dictionary<string, DataType> _customVaraibles;
+
+        /// <summary>
+        /// Executes the node as a program.
+        /// </summary>
+        private int Execute(Node pNode, Cursor pCursor)
+        {
+            using (Executor executor = new Executor(pCursor))
+            {
+                // create the global variables
+                Dictionary<string, DataType> globals = new Dictionary<string, DataType>(_customVaraibles)
+                                                       {
+                                                           {"this", new InstanceType()}
+                                                       };
+
+                foreach (KeyValuePair<string, object> customObject in _customObjects)
+                {
+                    ObjectSpace objSpace = new ObjectSpace(customObject.Value);
+                    globals.Add(customObject.Key, new InstanceType(objSpace));
+                }
+
+                using (executor.Cursor.Stack = new CursorSpace(executor.Cursor, globals))
+                {
+                    DataType value = executor.Execute(pNode, new Dictionary<string, DataType>()) ??
+                                     new NumericType(-1);
+
+                    NumericType num = value as NumericType;
+                    return (num != null) ? (int)num.Long : 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Generates a list of tests to run.
+        /// </summary>
+        private IEnumerable<string> getTestSuite(Node pRoot, IEnumerable<string> pUnitTests)
+        {
+            Node testSuite = pRoot.FindChild(GrammarSymbol.TestSuiteDecl);
+            if (testSuite.Children.Count == 0)
+            {
+                return pUnitTests;
+            }
+
+            if (testSuite.FirstChild().Type == GrammarSymbol.TestSuiteArray)
+            {
+                return from id in testSuite.FirstChild().Children 
+                       where id.Type == GrammarSymbol.ValidID
+                       && id.FirstData() is IdentifierType
+                       select id.FirstData().Cast<IdentifierType>().Name;
+            }
+            if (testSuite.FirstChild().Type == GrammarSymbol.ValidID)
+            {
+                return from id in testSuite.FirstChild().Data
+                       where id is IdentifierType
+                       select id.Cast<IdentifierType>().Name;
+            }
+
+            throw new UnexpectedErrorException(string.Format("Unexpected data assigned to <{0}>", GrammarSymbol.TestSuiteDecl));
+        }
+
+        /// <summary>
+        /// Creates a list of all unit test declarations.
+        /// </summary>
+        private IEnumerable<string> getUnitTests(Node pRoot)
+        {
+            return from child in pRoot.Children
+                   where child.Type == GrammarSymbol.TestDecl
+                   select child.FirstChild().FirstData().Cast<IdentifierType>().Name;
+        }
 
         /// <summary>
         /// Constructor
@@ -106,29 +178,18 @@ namespace Prometheus.Parser
         /// </summary>
         public int Run(TargetCode pCode)
         {
-            using (Executor executor = new Executor())
+            if (!pCode.Root.HasChild(GrammarSymbol.TestSuiteDecl))
             {
-                // create the global variables
-                Dictionary<string, DataType> globals = new Dictionary<string, DataType>(_customVaraibles);
-
-                // create root object (the default "this" reference)
-                globals.Add("this", new InstanceType());
-
-                foreach (KeyValuePair<string, object> customObject in _customObjects)
-                {
-                    ObjectSpace objSpace = new ObjectSpace(customObject.Value);
-                    globals.Add(customObject.Key, new InstanceType(objSpace));
-                }
-
-                using (executor.Cursor.Stack = new CursorSpace(executor.Cursor, globals))
-                {
-                    DataType value = executor.Execute(pCode.Root, new Dictionary<string, DataType>()) ??
-                                     new NumericType(-1);
-
-                    NumericType num = value as NumericType;
-                    return (num != null) ? (int)num.Long : 0;
-                }
+                return Execute(pCode.Root, new Cursor());
             }
+
+            IEnumerable<string> unitTests = getUnitTests(pCode.Root);
+            IEnumerable<string> tests = getTestSuite(pCode.Root, unitTests);
+            foreach (string test in tests)
+            {
+                Execute(pCode.Root, new Cursor(test));
+            }
+            return 0;
         }
     }
 }

@@ -1,13 +1,13 @@
-object House() {
-	this.foo = function() {
-		print "Hello World";
-	};
+Tests [Something];
+
+print "Start up";
+
+Test Something {
+	print "Something test....";
 };
 
-object House::Test() {
-	base();
+Test Another {
+	print "Another test....";
 };
 
-var x = new Test();
-vars;
-x.foo();
+print "Tear down";

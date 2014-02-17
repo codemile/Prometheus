@@ -80,6 +80,7 @@
     <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
+    <Compile Include="Runtime\TestGrammar.cs" />
     <Compile Include="Sources\Reader.cs" />
     <Compile Include="Storage\iMemoryDump.cs" />
     <Compile Include="Storage\iMemorySpace.cs" />

@@ -6,6 +6,7 @@ using Logging;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions;
 using Prometheus.Exceptions.Compiler;
+using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Properties;
 
@@ -83,7 +84,11 @@ namespace Prometheus.Compile
             {
                 throw new InternalErrorException(Errors.ProgramMissing, Location.None);
             }
-            return node;
+
+            // create a root node
+            Node root = new Node(GrammarSymbol.Statements, node.Location);
+            root.Children.Add(node);
+            return root;
         }
 
         /// <summary>

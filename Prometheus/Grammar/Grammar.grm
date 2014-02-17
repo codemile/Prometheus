@@ -50,7 +50,14 @@ Comment Line  = '//'
 ! ===================================================================
 ! Program Structure
 ! ===================================================================
-<Program>		::= <Object Decls>
+<Program>		::= <Program Test>
+				| <Program Code>
+
+<Program Test>	::= <TestSuite Decl> <Test Decls> <Test Execute>
+				| <TestSuite Decl> <Statements> <Test Decls> <Test Execute>
+				| <TestSuite Decl> <Statements> <Test Decls> <Test Execute> <Statements>
+
+<Program Code>	::= <Object Decls>
 				| <Object Decls> <Statements>
 				| <Statements>
 				| !Nothing
@@ -72,6 +79,24 @@ Comment Line  = '//'
 				| <Call Expression> <End>
 				| <New Expression> <End>
 				| <End>
+
+! ===================================================================
+! Unit Tests
+! ===================================================================
+
+<TestSuite Decl>	::= 'tests' <End>
+					| 'tests' '[' <TestSuite Array> ']' <End>
+
+<TestSuite Array>	::= <Valid ID>
+					| <Valid ID> ',' <TestSuite Array>
+					| ! or none
+
+<Test Decls>		::= <Test Decl>
+					| <Test Decls> <Test Decl>
+
+<Test Decl>			::= 'test' <Valid ID> <Block> <End>
+<Test Block>		::= ! place holder used by optimizer to create functions.
+<Test Execute>		::= ! a marker of when to execute the unit test
 
 ! ===========================================================================
 ! End of statement marker
@@ -177,7 +202,7 @@ Comment Line  = '//'
 					| ! zero or more
 
 <Member List>		::= <Member List> MemberName
-					|  !Zero or more 
+					| ! zero or more 
 
 <Value>				::= StringDouble
 					| StringSingle
@@ -232,7 +257,7 @@ Comment Line  = '//'
 <Object Decls>			::= <Object Decl>
 						| <Object Decls> <Object Decl>
 
-<Object Decl>			::= 'object' <BaseClass ID> <Parameters> <Block> <End>
+<Object Decl>			::= 'object' <BaseClass ID> <Parameter Array> <Block> <End>
 <Object Block>			::= ! place holder used by optimizer to create constructor function.
 
 <BaseClass ID>			::= <Qualified ID> '::' <Qualified ID>
@@ -242,12 +267,12 @@ Comment Line  = '//'
 ! Functions
 ! ===================================================================
 
-<Function Decl>				::= 'function' Identifier <Parameters> <Block>
+<Function Decl>				::= 'function' Identifier <Parameter Array> <Block>
 <Function Block>			::= ! place holder used by optimizer to create functions.
 
-<Function Expression>		::= 'function' <Parameters> <Block>
+<Function Expression>		::= 'function' <Parameter Array> <Block>
 
-<Parameters>				::= '(' ')'
+<Parameter Array>			::= '(' ')'
 							| '(' <Parameter List> ')'
 							| ! none
 
@@ -260,15 +285,15 @@ Comment Line  = '//'
 ! Formal Expressions
 ! ===================================================================
 
-<Call Expression>		::= <Qualified ID> <Arguments>
-						| <Call Expression> <Arguments>			! chaining
+<Call Expression>		::= <Qualified ID> <Argument Array>
+						| <Call Expression> <Argument Array>	! chaining
 
-<New Expression>		::= 'new' <Qualified ID> <Arguments>
+<New Expression>		::= 'new' <Qualified ID> <Argument Array>
 
 ! This is not used by the grammar. The optimizer uses it to mark calls to internal methods.
 <CallInternal>			::= ! matches nothing
 
-<Arguments>				::= '(' ')'
+<Argument Array>		::= '(' ')'
 						| '(' <Argument List> ')'
 
 <Argument List>			::= <Expression>

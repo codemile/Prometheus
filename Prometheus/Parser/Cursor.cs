@@ -13,6 +13,11 @@ namespace Prometheus.Parser
     public class Cursor : IDisposable
     {
         /// <summary>
+        /// The name of the unit test to run.
+        /// </summary>
+        public readonly string UnitTest;
+
+        /// <summary>
         /// The current node being executed.
         /// </summary>
         public Node Node;
@@ -29,6 +34,16 @@ namespace Prometheus.Parser
         {
             Stack = null;
             Node = null;
+            UnitTest = null;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="pUnitTest">Name of a unit test to run.</param>
+        public Cursor(string pUnitTest)
+        {
+            UnitTest = pUnitTest;
         }
 
         /// <summary>

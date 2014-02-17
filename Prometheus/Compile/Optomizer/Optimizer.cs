@@ -4,6 +4,7 @@ using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
+using Prometheus.Parser;
 using Prometheus.Parser.Executors;
 
 namespace Prometheus.Compile.Optomizer
@@ -22,8 +23,9 @@ namespace Prometheus.Compile.Optomizer
                                                                  {
                                                                      GrammarSymbol.Statements,
                                                                      GrammarSymbol.ObjectDecls,
+                                                                     GrammarSymbol.TestDecls,
                                                                      GrammarSymbol.Program,
-                                                                     GrammarSymbol.Arguments,
+                                                                     GrammarSymbol.ArgumentArray,
                                                                      GrammarSymbol.ArrayLiteralList,
                                                                      GrammarSymbol.ParameterList,
                                                                      GrammarSymbol.ArgumentList,
@@ -40,7 +42,8 @@ namespace Prometheus.Compile.Optomizer
                 <GrammarSymbol, GrammarSymbol>
             {
                 {GrammarSymbol.ObjectDecl, GrammarSymbol.ObjectBlock},
-                {GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock}
+                {GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock},
+                {GrammarSymbol.TestDecl, GrammarSymbol.TestBlock}
             };
 
         /// <summary>
@@ -53,6 +56,7 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.Statement,
                                                                    GrammarSymbol.Statements,
                                                                    GrammarSymbol.ObjectDecls,
+                                                                   GrammarSymbol.TestDecls,
                                                                    GrammarSymbol.BaseClassID,
                                                                    GrammarSymbol.MemberList
                                                                };
@@ -66,32 +70,20 @@ namespace Prometheus.Compile.Optomizer
                                                                       GrammarSymbol.Statements,
                                                                       GrammarSymbol.Statement,
                                                                       GrammarSymbol.ObjectDecls,
+                                                                      GrammarSymbol.TestDecls,
                                                                       GrammarSymbol.Value,
                                                                       GrammarSymbol.QualifiedList
                                                                   };
 
         /// <summary>
-        /// These nodes are removed but their child are kept and inserted into the same position as the removed node.
+        /// These nodes are removed but their children are kept and inserted into the same position as the removed node.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _remove = new HashSet<GrammarSymbol>
                                                                   {
+                                                                      GrammarSymbol.ProgramTest,
+                                                                      GrammarSymbol.ProgramCode,
                                                                       GrammarSymbol.BaseClassID
                                                                   };
-
-/*
-        /// <summary>
-        /// These nodes have a child QualifiedID node's data assigned to them.
-        /// </summary>
-        private static readonly HashSet<GrammarSymbol> _qualifiedData = new HashSet<GrammarSymbol>
-                                                                        {
-                                                                            GrammarSymbol.Assignment,
-                                                                            GrammarSymbol.ObjectDecl,
-                                                                            GrammarSymbol.PostIncOperator,
-                                                                            GrammarSymbol.PreIncOperator,
-                                                                            GrammarSymbol.PostDecOperator,
-                                                                            GrammarSymbol.PreDecOperator
-                                                                        };
-*/
 
         /// <summary>
         /// These nodes have their data moved to their parents.
@@ -116,25 +108,6 @@ namespace Prometheus.Compile.Optomizer
         /// Was the node tree modified
         /// </summary>
         private bool _modified;
-
-        /// <summary>
-        /// Moves the data from the child to the parent.
-        /// </summary>
-        /// <param name="pParent">The parent node</param>
-        /// <param name="pChild">The child node</param>
-        public static void ShiftData(Node pParent, Node pChild)
-        {
-/*
-            for (int i = 0, c = pChild.Data.Count; i < c; i++)
-            {
-                // this reverses the order so that the data is is the same order
-                // as the original parameters in the source code
-                pParent.Data.Insert(0, pChild.Data[i]);
-            }
-*/
-            pParent.Data.AddRange(pChild.Data);
-            pChild.Data.Clear();
-        }
 
         /// <summary>
         /// Replaces a call to a user function with a call to an internal function.
@@ -171,7 +144,7 @@ namespace Prometheus.Compile.Optomizer
         /// <returns>A node to used as the new root node.</returns>
         public Node Optimize(Node pRoot)
         {
-            using (_executor = new Executor())
+            using (_executor = new Executor(new Cursor()))
             {
                 _internalIds = new HashSet<string>(_executor.GetInternalIds());
 
@@ -308,19 +281,6 @@ namespace Prometheus.Compile.Optomizer
                 pNode.Children.Remove(block);
                 pNode.Children.Add(new Node(_declarations[pNode.Type], block.Location, new[] {block}));
             }
-
-/*
-            if (_qualifiedData.Contains(pNode.Type)
-                && pNode.Children.Count >= 1
-                && pNode.Children[0].Type == GrammarSymbol.QualifiedID
-                && pNode.Children[0].Children.Count == 0)
-            {
-                Assertion.Data(1, pNode.Children[0]);
-                QualifiedType qualifiedOldType = Assertion.Get<QualifiedType>(pNode.Children[0], 0);
-                pNode.Data.Insert(0, qualifiedOldType);
-                pNode.Children.RemoveAt(0);
-            }
-*/
 
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
