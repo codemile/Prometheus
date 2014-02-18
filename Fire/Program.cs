@@ -5,11 +5,7 @@ using GemsCLI;
 using Logging;
 using Logging.Writers;
 using Prometheus.Compile;
-using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions;
-using Prometheus.Packages;
-using Prometheus.Parser;
-using Prometheus.Sources;
 
 namespace Fire
 {
@@ -45,7 +41,7 @@ namespace Fire
                 return 0;
             }
 
-            if(!File.Exists(options.FileName))
+            if (!File.Exists(options.FileName))
             {
                 _logger.Error("File does not exist: {0}", options.FileName);
                 return -1;
