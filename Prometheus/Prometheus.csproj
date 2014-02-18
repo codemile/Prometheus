@@ -42,12 +42,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compile\iSourceRef.cs" />
+    <Compile Include="Compile\Project.cs" />
     <Compile Include="Compile\Optomizer\Assertion.cs" />
     <Compile Include="Compile\Optomizer\iNodeOptimizer.cs" />
     <Compile Include="Compile\Optomizer\Optimizer.cs" />
+    <Compile Include="Compile\Packaging\Package.cs" />
     <Compile Include="Compile\SourceReader.cs" />
     <Compile Include="Exceptions\Compiler\OptimizationException.cs" />
+    <Compile Include="Exceptions\Compiler\PackageNotFoundException.cs" />
     <Compile Include="Exceptions\Compiler\SourceCodeException.cs" />
     <Compile Include="Exceptions\Executor\BreakException.cs" />
     <Compile Include="Exceptions\Executor\ContinueException.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\AssertionException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
+    <Compile Include="Nodes\ClassNameType.cs" />
     <Compile Include="Nodes\RegexFactory.cs" />
     <Compile Include="Nodes\Types\ArrayType.cs" />
     <Compile Include="Nodes\Types\Bases\ArrayPointer.cs" />
@@ -77,6 +80,11 @@
     <Compile Include="Nodes\Types\StringType.cs" />
     <Compile Include="Nodes\Types\DeclarationType.cs" />
     <Compile Include="Nodes\Types\InstanceType.cs" />
+    <Compile Include="Packages\DirectoryLoader.cs" />
+    <Compile Include="Packages\FileReader.cs" />
+    <Compile Include="Packages\iPackageLoader.cs" />
+    <Compile Include="Packages\iPackageReader.cs" />
+    <Compile Include="Packages\MultiLoader.cs" />
     <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
@@ -133,8 +141,7 @@
     <Compile Include="Compile\Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\PrintCommand.cs" />
-    <Compile Include="Compile\TargetCode.cs" />
-    <Compile Include="Compile\TargetSource.cs" />
+    <Compile Include="Compile\Packaging\CodeFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Errors.resx">

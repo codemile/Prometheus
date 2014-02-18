@@ -3,6 +3,9 @@ using Prometheus.Exceptions.Compiler;
 
 namespace Prometheus.Sources
 {
+    /// <summary>
+    /// Generic text file reading.
+    /// </summary>
     public static class Reader
     {
         /// <summary>

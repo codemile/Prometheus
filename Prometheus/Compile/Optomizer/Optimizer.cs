@@ -24,6 +24,7 @@ namespace Prometheus.Compile.Optomizer
                                                                      GrammarSymbol.Statements,
                                                                      GrammarSymbol.ObjectDecls,
                                                                      GrammarSymbol.TestDecls,
+                                                                     GrammarSymbol.ImportDecls,
                                                                      GrammarSymbol.Program,
                                                                      GrammarSymbol.ArgumentArray,
                                                                      GrammarSymbol.ArrayLiteralList,
@@ -57,8 +58,8 @@ namespace Prometheus.Compile.Optomizer
                                                                    GrammarSymbol.Statements,
                                                                    GrammarSymbol.ObjectDecls,
                                                                    GrammarSymbol.TestDecls,
-                                                                   GrammarSymbol.BaseClassID,
-                                                                   GrammarSymbol.MemberList
+                                                                   GrammarSymbol.ImportDecls,
+                                                                   GrammarSymbol.BaseClassID
                                                                };
 
         /// <summary>
@@ -71,8 +72,10 @@ namespace Prometheus.Compile.Optomizer
                                                                       GrammarSymbol.Statement,
                                                                       GrammarSymbol.ObjectDecls,
                                                                       GrammarSymbol.TestDecls,
+                                                                      GrammarSymbol.ImportDecls,
                                                                       GrammarSymbol.Value,
-                                                                      GrammarSymbol.QualifiedList
+                                                                      GrammarSymbol.QualifiedList,
+                                                                      GrammarSymbol.ClassNameList
                                                                   };
 
         /// <summary>
@@ -82,7 +85,8 @@ namespace Prometheus.Compile.Optomizer
                                                                   {
                                                                       GrammarSymbol.ProgramTest,
                                                                       GrammarSymbol.ProgramCode,
-                                                                      GrammarSymbol.BaseClassID
+                                                                      GrammarSymbol.BaseClassID,
+                                                                      GrammarSymbol.ClassNameList
                                                                   };
 
         /// <summary>
@@ -90,8 +94,7 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        GrammarSymbol.BaseClassID,
-                                                                        GrammarSymbol.MemberList
+                                                                        GrammarSymbol.BaseClassID
                                                                     };
 
         /// <summary>

@@ -9,16 +9,6 @@ namespace PrometheusTest.Compile
     public class CompilerTests
     {
         [TestMethod]
-        public void Compile()
-        {
-            Compiler compiler = new Compiler();
-            TargetCode target = compiler.Compile("test.txt", "var mathew=3;");
-            Assert.IsNotNull(target.Root);
-            Assert.AreEqual(GrammarSymbol.Declare, target.Root.Type);
-            Assert.AreEqual(1, target.Root.Children.Count);
-        }
-
-        [TestMethod]
         public void Compiler()
         {
             try

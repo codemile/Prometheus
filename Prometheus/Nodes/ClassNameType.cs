@@ -1,20 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
 
-namespace Prometheus.Nodes.Types
+namespace Prometheus.Nodes
 {
     /// <summary>
-    /// Holds the multi-part names that reference a variable in memory.
+    /// Represents the name of a package, class or object member.
     /// </summary>
-    public class QualifiedType : DataType, IList<DataType>
+    public class ClassNameType : DataType, IList<string>
     {
         /// <summary>
         /// Each part is a member on the path.
         /// </summary>
-        public readonly List<DataType> Members;
+        public readonly List<string> Members;
+
+        /// <summary>
+        /// Gets the name component of the class name.
+        /// </summary>
+        public string Name
+        {
+            get { return Members[Members.Count]; }
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -24,48 +30,7 @@ namespace Prometheus.Nodes.Types
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
-        }
-
-        /// <summary>
-        /// Assumes there is only one member, and can be converted to an identifier.
-        /// </summary>
-        public IdentifierType ToIdentifier()
-        {
-#if DEBUG
-            if (Members.Count != 1)
-            {
-                throw new IdentifierInnerException("Cannot convert qualified reference to single identifier.");
-            }
-#endif
-            return Members[0].Cast<IdentifierType>();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public QualifiedType(string pFullName)
-        {
-            IEnumerable<IdentifierType> parts = from part in pFullName.ToLower().Split(new[] {'.'})
-                                                select new IdentifierType(part);
-            Members = new List<DataType>(parts);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public QualifiedType(IdentifierType pIdentifier)
-            : this()
-        {
-            Members.Add(pIdentifier);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public QualifiedType()
-        {
-            Members = new List<DataType>();
+            return Members.GetEnumerator();
         }
 
         /// <summary>
@@ -74,7 +39,7 @@ namespace Prometheus.Nodes.Types
         /// <returns>
         /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
         /// </returns>
-        public IEnumerator<DataType> GetEnumerator()
+        public IEnumerator<string> GetEnumerator()
         {
             return Members.GetEnumerator();
         }
@@ -87,7 +52,7 @@ namespace Prometheus.Nodes.Types
         /// The <see cref="T:System.Collections.Generic.ICollection`1"/> is
         /// read-only.
         /// </exception>
-        public void Add(DataType pItem)
+        public void Add(string pItem)
         {
             Members.Add(pItem);
         }
@@ -112,7 +77,7 @@ namespace Prometheus.Nodes.Types
         /// false.
         /// </returns>
         /// <param name="pItem">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
-        public bool Contains(DataType pItem)
+        public bool Contains(string pItem)
         {
             return Members.Contains(pItem);
         }
@@ -134,7 +99,7 @@ namespace Prometheus.Nodes.Types
         /// <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from
         /// <paramref name="pArrayIndex"/> to the end of the destination <paramref name="pArray"/>.
         /// </exception>
-        public void CopyTo(DataType[] pArray, int pArrayIndex)
+        public void CopyTo(string[] pArray, int pArrayIndex)
         {
             Members.CopyTo(pArray, pArrayIndex);
         }
@@ -152,7 +117,7 @@ namespace Prometheus.Nodes.Types
         /// The <see cref="T:System.Collections.Generic.ICollection`1"/> is
         /// read-only.
         /// </exception>
-        public bool Remove(DataType pItem)
+        public bool Remove(string pItem)
         {
             return Members.Remove(pItem);
         }
@@ -186,7 +151,7 @@ namespace Prometheus.Nodes.Types
         /// The index of <paramref name="pItem"/> if found in the list; otherwise, -1.
         /// </returns>
         /// <param name="pItem">The object to locate in the <see cref="T:System.Collections.Generic.IList`1"/>.</param>
-        public int IndexOf(DataType pItem)
+        public int IndexOf(string pItem)
         {
             return Members.IndexOf(pItem);
         }
@@ -201,7 +166,7 @@ namespace Prometheus.Nodes.Types
         /// <see cref="T:System.Collections.Generic.IList`1"/>.
         /// </exception>
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IList`1"/> is read-only.</exception>
-        public void Insert(int pIndex, DataType pItem)
+        public void Insert(int pIndex, string pItem)
         {
             Members.Insert(pIndex, pItem);
         }
@@ -235,21 +200,10 @@ namespace Prometheus.Nodes.Types
         /// The property is set and the
         /// <see cref="T:System.Collections.Generic.IList`1"/> is read-only.
         /// </exception>
-        public DataType this[int pIndex]
+        public string this[int pIndex]
         {
             get { return Members[pIndex]; }
             set { Members[pIndex] = value; }
-        }
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        public override string ToString()
-        {
-            return string.Join(".", Members);
         }
     }
 }

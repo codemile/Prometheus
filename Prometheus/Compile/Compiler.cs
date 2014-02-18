@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using GOLD;
 using Logging;
 using Prometheus.Compile.Optomizer;
+using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Packages;
 using Prometheus.Properties;
 
 namespace Prometheus.Compile
@@ -33,16 +37,11 @@ namespace Prometheus.Compile
         private readonly GOLD.Parser _parser;
 
         /// <summary>
-        /// The lines of source code.
-        /// </summary>
-        private string[] _lines;
-
-        /// <summary>
         /// Calculates the command tree from the source code and returns the root node.
         /// </summary>
         /// <param name="pFileName">The name of the source file.</param>
-        /// <param name="pReader">A stream of the source file.</param>
-        private Node Compile(string pFileName, TextReader pReader)
+        /// <param name="pSourceCode">The source code to compile.</param>
+        public Node Compile(string pFileName, string pSourceCode)
         {
             //This procedure starts the GOLD Parser Engine and handles each of the
             //messages it returns. Each time a reduction is made, you can create new
@@ -52,14 +51,17 @@ namespace Prometheus.Compile
             //The resulting tree will be a pure representation of the language 
             //and will be ready to implement.
 
-            _parser.Open(pReader);
+            string sourceCode = pSourceCode + "\n";
+            string[] lines = sourceCode.Split(new[] { '\n' });
+
+            _parser.Open(ref sourceCode);
             _parser.TrimReductions = true;
 
             for (ParseMessage response = _parser.Parse(); response != ParseMessage.Accept; response = _parser.Parse())
             {
                 int x = _parser.CurrentPosition().Line + 1;
                 int y = _parser.CurrentPosition().Column + 1;
-                Location location = new Location(pFileName, _lines[x - 1].Trim(), x, y);
+                Location location = new Location(pFileName, lines[x - 1].Trim(), x, y);
 
                 try
                 {
@@ -85,8 +87,13 @@ namespace Prometheus.Compile
                 throw new InternalErrorException(Errors.ProgramMissing, Location.None);
             }
 
-            // create a root node
-            Node root = new Node(GrammarSymbol.Statements, node.Location);
+            // always make Program the root node
+            if (node.Type == GrammarSymbol.Program)
+            {
+                return node;
+            }
+
+            Node root = new Node(GrammarSymbol.Program, node.Location);
             root.Children.Add(node);
             return root;
         }
@@ -144,57 +151,5 @@ namespace Prometheus.Compile
                 }
             }
         }
-
-        /// <summary>
-        /// Calculates the command tree from the source code.
-        /// </summary>
-        /// <param name="pFileName">The name of the source file.</param>
-        /// <param name="pSource">Contents of the source file.</param>
-        public TargetCode Compile(string pFileName, string pSource)
-        {
-            pSource = pSource + Environment.NewLine;
-            _lines = pSource.Split('\n');
-
-            using (StringReader reader = new StringReader(pSource))
-            {
-                Node root = Compile(pFileName, reader);
-
-#if DEBUG
-                TraceCode("Before Optimizer", root);
-#endif
-                Optimizer optimizer = new Optimizer();
-                root = optimizer.Optimize(root);
-#if DEBUG
-                TraceCode("After Optimizer", root);
-#endif
-                return new TargetCode(root);
-            }
-        }
-
-#if DEBUG
-        /// <summary>
-        /// Dumps a trace of the code tree to the console.
-        /// </summary>
-        private static void TraceCode(string pMessage, Node pRoot)
-        {
-            _logger.Debug(pMessage);
-            _logger.Debug("Root");
-            PrintCode(pRoot);
-            _logger.Debug("");
-        }
-
-        /// <summary>
-        /// Walks the tree of nodes displaying details about each node.
-        /// </summary>
-        private static void PrintCode(Node pNode, int pIndent = 0)
-        {
-            _logger.Debug("{0} {1} {2}", " ".PadLeft(pIndent * 2), pNode.Type, string.Join(" ", pNode.Data));
-
-            foreach (Node child in pNode.Children)
-            {
-                PrintCode(child, pIndent + 1);
-            }
-        }
-#endif
     }
 }

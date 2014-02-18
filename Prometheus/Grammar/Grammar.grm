@@ -57,10 +57,8 @@ Comment Line  = '//'
 				| <TestSuite Decl> <Statements> <Test Decls> <Test Execute>
 				| <TestSuite Decl> <Statements> <Test Decls> <Test Execute> <Statements>
 
-<Program Code>	::= <Object Decls>
-				| <Object Decls> <Statements>
-				| <Statements>
-				| !Nothing
+<Program Code>	::= <Import Decls> <Object Decls> 
+				| <Import Decls> <Object Decls> <Statements>
 
 <Block>			::= '{' <Statements> '}'
 				|  '{' '}'
@@ -68,9 +66,8 @@ Comment Line  = '//'
 <Statement or Block>	::= <Statement>
 						| <Block>
 
-<Statements>	::= <Statement>
-				| <Statements> <Statement>
-				| <Block>
+<Statements>	::= <Statement or Block>
+				| <Statements> <Statement or Block>
 
 <Statement>		::= <FlowControl>
 				| <Variable Statements> <End>
@@ -195,15 +192,23 @@ Comment Line  = '//'
 <Valid ID>			::= Identifier
 <Member ID>			::= MemberName
 
+<ClassName ID>		::= <Valid ID> <ClassName List>
+
+<ClassName List>	::= <Member ID> <ClassName List>
+					| ! zero or more
+
+! ===================================================================
+! References to a variable, object member or array index
+! ===================================================================
 <Qualified ID>		::= <Valid ID> <Qualified List>
 
 <Qualified List>	::= <Member ID> <Qualified List>
 					| '[' <Value> ']' <Qualified List>
 					| ! zero or more
 
-<Member List>		::= <Member List> MemberName
-					| ! zero or more 
-
+! ===================================================================
+! A value is the result of an expression.
+! ===================================================================
 <Value>				::= StringDouble
 					| StringSingle
 					| RegExpSlash
@@ -241,14 +246,11 @@ Comment Line  = '//'
 ! Packages
 ! ===================================================================
 
-!<Import Decls>		::= <Import Decl>
-!					| <Import Decls> <Import Decl>
+<Import Decls>		::= <Import Decl>
+					| <Import Decls> <Import Decl>
+					| ! or none
 
-!<Import Decl>		::= 'use' Identifier <Member List> <End>
-				
-
-!<Member List>		::= <Member List> MemberName
-!					|  !Zero or more 
+<Import Decl>		::= 'use' <ClassName ID> <End>
 
 ! ===================================================================
 ! Objects
@@ -256,12 +258,13 @@ Comment Line  = '//'
 
 <Object Decls>			::= <Object Decl>
 						| <Object Decls> <Object Decl>
+						| ! or none
 
 <Object Decl>			::= 'object' <BaseClass ID> <Parameter Array> <Block> <End>
 <Object Block>			::= ! place holder used by optimizer to create constructor function.
 
-<BaseClass ID>			::= <Qualified ID> '::' <Qualified ID>
-						| <Qualified ID>
+<BaseClass ID>			::= <ClassName ID> '::' <Valid ID>
+						| <Valid ID>
 
 ! ===================================================================
 ! Functions
@@ -288,7 +291,7 @@ Comment Line  = '//'
 <Call Expression>		::= <Qualified ID> <Argument Array>
 						| <Call Expression> <Argument Array>	! chaining
 
-<New Expression>		::= 'new' <Qualified ID> <Argument Array>
+<New Expression>		::= 'new' <ClassName ID> <Argument Array>
 
 ! This is not used by the grammar. The optimizer uses it to mark calls to internal methods.
 <CallInternal>			::= ! matches nothing

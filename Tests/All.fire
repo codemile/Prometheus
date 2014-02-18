@@ -1,1 +1,2 @@
-use Math;
+use Tests.Math;
+use System.Strings.Format;

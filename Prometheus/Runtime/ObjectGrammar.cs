@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -120,6 +121,15 @@ namespace Prometheus.Runtime
             DeclarationType decl = new DeclarationType(pBaseName, pObjectName, new ClosureType(pConstructor.Function, pParameters));
             Executor.Cursor.Stack.Create(pObjectName.ToIdentifier().Name, decl);
             return decl;
+        }
+
+        /// <summary>
+        /// Set what packages are being used by the current code.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ImportDecl)]
+        public DataType Import(ClassNameType pPackage)
+        {
+            return UndefinedType.Undefined;
         }
     }
 }

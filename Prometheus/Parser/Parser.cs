@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Prometheus.Compile;
+using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -176,18 +177,18 @@ namespace Prometheus.Parser
         /// <summary>
         /// Runs the code
         /// </summary>
-        public int Run(TargetCode pCode)
+        public int Run(CodeFile pCodeFile)
         {
-            if (!pCode.Root.HasChild(GrammarSymbol.TestSuiteDecl))
+            if (!pCodeFile.Root.HasChild(GrammarSymbol.TestSuiteDecl))
             {
-                return Execute(pCode.Root, new Cursor());
+                return Execute(pCodeFile.Root, new Cursor());
             }
 
-            IEnumerable<string> unitTests = getUnitTests(pCode.Root);
-            IEnumerable<string> tests = getTestSuite(pCode.Root, unitTests);
+            IEnumerable<string> unitTests = getUnitTests(pCodeFile.Root);
+            IEnumerable<string> tests = getTestSuite(pCodeFile.Root, unitTests);
             foreach (string test in tests)
             {
-                Execute(pCode.Root, new Cursor(test));
+                Execute(pCodeFile.Root, new Cursor(test));
             }
             return 0;
         }

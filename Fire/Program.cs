@@ -1,10 +1,13 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 using Fire.Properties;
 using GemsCLI;
 using Logging;
 using Logging.Writers;
 using Prometheus.Compile;
+using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions;
+using Prometheus.Packages;
 using Prometheus.Parser;
 using Prometheus.Sources;
 
@@ -39,18 +42,28 @@ namespace Fire
             if (string.IsNullOrWhiteSpace(options.FileName))
             {
                 WriteGreeting();
+                return 0;
+            }
+
+            if(!File.Exists(options.FileName))
+            {
+                _logger.Error("File does not exist: {0}", options.FileName);
+                return -1;
             }
 
             try
             {
-                string filename = Reader.getFileNameWithExtension(options.FileName, "fire");
-                string source = Reader.Open(filename);
+                string fullPath = Path.GetFullPath(options.FileName);
+                string directory = Path.GetDirectoryName(fullPath);
 
-                Compiler prometheus = new Compiler();
-                TargetCode code = prometheus.Compile(filename, source);
+                Project project = new Project();
+                project.Add(directory);
+                project.Build(fullPath);
 
+/*
                 Parser parser = new Parser();
-                return parser.Run(code);
+                return parser.Run(codeFile);
+*/
             }
             catch (PrometheusException e)
             {

@@ -33,6 +33,37 @@ namespace Prometheus.Parser.Executors
         private readonly Dictionary<string, ExecutorInternal> _internalLookup;
 
         /// <summary>
+        /// Creates an array object.
+        /// </summary>
+        private DataType CreateArray(Node pParent)
+        {
+            IList<DataType> array;
+            switch (pParent.Type)
+            {
+                case GrammarSymbol.QualifiedID:
+                    array = new QualifiedType();
+                    break;
+                default:
+                    array = new ArrayType();
+                    break;
+            }
+            for (int i = 0, c = pParent.Children.Count; i < c; i++)
+            {
+#if DEBUG
+                if (pParent.Type == GrammarSymbol.ParameterArray)
+                {
+                    ExecutorAssert.Data(pParent.Children[i], 1);
+                    ExecutorAssert.DataType(pParent.Children[i], 0, typeof (IdentifierType));
+                }
+#endif
+                array.Add(pParent.Type == GrammarSymbol.ParameterArray
+                    ? pParent.Children[i].Data[0]
+                    : WalkDownChildren(pParent.Children[i]));
+            }
+            return (DataType)array;
+        }
+
+        /// <summary>
         /// Executes the base implementation of the node. This is where the parser
         /// transitions from walking the node tree to executing C# code for a grammar
         /// command.
@@ -208,23 +239,8 @@ namespace Prometheus.Parser.Executors
                 case GrammarSymbol.ParameterArray:
                 case GrammarSymbol.TestSuiteArray:
                 case GrammarSymbol.QualifiedID:
-                    IList<DataType> array = pParent.Type == GrammarSymbol.QualifiedID
-                        ? (IList<DataType>)new QualifiedType()
-                        : new ArrayType();
-                    for (int i = 0, c = pParent.Children.Count; i < c; i++)
-                    {
-#if DEBUG
-                        if (pParent.Type == GrammarSymbol.ParameterArray)
-                        {
-                            ExecutorAssert.Data(pParent.Children[i], 1);
-                            ExecutorAssert.DataType(pParent.Children[i], 0, typeof (IdentifierType));
-                        }
-#endif
-                        array.Add(pParent.Type == GrammarSymbol.ParameterArray
-                            ? pParent.Children[i].Data[0]
-                            : WalkDownChildren(pParent.Children[i]));
-                    }
-                    return (DataType)array;
+                case GrammarSymbol.ClassNameID:
+                    return CreateArray(pParent);
             }
 
 #if DEBUG
