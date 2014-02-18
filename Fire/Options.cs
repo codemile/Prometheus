@@ -16,25 +16,16 @@ namespace Fire
         [CliHelp("Send output to Visual Studio's immediate window.")]
         public bool Debug { get; set; }
 
-        private string _fileName;
-
         /// <summary>
         /// The package to run
         /// </summary>
         [CliName(eROLE.PASSED)]
-        [CliHelp("File to build")]
-        public string FileName
-        {
-            get { return _fileName; }
-            set
-            {
-                _fileName = value;
-                if (_fileName.IndexOf('.') == -1)
-                {
-                    _fileName += ".fire";
-                }
-            }
-        }
+        [CliHelp("The path to the project directory.")]
+        public string Project { get; set; }
+
+        [CliName(eROLE.PASSED)]
+        [CliHelp("The name of the package.class to build.")]
+        public string Package { get; set; }
 
         /// <summary>
         /// Constructor

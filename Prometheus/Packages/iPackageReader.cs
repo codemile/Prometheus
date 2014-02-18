@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Prometheus.Nodes;
 
 namespace Prometheus.Packages
 {
@@ -8,6 +9,8 @@ namespace Prometheus.Packages
     /// </summary>
     public interface iPackageReader
     {
+        ClassNameType ClassName();
+
         /// <summary>
         /// The full path to the file. This is used in error messages as a
         /// reference to the source code.
@@ -15,9 +18,9 @@ namespace Prometheus.Packages
         string FileName();
 
         /// <summary>
-        /// The text reader will feed the source code to the compiler.
+        /// Read the source code for the compiler.
         /// </summary>
-        /// <returns>A reader object</returns>
-        TextReader CreateReader();
+        /// <returns>The source code</returns>
+        string Read();
     }
 }

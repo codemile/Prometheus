@@ -62,7 +62,7 @@ namespace Prometheus.Compile.Packaging
         /// <summary>
         /// Adds the code file to the package it belongs to.
         /// </summary>
-        public void Add(CodeFile pCode)
+        public void Add(Compiled pCode)
         {
             Package pack = Get(pCode.Package);
             pack.Declarations.AddRange(pCode.Declarations);

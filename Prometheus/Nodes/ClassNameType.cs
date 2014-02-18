@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes
@@ -7,7 +9,7 @@ namespace Prometheus.Nodes
     /// <summary>
     /// Represents the name of a package, class or object member.
     /// </summary>
-    public class ClassNameType : DataType, IList<string>
+    public class ClassNameType : DataType, IList<string>, IEqualityComparer
     {
         /// <summary>
         /// Each part is a member on the path.
@@ -15,11 +17,27 @@ namespace Prometheus.Nodes
         public readonly List<string> Members;
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public ClassNameType()
+        {
+            Members = new List<string>();
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ClassNameType(string pClassName)
+        {
+            Members = new List<string>(pClassName.Split(new []{'.'}));
+        }
+
+        /// <summary>
         /// Gets the name component of the class name.
         /// </summary>
         public string Name
         {
-            get { return Members[Members.Count]; }
+            get { return Members[Members.Count-1]; }
         }
 
         /// <summary>
@@ -204,6 +222,62 @@ namespace Prometheus.Nodes
         {
             get { return Members[pIndex]; }
             set { Members[pIndex] = value; }
+        }
+
+        /// <summary>
+        /// Determines whether the specified objects are equal.
+        /// </summary>
+        /// <returns>
+        /// true if the specified objects are equal; otherwise, false.
+        /// </returns>
+        /// <param name="pObj1">The first object to compare.</param><param name="pObj2">The second object to compare.</param><exception cref="T:System.ArgumentException"><paramref name="pObj1"/> and <paramref name="pObj2"/> are of different types and neither one can handle comparisons with the other.</exception>
+        public new bool Equals(object pObj1, object pObj2)
+        {
+            ClassNameType name1 = pObj1 as ClassNameType;
+            ClassNameType name2 = pObj2 as ClassNameType;
+            if (name1 == null 
+                || name2 == null 
+                || name1.Members.Count != name2.Members.Count)
+            {
+                return false;
+            }
+            for (int i = 0, c = name1.Members.Count; i < c; i++)
+            {
+                if (name1[i] != name2[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns a hash code for the specified object.
+        /// </summary>
+        /// <returns>
+        /// A hash code for the specified object.
+        /// </returns>
+        /// <param name="pObj">The <see cref="T:System.Object"/> for which a hash code is to be returned.</param><exception cref="T:System.ArgumentNullException">The type of <paramref name="pObj"/> is a reference type and <paramref name="pObj"/> is null.</exception>
+        public int GetHashCode(object pObj)
+        {
+            ClassNameType name = (ClassNameType)pObj;
+            int code = 0;
+            for (int i = 0, c = name.Members.Count; i < c; i++)
+            {
+                code ^= name.Members[i].GetHashCode();
+            }
+            return code;
+        }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Join(".", Members);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Prometheus.Compile.Packaging
     /// <summary>
     /// The output produced by the compiler.
     /// </summary>
-    public class CodeFile
+    public class Compiled
     {
         /// <summary>
         /// The name of the package this code belongs to.
@@ -41,7 +41,7 @@ namespace Prometheus.Compile.Packaging
         /// </summary>
         /// <param name="pPackage">The package this code belongs to</param>
         /// <param name="pRoot">Root node</param>
-        public CodeFile(ClassNameType pPackage, Node pRoot)
+        public Compiled(ClassNameType pPackage, Node pRoot)
         {
             Package = pPackage;
             Root = pRoot;

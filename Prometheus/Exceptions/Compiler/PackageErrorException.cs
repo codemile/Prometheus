@@ -3,12 +3,12 @@ using Prometheus.Compile;
 
 namespace Prometheus.Exceptions.Compiler
 {
-    public class PackageNotFoundException : CompilerException
+    public class PackageErrorException : CompilerException
     {
         /// <summary>
         /// Wraps around another exception.
         /// </summary>
-        public PackageNotFoundException(string pMessage, Location pLocation, Exception pInnerException)
+        public PackageErrorException(string pMessage, Location pLocation, Exception pInnerException)
             : base(pMessage, pLocation, pInnerException)
         {
         }
@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public PackageNotFoundException(string pMessage, Location pLocation) 
+        public PackageErrorException(string pMessage, Location pLocation) 
             : base(pMessage, pLocation)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public PackageNotFoundException(string pMessage) 
+        public PackageErrorException(string pMessage) 
             : base(pMessage)
         {
         }

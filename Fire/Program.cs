@@ -6,6 +6,7 @@ using Logging;
 using Logging.Writers;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
+using Prometheus.Nodes;
 
 namespace Fire
 {
@@ -35,26 +36,24 @@ namespace Fire
             Logger.Add(new ConsoleWriter(options.Debug));
             Logger.Add(new VisualStudioWriter());
 
-            if (string.IsNullOrWhiteSpace(options.FileName))
+            if (string.IsNullOrWhiteSpace(options.Project))
             {
                 WriteGreeting();
                 return 0;
             }
 
-            if (!File.Exists(options.FileName))
+            if (!Directory.Exists(options.Project))
             {
-                _logger.Error("File does not exist: {0}", options.FileName);
+                _logger.Error("Directory does not exist: {0}", options.Project);
                 return -1;
             }
 
             try
             {
-                string fullPath = Path.GetFullPath(options.FileName);
-                string directory = Path.GetDirectoryName(fullPath);
-
                 Project project = new Project();
-                project.Add(directory);
-                project.Build(fullPath);
+                project.AddDirectory(options.Project);
+                // TODO: Check that the package name is formatted correctly.
+                project.Build(new ClassNameType(options.Package));
 
 /*
                 Parser parser = new Parser();

@@ -177,18 +177,18 @@ namespace Prometheus.Parser
         /// <summary>
         /// Runs the code
         /// </summary>
-        public int Run(CodeFile pCodeFile)
+        public int Run(Compiled pCompiled)
         {
-            if (!pCodeFile.Root.HasChild(GrammarSymbol.TestSuiteDecl))
+            if (!pCompiled.Root.HasChild(GrammarSymbol.TestSuiteDecl))
             {
-                return Execute(pCodeFile.Root, new Cursor());
+                return Execute(pCompiled.Root, new Cursor());
             }
 
-            IEnumerable<string> unitTests = getUnitTests(pCodeFile.Root);
-            IEnumerable<string> tests = getTestSuite(pCodeFile.Root, unitTests);
+            IEnumerable<string> unitTests = getUnitTests(pCompiled.Root);
+            IEnumerable<string> tests = getTestSuite(pCompiled.Root, unitTests);
             foreach (string test in tests)
             {
-                Execute(pCodeFile.Root, new Cursor(test));
+                Execute(pCompiled.Root, new Cursor(test));
             }
             return 0;
         }

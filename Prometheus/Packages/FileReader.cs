@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Prometheus.Exceptions.Compiler;
+using Prometheus.Nodes;
 
 namespace Prometheus.Packages
 {
@@ -9,16 +10,30 @@ namespace Prometheus.Packages
     public class FileReader : iPackageReader
     {
         /// <summary>
-        /// The file to read
+        /// Name of the class to read.
         /// </summary>
-        private readonly string _fileName;
+        private readonly ClassNameType _className;
+
+        /// <summary>
+        /// Path to the file
+        /// </summary>
+        private readonly string _path;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public FileReader(string pFileName)
+        public FileReader(string pPath, ClassNameType pClassName)
         {
-            _fileName = pFileName;
+            _path = pPath;
+            _className = pClassName;
+        }
+
+        /// <summary>
+        /// The class this reader provides source code for.
+        /// </summary>
+        public ClassNameType ClassName()
+        {
+            return _className;
         }
 
         /// <summary>
@@ -27,21 +42,23 @@ namespace Prometheus.Packages
         /// </summary>
         public string FileName()
         {
-            return _fileName;
+            return _path;
         }
 
         /// <summary>
         /// The text reader will feed the source code to the compiler.
         /// </summary>
         /// <returns>A reader object</returns>
-        public TextReader CreateReader()
+        public string Read()
         {
-            if (!File.Exists(_fileName))
+            if (!File.Exists(_path))
             {
-                throw new SourceCodeException(string.Format("File does not exist: {0}", _fileName));
+                throw new SourceCodeException(string.Format("File does not exist: {0}", _path));
             }
-
-            return new StreamReader(_fileName);
+            using (StreamReader reader = new StreamReader(_path))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }

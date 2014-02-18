@@ -1,49 +1,62 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Prometheus.Exceptions.Compiler;
+using Prometheus.Nodes;
 
 namespace Prometheus.Packages
 {
     /// <summary>
-    /// Treats subdirectories as the name of packages.
+    /// A loader that points to a directory that acts like a package.
     /// </summary>
     public class DirectoryLoader : iPackageLoader
     {
         /// <summary>
-        /// The root folder
+        /// The directory
         /// </summary>
-        private readonly string _basePath;
+        private readonly string _directory;
+
+        /// <summary>
+        /// The name of the package.
+        /// </summary>
+        private readonly string _name;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="pPath"></param>
-        public DirectoryLoader(string pPath)
+        /// <param name="pDirectory"></param>
+        public DirectoryLoader(string pDirectory)
         {
-            _basePath = pPath;
+            int last = pDirectory.LastIndexOf(Path.DirectorySeparatorChar);
+            _directory = pDirectory.Substring(0, last);
+            _name = pDirectory.Substring(last+1);
         }
 
         /// <summary>
-        /// The compiler will call this method when a package is required. If the path
-        /// to a package is a directory, then return multiple readers for all files. If
-        /// the path is to a specific file, then return one reader for that file.
+        /// Creates a reader for each file in a directory, or a single file
+        /// depending if the class name points to a package or class.
         /// </summary>
-        /// <param name="pPath">The path to the file, or the files in a package.</param>
-        /// <returns>The package reader, or Null if not found</returns>
-        public IList<iPackageReader> Load(string pPath)
+        public IList<iPackageReader> Load(ClassNameType pClassName)
         {
-            string path = string.Format("{0}{1}{2}", _basePath, Path.DirectorySeparatorChar,
-                pPath.Replace('.', Path.DirectorySeparatorChar));
+            if (String.Compare(pClassName[0], _name, StringComparison.CurrentCultureIgnoreCase) != 0)
+            {
+                return null;
+            }
+
+            string parts = pClassName.ToString().Replace('.', Path.DirectorySeparatorChar);
+            string path = _directory + Path.DirectorySeparatorChar + parts;
 
             if (File.Exists(path + ".fire"))
             {
-                return new iPackageReader[] {new FileReader(path + ".fire")};
+                return new iPackageReader[] { new FileReader(path + ".fire", pClassName) };
             }
             if (Directory.Exists(path))
             {
                 return
                     (from file in Directory.EnumerateFiles(path, "*.fire") 
-                     select (iPackageReader)new FileReader(file))
+                     let cn = new ClassNameType(pClassName+"."+Path.GetFileNameWithoutExtension(file))
+                     select (iPackageReader)new FileReader(file, cn))
                         .ToList();
             }
             return null;

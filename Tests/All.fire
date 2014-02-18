@@ -1,2 +1,1 @@
-use Tests.Math;
-use System.Strings.Format;
+print "Hello World";

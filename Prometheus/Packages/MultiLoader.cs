@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Prometheus.Nodes;
 
 namespace Prometheus.Packages
 {
@@ -24,11 +25,11 @@ namespace Prometheus.Packages
         /// to a package is a directory, then return multiple readers for all files. If
         /// the path is to a specific file, then return one reader for that file.
         /// </summary>
-        /// <param name="pPath">The path to the file, or the files in a package.</param>
+        /// <param name="pClassName">The path to the file, or the files in a package.</param>
         /// <returns>The package reader, or Null if not found</returns>
-        public IList<iPackageReader> Load(string pPath)
+        public IList<iPackageReader> Load(ClassNameType pClassName)
         {
-            return this.Select(pLoader=>pLoader.Load(pPath)).FirstOrDefault(pReaders=>pReaders != null);
+            return this.Select(pLoader=>pLoader.Load(pClassName)).FirstOrDefault(pReaders=>pReaders != null);
         }
     }
 }
