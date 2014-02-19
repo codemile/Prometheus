@@ -1,7 +1,3 @@
-use "Math/Operators";
+Tests;
 
-object Document {
-};
-
-var x = new global.Document();
-vars;
+Use "Math/Operators";

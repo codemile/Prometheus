@@ -80,6 +80,7 @@
     <Compile Include="Nodes\Types\InstanceType.cs" />
     <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
+    <Compile Include="Runtime\GenericGrammar.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
     <Compile Include="Runtime\TestGrammar.cs" />
     <Compile Include="Packages\Reader.cs" />

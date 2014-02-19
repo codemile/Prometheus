@@ -53,9 +53,9 @@ Comment Line  = '//'
 <Program>		::= <Program Test>
 				| <Program Code>
 
-<Program Test>	::= <TestSuite Decl> <Test Decls> <Test Execute>
-				| <TestSuite Decl> <Statements> <Test Decls> <Test Execute>
-				| <TestSuite Decl> <Statements> <Test Decls> <Test Execute> <Statements>
+<Program Test>	::= <TestSuite Decl> <Import Decls> <Test Decls> <Test Execute>
+				| <TestSuite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute>
+				| <TestSuite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute> <Statements>
 
 <Program Code>	::= <Import Decls> <Object Decls> 
 				| <Import Decls> <Object Decls> <Statements>
@@ -90,6 +90,7 @@ Comment Line  = '//'
 
 <Test Decls>		::= <Test Decl>
 					| <Test Decls> <Test Decl>
+					| ! or none
 
 <Test Decl>			::= 'test' <Valid ID> <Block> <End>
 <Test Block>		::= ! place holder used by optimizer to create functions.
@@ -337,21 +338,14 @@ Comment Line  = '//'
 ! ===================================================================
 
 <Procedure>			::= <UnsetProc>
-					| <RejectProc>
-					| <AcceptProc>
-					| <ScopeProc>
-					| <IncludeProc>
-					| <PrintProc>
 					| <ReturnProc>
-					| <AssertProc>
 					| <ListVars>
+					| <Generic0Args>
+					| <Generic1Args>
 
 <UnsetProc>			::= UNSET <Qualified ID>
-<RejectProc>		::= REJECT <Expression>
-<AcceptProc>		::= ACCEPT <Expression>
-<ScopeProc>			::= SCOPE <Expression>
-<IncludeProc>		::= INCLUDE <Expression>
-<PrintProc>			::= PRINT <Expression>
 <ReturnProc>		::= RETURN <Expression>
-<AssertProc>		::= ASSERT <Expression>
 <ListVars>			::= VARS
+
+<Generic0Args>		::= Identifier
+<Generic1Args>		::= Identifier <Expression>

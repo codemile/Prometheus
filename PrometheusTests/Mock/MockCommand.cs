@@ -21,7 +21,7 @@ namespace PrometheusTest.Mock
         /// Prints a string to the output.
         /// </summary>
         /// <param name="pValue">The message to print.</param>
-        [ExecuteSymbol(GrammarSymbol.PrintProc)]
+        //[ExecuteSymbol(GrammarSymbol.PrintProc)]
         public DataType Print(DataType pValue)
         {
             Debug.WriteLine(pValue.ToString());

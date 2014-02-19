@@ -113,11 +113,11 @@ namespace Prometheus.Parser
         /// <summary>
         /// Creates a list of all unit test declarations.
         /// </summary>
-        private IEnumerable<string> getUnitTests(Node pRoot)
+        private static List<string> getUnitTests(Node pImported)
         {
-            return from child in pRoot.Children
-                   where child.Type == GrammarSymbol.TestDecl
-                   select child.FirstChild().FirstData().Cast<IdentifierType>().Name;
+            return (from child in pImported.Children
+                    where child.Type == GrammarSymbol.TestDecl
+                    select child.FirstChild().FirstData().Cast<IdentifierType>().Name).ToList();
         }
 
         /// <summary>
@@ -184,11 +184,14 @@ namespace Prometheus.Parser
                 return;
             }
 
-            IEnumerable<string> unitTests = getUnitTests(pCompiled.Root);
-            IEnumerable<string> tests = getTestSuite(pCompiled.Root, unitTests);
-            foreach (string test in tests)
+            // execute unit tests.
+            foreach (Node imported in pCompiled.Imported)
             {
-                Execute(new List<Node>{pCompiled.Root}, new Cursor(test));
+                List<string> unitTests = getUnitTests(imported);
+                foreach (string test in getTestSuite(imported, unitTests))
+                {
+                    Execute(new List<Node> { imported }, new Cursor(test));
+                }
             }
         }
     }

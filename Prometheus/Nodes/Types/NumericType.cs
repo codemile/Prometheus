@@ -23,7 +23,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public double Double
         {
-            get { return (double)Value; }
+            get { return Convert.ToDouble(Value); }
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public long Long
         {
-            get { return (long)Value; }
+            get { return Convert.ToInt64(Value); }
         }
 
         /// <summary>
