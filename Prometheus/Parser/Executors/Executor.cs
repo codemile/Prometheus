@@ -105,10 +105,11 @@ namespace Prometheus.Parser.Executors
         {
             switch (pParent.Type)
             {
-                    // these are just holders for constant values
+                // these are just holders for constant values
                 case GrammarSymbol.ValidID:
                 case GrammarSymbol.Value:
                 case GrammarSymbol.MemberID:
+                case GrammarSymbol.ImportDecl:
 #if DEBUG
                     ExecutorAssert.Data(pParent, 1);
 #endif

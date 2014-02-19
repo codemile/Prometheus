@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text.RegularExpressions;
 using Prometheus.Exceptions.Compiler;
 
 namespace Prometheus.Packages
@@ -47,7 +48,8 @@ namespace Prometheus.Packages
             {
                 return pFileName;
             }
-            return pFileName.Contains(".") ? pFileName : string.Format("{0}{1}", pFileName, ext);
+
+            return (Regex.IsMatch(pFileName, @"^.*/(\.[^\.]+)$")) ? pFileName : string.Format("{0}{1}", pFileName, ext);
         }
     }
 }

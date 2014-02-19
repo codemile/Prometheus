@@ -16,16 +16,9 @@ namespace Fire
         [CliHelp("Send output to Visual Studio's immediate window.")]
         public bool Debug { get; set; }
 
-        /// <summary>
-        /// The package to run
-        /// </summary>
         [CliName(eROLE.PASSED)]
-        [CliHelp("The path to the project directory.")]
-        public string Directory { get; set; }
-
-        [CliName(eROLE.PASSED)]
-        [CliHelp("The name of the package.class to build.")]
-        public string Package { get; set; }
+        [CliHelp("The name of the file to build.")]
+        public string FileName { get; set; }
 
         /// <summary>
         /// Constructor

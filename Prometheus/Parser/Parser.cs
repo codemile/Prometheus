@@ -55,7 +55,7 @@ namespace Prometheus.Parser
         /// <summary>
         /// Executes the node as a program.
         /// </summary>
-        private int Execute(Node pNode, Cursor pCursor)
+        private void Execute(IEnumerable<Node> pNode, Cursor pCursor)
         {
             using (Executor executor = new Executor(pCursor))
             {
@@ -71,13 +71,12 @@ namespace Prometheus.Parser
                     globals.Add(customObject.Key, new InstanceType(objSpace));
                 }
 
-                using (executor.Cursor.Stack = new CursorSpace(executor.Cursor, globals))
+                foreach (Node node in pNode)
                 {
-                    DataType value = executor.Execute(pNode, new Dictionary<string, DataType>()) ??
-                                     new NumericType(-1);
-
-                    NumericType num = value as NumericType;
-                    return (num != null) ? (int)num.Long : 0;
+                    using (executor.Cursor.Stack = new CursorSpace(executor.Cursor, globals))
+                    {
+                        executor.Execute(node, new Dictionary<string, DataType>());
+                    }
                 }
             }
         }
@@ -177,20 +176,20 @@ namespace Prometheus.Parser
         /// <summary>
         /// Runs the code
         /// </summary>
-        public int Run(Compiled pCompiled)
+        public void Run(Compiled pCompiled)
         {
             if (!pCompiled.Root.HasChild(GrammarSymbol.TestSuiteDecl))
             {
-                return Execute(pCompiled.Root, new Cursor());
+                Execute(pCompiled.Imported, new Cursor());
+                return;
             }
 
             IEnumerable<string> unitTests = getUnitTests(pCompiled.Root);
             IEnumerable<string> tests = getTestSuite(pCompiled.Root, unitTests);
             foreach (string test in tests)
             {
-                Execute(pCompiled.Root, new Cursor(test));
+                Execute(new List<Node>{pCompiled.Root}, new Cursor(test));
             }
-            return 0;
         }
     }
 }

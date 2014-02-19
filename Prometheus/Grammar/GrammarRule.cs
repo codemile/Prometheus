@@ -136,7 +136,7 @@ namespace Prometheus.Grammar
 		@ImportDecls = 125,                              // <Import Decls> ::= <Import Decl>
 		@ImportDecls2 = 126,                             // <Import Decls> ::= <Import Decls> <Import Decl>
 		@ImportDecls3 = 127,                             // <Import Decls> ::= 
-		@ImportDecl_use = 128,                           // <Import Decl> ::= use <ClassName ID> <End>
+		@ImportDecl_use_StringDouble = 128,              // <Import Decl> ::= use StringDouble <End>
 		@ObjectDecls = 129,                              // <Object Decls> ::= <Object Decl>
 		@ObjectDecls2 = 130,                             // <Object Decls> ::= <Object Decls> <Object Decl>
 		@ObjectDecls3 = 131,                             // <Object Decls> ::= 

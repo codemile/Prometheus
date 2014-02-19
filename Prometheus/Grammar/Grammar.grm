@@ -252,7 +252,7 @@ Comment Line  = '//'
 					| <Import Decls> <Import Decl>
 					| ! or none
 
-<Import Decl>		::= 'use' <ClassName ID> <End>
+<Import Decl>		::= 'use' StringDouble <End>
 
 ! ===================================================================
 ! Objects

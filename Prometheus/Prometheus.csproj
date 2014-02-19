@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compile\Builder.cs" />
-    <Compile Include="Compile\Project.cs" />
     <Compile Include="Compile\Optomizer\Assertion.cs" />
     <Compile Include="Compile\Optomizer\iNodeOptimizer.cs" />
     <Compile Include="Compile\Optomizer\Optimizer.cs" />

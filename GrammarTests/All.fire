@@ -1,4 +1,7 @@
-object Thing {
-	print "My thing!";
+use "Math/Operators";
+
+object Document {
 };
 
+var x = new global.Document();
+vars;
