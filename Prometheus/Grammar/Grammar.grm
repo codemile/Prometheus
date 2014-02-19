@@ -343,6 +343,7 @@ Comment Line  = '//'
 					| <IncludeProc>
 					| <PrintProc>
 					| <ReturnProc>
+					| <AssertProc>
 					| <ListVars>
 
 <UnsetProc>			::= UNSET <Qualified ID>
@@ -352,4 +353,5 @@ Comment Line  = '//'
 <IncludeProc>		::= INCLUDE <Expression>
 <PrintProc>			::= PRINT <Expression>
 <ReturnProc>		::= RETURN <Expression>
+<AssertProc>		::= ASSERT <Expression>
 <ListVars>			::= VARS

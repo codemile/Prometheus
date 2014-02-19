@@ -21,7 +21,9 @@ namespace Prometheus.Compile.Packaging
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _headerTypes = new HashSet<GrammarSymbol>
                                                                       {
-                                                                          GrammarSymbol.ObjectDecl
+                                                                          GrammarSymbol.ObjectDecl,
+                                                                          GrammarSymbol.TestSuiteDecl,
+                                                                          GrammarSymbol.TestDecl
                                                                       };
 
         /// <summary>

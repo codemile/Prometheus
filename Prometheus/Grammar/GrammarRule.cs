@@ -187,14 +187,16 @@ namespace Prometheus.Grammar
 		@Procedure5 = 176,                               // <Procedure> ::= <IncludeProc>
 		@Procedure6 = 177,                               // <Procedure> ::= <PrintProc>
 		@Procedure7 = 178,                               // <Procedure> ::= <ReturnProc>
-		@Procedure8 = 179,                               // <Procedure> ::= <ListVars>
-		@UnsetProc_UNSET = 180,                          // <UnsetProc> ::= UNSET <Qualified ID>
-		@RejectProc_REJECT = 181,                        // <RejectProc> ::= REJECT <Expression>
-		@AcceptProc_ACCEPT = 182,                        // <AcceptProc> ::= ACCEPT <Expression>
-		@ScopeProc_SCOPE = 183,                          // <ScopeProc> ::= SCOPE <Expression>
-		@IncludeProc_INCLUDE = 184,                      // <IncludeProc> ::= INCLUDE <Expression>
-		@PrintProc_PRINT = 185,                          // <PrintProc> ::= PRINT <Expression>
-		@ReturnProc_RETURN = 186,                        // <ReturnProc> ::= RETURN <Expression>
-		@ListVars_VARS = 187                             // <ListVars> ::= VARS
+		@Procedure8 = 179,                               // <Procedure> ::= <AssertProc>
+		@Procedure9 = 180,                               // <Procedure> ::= <ListVars>
+		@UnsetProc_UNSET = 181,                          // <UnsetProc> ::= UNSET <Qualified ID>
+		@RejectProc_REJECT = 182,                        // <RejectProc> ::= REJECT <Expression>
+		@AcceptProc_ACCEPT = 183,                        // <AcceptProc> ::= ACCEPT <Expression>
+		@ScopeProc_SCOPE = 184,                          // <ScopeProc> ::= SCOPE <Expression>
+		@IncludeProc_INCLUDE = 185,                      // <IncludeProc> ::= INCLUDE <Expression>
+		@PrintProc_PRINT = 186,                          // <PrintProc> ::= PRINT <Expression>
+		@ReturnProc_RETURN = 187,                        // <ReturnProc> ::= RETURN <Expression>
+		@AssertProc_ASSERT = 188,                        // <AssertProc> ::= ASSERT <Expression>
+		@ListVars_VARS = 189                             // <ListVars> ::= VARS
 	}
 }

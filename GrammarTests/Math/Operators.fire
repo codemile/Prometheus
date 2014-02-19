@@ -1,3 +1,5 @@
-vars;
+Tests;
 
-var x = new GrammarTests.Thing();
+Test Add {
+	assert 1+1==2;
+};
