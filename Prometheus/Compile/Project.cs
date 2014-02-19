@@ -78,7 +78,7 @@ namespace Prometheus.Compile
         /// <summary>
         /// Builds the current project.
         /// </summary>
-        public void Build()
+        public Compiled Build()
         {
             Builder make = new Builder();
             make.OnBeforeOptimizer += PrintCompiled;
@@ -89,6 +89,8 @@ namespace Prometheus.Compile
 
             _logger.Fine("********* DONE *********");
             PrintCompiled(compiled.Root);
+
+            return compiled;
         }
     }
 }

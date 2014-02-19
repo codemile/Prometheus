@@ -5,7 +5,9 @@ using GemsCLI;
 using Logging;
 using Logging.Writers;
 using Prometheus.Compile;
+using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions;
+using Prometheus.Parser;
 
 namespace Fire
 {
@@ -35,28 +37,26 @@ namespace Fire
             Logger.Add(new ConsoleWriter(options.Debug));
             Logger.Add(new VisualStudioWriter());
 
-            if (string.IsNullOrWhiteSpace(options.Project))
+            if (string.IsNullOrWhiteSpace(options.Directory))
             {
                 WriteGreeting();
                 return 0;
             }
 
-            if (!Directory.Exists(options.Project))
+            if (!Directory.Exists(options.Directory))
             {
-                _logger.Error("Directory does not exist: {0}", options.Project);
+                _logger.Error("Directory does not exist: {0}", options.Directory);
                 return -1;
             }
 
             try
             {
                 Project project = new Project();
-                project.AddDirectory(options.Project);
-                project.Build();
+                project.AddDirectory(options.Directory);
+                Compiled code = project.Build();
 
-/*
                 Parser parser = new Parser();
-                return parser.Run(codeFile);
-*/
+                return parser.Run(code);
             }
             catch (PrometheusException e)
             {

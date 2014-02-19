@@ -55,6 +55,16 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public QualifiedType(QualifiedType pNameSpace, IdentifierType pClassName)
+            : this()
+        {
+            Members.AddRange(pNameSpace.Members);
+            Members.Add(pClassName);
+        }
+
+        /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>

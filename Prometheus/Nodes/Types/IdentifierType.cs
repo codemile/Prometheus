@@ -34,7 +34,7 @@ namespace Prometheus.Nodes.Types
 #if DEBUG
             if (Name.Contains("."))
             {
-                throw new InternalErrorException(string.Format("Qualifier used as identifier <{0}>", pName));
+                //throw new InternalErrorException(string.Format("Qualifier used as identifier <{0}>", pName));
             }
 #endif
         }

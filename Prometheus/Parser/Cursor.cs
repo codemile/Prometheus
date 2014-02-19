@@ -28,6 +28,11 @@ namespace Prometheus.Parser
         public iMemorySpace Stack;
 
         /// <summary>
+        /// The current namespace.
+        /// </summary>
+        public QualifiedType NameSpace;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Cursor()
@@ -35,6 +40,7 @@ namespace Prometheus.Parser
             Stack = null;
             Node = null;
             UnitTest = null;
+            NameSpace = new QualifiedType("Global");
         }
 
         /// <summary>
@@ -42,6 +48,7 @@ namespace Prometheus.Parser
         /// </summary>
         /// <param name="pUnitTest">Name of a unit test to run.</param>
         public Cursor(string pUnitTest)
+            : this()
         {
             UnitTest = pUnitTest;
         }

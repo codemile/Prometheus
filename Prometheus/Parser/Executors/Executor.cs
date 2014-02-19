@@ -41,6 +41,7 @@ namespace Prometheus.Parser.Executors
             switch (pParent.Type)
             {
                 case GrammarSymbol.QualifiedID:
+                case GrammarSymbol.ClassNameID:
                     array = new QualifiedType();
                     break;
                 default:

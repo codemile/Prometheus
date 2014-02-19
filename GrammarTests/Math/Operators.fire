@@ -1,0 +1,3 @@
+vars;
+
+var x = new GrammarTests.Thing();

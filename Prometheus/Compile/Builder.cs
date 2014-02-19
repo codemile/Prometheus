@@ -5,6 +5,7 @@ using System.Linq;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Compile.Packaging;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 
 namespace Prometheus.Compile
 {
@@ -53,7 +54,7 @@ namespace Prometheus.Compile
             string[] folders = pDirectory.Split(Path.DirectorySeparatorChar);
             string name = folders[folders.Length - 1].ToLower();
             string baseDir = pDirectory.Substring(0, pDirectory.Length - name.Length);
-            ClassNameType className = new ClassNameType(name);
+            QualifiedType className = new QualifiedType(name);
 
             Directory.GetDirectories(pDirectory).ToList().ForEach(pDir=>IncludeSubdirectory(baseDir, pDir));
             Directory.GetFiles(pDirectory, "*.fire").ToList().ForEach(pFile=>BuildFile(className, pFile));
@@ -62,7 +63,7 @@ namespace Prometheus.Compile
         /// <summary>
         /// Compiles a file.
         /// </summary>
-        private void BuildFile(ClassNameType pClassName, string pFileName)
+        private void BuildFile(QualifiedType pClassName, string pFileName)
         {
             if (!Fire(OnFile, pFileName))
             {
@@ -85,7 +86,7 @@ namespace Prometheus.Compile
         {
             string packageName = pDirectory.Substring(pBaseDirectory.Length).ToLower();
             packageName = packageName.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), ".");
-            ClassNameType className = new ClassNameType(packageName);
+            QualifiedType className = new QualifiedType(packageName);
 
             Directory.GetDirectories(pDirectory).ToList().ForEach(pDir=>IncludeSubdirectory(pBaseDirectory, pDir));
             Directory.GetFiles(pDirectory, "*.fire").ToList().ForEach(pFile=>BuildFile(className, pFile));

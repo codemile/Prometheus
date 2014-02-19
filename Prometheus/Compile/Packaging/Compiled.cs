@@ -2,6 +2,7 @@
 using System.Linq;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 
 namespace Prometheus.Compile.Packaging
 {
@@ -43,11 +44,13 @@ namespace Prometheus.Compile.Packaging
         /// </summary>
         private readonly Node _header;
 
-        private static Node CreateNameSpace(ClassNameType pClassName, IEnumerable<Node> pNodes)
+        /// <summary>
+        /// Creates a namespace node.
+        /// </summary>
+        private static Node CreateNameSpace(QualifiedType pClassName)
         {
             Node ns = new Node(GrammarSymbol.NameSpace, Location.None);
             ns.Data.Add(pClassName);
-            ns.Children.AddRange(pNodes);
             return ns;
         }
 
@@ -70,20 +73,23 @@ namespace Prometheus.Compile.Packaging
         /// <summary>
         /// Adds a compiled node tree to the package.
         /// </summary>
-        public void Add(ClassNameType pPackage, Node pRoot)
+        public void Add(QualifiedType pPackage, Node pRoot)
         {
-            _header.Children.Add(CreateNameSpace(pPackage, from node in pRoot.Children
-                                                           where _headerTypes.Contains(node.Type)
-                                                           select node));
+            _header.Children.Add(CreateNameSpace(pPackage));
+            _header.Children.AddRange(from node in pRoot.Children
+                                      where _headerTypes.Contains(node.Type)
+                                      select node);
 
-            _body.Children.Add(CreateNameSpace(pPackage, from node in pRoot.Children
-                                                         where !_headerTypes.Contains(node.Type)
-                                                               && !_footerTypes.Contains(node.Type)
-                                                         select node));
+            _body.Children.Add(CreateNameSpace(pPackage));
+            _body.Children.AddRange(from node in pRoot.Children
+                                    where !_headerTypes.Contains(node.Type)
+                                          && !_footerTypes.Contains(node.Type)
+                                    select node);
 
-            _footer.Children.Add(CreateNameSpace(pPackage, from node in pRoot.Children
-                                                           where _footerTypes.Contains(node.Type)
-                                                           select node));
+            _footer.Children.Add(CreateNameSpace(pPackage));
+            _footer.Children.AddRange(from node in pRoot.Children
+                                      where _footerTypes.Contains(node.Type)
+                                      select node);
         }
     }
 }
