@@ -81,13 +81,6 @@
     <Compile Include="Nodes\Types\StringType.cs" />
     <Compile Include="Nodes\Types\DeclarationType.cs" />
     <Compile Include="Nodes\Types\InstanceType.cs" />
-    <Compile Include="Packages\DirectoryLoader.cs" />
-    <Compile Include="Packages\FileReader.cs" />
-    <Compile Include="Packages\FileReaderFactory.cs" />
-    <Compile Include="Packages\iPackageLoader.cs" />
-    <Compile Include="Packages\iPackageReader.cs" />
-    <Compile Include="Packages\iPackageReaderFactory.cs" />
-    <Compile Include="Packages\MultiLoader.cs" />
     <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />

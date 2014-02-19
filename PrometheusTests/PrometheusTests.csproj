@@ -51,16 +51,9 @@
     <Compile Include="Mock\MockCommand.cs" />
     <Compile Include="Mock\MockNode.cs" />
     <Compile Include="Mock\Objects\MockDeclarationType.cs" />
-    <Compile Include="Mock\Packages\MockPackageLoader.cs" />
-    <Compile Include="Mock\Packages\MockPackageReaderFactory.cs" />
-    <Compile Include="Mock\Packages\MockPackageReader.cs" />
     <Compile Include="Mock\Types\MockClosure.cs" />
     <Compile Include="Mock\Types\MockType.cs" />
     <Compile Include="Nodes\DataTypeFactoryTests.cs" />
-    <Compile Include="Packages\DirectoryLoaderTests.cs" />
-    <Compile Include="Packages\FileReaderFactoryTests.cs" />
-    <Compile Include="Packages\FileReaderTests.cs" />
-    <Compile Include="Packages\MultiLoaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\StorageSpaceTests.cs" />
     <Compile Include="Storage\StackSpaceTests.cs" />
