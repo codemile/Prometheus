@@ -52,8 +52,7 @@ namespace Fire
             {
                 Project project = new Project();
                 project.AddDirectory(options.Project);
-                // TODO: Check that the package name is formatted correctly.
-                project.Build(new ClassNameType(options.Package));
+                project.Build();
 
 /*
                 Parser parser = new Parser();

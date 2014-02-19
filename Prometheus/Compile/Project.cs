@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Logging;
-using Prometheus.Compile.Optomizer;
 using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Nodes;
-using Prometheus.Packages;
 
 namespace Prometheus.Compile
 {
@@ -22,55 +18,17 @@ namespace Prometheus.Compile
         private static readonly Logger _logger = Logger.Create(typeof (Project));
 
         /// <summary>
-        /// The package loaders.
+        /// A list of directories to compile.
         /// </summary>
-        private readonly MultiLoader _loader;
+        private readonly List<string> _directories;
 
         /// <summary>
-        /// Constructor
+        /// Logs what file is being built.
         /// </summary>
-        public Project()
+        private static bool LogFileName(string pFileName)
         {
-            _loader = new MultiLoader();
-        }
-
-        /// <summary>
-        /// Adds a directory as a library. With the directory name
-        /// the name of the library.
-        /// </summary>
-        public void AddDirectory(string pPath)
-        {
-            Add(new DirectoryLoader(new FileReaderFactory(), pPath));
-        }
-
-        /// <summary>
-        /// Add a package loader
-        /// </summary>
-        public void Add(iPackageLoader pLoader)
-        {
-            _loader.Add(pLoader);
-        }
-
-        /// <summary>
-        /// Builds the current project.
-        /// </summary>
-        /// <param name="pClassName">Name of the file to build.</param>
-        public void Build(ClassNameType pClassName)
-        {
-            Builder make = new Builder(_loader);
-            make.BeforeOptimizer += PrintCompiled;
-            make.AfterOptimizer += PrintCompiled;
-            Package package = make.Start(pClassName);
-        }
-
-        /// <summary>
-        /// Prints the node tree.
-        /// </summary>
-        private static void PrintCompiled(Node pNode)
-        {
-            _logger.Debug("");
-            PrintCode(pNode);
-            _logger.Debug("");
+            _logger.Fine("Compile: {0}", pFileName);
+            return true;
         }
 
         /// <summary>
@@ -84,6 +42,53 @@ namespace Prometheus.Compile
             {
                 PrintCode(child, pIndent + 1);
             }
+        }
+
+        /// <summary>
+        /// Prints the node tree.
+        /// </summary>
+        private static bool PrintCompiled(Node pNode)
+        {
+            _logger.Debug("");
+            PrintCode(pNode);
+            _logger.Debug("");
+            return true;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Project()
+        {
+            _directories = new List<string>();
+        }
+
+        /// <summary>
+        /// Recursively adds files from a directory and all sub-directories.
+        /// </summary>
+        public void AddDirectory(string pDirectory)
+        {
+            if (!Directory.Exists(pDirectory))
+            {
+                throw new PackageErrorException(string.Format("Directory does not exist: {0}", pDirectory));
+            }
+            _directories.Add(pDirectory);
+        }
+
+        /// <summary>
+        /// Builds the current project.
+        /// </summary>
+        public void Build()
+        {
+            Builder make = new Builder();
+            make.OnBeforeOptimizer += PrintCompiled;
+            make.OnAfterOptimizer += PrintCompiled;
+            make.OnDirectory += LogFileName;
+            make.OnFile += LogFileName;
+            Compiled compiled = make.Build(_directories);
+
+            _logger.Fine("********* DONE *********");
+            PrintCompiled(compiled.Root);
         }
     }
 }

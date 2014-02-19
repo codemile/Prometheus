@@ -2,62 +2,88 @@
 using System.Linq;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Nodes.Types;
 
 namespace Prometheus.Compile.Packaging
 {
     /// <summary>
-    /// The output produced by the compiler.
+    /// Represents all the compiled code.
     /// </summary>
     public class Compiled
     {
         /// <summary>
-        /// The name of the package this code belongs to.
+        /// Symbols of code to go to the footer.
         /// </summary>
-        public readonly ClassNameType Package;
+        private static readonly HashSet<GrammarSymbol> _footerTypes = new HashSet<GrammarSymbol>();
 
         /// <summary>
-        /// A list of packages this target depends on.
+        /// Symbols of code to go to the header.
         /// </summary>
-        public readonly List<ClassNameType> Uses;
+        private static readonly HashSet<GrammarSymbol> _headerTypes = new HashSet<GrammarSymbol>
+                                                                      {
+                                                                          GrammarSymbol.ObjectDecl
+                                                                      };
 
         /// <summary>
-        /// The root node of the compiled tree.
+        /// The root node
         /// </summary>
         public readonly Node Root;
 
         /// <summary>
-        /// A list of object declarations
+        /// The code in the middle.
         /// </summary>
-        public readonly List<Node> Declarations;
+        private readonly Node _body;
 
         /// <summary>
-        /// The root node for the source code in the file (after the declarations).
+        /// The code at the bottom.
         /// </summary>
-        public readonly Node Code;
+        private readonly Node _footer;
+
+        /// <summary>
+        /// The code at the top.
+        /// </summary>
+        private readonly Node _header;
+
+        private static Node CreateNameSpace(ClassNameType pClassName, IEnumerable<Node> pNodes)
+        {
+            Node ns = new Node(GrammarSymbol.NameSpace, Location.None);
+            ns.Data.Add(pClassName);
+            ns.Children.AddRange(pNodes);
+            return ns;
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="pPackage">The package this code belongs to</param>
-        /// <param name="pRoot">Root node</param>
-        public Compiled(ClassNameType pPackage, Node pRoot)
+        public Compiled()
         {
-            Package = pPackage;
-            Root = pRoot;
+            Root = new Node(GrammarSymbol.Program, Location.None);
 
-            // read the imports
-            Uses = (from node in Root.Children
-                    where node.Type == GrammarSymbol.ImportDecl
-                    select node.FirstChild().FirstData().Cast<ClassNameType>()).ToList();
+            _header = new Node(GrammarSymbol.Statements, Location.None);
+            _body = new Node(GrammarSymbol.Statements, Location.None);
+            _footer = new Node(GrammarSymbol.Statements, Location.None);
 
-            // read the object declarations
-            Declarations = (from node in Root.Children
-                            where node.Type == GrammarSymbol.ObjectDecl
-                            select node).ToList();
+            Root.Children.Add(_header);
+            Root.Children.Add(_body);
+            Root.Children.Add(_footer);
+        }
 
-            // the executable for the file.
-            Code = Root.Children.FirstOrDefault(pNode=>pNode.Type == GrammarSymbol.ProgramCode);
+        /// <summary>
+        /// Adds a compiled node tree to the package.
+        /// </summary>
+        public void Add(ClassNameType pPackage, Node pRoot)
+        {
+            _header.Children.Add(CreateNameSpace(pPackage, from node in pRoot.Children
+                                                           where _headerTypes.Contains(node.Type)
+                                                           select node));
+
+            _body.Children.Add(CreateNameSpace(pPackage, from node in pRoot.Children
+                                                         where !_headerTypes.Contains(node.Type)
+                                                               && !_footerTypes.Contains(node.Type)
+                                                         select node));
+
+            _footer.Children.Add(CreateNameSpace(pPackage, from node in pRoot.Children
+                                                           where _footerTypes.Contains(node.Type)
+                                                           select node));
         }
     }
 }

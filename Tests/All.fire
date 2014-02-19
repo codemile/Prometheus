@@ -1,1 +1,5 @@
+object Thing {
+	print "My thing!";
+};
+
 print "Hello World";

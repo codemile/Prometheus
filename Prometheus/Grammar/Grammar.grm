@@ -69,7 +69,7 @@ Comment Line  = '//'
 <Statements>	::= <Statement or Block>
 				| <Statements> <Statement or Block>
 
-<Statement>		::= <FlowControl>
+<Statement>		::=  <FlowControl> <End>
 				| <Variable Statements> <End>
 				| <Function Decl> <End>
 				| <Procedure> <End>
@@ -196,6 +196,8 @@ Comment Line  = '//'
 
 <ClassName List>	::= <Member ID> <ClassName List>
 					| ! zero or more
+
+<NameSpace>			::= ! used by the builder to package multiple files.
 
 ! ===================================================================
 ! References to a variable, object member or array index

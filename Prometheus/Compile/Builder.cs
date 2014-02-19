@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Compile.Packaging;
 using Prometheus.Nodes;
-using Prometheus.Packages;
 
 namespace Prometheus.Compile
 {
@@ -14,8 +15,7 @@ namespace Prometheus.Compile
         /// <summary>
         /// Callback during the build process.
         /// </summary>
-        /// <param name="pNode"></param>
-        public delegate void BuildEvent(Node pNode);
+        public delegate bool BuildEvent<in T>(T pArgument) where T : class;
 
         /// <summary>
         /// Handles compiling code.
@@ -23,60 +23,71 @@ namespace Prometheus.Compile
         private readonly Compiler _compiler;
 
         /// <summary>
-        /// List of classes that have been compiled.
+        /// The compiled code.
         /// </summary>
-        private readonly HashSet<ClassNameType> _done;
+        private Compiled _compiled;
 
         /// <summary>
-        /// The package loaders.
+        /// A list of files to include in the file.
         /// </summary>
-        private readonly MultiLoader _loader;
+        private List<string> _directories;
 
         /// <summary>
-        /// A list of classes waiting to be compiled.
+        /// Handles the firing of an event.
         /// </summary>
-        private readonly Queue<ClassNameType> _queue;
-
-        /// <summary>
-        /// Handles compiling
-        /// </summary>
-        private IEnumerable<ClassNameType> Build(Package pPackage, ClassNameType pClassName, iPackageReader pReader)
+        private static bool Fire<T>(BuildEvent<T> pEvent, T pArg) where T : class
         {
-            string fileName = pReader.FileName();
-            string contents = pReader.Read();
-
-            Node root = _compiler.Compile(fileName, contents);
-            root = Optimize(root);
-            Compiled code = new Compiled(pClassName, root);
-            pPackage.Add(code);
-
-            return code.Uses;
+            return pEvent == null || pEvent(pArg);
         }
 
         /// <summary>
-        /// Builds the next class or package in the queue.
+        /// Compiles all the files in a directory.
         /// </summary>
-        private void BuildNext(Package pPackage)
+        private void BuildDirectory(string pDirectory)
         {
-            if (_queue.Count == 0)
+            if (!Fire(OnDirectory, pDirectory))
             {
                 return;
             }
 
-            ClassNameType className = _queue.Dequeue();
-            IList<iPackageReader> readers = _loader.Load(className) ?? new List<iPackageReader>();
-            foreach (iPackageReader reader in readers)
+            string[] folders = pDirectory.Split(Path.DirectorySeparatorChar);
+            string name = folders[folders.Length - 1].ToLower();
+            string baseDir = pDirectory.Substring(0,pDirectory.Length-name.Length);
+            ClassNameType className = new ClassNameType(name);
+
+            Directory.GetDirectories(pDirectory).ToList().ForEach(pDir=>IncludeSubdirectory(baseDir,pDir));
+            Directory.GetFiles(pDirectory, "*.fire").ToList().ForEach(pFile=>BuildFile(className,pFile));
+        }
+
+        /// <summary>
+        /// Compiles all the subdirectories as sub-namespaces
+        /// </summary>
+        private void IncludeSubdirectory(string pBaseDirectory, string pDirectory)
+        {
+            string packageName = pDirectory.Substring(pBaseDirectory.Length).ToLower();
+            packageName = packageName.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), ".");
+            ClassNameType className = new ClassNameType(packageName);
+
+            Directory.GetDirectories(pDirectory).ToList().ForEach(pDir=>IncludeSubdirectory(pBaseDirectory,pDir));
+            Directory.GetFiles(pDirectory, "*.fire").ToList().ForEach(pFile=>BuildFile(className,pFile));
+        }
+
+        /// <summary>
+        /// Compiles a file.
+        /// </summary>
+        private void BuildFile(ClassNameType pClassName, string pFileName)
+        {
+            if (!Fire(OnFile, pFileName))
             {
-                ClassNameType current = reader.ClassName();
-                if (_done.Contains(current))
-                {
-                    continue;
-                }
+                return;
+            }
+            using (StreamReader reader = new StreamReader(pFileName))
+            {
+                string sourceCode = reader.ReadToEnd();
 
-                IEnumerable<ClassNameType> uses = Build(pPackage, current, reader);
-
-                _done.Add(current);
-                uses.Where(pUsed=>!_done.Contains(pUsed)).ToList().ForEach(_queue.Enqueue);
+                Node root = _compiler.Compile(pFileName, sourceCode);
+                root = Optimize(root);
+                _compiled.Add(pClassName, root);
             }
         }
 
@@ -86,54 +97,50 @@ namespace Prometheus.Compile
         /// </summary>
         private Node Optimize(Node pRoot)
         {
-            if (BeforeOptimizer != null)
-            {
-                BeforeOptimizer(pRoot);
-            }
-
+            Fire(OnBeforeOptimizer, pRoot);
             Optimizer optimizer = new Optimizer();
             pRoot = optimizer.Optimize(pRoot);
-
-            if (AfterOptimizer != null)
-            {
-                AfterOptimizer(pRoot);
-            }
-
+            Fire(OnAfterOptimizer, pRoot);
             return pRoot;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Builder(MultiLoader pLoader)
+        public Builder()
         {
-            _loader = pLoader;
-            _done = new HashSet<ClassNameType>();
-            _queue = new Queue<ClassNameType>();
             _compiler = new Compiler();
         }
 
         /// <summary>
-        /// Starts the build process by compiled a class, and branching
-        /// out from there.
+        /// Compiles all the files in the current build.
         /// </summary>
-        /// <param name="pClassName">The class to build</param>
-        public Package Start(ClassNameType pClassName)
+        public Compiled Build(IEnumerable<string> pDirectories)
         {
-            Package built = new Package(pClassName.Members.First());
-            _queue.Enqueue(pClassName);
-            BuildNext(built);
-            return built;
+            _directories = new List<string>(pDirectories);
+            _compiled = new Compiled();
+            _directories.ForEach(BuildDirectory);
+            return _compiled;
         }
 
         /// <summary>
         /// Called before optimization.
         /// </summary>
-        public event BuildEvent BeforeOptimizer;
+        public event BuildEvent<Node> OnBeforeOptimizer;
+
+        /// <summary>
+        /// Before a directory is compiled
+        /// </summary>
+        public event BuildEvent<string> OnDirectory;
+
+        /// <summary>
+        /// Before a file is compiled.
+        /// </summary>
+        public event BuildEvent<string> OnFile;
 
         /// <summary>
         /// Called after optimization.
         /// </summary>
-        public event BuildEvent AfterOptimizer;
+        public event BuildEvent<Node> OnAfterOptimizer;
     }
 }
