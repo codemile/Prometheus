@@ -30,7 +30,7 @@ namespace Prometheus.Runtime
             DeclarationType baseType = Executor.Cursor.Get<DeclarationType>(pDecl.Base);
             StackSpace baseSpace = new StackSpace(pSpace);
             InstanceType baseInst = CreateInstance(baseSpace, baseType);
-            ClosureType baseFunc = new ClosureType(baseInst,baseType.Constructor);
+            ClosureType baseFunc = new ClosureType(baseInst, baseType.Constructor);
             inst.GetMembers().Create(IdentifierType.BASE, baseFunc);
 
             return inst;
@@ -42,6 +42,15 @@ namespace Prometheus.Runtime
         public ObjectGrammar(Executor pExecutor)
             : base(pExecutor)
         {
+        }
+
+        /// <summary>
+        /// Set what packages are being used by the current code.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ImportDecl)]
+        public DataType Import(ClassNameType pPackage)
+        {
+            return UndefinedType.Undefined;
         }
 
         /// <summary>
@@ -71,7 +80,7 @@ namespace Prometheus.Runtime
             try
             {
                 DataType[] arguments = new DataType[pArguments.Count];
-                for (int i = 0, c = arguments.Length; i < c ;i++)
+                for (int i = 0, c = arguments.Length; i < c; i++)
                 {
                     arguments[i] = Resolve(pArguments[i]);
                 }
@@ -116,20 +125,13 @@ namespace Prometheus.Runtime
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(QualifiedType pBaseName, QualifiedType pObjectName, ArrayType pParameters, ClosureType pConstructor)
+        public DataType ObjectDeclare(QualifiedType pBaseName, QualifiedType pObjectName, ArrayType pParameters,
+                                      ClosureType pConstructor)
         {
-            DeclarationType decl = new DeclarationType(pBaseName, pObjectName, new ClosureType(pConstructor.Function, pParameters));
+            DeclarationType decl = new DeclarationType(pBaseName, pObjectName,
+                new ClosureType(pConstructor.Function, pParameters));
             Executor.Cursor.Stack.Create(pObjectName.ToIdentifier().Name, decl);
             return decl;
-        }
-
-        /// <summary>
-        /// Set what packages are being used by the current code.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.ImportDecl)]
-        public DataType Import(ClassNameType pPackage)
-        {
-            return UndefinedType.Undefined;
         }
     }
 }

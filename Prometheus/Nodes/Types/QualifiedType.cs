@@ -28,20 +28,6 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
-        /// Assumes there is only one member, and can be converted to an identifier.
-        /// </summary>
-        public IdentifierType ToIdentifier()
-        {
-#if DEBUG
-            if (Members.Count != 1)
-            {
-                throw new IdentifierInnerException("Cannot convert qualified reference to single identifier.");
-            }
-#endif
-            return Members[0].Cast<IdentifierType>();
-        }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public QualifiedType(string pFullName)
@@ -250,6 +236,20 @@ namespace Prometheus.Nodes.Types
         public override string ToString()
         {
             return string.Join(".", Members);
+        }
+
+        /// <summary>
+        /// Assumes there is only one member, and can be converted to an identifier.
+        /// </summary>
+        public IdentifierType ToIdentifier()
+        {
+#if DEBUG
+            if (Members.Count != 1)
+            {
+                throw new IdentifierInnerException("Cannot convert qualified reference to single identifier.");
+            }
+#endif
+            return Members[0].Cast<IdentifierType>();
         }
     }
 }

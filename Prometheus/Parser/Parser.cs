@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Prometheus.Compile;
 using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
@@ -96,9 +95,9 @@ namespace Prometheus.Parser
 
             if (testSuite.FirstChild().Type == GrammarSymbol.TestSuiteArray)
             {
-                return from id in testSuite.FirstChild().Children 
+                return from id in testSuite.FirstChild().Children
                        where id.Type == GrammarSymbol.ValidID
-                       && id.FirstData() is IdentifierType
+                             && id.FirstData() is IdentifierType
                        select id.FirstData().Cast<IdentifierType>().Name;
             }
             if (testSuite.FirstChild().Type == GrammarSymbol.ValidID)
@@ -108,7 +107,8 @@ namespace Prometheus.Parser
                        select id.Cast<IdentifierType>().Name;
             }
 
-            throw new UnexpectedErrorException(string.Format("Unexpected data assigned to <{0}>", GrammarSymbol.TestSuiteDecl));
+            throw new UnexpectedErrorException(string.Format("Unexpected data assigned to <{0}>",
+                GrammarSymbol.TestSuiteDecl));
         }
 
         /// <summary>

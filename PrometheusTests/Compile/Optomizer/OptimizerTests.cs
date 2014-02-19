@@ -1,8 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prometheus.Compile.Optomizer;
-using Prometheus.Nodes;
-using PrometheusTest.Mock;
-using PrometheusTest.Mock.Types;
 
 namespace PrometheusTest.Compile.Optomizer
 {

@@ -15,14 +15,14 @@ namespace Prometheus.Runtime
     public class TestGrammar : ExecutorGrammar
     {
         /// <summary>
-        /// A list of unit tests defined in the program.
-        /// </summary>
-        private readonly List<string> _tests;
-
-        /// <summary>
         /// List of unit tests to execute.
         /// </summary>
         private readonly List<string> _testSuite;
+
+        /// <summary>
+        /// A list of unit tests defined in the program.
+        /// </summary>
+        private readonly List<string> _tests;
 
         /// <summary>
         /// Constructor
@@ -32,6 +32,26 @@ namespace Prometheus.Runtime
         {
             _tests = new List<string>();
             _testSuite = new List<string>();
+        }
+
+        /// <summary>
+        /// Executes the current unit test.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.TestExecute)]
+        public DataType TestExecute()
+        {
+            try
+            {
+                QualifiedType unit = new QualifiedType(Executor.Cursor.UnitTest);
+                ClosureType func = Executor.Cursor.Get<ClosureType>(unit);
+                return func.Function.Children.Count == 0
+                    ? UndefinedType.Undefined
+                    : Executor.Execute(func.Function);
+            }
+            catch (ReturnException returnData)
+            {
+                return returnData.Value;
+            }
         }
 
         /// <summary>
@@ -69,26 +89,6 @@ namespace Prometheus.Runtime
             _tests.Add(pName.Name);
             Executor.Cursor.Stack.Create(pName.Name, pTest);
             return UndefinedType.Undefined;
-        }
-
-        /// <summary>
-        /// Executes the current unit test.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.TestExecute)]
-        public DataType TestExecute()
-        {
-            try
-            {
-                QualifiedType unit = new QualifiedType(Executor.Cursor.UnitTest);
-                ClosureType func = Executor.Cursor.Get<ClosureType>(unit);
-                return func.Function.Children.Count == 0 
-                    ? UndefinedType.Undefined 
-                    : Executor.Execute(func.Function);
-            }
-            catch (ReturnException returnData)
-            {
-                return returnData.Value;
-            }
         }
     }
 }

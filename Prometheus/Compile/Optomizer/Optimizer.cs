@@ -82,12 +82,12 @@ namespace Prometheus.Compile.Optomizer
         /// These nodes are removed but their children are kept and inserted into the same position as the removed node.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _remove = new HashSet<GrammarSymbol>
-                                                                  {
-                                                                      GrammarSymbol.ProgramTest,
-                                                                      GrammarSymbol.ProgramCode,
-                                                                      GrammarSymbol.BaseClassID,
-                                                                      GrammarSymbol.ClassNameList
-                                                                  };
+                                                                 {
+                                                                     GrammarSymbol.ProgramTest,
+                                                                     GrammarSymbol.ProgramCode,
+                                                                     GrammarSymbol.BaseClassID,
+                                                                     GrammarSymbol.ClassNameList
+                                                                 };
 
         /// <summary>
         /// These nodes have their data moved to their parents.

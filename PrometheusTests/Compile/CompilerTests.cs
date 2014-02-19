@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prometheus.Compile;
-using Prometheus.Grammar;
 
 namespace PrometheusTest.Compile
 {

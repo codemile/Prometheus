@@ -6,7 +6,6 @@ using Logging;
 using Logging.Writers;
 using Prometheus.Compile;
 using Prometheus.Exceptions;
-using Prometheus.Nodes;
 
 namespace Fire
 {

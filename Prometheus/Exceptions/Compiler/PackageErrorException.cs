@@ -16,7 +16,7 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public PackageErrorException(string pMessage, Location pLocation) 
+        public PackageErrorException(string pMessage, Location pLocation)
             : base(pMessage, pLocation)
         {
         }
@@ -24,7 +24,7 @@ namespace Prometheus.Exceptions.Compiler
         /// <summary>
         /// Throw a message.
         /// </summary>
-        public PackageErrorException(string pMessage) 
+        public PackageErrorException(string pMessage)
             : base(pMessage)
         {
         }

@@ -52,24 +52,11 @@ namespace Prometheus.Compile
 
             string[] folders = pDirectory.Split(Path.DirectorySeparatorChar);
             string name = folders[folders.Length - 1].ToLower();
-            string baseDir = pDirectory.Substring(0,pDirectory.Length-name.Length);
+            string baseDir = pDirectory.Substring(0, pDirectory.Length - name.Length);
             ClassNameType className = new ClassNameType(name);
 
-            Directory.GetDirectories(pDirectory).ToList().ForEach(pDir=>IncludeSubdirectory(baseDir,pDir));
-            Directory.GetFiles(pDirectory, "*.fire").ToList().ForEach(pFile=>BuildFile(className,pFile));
-        }
-
-        /// <summary>
-        /// Compiles all the subdirectories as sub-namespaces
-        /// </summary>
-        private void IncludeSubdirectory(string pBaseDirectory, string pDirectory)
-        {
-            string packageName = pDirectory.Substring(pBaseDirectory.Length).ToLower();
-            packageName = packageName.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), ".");
-            ClassNameType className = new ClassNameType(packageName);
-
-            Directory.GetDirectories(pDirectory).ToList().ForEach(pDir=>IncludeSubdirectory(pBaseDirectory,pDir));
-            Directory.GetFiles(pDirectory, "*.fire").ToList().ForEach(pFile=>BuildFile(className,pFile));
+            Directory.GetDirectories(pDirectory).ToList().ForEach(pDir=>IncludeSubdirectory(baseDir, pDir));
+            Directory.GetFiles(pDirectory, "*.fire").ToList().ForEach(pFile=>BuildFile(className, pFile));
         }
 
         /// <summary>
@@ -89,6 +76,19 @@ namespace Prometheus.Compile
                 root = Optimize(root);
                 _compiled.Add(pClassName, root);
             }
+        }
+
+        /// <summary>
+        /// Compiles all the subdirectories as sub-namespaces
+        /// </summary>
+        private void IncludeSubdirectory(string pBaseDirectory, string pDirectory)
+        {
+            string packageName = pDirectory.Substring(pBaseDirectory.Length).ToLower();
+            packageName = packageName.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), ".");
+            ClassNameType className = new ClassNameType(packageName);
+
+            Directory.GetDirectories(pDirectory).ToList().ForEach(pDir=>IncludeSubdirectory(pBaseDirectory, pDir));
+            Directory.GetFiles(pDirectory, "*.fire").ToList().ForEach(pFile=>BuildFile(className, pFile));
         }
 
         /// <summary>

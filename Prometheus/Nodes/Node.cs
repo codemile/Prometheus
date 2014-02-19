@@ -91,14 +91,6 @@ namespace Prometheus.Nodes
         {
             return Children.FirstOrDefault(pNode=>pNode.Type == pSymbol);
         }
-        
-        /// <summary>
-        /// Access the first data node.
-        /// </summary>
-        public DataType FirstData()
-        {
-            return Data[0];
-        }
 
         /// <summary>
         /// Access the first child node.
@@ -106,6 +98,14 @@ namespace Prometheus.Nodes
         public Node FirstChild()
         {
             return Children[0];
+        }
+
+        /// <summary>
+        /// Access the first data node.
+        /// </summary>
+        public DataType FirstData()
+        {
+            return Data[0];
         }
 
         /// <summary>

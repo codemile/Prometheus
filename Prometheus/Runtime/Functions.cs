@@ -21,26 +21,6 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Declares a new function type
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
-        {
-            Executor.Cursor.Stack.Create(pFuncName.Name, pFunc);
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
-        /// Declares a new function type
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(IdentifierType pFuncName, IEnumerable<DataType> pParameters, ClosureType pFunc)
-        {
-            Executor.Cursor.Stack.Create(pFuncName.Name, new ClosureType(pFunc.Function, pParameters));
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
         /// Executes an identify as a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
@@ -65,7 +45,7 @@ namespace Prometheus.Runtime
                 }
                 // resolve the argument
                 DataType[] arguments = new DataType[pArguments.Count];
-                for(int i=0, c = arguments.Length; i < c; i++)
+                for (int i = 0, c = arguments.Length; i < c; i++)
                 {
                     arguments[i] = Resolve(pArguments[i]);
                 }
@@ -86,6 +66,26 @@ namespace Prometheus.Runtime
         {
             string name = pIdentifier.Name;
             return Executor.Execute(name, pArguments.Values);
+        }
+
+        /// <summary>
+        /// Declares a new function type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
+        public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
+        {
+            Executor.Cursor.Stack.Create(pFuncName.Name, pFunc);
+            return UndefinedType.Undefined;
+        }
+
+        /// <summary>
+        /// Declares a new function type
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
+        public DataType FunctionDeclare(IdentifierType pFuncName, IEnumerable<DataType> pParameters, ClosureType pFunc)
+        {
+            Executor.Cursor.Stack.Create(pFuncName.Name, new ClosureType(pFunc.Function, pParameters));
+            return UndefinedType.Undefined;
         }
 
         /// <summary>

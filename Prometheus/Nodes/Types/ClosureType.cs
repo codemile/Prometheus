@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Security.Cryptography;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
 
@@ -64,14 +63,6 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
-        /// True if this closure has been compiled.
-        /// </summary>
-        public bool HasThis()
-        {
-            return This != null;
-        }
-
-        /// <summary>
         /// Creates the variables to be sent when executing the function.
         /// </summary>
         public Dictionary<string, DataType> CreateArguments(DataType[] pArgs)
@@ -97,6 +88,14 @@ namespace Prometheus.Nodes.Types
             }
 
             return variables;
+        }
+
+        /// <summary>
+        /// True if this closure has been compiled.
+        /// </summary>
+        public bool HasThis()
+        {
+            return This != null;
         }
     }
 }

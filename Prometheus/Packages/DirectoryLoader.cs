@@ -11,8 +11,6 @@ namespace Prometheus.Packages
     /// </summary>
     public class DirectoryLoader : iPackageLoader
     {
-        private readonly iPackageReaderFactory _factory;
-
         /// <summary>
         /// The directory
         /// </summary>
@@ -22,6 +20,8 @@ namespace Prometheus.Packages
         /// The name of the package.
         /// </summary>
         public readonly string Name;
+
+        private readonly iPackageReaderFactory _factory;
 
         /// <summary>
         /// Constructor
@@ -51,14 +51,14 @@ namespace Prometheus.Packages
             if (File.Exists(path + ".fire"))
             {
                 iPackageReader reader = _factory.Create(pClassName, path + ".fire");
-                return new[] { reader };
+                return new[] {reader};
             }
             if (System.IO.Directory.Exists(path))
             {
                 return
                     (from file in System.IO.Directory.EnumerateFiles(path, "*.fire")
                      let cn = new ClassNameType(pClassName + "." + Path.GetFileNameWithoutExtension(file))
-                     select _factory.Create(cn,file))
+                     select _factory.Create(cn, file))
                         .ToList();
             }
             return null;
