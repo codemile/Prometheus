@@ -40,7 +40,7 @@ namespace Prometheus.Compile
         /// </summary>
         public void AddDirectory(string pPath)
         {
-            Add(new DirectoryLoader(pPath));
+            Add(new DirectoryLoader(new FileReaderFactory(), pPath));
         }
 
         /// <summary>

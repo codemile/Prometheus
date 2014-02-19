@@ -22,7 +22,7 @@ namespace Prometheus.Packages
         /// <summary>
         /// Constructor
         /// </summary>
-        public FileReader(string pPath, ClassNameType pClassName)
+        public FileReader(ClassNameType pClassName, string pPath)
         {
             _path = pPath;
             _className = pClassName;

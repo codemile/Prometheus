@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Prometheus.Exceptions.Compiler;
 using Prometheus.Nodes;
 
 namespace Prometheus.Packages
@@ -12,25 +11,27 @@ namespace Prometheus.Packages
     /// </summary>
     public class DirectoryLoader : iPackageLoader
     {
+        private readonly iPackageReaderFactory _factory;
+
         /// <summary>
         /// The directory
         /// </summary>
-        private readonly string _directory;
+        public readonly string Directory;
 
         /// <summary>
         /// The name of the package.
         /// </summary>
-        private readonly string _name;
+        public readonly string Name;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="pDirectory"></param>
-        public DirectoryLoader(string pDirectory)
+        public DirectoryLoader(iPackageReaderFactory pFactory, string pDirectory)
         {
+            _factory = pFactory;
             int last = pDirectory.LastIndexOf(Path.DirectorySeparatorChar);
-            _directory = pDirectory.Substring(0, last);
-            _name = pDirectory.Substring(last+1);
+            Directory = pDirectory.Substring(0, last);
+            Name = pDirectory.Substring(last + 1);
         }
 
         /// <summary>
@@ -39,24 +40,25 @@ namespace Prometheus.Packages
         /// </summary>
         public IList<iPackageReader> Load(ClassNameType pClassName)
         {
-            if (String.Compare(pClassName[0], _name, StringComparison.CurrentCultureIgnoreCase) != 0)
+            if (String.Compare(pClassName[0], Name, StringComparison.CurrentCultureIgnoreCase) != 0)
             {
                 return null;
             }
 
             string parts = pClassName.ToString().Replace('.', Path.DirectorySeparatorChar);
-            string path = _directory + Path.DirectorySeparatorChar + parts;
+            string path = Directory + Path.DirectorySeparatorChar + parts;
 
             if (File.Exists(path + ".fire"))
             {
-                return new iPackageReader[] { new FileReader(path + ".fire", pClassName) };
+                iPackageReader reader = _factory.Create(pClassName, path + ".fire");
+                return new[] { reader };
             }
-            if (Directory.Exists(path))
+            if (System.IO.Directory.Exists(path))
             {
                 return
-                    (from file in Directory.EnumerateFiles(path, "*.fire") 
-                     let cn = new ClassNameType(pClassName+"."+Path.GetFileNameWithoutExtension(file))
-                     select (iPackageReader)new FileReader(file, cn))
+                    (from file in System.IO.Directory.EnumerateFiles(path, "*.fire")
+                     let cn = new ClassNameType(pClassName + "." + Path.GetFileNameWithoutExtension(file))
+                     select _factory.Create(cn,file))
                         .ToList();
             }
             return null;

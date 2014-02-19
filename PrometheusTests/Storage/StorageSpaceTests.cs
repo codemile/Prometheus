@@ -8,7 +8,7 @@ using PrometheusTest.Mock.Types;
 namespace PrometheusTest.Storage
 {
     [TestClass]
-    public class MemorySpaceTests
+    public class StorageSpaceTests
     {
         [TestMethod]
         public void Assign()
