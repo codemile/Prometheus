@@ -8,7 +8,6 @@ using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Nodes;
 using Prometheus.Packages;
-using Prometheus.Sources;
 
 namespace Prometheus.Compile
 {

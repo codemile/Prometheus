@@ -40,14 +40,14 @@ namespace Prometheus.Compile
         /// <summary>
         /// Handles compiling
         /// </summary>
-        private IEnumerable<ClassNameType> Build(Package pPackage, iPackageReader pReader)
+        private IEnumerable<ClassNameType> Build(Package pPackage, ClassNameType pClassName, iPackageReader pReader)
         {
             string fileName = pReader.FileName();
             string contents = pReader.Read();
 
             Node root = _compiler.Compile(fileName, contents);
             root = Optimize(root);
-            Compiled code = new Compiled(null, root);
+            Compiled code = new Compiled(pClassName, root);
             pPackage.Add(code);
 
             return code.Uses;
@@ -73,7 +73,7 @@ namespace Prometheus.Compile
                     continue;
                 }
 
-                IEnumerable<ClassNameType> uses = Build(pPackage, reader);
+                IEnumerable<ClassNameType> uses = Build(pPackage, current, reader);
 
                 _done.Add(current);
                 uses.Where(pUsed=>!_done.Contains(pUsed)).ToList().ForEach(_queue.Enqueue);
