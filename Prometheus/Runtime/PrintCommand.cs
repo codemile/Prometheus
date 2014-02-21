@@ -10,7 +10,7 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Prints a string to the output.
     /// </summary>
-    public class PrintCommand : ExecutorGrammar
+    public class PrintCommand : ExecutorGeneric
     {
         /// <summary>
         /// Logging
@@ -29,7 +29,7 @@ namespace Prometheus.Runtime
         /// Prints a string to the output.
         /// </summary>
         /// <param name="pValue">The message to print.</param>
-        //[ExecuteSymbol(GrammarSymbol.PrintProc)]
+        [ExecuteGeneric("print")]
         public DataType Print(DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
@@ -40,6 +40,12 @@ namespace Prometheus.Runtime
 
             _logger.Fine(value.ToString());
 
+            return UndefinedType.Undefined;
+        }
+
+        [ExecuteGeneric("assert")]
+        public DataType _Assert(DataType pValue)
+        {
             return UndefinedType.Undefined;
         }
     }

@@ -30,7 +30,7 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// All the objects that implement symbol methods.
         /// </summary>
-        private readonly Dictionary<string, ExecutorInternal> _internalLookup;
+        private readonly Dictionary<string, ExecutorGeneric> _genericLookup;
 
         /// <summary>
         /// Creates an array object.
@@ -245,11 +245,28 @@ namespace Prometheus.Parser.Executors
                     return CreateArray(pParent);
             }
 
-#if DEBUG
-            ExecutorAssert.Node(_grammarLookup, pParent);
-#endif
-
+            ExecutorBase _base;
             int dCount = pParent.Data.Count;
+
+            if (pParent.Type == GrammarSymbol.Generic0Args
+                || pParent.Type == GrammarSymbol.Generic1Args
+                || pParent.Type == GrammarSymbol.GenericNArgs)
+            {
+                string name = pParent.Data[0].Cast<IdentifierType>().Name;
+#if DEBUG
+                ExecutorAssert.Node(_genericLookup, name, pParent);
+#endif
+                _base = _genericLookup[name];
+                dCount--;
+            }
+            else
+            {
+#if DEBUG
+                ExecutorAssert.Node(_grammarLookup, pParent.Type, pParent);
+#endif
+                _base = _grammarLookup[pParent.Type];
+            }
+
             int cChild = pParent.Children.Count;
             object[] values = new object[cChild + dCount];
             for (int i = 0, c = dCount; i < c; i++)
@@ -264,7 +281,7 @@ namespace Prometheus.Parser.Executors
             try
             {
                 Cursor.Node = pParent;
-                return _grammarLookup[pParent.Type].Execute(values);
+                return _base.Execute(values);
             }
             catch (IdentifierInnerException e)
             {
@@ -281,8 +298,8 @@ namespace Prometheus.Parser.Executors
 
             _grammarLookup =
                 ObjectFactory.CreateLookupTable<GrammarSymbol, ExecutorGrammar, ExecuteSymbol>(new object[] {this});
-            _internalLookup =
-                ObjectFactory.CreateLookupTable<string, ExecutorInternal, ExecuteInternal>(new object[] {this});
+            _genericLookup =
+                ObjectFactory.CreateLookupTable<string, ExecutorGeneric, ExecuteGeneric>(new object[] {this});
         }
 
         /// <summary>
@@ -299,7 +316,7 @@ namespace Prometheus.Parser.Executors
         /// <param name="pInternal">Name of the API to call</param>
         /// <param name="pArguments">The arguments</param>
         /// <returns>The resulting data</returns>
-        public DataType Execute(string pInternal, List<DataType> pArguments)
+        public DataType Execute(IdentifierType pInternal, ArrayType pArguments)
         {
             object[] values = new object[pArguments.Count];
             for (int i = 0, c = pArguments.Count; i < c; i++)
@@ -307,7 +324,7 @@ namespace Prometheus.Parser.Executors
                 values[i] = pArguments[i];
             }
 
-            return _internalLookup[pInternal].Execute(values);
+            return _genericLookup[pInternal.Name].Execute(values);
         }
 
         /// <summary>
@@ -328,7 +345,7 @@ namespace Prometheus.Parser.Executors
         /// <returns>A collection of internal names.</returns>
         public IEnumerable<string> GetInternalIds()
         {
-            return _internalLookup.Keys.ToList();
+            return _genericLookup.Keys.ToList();
         }
 
         /// <summary>

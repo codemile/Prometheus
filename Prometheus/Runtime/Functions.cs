@@ -59,16 +59,6 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Executes an internal function.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.CallInternal)]
-        public DataType CallInternal(IdentifierType pIdentifier, ArrayType pArguments)
-        {
-            string name = pIdentifier.Name;
-            return Executor.Execute(name, pArguments.Values);
-        }
-
-        /// <summary>
         /// Declares a new function type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.FunctionDecl)]

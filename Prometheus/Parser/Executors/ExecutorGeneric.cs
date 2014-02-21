@@ -10,7 +10,7 @@ namespace Prometheus.Parser.Executors
     /// Derived by classes that implement core APIs as functions. An example
     /// would be string manipulation.
     /// </summary>
-    public abstract class ExecutorInternal : ExecutorBase
+    public abstract class ExecutorGeneric : ExecutorBase
     {
         /// <summary>
         /// A lookup table for a method. Grouped by symbol and argument count.
@@ -20,10 +20,10 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// Constructor
         /// </summary>
-        protected ExecutorInternal(Executor pExecutor)
+        protected ExecutorGeneric(Executor pExecutor)
             : base(pExecutor)
         {
-            _methods = ExecutorReflector.CreateMethodLookup<string, ExecuteInternal>(GetType());
+            _methods = ExecutorReflector.CreateMethodLookup<string, ExecuteGeneric>(GetType());
         }
 
         /// <summary>

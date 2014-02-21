@@ -7,7 +7,7 @@ namespace Prometheus.Runtime
     /// <summary>
     /// All the string functions
     /// </summary>
-    public class StringManipulation : ExecutorInternal
+    public class StringManipulation : ExecutorGeneric
     {
         /// <summary>
         /// Constructor
@@ -20,7 +20,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Converts to lower case.
         /// </summary>
-        [ExecuteInternal("lower")]
+        [ExecuteGeneric("lower")]
         public StringType Lower(StringType pValue)
         {
             return new StringType(pValue.Value.ToLower());
@@ -29,7 +29,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Converts to trims spaces
         /// </summary>
-        [ExecuteInternal("trim")]
+        [ExecuteGeneric("trim")]
         public StringType Trim(StringType pValue)
         {
             return new StringType(pValue.Value.Trim());
@@ -38,7 +38,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Converts to upper case.
         /// </summary>
-        [ExecuteInternal("upper")]
+        [ExecuteGeneric("upper")]
         public StringType Upper(StringType pValue)
         {
             return new StringType(pValue.Value.ToUpper());

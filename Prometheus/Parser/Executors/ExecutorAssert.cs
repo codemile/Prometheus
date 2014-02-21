@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
@@ -57,15 +58,13 @@ namespace Prometheus.Parser.Executors
         }
 
         /// <summary>
-        /// Validates that the node is structured as expected.
+        /// Validates that a lookup table contains the expected symbol.
         /// </summary>
-        /// <param name="pGrammarLookup"></param>
-        /// <param name="pNode">The node to validate</param>
-        public static void Node(Dictionary<GrammarSymbol, ExecutorGrammar> pGrammarLookup, Node pNode)
+        public static void Node<T>(IDictionary pLookup, T pKey, Node pNode)
         {
-            if (!pGrammarLookup.ContainsKey(pNode.Type))
+            if (!pLookup.Contains(pKey))
             {
-                throw new AssertionException(string.Format("Symbol <{0}> is not implemented", pNode.Type), pNode);
+                throw new AssertionException(string.Format("Symbol <{0}> is not implemented", pKey), pNode);
             }
         }
     }

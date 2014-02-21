@@ -296,9 +296,6 @@ Comment Line  = '//'
 
 <New Expression>		::= 'new' <ClassName ID> <Argument Array>
 
-! This is not used by the grammar. The optimizer uses it to mark calls to internal methods.
-<CallInternal>			::= ! matches nothing
-
 <Argument Array>		::= '(' ')'
 						| '(' <Argument List> ')'
 
@@ -342,6 +339,7 @@ Comment Line  = '//'
 					| <ListVars>
 					| <Generic0Args>
 					| <Generic1Args>
+					| <GenericNArgs>
 
 <UnsetProc>			::= UNSET <Qualified ID>
 <ReturnProc>		::= RETURN <Expression>
@@ -349,3 +347,4 @@ Comment Line  = '//'
 
 <Generic0Args>		::= Identifier
 <Generic1Args>		::= Identifier <Expression>
+<GenericNArgs>		::= Identifier <Argument Array>

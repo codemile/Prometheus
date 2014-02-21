@@ -80,7 +80,6 @@
     <Compile Include="Nodes\Types\InstanceType.cs" />
     <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
-    <Compile Include="Runtime\GenericGrammar.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
     <Compile Include="Runtime\TestGrammar.cs" />
     <Compile Include="Packages\Reader.cs" />
@@ -102,12 +101,12 @@
     <Compile Include="Storage\StackSpace.cs" />
     <Compile Include="Storage\StorageSpace.cs" />
     <Compile Include="Storage\CursorSpace.cs" />
-    <Compile Include="Parser\Executors\Attributes\ExecuteInternal.cs" />
+    <Compile Include="Parser\Executors\Attributes\ExecuteGeneric.cs" />
     <Compile Include="Parser\Executors\Attributes\ExecuteSymbol.cs" />
     <Compile Include="Parser\Executors\ExecutorBase.cs" />
     <Compile Include="Parser\Executors\ExecutorReflector.cs" />
     <Compile Include="Parser\Executors\ObjectFactory.cs" />
-    <Compile Include="Parser\Executors\ExecutorInternal.cs" />
+    <Compile Include="Parser\Executors\ExecutorGeneric.cs" />
     <Compile Include="Parser\Executors\ExecutorGrammar.cs" />
     <Compile Include="Runtime\Arguments.cs" />
     <Compile Include="Runtime\Functions.cs" />

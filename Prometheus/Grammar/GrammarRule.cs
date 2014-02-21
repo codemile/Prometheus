@@ -157,39 +157,40 @@ namespace Prometheus.Grammar
 		@CallExpression = 146,                           // <Call Expression> ::= <Qualified ID> <Argument Array>
 		@CallExpression2 = 147,                          // <Call Expression> ::= <Call Expression> <Argument Array>
 		@NewExpression_new = 148,                        // <New Expression> ::= new <ClassName ID> <Argument Array>
-		@CallInternal = 149,                             // <CallInternal> ::= 
-		@ArgumentArray_LParen_RParen = 150,              // <Argument Array> ::= '(' ')'
-		@ArgumentArray_LParen_RParen2 = 151,             // <Argument Array> ::= '(' <Argument List> ')'
-		@ArgumentList = 152,                             // <Argument List> ::= <Expression>
-		@ArgumentList_Comma = 153,                       // <Argument List> ::= <Argument List> ',' <Expression>
-		@FlowControl = 154,                              // <FlowControl> ::= <IfControl>
-		@FlowControl2 = 155,                             // <FlowControl> ::= <DoWhileControl>
-		@FlowControl3 = 156,                             // <FlowControl> ::= <DoUntilControl>
-		@FlowControl4 = 157,                             // <FlowControl> ::= <LoopWhileControl>
-		@FlowControl5 = 158,                             // <FlowControl> ::= <LoopUntilControl>
-		@FlowControl6 = 159,                             // <FlowControl> ::= <ForControl>
-		@FlowControl7 = 160,                             // <FlowControl> ::= <ForStepControl>
-		@FlowControl8 = 161,                             // <FlowControl> ::= <BreakControl>
-		@FlowControl9 = 162,                             // <FlowControl> ::= <ContinueControl>
-		@IfControl_IF_LParen_RParen = 163,               // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block>
-		@IfControl_IF_LParen_RParen_ELSE = 164,          // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block> ELSE <Statement or Block>
-		@DoWhileControl_WHILE_LParen_RParen = 165,       // <DoWhileControl> ::= WHILE '(' <Expression> ')' <Statement or Block>
-		@DoUntilControl_UNTIL_LParen_RParen = 166,       // <DoUntilControl> ::= UNTIL '(' <Expression> ')' <Statement or Block>
-		@LoopWhileControl_DO_WHILE_LParen_RParen = 167,  // <LoopWhileControl> ::= DO <Statement or Block> WHILE '(' <Expression> ')'
-		@LoopUntilControl_DO_UNTIL_LParen_RParen = 168,  // <LoopUntilControl> ::= DO <Statement or Block> UNTIL '(' <Expression> ')'
-		@ForControl_FOR_Identifier_Eq_TO = 169,          // <ForControl> ::= FOR Identifier '=' <Expression> TO <Expression> <Statement or Block>
-		@ForStepControl_FOR_Identifier_Eq_TO_STEP = 170,  // <ForStepControl> ::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Statement or Block>
-		@BreakControl_BREAK = 171,                       // <BreakControl> ::= BREAK
-		@ContinueControl_CONTINUE = 172,                 // <ContinueControl> ::= CONTINUE
-		@Procedure = 173,                                // <Procedure> ::= <UnsetProc>
-		@Procedure2 = 174,                               // <Procedure> ::= <ReturnProc>
-		@Procedure3 = 175,                               // <Procedure> ::= <ListVars>
-		@Procedure4 = 176,                               // <Procedure> ::= <Generic0Args>
-		@Procedure5 = 177,                               // <Procedure> ::= <Generic1Args>
+		@ArgumentArray_LParen_RParen = 149,              // <Argument Array> ::= '(' ')'
+		@ArgumentArray_LParen_RParen2 = 150,             // <Argument Array> ::= '(' <Argument List> ')'
+		@ArgumentList = 151,                             // <Argument List> ::= <Expression>
+		@ArgumentList_Comma = 152,                       // <Argument List> ::= <Argument List> ',' <Expression>
+		@FlowControl = 153,                              // <FlowControl> ::= <IfControl>
+		@FlowControl2 = 154,                             // <FlowControl> ::= <DoWhileControl>
+		@FlowControl3 = 155,                             // <FlowControl> ::= <DoUntilControl>
+		@FlowControl4 = 156,                             // <FlowControl> ::= <LoopWhileControl>
+		@FlowControl5 = 157,                             // <FlowControl> ::= <LoopUntilControl>
+		@FlowControl6 = 158,                             // <FlowControl> ::= <ForControl>
+		@FlowControl7 = 159,                             // <FlowControl> ::= <ForStepControl>
+		@FlowControl8 = 160,                             // <FlowControl> ::= <BreakControl>
+		@FlowControl9 = 161,                             // <FlowControl> ::= <ContinueControl>
+		@IfControl_IF_LParen_RParen = 162,               // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block>
+		@IfControl_IF_LParen_RParen_ELSE = 163,          // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block> ELSE <Statement or Block>
+		@DoWhileControl_WHILE_LParen_RParen = 164,       // <DoWhileControl> ::= WHILE '(' <Expression> ')' <Statement or Block>
+		@DoUntilControl_UNTIL_LParen_RParen = 165,       // <DoUntilControl> ::= UNTIL '(' <Expression> ')' <Statement or Block>
+		@LoopWhileControl_DO_WHILE_LParen_RParen = 166,  // <LoopWhileControl> ::= DO <Statement or Block> WHILE '(' <Expression> ')'
+		@LoopUntilControl_DO_UNTIL_LParen_RParen = 167,  // <LoopUntilControl> ::= DO <Statement or Block> UNTIL '(' <Expression> ')'
+		@ForControl_FOR_Identifier_Eq_TO = 168,          // <ForControl> ::= FOR Identifier '=' <Expression> TO <Expression> <Statement or Block>
+		@ForStepControl_FOR_Identifier_Eq_TO_STEP = 169,  // <ForStepControl> ::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Statement or Block>
+		@BreakControl_BREAK = 170,                       // <BreakControl> ::= BREAK
+		@ContinueControl_CONTINUE = 171,                 // <ContinueControl> ::= CONTINUE
+		@Procedure = 172,                                // <Procedure> ::= <UnsetProc>
+		@Procedure2 = 173,                               // <Procedure> ::= <ReturnProc>
+		@Procedure3 = 174,                               // <Procedure> ::= <ListVars>
+		@Procedure4 = 175,                               // <Procedure> ::= <Generic0Args>
+		@Procedure5 = 176,                               // <Procedure> ::= <Generic1Args>
+		@Procedure6 = 177,                               // <Procedure> ::= <GenericNArgs>
 		@UnsetProc_UNSET = 178,                          // <UnsetProc> ::= UNSET <Qualified ID>
 		@ReturnProc_RETURN = 179,                        // <ReturnProc> ::= RETURN <Expression>
 		@ListVars_VARS = 180,                            // <ListVars> ::= VARS
 		@Generic0Args_Identifier = 181,                  // <Generic0Args> ::= Identifier
-		@Generic1Args_Identifier = 182                   // <Generic1Args> ::= Identifier <Expression>
+		@Generic1Args_Identifier = 182,                  // <Generic1Args> ::= Identifier <Expression>
+		@GenericNArgs_Identifier = 183                   // <GenericNArgs> ::= Identifier <Argument Array>
 	}
 }

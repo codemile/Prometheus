@@ -3,7 +3,7 @@
     /// <summary>
     /// Allows a class to expose it's methods as built-in function APIs.
     /// </summary>
-    public class ExecuteInternal : ExecuteAttribute
+    public class ExecuteGeneric : ExecuteAttribute
     {
         /// <summary>
         /// The symbol the method implement.
@@ -14,7 +14,7 @@
         /// Construct
         /// </summary>
         /// <param name="pName">The internal name the method implement.</param>
-        public ExecuteInternal(string pName)
+        public ExecuteGeneric(string pName)
         {
             _name = pName;
         }

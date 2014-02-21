@@ -113,34 +113,6 @@ namespace Prometheus.Compile.Optomizer
         private bool _modified;
 
         /// <summary>
-        /// Replaces a call to a user function with a call to an internal function.
-        /// </summary>
-        /// <param name="pNode">The node to inspect</param>
-        /// <returns>The node</returns>
-        public Node CallInternal(Node pNode)
-        {
-            if (pNode.Children.Count == 0
-                || pNode.Children[0].Type == GrammarSymbol.QualifiedID)
-            {
-                return pNode;
-            }
-
-            IdentifierType id = (IdentifierType)pNode.Children[0].Data[0];
-            if (!_internalIds.Contains(id.Name))
-            {
-                return pNode;
-            }
-
-            DataType identifier = pNode.Children[0].Data[0];
-
-            Node callInternal = new Node(GrammarSymbol.CallInternal, pNode.Location);
-            callInternal.Data.Add(identifier);
-            callInternal.Children.AddRange(pNode.Children.Skip(1));
-
-            return callInternal;
-        }
-
-        /// <summary>
         /// Performs optimization of a node tree.
         /// </summary>
         /// <param name="pRoot">The root node</param>
@@ -222,12 +194,6 @@ namespace Prometheus.Compile.Optomizer
                 List<Node> children = pNode.Children[0].Children;
                 pNode.Children.Clear();
                 pNode.Children.AddRange(children);
-            }
-
-            // check if a function call is to an internal method
-            if (pNode.Type == GrammarSymbol.CallExpression)
-            {
-                pNode = CallInternal(pNode);
             }
 
             return _executor.Optimize(pNode);
