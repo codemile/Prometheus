@@ -66,5 +66,13 @@ namespace Prometheus.Nodes.Types.Bases
 
             throw new DataTypeException(string.Format("Cannot convert <{0}> to boolean", GetType().FullName));
         }
+
+        /// <summary>
+        /// Creates a new copy of the data.
+        /// </summary>
+        public virtual DataType Clone()
+        {
+            return this;
+        }
     }
 }

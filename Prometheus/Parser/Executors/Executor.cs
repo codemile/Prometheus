@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Compile.Optomizer;
+using Prometheus.Exceptions;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -62,38 +63,6 @@ namespace Prometheus.Parser.Executors
                     : WalkDownChildren(pParent.Children[i]));
             }
             return (DataType)array;
-        }
-
-        /// <summary>
-        /// Executes the base implementation of the node. This is where the parser
-        /// transitions from walking the node tree to executing C# code for a grammar
-        /// command.
-        /// </summary>
-        /// <param name="pNode">The node to execute</param>
-        /// <param name="pBase">The object that implements the node</param>
-        /// <returns>The returning data</returns>
-        private DataType ExecuteBase(Node pNode, ExecutorBase pBase)
-        {
-            int dCount = pNode.Data.Count;
-            object[] values = new object[pNode.Children.Count + dCount];
-            for (int i = 0, c = dCount; i < c; i++)
-            {
-                values[i] = pNode.Data[i];
-            }
-            for (int i = 0, j = dCount, c = pNode.Children.Count; i < c; i++, j++)
-            {
-                values[j] = WalkDownChildren(pNode.Children[i]);
-            }
-
-            try
-            {
-                Cursor.Node = pNode;
-                return pBase.Execute(values);
-            }
-            catch (IdentifierInnerException e)
-            {
-                throw new IdentifierException(e.Message, pNode);
-            }
         }
 
         /// <summary>
@@ -283,9 +252,13 @@ namespace Prometheus.Parser.Executors
                 Cursor.Node = pParent;
                 return _base.Execute(values);
             }
-            catch (IdentifierInnerException e)
+            catch (PrometheusException e)
             {
-                throw new IdentifierException(e.Message, pParent);
+                if (e.Where == null)
+                {
+                    e.Where = pParent.Location;
+                }
+                throw;
             }
         }
 
@@ -362,10 +335,21 @@ namespace Prometheus.Parser.Executors
                                               where node != null
                                               select node)
             {
-                pNode = nodeOp.Optomize(pNode);
-                if (pNode == null)
+                try
                 {
-                    return null;
+                    pNode = nodeOp.Optomize(pNode);
+                    if (pNode == null)
+                    {
+                        return null;
+                    }
+                }
+                catch (PrometheusException e)
+                {
+                    if (pNode != null && e.Where == null)
+                    {
+                        e.Where = pNode.Location;
+                    }
+                    throw;
                 }
             }
 

@@ -1,26 +1,25 @@
 ﻿using Logging;
-using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
-namespace Prometheus.Runtime
+namespace Prometheus.Runtime.Generics
 {
     /// <summary>
     /// Prints a string to the output.
     /// </summary>
-    public class PrintCommand : ExecutorGeneric
+    public class PrintGeneric : ExecutorGeneric
     {
         /// <summary>
         /// Logging
         /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof (PrintCommand));
+        private static readonly Logger _logger = Logger.Create(typeof (PrintGeneric));
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public PrintCommand(Executor pExecutor)
+        public PrintGeneric(Executor pExecutor)
             : base(pExecutor)
         {
         }
@@ -40,12 +39,6 @@ namespace Prometheus.Runtime
 
             _logger.Fine(value.ToString());
 
-            return UndefinedType.Undefined;
-        }
-
-        [ExecuteGeneric("assert")]
-        public DataType _Assert(DataType pValue)
-        {
             return UndefinedType.Undefined;
         }
     }

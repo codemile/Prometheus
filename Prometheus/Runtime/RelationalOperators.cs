@@ -24,7 +24,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Used to recursively compare arrays.
         /// </summary>
-        private static bool InnerEq(DataType pValue1, DataType pValue2)
+        public static bool DataEqual(DataType pValue1, DataType pValue2)
         {
             // same object reference
             if (pValue1 == pValue2)
@@ -49,7 +49,7 @@ namespace Prometheus.Runtime
                 {
                     return num1.Long == num2.Long;
                 }
-                return Math.Abs(num1.Double - num2.Double) < double.Epsilon;
+                return Math.Abs(num1.Double - num2.Double) < 0.0000000000001;
             }
 
             // compare boolean
@@ -93,11 +93,26 @@ namespace Prometheus.Runtime
                 bool result = true;
                 for (int i = 0, c = array1.Count; i < c; i++)
                 {
-                    result &= InnerEq(array1[i], array2[i]);
+                    result &= DataEqual(array1[i], array2[i]);
                 }
                 return result;
             }
 
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if an array contains a data type using relational equals operator.
+        /// </summary>
+        public static bool Contains(ArrayType pArr, DataType pValue)
+        {
+            for (int i = 0, c = pArr.Values.Count; i < c; i++)
+            {
+                if (DataEqual(pArr.Values[i], pValue))
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -225,10 +240,9 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.EqualOperator)]
         public DataType Equal(DataType pValue1, DataType pValue2)
         {
-            pValue1 = Resolve(pValue1);
-            pValue2 = Resolve(pValue2);
-
-            return new BooleanType(InnerEq(pValue1, pValue2));
+            DataType data1 = Resolve(pValue1);
+            DataType data2 = Resolve(pValue2);
+            return new BooleanType(DataEqual(data1, data2));
         }
 
         /// <summary>
@@ -395,7 +409,7 @@ namespace Prometheus.Runtime
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
 
-            return new BooleanType(!InnerEq(pValue1, pValue2));
+            return new BooleanType(!DataEqual(pValue1, pValue2));
         }
 
         /// <summary>

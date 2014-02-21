@@ -33,7 +33,7 @@ namespace Prometheus.Nodes.Types
         {
             This = pThis;
             Function = pFunction.Function;
-            Parameters = pFunction.Parameters.Clone();
+            Parameters = (ArrayType)pFunction.Parameters.Clone();
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Prometheus.Nodes.Types.Bases;
+using Prometheus.Runtime;
 using Prometheus.Storage;
 
 namespace Prometheus.Nodes.Types
@@ -42,6 +43,14 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public ArrayType(int pCount)
+        {
+            Values = new List<DataType>(pCount);
+        }
+
+        /// <summary>
         /// Boxing constructor
         /// </summary>
         /// <param name="pBox">The item to put into the array</param>
@@ -72,6 +81,14 @@ namespace Prometheus.Nodes.Types
         public void Add(DataType pItem)
         {
             Values.Add(pItem);
+        }
+
+        /// <summary>
+        /// Appends an array
+        /// </summary>
+        public void AddRange(ArrayType pArr)
+        {
+            Values.AddRange(((ArrayType)pArr.Clone()).Values);
         }
 
         /// <summary>
@@ -254,15 +271,12 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Creates a deep copy of an array.
         /// </summary>
-        public ArrayType Clone()
+        public override DataType Clone()
         {
-            ArrayType copy = new ArrayType();
+            ArrayType copy = new ArrayType(Values.Count);
             for (int i = 0, c = Values.Count; i < c; i++)
             {
-                DataType value = Values[i];
-                ArrayType arrValue = value as ArrayType;
-                value = (arrValue == null) ? value : arrValue.Clone();
-                copy.Add(value);
+                copy.Add(Values[i].Clone());
             }
             return copy;
         }

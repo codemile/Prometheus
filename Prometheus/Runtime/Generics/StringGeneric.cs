@@ -2,17 +2,17 @@
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
-namespace Prometheus.Runtime
+namespace Prometheus.Runtime.Generics
 {
     /// <summary>
     /// All the string functions
     /// </summary>
-    public class StringManipulation : ExecutorGeneric
+    public class StringGeneric : ExecutorGeneric
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public StringManipulation(Executor pExecutor)
+        public StringGeneric(Executor pExecutor)
             : base(pExecutor)
         {
         }

@@ -80,6 +80,8 @@
     <Compile Include="Nodes\Types\InstanceType.cs" />
     <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
+    <Compile Include="Runtime\Generics\AssertGeneric.cs" />
+    <Compile Include="Runtime\Generics\MathGeneric.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
     <Compile Include="Runtime\TestGrammar.cs" />
     <Compile Include="Packages\Reader.cs" />
@@ -113,7 +115,7 @@
     <Compile Include="Runtime\MathOperators.cs" />
     <Compile Include="Runtime\ObjectGrammar.cs" />
     <Compile Include="Runtime\RelationalOperators.cs" />
-    <Compile Include="Runtime\StringManipulation.cs" />
+    <Compile Include="Runtime\Generics\StringGeneric.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Runtime\Variables.cs" />
     <Compile Include="Nodes\Node.cs" />
@@ -133,7 +135,7 @@
     <Compile Include="Exceptions\Compiler\SyntaxException.cs" />
     <Compile Include="Compile\Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runtime\PrintCommand.cs" />
+    <Compile Include="Runtime\Generics\PrintGeneric.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Errors.resx">

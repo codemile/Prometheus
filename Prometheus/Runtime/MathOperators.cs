@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
@@ -116,6 +118,18 @@ namespace Prometheus.Runtime
                     : new NumericType(num1.Double + num2.Double);
             }
 
+            ArrayType arr1 = pValue1 as ArrayType;
+            ArrayType arr2 = pValue2 as ArrayType;
+            if (arr1 != null && arr2 != null)
+            {
+                ArrayType arr = (ArrayType)arr1.Clone();
+                for (int i = 0, c = arr2.Count; i < c; i++)
+                {
+                    arr.Values.Add(arr2[i].Clone());
+                }
+                return arr;
+            }
+
             throw DataTypeException.InvalidTypes("+", pValue1, pValue2);
         }
 
@@ -142,6 +156,38 @@ namespace Prometheus.Runtime
                 }
             }
 
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
+            {
+                Regex regex = str2.Compile();
+                string[] strings = regex.Split(str1.Value);
+                ArrayType arr = new ArrayType(strings.Length);
+                for (int i = 0, c = strings.Length; i < c; i++)
+                {
+                    arr.Add(new StringType(str1.IsRegex, strings[i], str1.Mode, str1.Flags));
+                }
+                return arr;
+            }
+
+            ArrayType arr1 = pValue1 as ArrayType;
+            if (arr1 != null
+                && num2 != null
+                && num2.isLong)
+            {
+                int length = (int)num2.Long;
+                if (length > arr1.Count)
+                {
+                    return arr1;
+                }
+                ArrayType arr = new ArrayType(length);
+                for (int i = 0; i < length; i++)
+                {
+                    arr.Add(arr1[i].Clone());
+                }
+                return arr;
+            }
+
             throw DataTypeException.InvalidTypes("/", pValue1, pValue2);
         }
 
@@ -158,9 +204,36 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                return num1.isLong
+                return num1.isLong && num2.isLong
                     ? new NumericType(num1.Long * num2.Long)
                     : new NumericType(num1.Double * num2.Double);
+            }
+
+            StringType str1 = pValue1 as StringType;
+            if (str1 != null
+                && num2 != null
+                && num2.isLong)
+            {
+                StringBuilder sb = new StringBuilder();
+                for (long i = 0, c = num2.Long; i < c; i++)
+                {
+                    sb.Append(str1.Value);
+                }
+                return new StringType(str1.IsRegex,sb.ToString(),str1.Mode,str1.Flags);
+            }
+
+            ArrayType arr1 = pValue1 as ArrayType;
+            if (arr1 != null
+                && num2 != null
+                && num2.isLong)
+            {
+                int c = (int)num2.Long;
+                ArrayType arr = new ArrayType(arr1.Count * c);
+                for (int i = 0; i < c; i++)
+                {
+                    arr.AddRange(arr1);
+                }
+                return arr;
             }
 
             throw DataTypeException.InvalidTypes("*", pValue1, pValue2);
@@ -203,6 +276,30 @@ namespace Prometheus.Runtime
                 return num1.isLong
                     ? new NumericType(num1.Long - num2.Long)
                     : new NumericType(num1.Double - num2.Double);
+            }
+
+            StringType str1 = pValue1 as StringType;
+            StringType str2 = pValue2 as StringType;
+            if (str1 != null && str2 != null)
+            {
+                Regex regex = str2.Compile();
+                return new StringType(str1.IsRegex,regex.Replace(str1.Value, ""),str1.Mode,str1.Flags);
+            }
+
+            ArrayType arr1 = pValue1 as ArrayType;
+            ArrayType arr2 = pValue2 as ArrayType;
+            if (arr1 != null && arr2 != null)
+            {
+                ArrayType arr = new ArrayType();
+                for (int i = 0, ic = arr1.Count; i < ic; i++)
+                {
+                    if (RelationalOperators.Contains(arr2, arr1[i]))
+                    {
+                        continue;
+                    }
+                    arr.Add(arr1[i].Clone());
+                }
+                return arr;
             }
 
             throw DataTypeException.InvalidTypes("-", pValue1, pValue2);

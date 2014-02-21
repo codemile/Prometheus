@@ -71,7 +71,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Handle this string as a regex
         /// </summary>
-        private readonly bool _isRegex;
+        public readonly bool IsRegex;
 
         /// <summary>
         /// The compiled version of this string as a search term.
@@ -93,7 +93,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public StringType(bool pIsRegex, string pValue, eMODE pMode, eFLAGS pFlags)
         {
-            _isRegex = pIsRegex;
+            IsRegex = pIsRegex;
             Value = pValue;
             Mode = pMode;
             Flags = pFlags;
@@ -138,7 +138,7 @@ namespace Prometheus.Nodes.Types
                 return _regex.IsMatch(pHaystack);
             }
 
-            if (Mode == eMODE.ANYWHERE && !_isRegex)
+            if (Mode == eMODE.ANYWHERE && !IsRegex)
             {
                 StringComparison c = (Flags & eFLAGS.IGNORE_CASE) == eFLAGS.IGNORE_CASE
                     ? StringComparison.CurrentCultureIgnoreCase
@@ -163,6 +163,32 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Compiles this string to a regex.
+        /// </summary>
+        public Regex Compile()
+        {
+            if (_regex != null)
+            {
+                return _regex;
+            }
+
+            string str = ((Flags & eFLAGS.IGNORE_CASE) == eFLAGS.IGNORE_CASE ? "(?is)" : "(?s)");
+            string term = IsRegex ? Value : Regex.Escape(Value);
+
+            if (Mode == eMODE.WORD_BOUNDARIES)
+            {
+                str += RegexFactory.WordBoundaries(term);
+            }
+            else
+            {
+                str += term;
+            }
+
+            _regex = new Regex(str);
+            return _regex;
+        }
+
+        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>
@@ -171,7 +197,7 @@ namespace Prometheus.Nodes.Types
         public override string ToString()
         {
             string quotes;
-            if (_isRegex)
+            if (IsRegex)
             {
                 quotes = (Mode == eMODE.ANYWHERE) ? "/" : "|";
             }
