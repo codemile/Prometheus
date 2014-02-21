@@ -37,7 +37,9 @@ namespace Prometheus.Runtime
             StringType str2 = pValue2 as StringType;
             if (str1 != null && str2 != null)
             {
-                return String.CompareOrdinal(str1.Value, str2.Value) == 0;
+                return str1.IgnoreCase || str2.IgnoreCase
+                    ? String.Compare(str1.Value, str2.Value, StringComparison.CurrentCultureIgnoreCase) == 0
+                    : String.CompareOrdinal(str1.Value, str2.Value) == 0;
             }
 
             // compare numbers

@@ -37,7 +37,8 @@ RegExpPipe		= '|' ({RegExp Chars} | '\' {Non Terminator})+ '|' [icf]*
 
 Number			= [0123456789]+
 Decimal			= [0123456789]+ '.' [0123456789]+
-Boolean			= true | false | on | off | yes | no | always | never
+Boolean			= 'true' | 'false' | 'on' | 'off' | 'yes' | 'no' | 'always' | 'never'
+Undefined		= 'undefined'
 
 ! ===================================================================
 ! Comments
@@ -219,6 +220,7 @@ Comment Line  = '//'
 					| Number
 					| Decimal
 					| Boolean
+					| Undefined
 					| <Array Literal>
 					| <Qualified ID>
 					| <Function Expression>

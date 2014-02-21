@@ -79,6 +79,14 @@ namespace Prometheus.Nodes.Types
         private Regex _regex;
 
         /// <summary>
+        /// True if ignoring case.
+        /// </summary>
+        public bool IgnoreCase
+        {
+            get { return Flags.HasFlag(eFLAGS.IGNORE_CASE); }
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public StringType(string pValue)

@@ -26,6 +26,7 @@ namespace Prometheus.Nodes
                                                                         GrammarSymbol.Number,
                                                                         GrammarSymbol.Decimal,
                                                                         GrammarSymbol.Boolean,
+                                                                        GrammarSymbol.Undefined,
                                                                         GrammarSymbol.Identifier,
                                                                         GrammarSymbol.ValidID,
                                                                         GrammarSymbol.MemberName
@@ -67,6 +68,9 @@ namespace Prometheus.Nodes
                             return new BooleanType(false);
                     }
                     break;
+
+                case GrammarSymbol.Undefined:
+                    return UndefinedType.Undefined;
 
                 case GrammarSymbol.Identifier:
                     return new IdentifierType(pValue);

@@ -1,0 +1,10 @@
+Tests;
+
+Test AndOp {
+};
+
+Test OrOp {
+};
+
+Test NotOp {
+};

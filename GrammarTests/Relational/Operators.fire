@@ -1,0 +1,49 @@
+Tests;
+
+Test Equals {
+	Assert true == true;
+	Assert true == on;
+	Assert true == yes;
+	Assert true == always;
+	Assert false == false;
+	Assert false == off;
+	Assert false == no;
+	Assert false == never;
+	Assert Undefined == Undefined;
+	Assert "Prometheus" == "Prometheus";
+	Assert "Prometheus" == "prometheus"i;
+	Assert 1 == 1;
+	Assert 12.34 == 12.34;
+	Assert [1,2,3] == [1,2,3];
+	Assert ["ABC"] == ["ABC"];
+	Assert ["ABC"] == ["abc"i];
+};
+
+Test NotEquals{
+	Assert true != false;
+	Assert undefined != false;
+	Assert undefined != true;
+	Assert 1 != 2;
+	Assert "abc" != 0;
+	Assert "Prometheus" != "prometheus";
+	Assert [1,2,3] != [2,3,4];
+	Assert ["ABC"] != ["abc"];
+};
+
+Test GreaterThan {
+	Assert 3 > 1;
+};
+
+Test LessThan {
+	Assert 1 < 3;
+};
+
+Test GreaterThenEquals {
+	Assert 3 > 1;
+	Assert 1 >= 1;
+};
+
+Test LessThanEquals {
+	Assert 1 <= 3;
+	Assert 3 <= 3;
+};
