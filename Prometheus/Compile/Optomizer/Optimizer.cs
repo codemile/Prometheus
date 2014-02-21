@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser;
 using Prometheus.Parser.Executors;
 
@@ -140,6 +139,17 @@ namespace Prometheus.Compile.Optomizer
         /// <returns>Same node, a new node or null.</returns>
         public Node OptimizeNode(Node pNode)
         {
+            if (pNode.Type == GrammarSymbol.Generic0Args
+                || pNode.Type == GrammarSymbol.Generic1Args
+                || pNode.Type == GrammarSymbol.GenericNArgs)
+            {
+                string name = pNode.FirstData().Cast<IdentifierType>().Name;
+                if (!_internalIds.Contains(name))
+                {
+                    throw new LexicalException(string.Format("Command not supported <{0}>", name),pNode.Location);
+                }
+            }
+
             // change MemberID nodes to ValidID nodes (so Identifier is one type only).
             if (pNode.Type == GrammarSymbol.MemberID)
             {
