@@ -1,62 +1,39 @@
 #Prometheus
 
-[Prometheus](http://pro.me-the.us) (also called Fire) is a C# coded interpreter that supports object-oriented features with [first-class functions](https://en.wikipedia.org/wiki/First-class_functions). Prometheus objects are event-driven entity models that implement both the singular model and the model collection. 
+[Prometheus](http://pro.me-the.us) (also called Fire) is a C# coded interpreter that supports object-oriented features with [first-class functions](https://en.wikipedia.org/wiki/First-class_functions). 
 
-Prometheus was created for searching, categorizing and extracting data from text based data models. Such as text documents, blogs, RSS feeds and databases.
+Prometheus can express business rules for how a document should be `accepted` or `rejected` using easy to understand grammar. The goal was to create a language that allowed people to read rules long after they were written, and quick identify what the intent of the rule was.
 
-##Objects
+> Prometheus was intended to be used as an *embedded* tool to allow users to program business rules without much programming knowledge.
 
-To declare an object use the `object` syntax. All objects are defined using a constructor function. The constructor function is called when the object is instantiated. Properties and methods are assigned in the constructor to the `this` reference.
+## Quick Example
 
-	object Foo(x) {
-		this.title = x;
-		this.DoStuff = function() {
-			print this.title;
-		};
-	}
+	Accept Title contains 'Microsoft';
+	Accept Sentences contains [/buys?/i,/purchase[sd]?/i,/acquire[sd]?/i] >>> 'Facebook';
+	Reject Body contains ['joke'i,'hoax'i,'onion news'i];
 
-To create a new object, use the `new` keyword to instantiate an `object`:
+The above would mark a document as `accepted` if the title contains the word *"Microsoft"*, and has the sentence *"Today the company purchased the social network FaceBook for $1 dollar."*, and reject the document if it appears to be a joke.
 
-	var f = new Foo("The title");
-	f.DoStuff();
+### Example Break-Down
 
-###Private Methods
+Business rules evaluate to `accepted`, `rejected` or `undecided`. This is purely semantics as Prometheus can provide a variety of results.
 
-To declare an object method as private use the `var` keyword.
+Strings in Prometheus represent search terms that can be expressed with flags to indicate their matching behavior, and regular expressions can be written using the `/` character.
 
-	object Foo {
-		var _private_stuff = function(x) {
-			return x * x;
-		};
-		this.DoStuff = function(x) {
-			return _private_stuff(x);
-		};
-	}
+An array is used to define a collection of *match any* search term.
 
-#Events
+The look ahead operator `>>>` was used to indicate that one of the keywords must appear on a sentence before the word "Facebook".
 
-Any variable can be bound as an event.
+## Getting Started
 
-	// To declare an event that takes a single argument.
-	var x = event(arg);
+Options for using Prometheus in your project:
 
-	// add an event listener
-	x += function(arg) {
-		print arg;
-	};
+- Include the Prometheus SDK and use with your .NET project.
+- Run Prometheus on the command line using the Fire tool.
 
-	// To trigger an event.
-	trigger x(3);
+## More Information
 
-To add and remove listener functions.
+For general information on the language and its uses.
 
-	var x = event(arg);
-
-	var foo = function(arg) {
-	};
-
-	// add listener
-	x += foo;
-
-	// remove listener
-	x -= foo;
+- [The Manual](http://pro.me-the.us/manual/) contains detailed information about syntax and features.
+- [Tutorials](http://pro.me-the.us/category/tutorials/) haves many examples of real-world usages.

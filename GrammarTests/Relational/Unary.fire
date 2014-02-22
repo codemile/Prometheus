@@ -38,3 +38,14 @@ Test Decrement {
 	Assert y == 9;
 	Assert z == 9;
 };
+
+Test Remainder {
+	Assert 5 % 2 == 1;
+	Assert -5 % 2 == -1;
+	Assert 5.0 % 2.2 == 0.6;
+	Assert -5.2 % 2.0 == -1.2;
+};
+
+Test RemainderArrays {
+	Assert [1,2,3,4,5,6] % 4 == [5,6];
+};

@@ -138,16 +138,18 @@ namespace Prometheus.Parser
         /// <summary>
         /// Executes the list of nodes and handles any exceptions.
         /// </summary>
-        private void ExecuteSafely(IEnumerable<Node> pNodes, Cursor pCursor)
+        private bool ExecuteSafely(IEnumerable<Node> pNodes, Cursor pCursor)
         {
             try
             {
                 Execute(pNodes, pCursor);
+                return true;
             }
             catch (PrometheusException e)
             {
                 HandleError(e);
             }
+            return false;
         }
 
         /// <summary>
@@ -160,7 +162,10 @@ namespace Prometheus.Parser
                 IEnumerable<string> unitTests = getUnitTests(imported);
                 foreach (string test in getTestSuite(imported, unitTests))
                 {
-                    ExecuteSafely(new[] {imported}, new Cursor(test));
+                    if (ExecuteSafely(new[] {imported}, new Cursor(test)))
+                    {
+                        _logger.Fine("Test {0}: passed", test);
+                    }
                 }
             }
         }

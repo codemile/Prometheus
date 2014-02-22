@@ -252,9 +252,28 @@ namespace Prometheus.Runtime
             NumericType num2 = pValue2 as NumericType;
             if (num1 != null && num2 != null)
             {
-                return num1.isLong
+                return num1.isLong && num2.isLong
                     ? new NumericType(num1.Long % num2.Long)
                     : new NumericType(num1.Double % num2.Double);
+            }
+
+            ArrayType arr1 = pValue1 as ArrayType;
+            if (arr1 != null
+                && num2 != null
+                && num2.isLong
+                && num2.Long >= 0)
+            {
+                int c = Math.Min((int)num2.Long, arr1.Count);
+                if (c == 0)
+                {
+                    return arr1.Clone();
+                }
+                ArrayType arr = new ArrayType(arr1.Count - c);
+                for (int i = c; i < arr1.Count; i++)
+                {
+                    arr.Add(arr1[i]);
+                }
+                return arr;
             }
 
             throw DataTypeException.InvalidTypes("%", pValue1, pValue2);
