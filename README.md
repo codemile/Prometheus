@@ -10,8 +10,8 @@ Prometheus can express business rules for how a document should be `accepted` or
 
 ## Quick Example
 
-	Accept (Title contains 'Microsoft') 
-		And (Sentences contains [/buys?/i,/purchase[sd]?/i,/acquire[sd]?/i] >>> 'Facebook');
+	Accept Title contains 'Microsoft'
+		And Sentences contains [/buys?/i,/purchase[sd]?/i,/acquire[sd]?/i] >>> 'Facebook';
 	Reject Body contains ['joke'i,'hoax'i,'onion news'i];
 
 The above would mark a document as `accepted` if the title contains the word *"Microsoft"*, and has the sentence *"Today the company purchased the social network FaceBook for $1 dollar."*, and reject the document if it appears to be a joke.
