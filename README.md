@@ -1,10 +1,8 @@
-![Prometheus](https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-name-64-black.png "Prometheus")
+<p align="center">
+  <img src="https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-256.png" width="256" height="256" />
+</p>
 
 #Prometheus
-
-<p align="center">
-  <img src="https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-128.png" width="128" height="128" />
-</p>
 
 [Prometheus](http://pro.me-the.us) (also called Fire) is a C# coded interpreter that supports object-oriented features with [first-class functions](https://en.wikipedia.org/wiki/First-class_functions). 
 
