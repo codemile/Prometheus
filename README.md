@@ -1,4 +1,4 @@
-![Prometheus](/Logo/prometheus-64-block.png "Prometheus")
+![Prometheus](/thinkingmedia/Prometheus/blob/master/Logo/prometheus-name-64-black.png "Prometheus")
 
 #Prometheus
 
