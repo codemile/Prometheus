@@ -99,9 +99,33 @@ namespace Prometheus.Runtime
         {
             if (!pValue.getBool())
             {
-                throw new AssertionException("Assert failed", Executor.Cursor.Node);
+                throw new TestException("Assert failed", Executor.Cursor.Node);
             }
             return UndefinedType.Undefined;
+        }
+
+        /// <summary>
+        /// Triggers the failure of a test.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.FailProc)]
+        public DataType _Fail(DataType pValue)
+        {
+            QualifiedType id = pValue as QualifiedType;
+
+            DataType value = id != null
+                ? Executor.Cursor.Resolve(id).Read()
+                : pValue;
+
+            throw new TestException(string.Format("Failed: {0}", value.ToString()), Executor.Cursor.Node);
+        }
+
+        /// <summary>
+        /// Triggers the failure of a test.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.FailProc)]
+        public DataType _Fail()
+        {
+            throw new TestException("Failed", Executor.Cursor.Node);
         }
     }
 }

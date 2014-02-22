@@ -322,16 +322,16 @@ Comment Line  = '//'
 					| <BreakControl>
 					| <ContinueControl>
 
-<IfControl>			::= IF '(' <Expression> ')' <Statement or Block> 
-					| IF '(' <Expression> ')' <Statement or Block> ELSE <Statement or Block>
+<IfControl>			::= IF '(' <Expression> ')' <Block> 
+					| IF '(' <Expression> ')' <Block> ELSE <Block>
 
-<DoWhileControl>	::= WHILE '(' <Expression> ')' <Statement or Block>
-<DoUntilControl>	::= UNTIL '(' <Expression> ')' <Statement or Block>
-<LoopWhileControl>	::= DO <Statement or Block> WHILE '(' <Expression> ')'
-<LoopUntilControl>	::= DO <Statement or Block> UNTIL '(' <Expression> ')'
+<DoWhileControl>	::= WHILE '(' <Expression> ')' <Block>
+<DoUntilControl>	::= UNTIL '(' <Expression> ')' <Block>
+<LoopWhileControl>	::= DO <Block> WHILE '(' <Expression> ')'
+<LoopUntilControl>	::= DO <Block> UNTIL '(' <Expression> ')'
 
-<ForControl>		::= FOR Identifier '=' <Expression> TO <Expression> <Statement or Block>
-<ForStepControl>	::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Statement or Block>
+<ForControl>		::= FOR Identifier '=' <Expression> TO <Expression> <Block>
+<ForStepControl>	::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Block>
 
 <BreakControl>		::= BREAK
 <ContinueControl>	::= CONTINUE
@@ -341,14 +341,22 @@ Comment Line  = '//'
 ! ===================================================================
 
 <Procedure>			::= <UnsetProc>
+					| <PrintProc>
 					| <ReturnProc>
 					| <AssertProc>
+					| <FailProc>
 					| <ListVars>
 					| <Call Generic>
 
 <UnsetProc>			::= 'UNSET' <Qualified ID>
+<PrintProc>			::= 'PRINT' <Expression>
+
 <ReturnProc>		::= 'RETURN' <Expression>
+					| 'RETURN'
+
 <AssertProc>		::= 'ASSERT' <Expression>
+<FailProc>			::= 'FAIL' <Expression>
+					| 'FAIL'
 
 <ListVars>			::= 'VARS'
 

@@ -175,25 +175,31 @@ namespace Prometheus.Grammar
 		@FlowControl7 = 164,                             // <FlowControl> ::= <ForStepControl>
 		@FlowControl8 = 165,                             // <FlowControl> ::= <BreakControl>
 		@FlowControl9 = 166,                             // <FlowControl> ::= <ContinueControl>
-		@IfControl_IF_LParen_RParen = 167,               // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block>
-		@IfControl_IF_LParen_RParen_ELSE = 168,          // <IfControl> ::= IF '(' <Expression> ')' <Statement or Block> ELSE <Statement or Block>
-		@DoWhileControl_WHILE_LParen_RParen = 169,       // <DoWhileControl> ::= WHILE '(' <Expression> ')' <Statement or Block>
-		@DoUntilControl_UNTIL_LParen_RParen = 170,       // <DoUntilControl> ::= UNTIL '(' <Expression> ')' <Statement or Block>
-		@LoopWhileControl_DO_WHILE_LParen_RParen = 171,  // <LoopWhileControl> ::= DO <Statement or Block> WHILE '(' <Expression> ')'
-		@LoopUntilControl_DO_UNTIL_LParen_RParen = 172,  // <LoopUntilControl> ::= DO <Statement or Block> UNTIL '(' <Expression> ')'
-		@ForControl_FOR_Identifier_Eq_TO = 173,          // <ForControl> ::= FOR Identifier '=' <Expression> TO <Expression> <Statement or Block>
-		@ForStepControl_FOR_Identifier_Eq_TO_STEP = 174,  // <ForStepControl> ::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Statement or Block>
+		@IfControl_IF_LParen_RParen = 167,               // <IfControl> ::= IF '(' <Expression> ')' <Block>
+		@IfControl_IF_LParen_RParen_ELSE = 168,          // <IfControl> ::= IF '(' <Expression> ')' <Block> ELSE <Block>
+		@DoWhileControl_WHILE_LParen_RParen = 169,       // <DoWhileControl> ::= WHILE '(' <Expression> ')' <Block>
+		@DoUntilControl_UNTIL_LParen_RParen = 170,       // <DoUntilControl> ::= UNTIL '(' <Expression> ')' <Block>
+		@LoopWhileControl_DO_WHILE_LParen_RParen = 171,  // <LoopWhileControl> ::= DO <Block> WHILE '(' <Expression> ')'
+		@LoopUntilControl_DO_UNTIL_LParen_RParen = 172,  // <LoopUntilControl> ::= DO <Block> UNTIL '(' <Expression> ')'
+		@ForControl_FOR_Identifier_Eq_TO = 173,          // <ForControl> ::= FOR Identifier '=' <Expression> TO <Expression> <Block>
+		@ForStepControl_FOR_Identifier_Eq_TO_STEP = 174,  // <ForStepControl> ::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Block>
 		@BreakControl_BREAK = 175,                       // <BreakControl> ::= BREAK
 		@ContinueControl_CONTINUE = 176,                 // <ContinueControl> ::= CONTINUE
 		@Procedure = 177,                                // <Procedure> ::= <UnsetProc>
-		@Procedure2 = 178,                               // <Procedure> ::= <ReturnProc>
-		@Procedure3 = 179,                               // <Procedure> ::= <AssertProc>
-		@Procedure4 = 180,                               // <Procedure> ::= <ListVars>
-		@Procedure5 = 181,                               // <Procedure> ::= <Call Generic>
-		@UnsetProc_UNSET = 182,                          // <UnsetProc> ::= UNSET <Qualified ID>
-		@ReturnProc_RETURN = 183,                        // <ReturnProc> ::= RETURN <Expression>
-		@AssertProc_ASSERT = 184,                        // <AssertProc> ::= ASSERT <Expression>
-		@ListVars_VARS = 185,                            // <ListVars> ::= VARS
-		@CallGeneric_Identifier = 186                    // <Call Generic> ::= Identifier <Argument Array>
+		@Procedure2 = 178,                               // <Procedure> ::= <PrintProc>
+		@Procedure3 = 179,                               // <Procedure> ::= <ReturnProc>
+		@Procedure4 = 180,                               // <Procedure> ::= <AssertProc>
+		@Procedure5 = 181,                               // <Procedure> ::= <FailProc>
+		@Procedure6 = 182,                               // <Procedure> ::= <ListVars>
+		@Procedure7 = 183,                               // <Procedure> ::= <Call Generic>
+		@UnsetProc_UNSET = 184,                          // <UnsetProc> ::= UNSET <Qualified ID>
+		@PrintProc_PRINT = 185,                          // <PrintProc> ::= PRINT <Expression>
+		@ReturnProc_RETURN = 186,                        // <ReturnProc> ::= RETURN <Expression>
+		@ReturnProc_RETURN2 = 187,                       // <ReturnProc> ::= RETURN
+		@AssertProc_ASSERT = 188,                        // <AssertProc> ::= ASSERT <Expression>
+		@FailProc_FAIL = 189,                            // <FailProc> ::= FAIL <Expression>
+		@FailProc_FAIL2 = 190,                           // <FailProc> ::= FAIL
+		@ListVars_VARS = 191,                            // <ListVars> ::= VARS
+		@CallGeneric_Identifier = 192                    // <Call Generic> ::= Identifier <Argument Array>
 	}
 }

@@ -1,8 +1,6 @@
-<p align="center"><img src="https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-128.png" width="128" height="128" /></p>
-
 #Prometheus
 
-[Prometheus](http://pro.me-the.us) (also called Fire) is a C# coded interpreter that supports object-oriented features with [first-class functions](https://en.wikipedia.org/wiki/First-class_functions). 
+![Prometheus](https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-32.png) [Prometheus](http://pro.me-the.us) (also called Fire) is a C# coded interpreter that supports object-oriented features with [first-class functions](https://en.wikipedia.org/wiki/First-class_functions).
 
 Prometheus can express business rules for how a document should be `accepted` or `rejected` using easy to understand grammar. The goal was to create a language that allowed people to read rules long after they were written, and quickly identify what the intent of the rule was.
 
@@ -10,9 +8,9 @@ Prometheus can express business rules for how a document should be `accepted` or
 
 ## Quick Example
 
-	Accept Title contains 'Microsoft'
-		And Sentences contains [/buys?/i,/purchase[sd]?/i,/acquire[sd]?/i] >>> 'Facebook';
-	Reject Body contains ['joke'i,'hoax'i,'onion news'i];
+Accept Title contains 'Microsoft'
+And Sentences contains [/buys?/i,/purchase[sd]?/i,/acquire[sd]?/i] >>> 'FaceBook'i;
+Reject Body contains ['joke'i,'hoax'i,'onion news'i];
 
 The above would mark a document as `accepted` if the title contains the word *"Microsoft"*, and has the sentence *"Today the company purchased the social network FaceBook for $1 dollar."*, and reject the document if it appears to be a joke.
 

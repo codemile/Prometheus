@@ -130,7 +130,7 @@ namespace Prometheus.Parser.Executors
                             return WalkDownChildren(pParent.Children[2]);
                         }
                     }
-                    throw new AssertionException(
+                    throw new TestException(
                         string.Format("Invalid child count. Expected (2 or 3) Found <{0}>", pParent.Children.Count),
                         pParent);
                 }

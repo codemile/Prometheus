@@ -1,0 +1,17 @@
+Tests;
+
+Test IfThen {
+	If (true) {
+		Return;
+	};
+	Fail "Should not reach here.";
+};
+
+Test IfThenElse {
+	If (false) {
+		Fail "Should not execute";
+	} else {
+		Return;
+	};
+	Fail "Should not reach here.";
+};

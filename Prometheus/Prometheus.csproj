@@ -64,7 +64,7 @@
     <Compile Include="Exceptions\Executor\IdentifierInnerException.cs" />
     <Compile Include="Exceptions\Executor\UnexpectedErrorException.cs" />
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
-    <Compile Include="Exceptions\Executor\AssertionException.cs" />
+    <Compile Include="Exceptions\Executor\TestException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
     <Compile Include="Nodes\RegexFactory.cs" />
     <Compile Include="Nodes\Types\ArrayType.cs" />
@@ -134,7 +134,7 @@
     <Compile Include="Exceptions\Compiler\SyntaxException.cs" />
     <Compile Include="Compile\Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runtime\Generics\PrintGeneric.cs" />
+    <Compile Include="Runtime\PrintCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Errors.resx">

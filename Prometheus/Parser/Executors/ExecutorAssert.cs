@@ -21,7 +21,7 @@ namespace Prometheus.Parser.Executors
         {
             if (pNode.Children.Count != pChildCount)
             {
-                throw new AssertionException(
+                throw new TestException(
                     string.Format("Invalid child count. Expected <{0}> Found <{1}>", pChildCount, pNode.Children.Count),
                     pNode);
             }
@@ -36,7 +36,7 @@ namespace Prometheus.Parser.Executors
         {
             if (pNode.Data.Count != pDataCount)
             {
-                throw new AssertionException(
+                throw new TestException(
                     string.Format("Invalid data count. Expected <{0}> Found <{1}>", pDataCount, pNode.Data.Count), pNode);
             }
         }
@@ -51,7 +51,7 @@ namespace Prometheus.Parser.Executors
         {
             if (pNode.Data[pIndex].GetType() != pType)
             {
-                throw new AssertionException(
+                throw new TestException(
                     string.Format("Invalid data type. Expected <{0}> Found <{1}>", pType.FullName,
                         pNode.Data[pIndex].GetType().FullName), pNode);
             }
@@ -64,7 +64,7 @@ namespace Prometheus.Parser.Executors
         {
             if (!pLookup.Contains(pKey))
             {
-                throw new AssertionException(string.Format("Symbol <{0}> is not implemented", pKey), pNode);
+                throw new TestException(string.Format("Symbol <{0}> is not implemented", pKey), pNode);
             }
         }
     }
