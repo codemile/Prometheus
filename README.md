@@ -2,6 +2,10 @@
 
 #Prometheus
 
+<p align="center">
+  <img src="https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-128.png" width="128" height="128" />
+</p>
+
 [Prometheus](http://pro.me-the.us) (also called Fire) is a C# coded interpreter that supports object-oriented features with [first-class functions](https://en.wikipedia.org/wiki/First-class_functions). 
 
 Prometheus can express business rules for how a document should be `accepted` or `rejected` using easy to understand grammar. The goal was to create a language that allowed people to read rules long after they were written, and quickly identify what the intent of the rule was.
