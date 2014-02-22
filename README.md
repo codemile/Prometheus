@@ -1,4 +1,4 @@
--> ![Prometheus](https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-name-64-black.png "Prometheus") <-
+![Prometheus](https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-name-64-black.png "Prometheus")
 
 #Prometheus
 
