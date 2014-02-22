@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-256.png" width="256" height="256" />
-</p>
+<p align="center"><img src="https://raw2.github.com/thinkingmedia/Prometheus/master/Logo/prometheus-128.png" width="128" height="128" /></p>
 
 #Prometheus
 
