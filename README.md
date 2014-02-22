@@ -1,3 +1,5 @@
+![Prometheus](/Logo/prometheus-64-block.png "Prometheus")
+
 #Prometheus
 
 [Prometheus](http://pro.me-the.us) (also called Fire) is a C# coded interpreter that supports object-oriented features with [first-class functions](https://en.wikipedia.org/wiki/First-class_functions). 
