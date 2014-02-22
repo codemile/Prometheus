@@ -90,5 +90,18 @@ namespace Prometheus.Runtime
             Executor.Cursor.Stack.Create(pName.Name, pTest);
             return UndefinedType.Undefined;
         }
+
+        /// <summary>
+        /// Handles a basic assert
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.AssertProc)]
+        public DataType _Assert(DataType pValue)
+        {
+            if (!pValue.getBool())
+            {
+                throw new AssertionException("Assert failed", Executor.Cursor.Node);
+            }
+            return UndefinedType.Undefined;
+        }
     }
 }

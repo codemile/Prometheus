@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using Fire.Properties;
 using GemsCLI;
@@ -44,11 +45,11 @@ namespace Fire
                 return 0;
             }
 
+            string fileName = Path.GetFullPath(Reader.getFileNameWithExtension(options.FileName, "fire"));
+            string includePath = Path.GetDirectoryName(fileName);
+
             try
             {
-                string fileName = Path.GetFullPath(Reader.getFileNameWithExtension(options.FileName, "fire"));
-                string includePath = Path.GetDirectoryName(fileName);
-
                 Builder project = new Builder();
                 project.AddDirectory(includePath);
                 Compiled code = project.Build(fileName);
@@ -58,8 +59,7 @@ namespace Fire
             }
             catch (PrometheusException e)
             {
-                _logger.Error("Error: " + e.Format().Replace("{", "{{").Replace("}", "}}"));
-                return -1;
+                Parser.HandleError(e);
             }
 
             return 0;

@@ -93,18 +93,45 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Decrement
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.Decrement)]
-        public DataType Dec(QualifiedType pId)
+        [ExecuteSymbol(GrammarSymbol.PreDecrement)]
+        public DataType PreDec(QualifiedType pId)
         {
-            NumericType num = Executor.Cursor.Resolve(pId).Read() as NumericType;
+            iVariablePointer pointer = Executor.Cursor.Resolve(pId);
+
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("++", pId);
+            }
+
+            pointer.Write(num.isLong
+                ? new NumericType(num.Long - 1)
+                : new NumericType(num.Double - 1.0));
+
+            return num;
+        }
+
+        /// <summary>
+        /// Decrement
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PostDecrement)]
+        public DataType PostDec(QualifiedType pId)
+        {
+            iVariablePointer pointer = Executor.Cursor.Resolve(pId);
+
+            NumericType num = pointer.Read() as NumericType;
             if (num == null)
             {
                 throw DataTypeException.InvalidTypes("--", pId);
             }
 
-            return num.isLong
+            num =  num.isLong
                 ? new NumericType(num.Long - 1)
                 : new NumericType(num.Double - 1.0);
+
+            pointer.Write(num);
+
+            return num;
         }
 
         /// <summary>
@@ -135,17 +162,45 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Increment
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.Increment)]
-        public DataType Inc(QualifiedType pId)
+        [ExecuteSymbol(GrammarSymbol.PostIncrement)]
+        public DataType PostInc(QualifiedType pId)
         {
-            NumericType num = Executor.Cursor.Resolve(pId).Read() as NumericType;
+            iVariablePointer pointer = Executor.Cursor.Resolve(pId);
+
+            NumericType num = pointer.Read() as NumericType;
             if (num == null)
             {
                 throw DataTypeException.InvalidTypes("++", pId);
             }
-            return num.isLong
+
+            num = num.isLong
                 ? new NumericType(num.Long + 1)
                 : new NumericType(num.Double + 1.0);
+
+            pointer.Write(num);
+
+            return num;
+        }
+
+        /// <summary>
+        /// Increment
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PreIncrement)]
+        public DataType PreInc(QualifiedType pId)
+        {
+            iVariablePointer pointer = Executor.Cursor.Resolve(pId);
+
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("++", pId);
+            }
+
+            pointer.Write(num.isLong
+                ? new NumericType(num.Long + 1)
+                : new NumericType(num.Double + 1.0));
+
+            return num;
         }
 
         /// <summary>
@@ -168,78 +223,5 @@ namespace Prometheus.Runtime
         {
             return Executor.Cursor.Resolve(pId).Read();
         }
-
-        /// <summary>
-        /// Returns the value in an array accessed by an index offset.
-        /// </summary>
-/*
-        public DataType ArrayAccess(QualifiedOldType pId, ArrayType pElements)
-        {
-            ArrayType array = getArray(pId);
-            DataType result = UndefinedType.Undefined;
-            for (int i = 0, c = pElements.Count; i < c; i++)
-            {
-                if (i != 0)
-                {
-                    array = result as ArrayType;
-                    if (array == null)
-                    {
-                        throw new InvalidIndexException(string.Format("Cannot apply indexing to an expression of type <{0}>",
-                            result.GetType()));
-                    }
-                }
-                int index = getArrayIndex(pElements.Values[i]);
-                if (index < 0 || index >= array.Count)
-                {
-                    throw new InvalidIndexException(string.Format("Index parameter is out of range <{0}>",index));
-                }
-                result = array.Values[index];
-            }
-
-            return result;
-        }
-*/
-
-        /// <summary>
-        /// When using a DataType to access an index of an array. This ensures it's an integer
-        /// value.
-        /// </summary>
-        /// <param name="pValue"></param>
-        /// <returns></returns>
-/*
-        private static int getArrayIndex(DataType pValue)
-        {
-            NumericType num = pValue as NumericType;
-            if (num == null)
-            {
-                throw new InvalidIndexException(string.Format("Cannot access array using index of type <{0}>", pValue.GetType()));
-            }
-            if (num.isDouble)
-            {
-                throw new InvalidIndexException("Cannot access array using index of type <float>");
-            }
-            return (int)num.Long;
-        }
-*/
-
-        /// <summary>
-        /// Access the identifier as an array type.
-        /// </summary>
-        /// <param name="pId">The identifier</param>
-        /// <returns>The array object</returns>
-/*
-        private ArrayType getArray(QualifiedOldType pId)
-        {
-            // an ID or array
-            DataType data = Executor.Cursor.Get(pId);
-            ArrayType array = data as ArrayType;
-            if (array == null)
-            {
-                throw new InvalidIndexException(string.Format("Cannot apply indexing to an expression of type <{0}>",
-                    data.GetType()));
-            }
-            return array;
-        }
-*/
     }
 }

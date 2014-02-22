@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Logging;
 using Prometheus.Compile.Packaging;
+using Prometheus.Exceptions;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -28,6 +30,11 @@ namespace Prometheus.Parser
                                                              };
 
         /// <summary>
+        /// Logging
+        /// </summary>
+        private static readonly Logger _logger = Logger.Create(typeof (Parser));
+
+        /// <summary>
         /// List of types that can be converted to long without lose of precision.
         /// </summary>
         private static readonly HashSet<Type> _longTypes = new HashSet<Type>
@@ -51,6 +58,53 @@ namespace Prometheus.Parser
         /// A list of variables to inject
         /// </summary>
         private readonly Dictionary<string, DataType> _customVaraibles;
+
+        /// <summary>
+        /// Logs the error
+        /// </summary>
+        public static void HandleError(PrometheusException pException)
+        {
+            _logger.Error("Error: " + pException.Format().Replace("{", "{{").Replace("}", "}}"));
+        }
+
+        /// <summary>
+        /// Generates a list of tests to run.
+        /// </summary>
+        private static IEnumerable<string> getTestSuite(Node pRoot, IEnumerable<string> pUnitTests)
+        {
+            Node testSuite = pRoot.FindChild(GrammarSymbol.TestSuiteDecl);
+            if (testSuite.Children.Count == 0)
+            {
+                return pUnitTests;
+            }
+
+            if (testSuite.FirstChild().Type == GrammarSymbol.TestSuiteArray)
+            {
+                return from id in testSuite.FirstChild().Children
+                       where id.Type == GrammarSymbol.ValidID
+                             && id.FirstData() is IdentifierType
+                       select id.FirstData().Cast<IdentifierType>().Name;
+            }
+            if (testSuite.FirstChild().Type == GrammarSymbol.ValidID)
+            {
+                return from id in testSuite.FirstChild().Data
+                       where id is IdentifierType
+                       select id.Cast<IdentifierType>().Name;
+            }
+
+            throw new UnexpectedErrorException(string.Format("Unexpected data assigned to <{0}>",
+                GrammarSymbol.TestSuiteDecl));
+        }
+
+        /// <summary>
+        /// Creates a list of all unit test declarations.
+        /// </summary>
+        private static IEnumerable<string> getUnitTests(Node pImported)
+        {
+            return (from child in pImported.Children
+                    where child.Type == GrammarSymbol.TestDecl
+                    select child.FirstChild().FirstData().Cast<IdentifierType>().Name).ToList();
+        }
 
         /// <summary>
         /// Executes the node as a program.
@@ -82,42 +136,33 @@ namespace Prometheus.Parser
         }
 
         /// <summary>
-        /// Generates a list of tests to run.
+        /// Executes the list of nodes and handles any exceptions.
         /// </summary>
-        private IEnumerable<string> getTestSuite(Node pRoot, IEnumerable<string> pUnitTests)
+        private void ExecuteSafely(IEnumerable<Node> pNodes, Cursor pCursor)
         {
-            Node testSuite = pRoot.FindChild(GrammarSymbol.TestSuiteDecl);
-            if (testSuite.Children.Count == 0)
+            try
             {
-                return pUnitTests;
+                Execute(pNodes, pCursor);
             }
-
-            if (testSuite.FirstChild().Type == GrammarSymbol.TestSuiteArray)
+            catch (PrometheusException e)
             {
-                return from id in testSuite.FirstChild().Children
-                       where id.Type == GrammarSymbol.ValidID
-                             && id.FirstData() is IdentifierType
-                       select id.FirstData().Cast<IdentifierType>().Name;
+                HandleError(e);
             }
-            if (testSuite.FirstChild().Type == GrammarSymbol.ValidID)
-            {
-                return from id in testSuite.FirstChild().Data
-                       where id is IdentifierType
-                       select id.Cast<IdentifierType>().Name;
-            }
-
-            throw new UnexpectedErrorException(string.Format("Unexpected data assigned to <{0}>",
-                GrammarSymbol.TestSuiteDecl));
         }
 
         /// <summary>
-        /// Creates a list of all unit test declarations.
+        /// Runs the code in testing mode.
         /// </summary>
-        private static List<string> getUnitTests(Node pImported)
+        private void ExecuteTests(Compiled pCompiled)
         {
-            return (from child in pImported.Children
-                    where child.Type == GrammarSymbol.TestDecl
-                    select child.FirstChild().FirstData().Cast<IdentifierType>().Name).ToList();
+            foreach (Node imported in pCompiled.Imported)
+            {
+                IEnumerable<string> unitTests = getUnitTests(imported);
+                foreach (string test in getTestSuite(imported, unitTests))
+                {
+                    ExecuteSafely(new[] {imported}, new Cursor(test));
+                }
+            }
         }
 
         /// <summary>
@@ -180,18 +225,11 @@ namespace Prometheus.Parser
         {
             if (!pCompiled.Root.HasChild(GrammarSymbol.TestSuiteDecl))
             {
-                Execute(pCompiled.Imported, new Cursor());
-                return;
+                ExecuteSafely(pCompiled.Imported, new Cursor());
             }
-
-            // execute unit tests.
-            foreach (Node imported in pCompiled.Imported)
+            else
             {
-                List<string> unitTests = getUnitTests(imported);
-                foreach (string test in getTestSuite(imported, unitTests))
-                {
-                    Execute(new List<Node> { imported }, new Cursor(test));
-                }
+                ExecuteTests(pCompiled);
             }
         }
     }

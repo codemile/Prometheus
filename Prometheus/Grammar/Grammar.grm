@@ -71,9 +71,9 @@ Comment Line  = '//'
 				| <Statements> <Statement or Block>
 
 <Statement>		::=  <FlowControl> <End>
-				| <Variable Statements> <End>
 				| <Function Decl> <End>
 				| <Procedure> <End>
+				| <Variable Statements> <End>
 				| <Call Expression> <End>
 				| <New Expression> <End>
 				| <End>
@@ -229,8 +229,10 @@ Comment Line  = '//'
 
 <Variable Statements>	::= <Declare>
 						| <Assignment>
-						| <Increment>
-						| <Decrement>
+						| <PostIncrement>
+						| <PreIncrement>
+						| <PostDecrement>
+						| <PreDecrement>
 
 <Array Literal>			::= '[' ']'
 						| '[' <Array Literal List> ']'
@@ -244,8 +246,10 @@ Comment Line  = '//'
 
 <Assignment>		::= <Qualified ID> '=' <Expression>
 
-<Increment>			::= <Qualified ID> '++'
-<Decrement>			::= <Qualified ID> '--'
+<PostIncrement>			::= <Qualified ID> '++'
+<PreIncrement>			::= '++' <Qualified ID>
+<PostDecrement>			::= <Qualified ID> '--'
+<PreDecrement>			::= '--' <Qualified ID>
 
 ! ===================================================================
 ! Packages
@@ -338,15 +342,14 @@ Comment Line  = '//'
 
 <Procedure>			::= <UnsetProc>
 					| <ReturnProc>
+					| <AssertProc>
 					| <ListVars>
-					| <Generic0Args>
-					| <Generic1Args>
-					| <GenericNArgs>
+					| <Call Generic>
 
-<UnsetProc>			::= UNSET <Qualified ID>
-<ReturnProc>		::= RETURN <Expression>
-<ListVars>			::= VARS
+<UnsetProc>			::= 'UNSET' <Qualified ID>
+<ReturnProc>		::= 'RETURN' <Expression>
+<AssertProc>		::= 'ASSERT' <Expression>
 
-<Generic0Args>		::= Identifier
-<Generic1Args>		::= Identifier <Expression>
-<GenericNArgs>		::= Identifier <Argument Array>
+<ListVars>			::= 'VARS'
+
+<Call Generic>		::= Identifier <Argument Array>

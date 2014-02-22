@@ -217,9 +217,7 @@ namespace Prometheus.Parser.Executors
             ExecutorBase _base;
             int dCount = pParent.Data.Count;
 
-            if (pParent.Type == GrammarSymbol.Generic0Args
-                || pParent.Type == GrammarSymbol.Generic1Args
-                || pParent.Type == GrammarSymbol.GenericNArgs)
+            if (pParent.Type == GrammarSymbol.CallGeneric)
             {
                 string name = pParent.Data[0].Cast<IdentifierType>().Name;
 #if DEBUG

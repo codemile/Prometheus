@@ -1,10 +1,40 @@
 Tests;
 
 Test AndOp {
+	Assert true && true == true;
+	Assert true and true == true;
+	Assert false && false == false;
 };
 
 Test OrOp {
+	Assert true or false == true;
+	Assert true || false == true;
 };
 
 Test NotOp {
+	Assert !false;
+	Assert not false;
+	Assert true != false;
+};
+
+Test Increment {
+	var x = 10;
+	var y = x++;
+	var z = ++x;
+	x++;
+	++x;
+	Assert x == 14;
+	Assert y == 11;
+	Assert z == 11;
+};
+
+Test Decrement {
+	var x = 10;
+	var y = x--;
+	var z = --x;
+	x--;
+	--x;
+	Assert x == 6;
+	Assert y == 9;
+	Assert z == 9;
 };

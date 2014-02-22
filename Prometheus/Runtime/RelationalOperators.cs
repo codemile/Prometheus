@@ -454,21 +454,13 @@ namespace Prometheus.Runtime
         /// x-- operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PostDecOperator)]
-        public DataType PostDec(DataType pValue)
+        public DataType PostDec(QualifiedType pValue)
         {
-            pValue = Resolve(pValue);
-
-            QualifiedType id = pValue as QualifiedType;
-            if (id == null)
-            {
-                throw DataTypeException.InvalidTypes("-", pValue);
-            }
-
-            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            iVariablePointer pointer = Executor.Cursor.Resolve(pValue);
             NumericType num = pointer.Read() as NumericType;
             if (num == null)
             {
-                throw DataTypeException.InvalidTypes("-", pValue);
+                throw DataTypeException.InvalidTypes("--", pValue);
             }
 
             num = num.isLong
@@ -482,21 +474,13 @@ namespace Prometheus.Runtime
         /// x++ operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PostIncOperator)]
-        public DataType PostInc(DataType pValue)
+        public DataType PostInc(QualifiedType pValue)
         {
-            pValue = Resolve(pValue);
-
-            QualifiedType id = pValue as QualifiedType;
-            if (id == null)
-            {
-                throw DataTypeException.InvalidTypes("-", pValue);
-            }
-
-            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            iVariablePointer pointer = Executor.Cursor.Resolve(pValue);
             NumericType num = pointer.Read() as NumericType;
             if (num == null)
             {
-                throw DataTypeException.InvalidTypes("-", pValue);
+                throw DataTypeException.InvalidTypes("++", pValue);
             }
 
             num = num.isLong
@@ -511,21 +495,13 @@ namespace Prometheus.Runtime
         /// --x operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PreDecOperator)]
-        public DataType PreDec(DataType pValue)
+        public DataType PreDec(QualifiedType pValue)
         {
-            pValue = Resolve(pValue);
-
-            QualifiedType id = pValue as QualifiedType;
-            if (id == null)
-            {
-                throw DataTypeException.InvalidTypes("-", pValue);
-            }
-
-            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            iVariablePointer pointer = Executor.Cursor.Resolve(pValue);
             NumericType num = pointer.Read() as NumericType;
             if (num == null)
             {
-                throw DataTypeException.InvalidTypes("-", pValue);
+                throw DataTypeException.InvalidTypes("--", pValue);
             }
 
             pointer.Write(num.isLong
@@ -538,21 +514,13 @@ namespace Prometheus.Runtime
         /// ++x operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PreIncOperator)]
-        public DataType PreInc(DataType pValue)
+        public DataType PreInc(QualifiedType pValue)
         {
-            pValue = Resolve(pValue);
-
-            QualifiedType id = pValue as QualifiedType;
-            if (id == null)
-            {
-                throw DataTypeException.InvalidTypes("-", pValue);
-            }
-
-            iVariablePointer pointer = Executor.Cursor.Resolve(id);
+            iVariablePointer pointer = Executor.Cursor.Resolve(pValue);
             NumericType num = pointer.Read() as NumericType;
             if (num == null)
             {
-                throw DataTypeException.InvalidTypes("-", pValue);
+                throw DataTypeException.InvalidTypes("++", pValue);
             }
 
             pointer.Write(num.isLong
