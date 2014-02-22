@@ -24,6 +24,22 @@ An array is used to define a collection of *match any* search term.
 
 The look ahead operator `>>>` was used to indicate that one of the keywords must appear on a sentence before the word "Facebook".
 
+## Why Use Prometheus?
+
+Prometheus was designed to perform text matching in strings and arrays with as as little grammar as possible, and make source code as close as possible to human readable rules.
+
+Under the hood Prometheus is constantly building and compiling regular expressions from your source code. Enabling you to write complex matching terms with much easier to understand grammar. This reduces the chances of making a mistake, and increases the accuracy of your search terms.
+
+## Test, Test And Test Some More
+
+Anyone who has had to categorize a collection of documents knows that managing your failure rate is only as good as the tests you run. Prometheus comes with built in test grammar that allows you to proof your search terms before they are used on production data.
+
+## Why Was Prometheus Created
+
+Documents are an ever changing sea of data. While you can perform document searching in C# easily and quickly. The rules you create become fixed within the limits of what was programmed. As the sea of production data changes the rules need to be modified, and that results in recompiling/deploying new C# source code.
+
+Prometheus was created to disconnect the dependency of matching text from the implementation of a C# project. Allowing the rules to be modified without having to change the application that is using Prometheus.
+
 ## Getting Started
 
 Options for using Prometheus in your project:
