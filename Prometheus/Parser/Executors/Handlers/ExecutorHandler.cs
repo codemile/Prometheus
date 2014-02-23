@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Compile.Optimizers;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types.Bases;
+using Prometheus.Storage;
 
 namespace Prometheus.Parser.Executors.Handlers
 {
@@ -27,17 +29,6 @@ namespace Prometheus.Parser.Executors.Handlers
         private readonly HashSet<GrammarSymbol> _nodeTypes;
 
         /// <summary>
-        /// Executes only the children of a node.
-        /// </summary>
-        protected void ExecuteChildren(Node pNode)
-        {
-            for (int i = 0, c = pNode.Children.Count; i < c; i++)
-            {
-                Executor.WalkDownChildren(pNode.Children[i]);
-            }
-        }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         protected ExecutorHandler(iExecutor pExecutor, HashSet<GrammarSymbol> pTypes)
@@ -46,6 +37,36 @@ namespace Prometheus.Parser.Executors.Handlers
 
             Executor = pExecutor;
             Cursor = pExecutor.GetCursor();
+        }
+
+        /// <summary>
+        /// Executes the block for an inner loop. Creating the stack
+        /// space required for the loop, and handling a continue
+        /// exception.
+        /// </summary>
+        protected void ExecuteBlock(Node pBlock, Dictionary<string, DataType> pVariables = null)
+        {
+            using (Cursor.Stack = new CursorSpace(Cursor, pVariables ?? new Dictionary<string, DataType>()))
+            {
+                try
+                {
+                    Executor.WalkDownChildren(pBlock);
+                }
+                catch (ContinueException)
+                {
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes only the children of a node.
+        /// </summary>
+        protected void ExecuteChildren(Node pNode)
+        {
+            for (int i = 0, c = pNode.Children.Count; i < c; i++)
+            {
+                Executor.WalkDownChildren(pNode.Children[i]);
+            }
         }
 
         /// <summary>

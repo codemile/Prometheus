@@ -12,7 +12,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// The position in the storage
         /// </summary>
-        private readonly string _id;
+        public readonly string Name;
 
         /// <summary>
         /// The storage space
@@ -22,10 +22,10 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        public MemoryPointer(iMemorySpace pSpace, string pID) : this()
+        public MemoryPointer(iMemorySpace pSpace, string pName) : this()
         {
             _space = pSpace;
-            _id = pID;
+            Name = pName;
         }
 
         /// <summary>
@@ -33,10 +33,10 @@ namespace Prometheus.Storage
         /// </summary>
         public DataType Read()
         {
-            DataType value = _space.Get(_id);
+            DataType value = _space.Get(Name);
             if (value == null)
             {
-                throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, _id));
+                throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, Name));
             }
             return value;
         }
@@ -48,9 +48,9 @@ namespace Prometheus.Storage
         {
             if (_space is CursorSpace)
             {
-                return _space.Set(_id, pValue);
+                return _space.Set(Name, pValue);
             }
-            _space.Assign(_id, pValue);
+            _space.Assign(Name, pValue);
             return true;
         }
     }

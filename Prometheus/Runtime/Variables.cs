@@ -1,6 +1,7 @@
 ﻿using Logging;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -49,6 +50,21 @@ namespace Prometheus.Runtime
                 }
                 _logger.Fine("{0}{1} = {2}", indent, item.Name, item.Data);
             }
+        }
+
+        /// <summary>
+        /// Creates a plural data type object.
+        /// </summary>
+        private DataType CreatePlural(DataType pValue, IdentifierType pSingular)
+        {
+            ArrayType arr = pValue as ArrayType;
+            if (arr == null)
+            {
+                throw new InvalidArgumentException(
+                    string.Format("Expected array value but found <{0}> instead", pValue.GetType().Name), Cursor.Node);
+            }
+
+            return new PluralType(arr, pSingular);
         }
 
         /// <summary>
@@ -123,6 +139,47 @@ namespace Prometheus.Runtime
         {
             Print(Cursor.Stack, 0);
             return UndefinedType.Undefined;
+        }
+
+        /// <summary>
+        /// Creates a singular identifier from a reference to a plural identifier.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PluralID)]
+        public DataType Plural(QualifiedType pId)
+        {
+            iVariablePointer pointer = Cursor.Resolve(pId);
+            if (pointer is ArrayPointer)
+            {
+                throw new InvalidArgumentException(
+                    "Can not singularize an array identifier. Use the AS keyword to specify singular identifier",
+                    Cursor.Node);
+            }
+#if DEBUG
+            if (!(pointer is MemoryPointer))
+            {
+                throw new UnexpectedErrorException("Pointer is of unexpected type", Cursor.Node);
+            }
+#endif
+            MemoryPointer memPointer = (MemoryPointer)pointer;
+            string singular = Inflector.Singularize(memPointer.Name);
+            if (singular == memPointer.Name)
+            {
+                throw new InflectorException(
+                    string.Format("Can not singularize \"{0}\". Use the AS keyword to specify singular identifier",
+                        memPointer.Name), Cursor.Node);
+            }
+
+            DataType value = memPointer.Read();
+            return CreatePlural(value, new IdentifierType(singular));
+        }
+
+        /// <summary>
+        /// Creates a plural data type when singular name is provided.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PluralID)]
+        public DataType Plural(IdentifierType pSingular, DataType pData)
+        {
+            return CreatePlural(Resolve(pData), pSingular);
         }
 
         /// <summary>

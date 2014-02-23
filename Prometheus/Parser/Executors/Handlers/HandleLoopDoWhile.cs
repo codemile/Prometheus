@@ -34,20 +34,17 @@ namespace Prometheus.Parser.Executors.Handlers
 #if DEBUG
             ExecutorAssert.Children(pNode, 2);
 #endif
+            Node whileBlock = pNode.Children[0];
+            Node whileCondition = pNode.Children[1];
+
             try
             {
                 do
                 {
-                    try
-                    {
-                        Executor.WalkDownChildren(pNode.Children[0]);
-                    }
-                    catch (ContinueException)
-                    {
-                    }
+                    ExecuteBlock(whileBlock);
                 } while (pNode.Type == GrammarSymbol.LoopWhileControl
-                    ? Executor.WalkDownChildren(pNode.Children[1]).getBool()
-                    : !Executor.WalkDownChildren(pNode.Children[1]).getBool());
+                    ? Executor.WalkDownChildren(whileCondition).getBool()
+                    : !Executor.WalkDownChildren(whileCondition).getBool());
             }
             catch (BreakException)
             {

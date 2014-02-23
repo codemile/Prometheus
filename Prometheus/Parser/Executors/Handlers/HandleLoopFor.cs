@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using Prometheus.Compile.Optimizers;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Storage;
 
 namespace Prometheus.Parser.Executors.Handlers
 {
@@ -42,25 +40,15 @@ namespace Prometheus.Parser.Executors.Handlers
 
             try
             {
-                using (StackSpace stack = new StackSpace(Cursor.Stack))
+                ExecuteChildren(forDeclare);
+                while (Executor.WalkDownChildren(forExpression).getBool())
                 {
-                    ExecuteChildren(forDeclare);
-                    while (Executor.WalkDownChildren(forExpression).getBool())
+                    ExecuteBlock(forBlock);
+                    if (forStep.Type == GrammarSymbol.ForStep && forStep.Children.Count == 0)
                     {
-                        try
-                        {
-                            Executor.WalkDownChildren(forBlock);
-                        }
-                        catch (ContinueException)
-                        {
-                        }
-                        if (forStep.Type == GrammarSymbol.ForStep
-                            && forStep.Children.Count == 0)
-                        {
-                            continue;
-                        }
-                        Executor.WalkDownChildren(forStep);
+                        continue;
                     }
+                    Executor.WalkDownChildren(forStep);
                 }
             }
             catch (BreakException)
@@ -91,7 +79,7 @@ namespace Prometheus.Parser.Executors.Handlers
 
             if (pNode.Children[0].Type != GrammarSymbol.ForDeclare)
             {
-                pNode.Children.Insert(0,new Node(GrammarSymbol.ForDeclare,pNode.Location));
+                pNode.Children.Insert(0, new Node(GrammarSymbol.ForDeclare, pNode.Location));
             }
 
 /*

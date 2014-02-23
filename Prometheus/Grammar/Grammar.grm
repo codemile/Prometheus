@@ -185,6 +185,9 @@ Comment Line  = '//'
 						| <PostIncOperator>
 
 <PostIncOperator>		::= <Qualified ID> '++'
+						| <EachOperator>
+
+<EachOperator>			::= <EachControl>
 						| <Value>
 
 ! ===================================================================
@@ -338,8 +341,10 @@ Comment Line  = '//'
 <ForStep>			::= <Variable Statements>
 					| ! optional
 
-<EachControl>		::= 'each' <Qualified ID> <Block>
-					| 'each' <Qualified ID> 'as' <Valid ID> <Block>
+<EachControl>		::= 'each' <Plural ID> <Block>
+
+<Plural ID>			::= <Expression>
+					| <Expression> 'as' Identifier
 
 <BreakControl>		::= BREAK
 <ContinueControl>	::= CONTINUE

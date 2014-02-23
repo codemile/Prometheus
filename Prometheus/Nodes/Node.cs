@@ -14,14 +14,6 @@ namespace Prometheus.Nodes
     public class Node
     {
         /// <summary>
-        /// A statement that performs no operation.
-        /// </summary>
-        public static Node NoOp()
-        {
-            return new Node(GrammarSymbol.Statement, Location.None);
-        }
-
-        /// <summary>
         /// The children of this node.
         /// </summary>
         public readonly List<Node> Children;
@@ -67,6 +59,14 @@ namespace Prometheus.Nodes
             : this(pType, pLocation)
         {
             Children.AddRange(pChildren);
+        }
+
+        /// <summary>
+        /// A statement that performs no operation.
+        /// </summary>
+        public static Node NoOp()
+        {
+            return new Node(GrammarSymbol.Statement, Location.None);
         }
 
         /// <summary>

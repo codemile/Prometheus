@@ -55,6 +55,7 @@
     <Compile Include="Exceptions\Executor\DataTypeException.cs" />
     <Compile Include="Exceptions\Executor\DivideByZeroPrometheusException.cs" />
     <Compile Include="Exceptions\Executor\IdentifierException.cs" />
+    <Compile Include="Exceptions\Executor\InflectorException.cs" />
     <Compile Include="Exceptions\Executor\InvalidArgumentException.cs" />
     <Compile Include="Exceptions\Executor\InvalidIndexException.cs" />
     <Compile Include="Exceptions\Executor\NameSpaceException.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Exceptions\Compiler\UnsupportedDataTypeException.cs" />
     <Compile Include="Exceptions\Executor\TestException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
+    <Compile Include="Nodes\Inflector.cs" />
     <Compile Include="Nodes\RegexFactory.cs" />
     <Compile Include="Nodes\Types\ArrayType.cs" />
     <Compile Include="Nodes\Types\Bases\ArrayPointer.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Nodes\Types\BooleanType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
     <Compile Include="Nodes\Types\NumericType.cs" />
+    <Compile Include="Nodes\Types\PluralType.cs" />
     <Compile Include="Nodes\Types\QualifiedType.cs" />
     <Compile Include="Nodes\Types\StringType.cs" />
     <Compile Include="Nodes\Types\DeclarationType.cs" />

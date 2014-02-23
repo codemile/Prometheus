@@ -3,10 +3,13 @@ Tests;
 Test Each_Test {
 	var numbers = [1,2,3,4];
 	var x = 0;
+	var y = 0;
 	Each numbers {
 		x = x + number;
+		y++;
 	};
 	Assert x == 10;
+	Assert y == 4;
 };
 
 Test Each_As_Test {
@@ -16,6 +19,14 @@ Test Each_As_Test {
 		x = x + thing;
 	};
 	Assert x == 10;
+};
+
+Test Each_Literal {
+	var x = 0;
+	Each [1,2,3,4,5] as num {
+		x = x + num;
+	};
+	Assert x == 15;
 };
 
 Test Each_Break_Test {
@@ -39,4 +50,11 @@ Test Each_Continue_Test {
 	};
 	Assert x == 4;
 	Assert y == 0;
+};
+
+Test Each_Assignment {
+	var x = Each [1,2,3,4] as num {
+		return num *2;
+	};
+	Assert x == [2,4,6,8];
 };
