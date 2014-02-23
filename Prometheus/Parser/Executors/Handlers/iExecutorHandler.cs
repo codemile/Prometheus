@@ -21,6 +21,6 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// Handle execution of a node.
         /// </summary>
-        DataType Handle(Node pParent);
+        DataType Handle(Node pNode);
     }
 }

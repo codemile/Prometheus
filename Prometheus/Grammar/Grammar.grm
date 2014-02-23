@@ -318,7 +318,6 @@ Comment Line  = '//'
 					| <LoopWhileControl>
 					| <LoopUntilControl>
 					| <ForControl>
-					| <ForStepControl>
 					| <EachControl>
 					| <BreakControl>
 					| <ContinueControl>
@@ -331,8 +330,13 @@ Comment Line  = '//'
 <LoopWhileControl>	::= 'do' <Block> 'while' '(' <Expression> ')'
 <LoopUntilControl>	::= 'do' <Block> 'until' '(' <Expression> ')'
 
-<ForControl>		::= 'for' Identifier '=' <Expression> 'to' <Expression> <Block>
-<ForStepControl>	::= 'for' Identifier '=' <Expression> 'to' <Expression> 'step' <Expression> <Block>
+<ForControl>		::= 'for' '(' <ForDeclare> <ForExpression> <ForStep> ')' <Block>
+<ForDeclare>		::= <Variable Statements> <End>
+					| <End> ! optional
+<ForExpression>		::= <Expression> <End>
+					| <End> ! optional
+<ForStep>			::= <Variable Statements>
+					| ! optional
 
 <EachControl>		::= 'each' <Qualified ID> <Block>
 					| 'each' <Qualified ID> 'as' <Valid ID> <Block>

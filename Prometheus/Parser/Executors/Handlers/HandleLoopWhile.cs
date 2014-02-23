@@ -29,20 +29,20 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// Handle execution of a node.
         /// </summary>
-        public override DataType Handle(Node pParent)
+        public override DataType Handle(Node pNode)
         {
 #if DEBUG
-            ExecutorAssert.Children(pParent, 2);
+            ExecutorAssert.Children(pNode, 2);
 #endif
             try
             {
-                while (pParent.Type == GrammarSymbol.DoWhileControl
-                    ? Executor.WalkDownChildren(pParent.FirstChild()).getBool()
-                    : !Executor.WalkDownChildren(pParent.FirstChild()).getBool())
+                while (pNode.Type == GrammarSymbol.DoWhileControl
+                    ? Executor.WalkDownChildren(pNode.FirstChild()).getBool()
+                    : !Executor.WalkDownChildren(pNode.FirstChild()).getBool())
                 {
                     try
                     {
-                        Executor.WalkDownChildren(pParent.Children[1]);
+                        Executor.WalkDownChildren(pNode.Children[1]);
                     }
                     catch (ContinueException)
                     {

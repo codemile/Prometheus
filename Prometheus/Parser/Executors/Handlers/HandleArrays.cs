@@ -35,10 +35,10 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// Handle execution of a node.
         /// </summary>
-        public override DataType Handle(Node pParent)
+        public override DataType Handle(Node pNode)
         {
             IList<DataType> array;
-            switch (pParent.Type)
+            switch (pNode.Type)
             {
                 case GrammarSymbol.QualifiedID:
                 case GrammarSymbol.ClassNameID:
@@ -48,18 +48,18 @@ namespace Prometheus.Parser.Executors.Handlers
                     array = new ArrayType();
                     break;
             }
-            for (int i = 0, c = pParent.Children.Count; i < c; i++)
+            for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
 #if DEBUG
-                if (pParent.Type == GrammarSymbol.ParameterArray)
+                if (pNode.Type == GrammarSymbol.ParameterArray)
                 {
-                    ExecutorAssert.Data(pParent.Children[i], 1);
-                    ExecutorAssert.DataType(pParent.Children[i], 0, typeof (IdentifierType));
+                    ExecutorAssert.Data(pNode.Children[i], 1);
+                    ExecutorAssert.DataType(pNode.Children[i], 0, typeof (IdentifierType));
                 }
 #endif
-                array.Add(pParent.Type == GrammarSymbol.ParameterArray
-                    ? pParent.Children[i].Data[0]
-                    : Executor.WalkDownChildren(pParent.Children[i]));
+                array.Add(pNode.Type == GrammarSymbol.ParameterArray
+                    ? pNode.Children[i].Data[0]
+                    : Executor.WalkDownChildren(pNode.Children[i]));
             }
             return (DataType)array;
         }

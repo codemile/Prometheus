@@ -86,6 +86,7 @@
     <Compile Include="Parser\Executors\Handlers\HandleClosure.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleLoopDoWhile.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleExceptions.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleLoopEach.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleLoopFor.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleIfElse.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleLoopWhile.cs" />

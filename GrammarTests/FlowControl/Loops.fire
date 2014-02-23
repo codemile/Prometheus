@@ -114,20 +114,64 @@ Test Do_Until_Continue_Test {
 	Assert y == 0;
 };
 
-Test For_To_Test {
-	var y = 0;
-	For x = 0 To 10 {
-		y = y + 1;
+Test For_Test {
+	var x = 0;
+	For(var y=0; y < 10; y++)
+	{
+		x = x + 1;
 	};
-	print y;
-	Assert y == 10;
+	Assert x == 10;
 };
 
-Test For_To_Step_Test {
-	var y = 0;
-	For x = 0 To 10 Step 2 {
-		y = y +1;
+Test For_NoVar_Test {
+	var x = 0;
+	var y = 5;
+	For(; y < 10; y++)
+	{
+		x = x + 1;
 	};
-	print y;
-	Assert y == 5;
+	Assert x == 5;
+};
+
+Test For_NoStep_Test {
+	var x = 0;
+	For(var y=0; y < 10;)
+	{
+		x = x + 1;
+		y++;
+	};
+	Assert x == 10;
+};
+
+Test For_NoVar_NoStep_Test {
+	var x = 0;
+	var y = 5;
+	For(;y < 10;)
+	{
+		x = x + 1;
+		y++;
+	};
+	Assert x == 5;
+};
+
+Test For_Break_Test {
+	var x = 0;
+	For(var y=0; y < 10; y++)
+	{
+		x = x + 1;
+		break;
+	};
+	Assert y == 0;
+	Assert x == 1;
+};
+
+Test For_Continue_Test {
+	var x = 0;
+	For(var y=0; y < 10; y++)
+	{
+		continue;
+		x = x + 1;
+	};
+	Assert y == 10;
+	Assert x == 0;
 };

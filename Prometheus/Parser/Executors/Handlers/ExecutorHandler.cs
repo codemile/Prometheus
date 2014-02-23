@@ -27,6 +27,17 @@ namespace Prometheus.Parser.Executors.Handlers
         private readonly HashSet<GrammarSymbol> _nodeTypes;
 
         /// <summary>
+        /// Executes only the children of a node.
+        /// </summary>
+        protected void ExecuteChildren(Node pNode)
+        {
+            for (int i = 0, c = pNode.Children.Count; i < c; i++)
+            {
+                Executor.WalkDownChildren(pNode.Children[i]);
+            }
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         protected ExecutorHandler(iExecutor pExecutor, HashSet<GrammarSymbol> pTypes)
@@ -48,7 +59,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// Handle execution of a node.
         /// </summary>
-        public abstract DataType Handle(Node pParent);
+        public abstract DataType Handle(Node pNode);
 
         /// <summary>
         /// The unique ID of the handler.
@@ -63,7 +74,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         /// <param name="pNode">The node to check</param>
         /// <returns>Same node, a new node or null to remove it.</returns>
-        public Node Optimize(Node pNode)
+        public virtual Node Optimize(Node pNode)
         {
             if (_nodeTypes.Contains(pNode.Type))
             {

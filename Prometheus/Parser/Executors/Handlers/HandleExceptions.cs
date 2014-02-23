@@ -31,9 +31,9 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// Handle execution of a node.
         /// </summary>
-        public override DataType Handle(Node pParent)
+        public override DataType Handle(Node pNode)
         {
-            if (pParent.Type == GrammarSymbol.BreakControl)
+            if (pNode.Type == GrammarSymbol.BreakControl)
             {
                 throw new BreakException();
             }

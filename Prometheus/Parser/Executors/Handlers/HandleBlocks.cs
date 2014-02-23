@@ -29,12 +29,9 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// Handle execution of a node.
         /// </summary>
-        public override DataType Handle(Node pParent)
+        public override DataType Handle(Node pNode)
         {
-            for (int i = 0, c = pParent.Children.Count; i < c; i++)
-            {
-                Executor.WalkDownChildren(pParent.Children[i]);
-            }
+            ExecuteChildren(pNode);
             return UndefinedType.Undefined;
         }
     }

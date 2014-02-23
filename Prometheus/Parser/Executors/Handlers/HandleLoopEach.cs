@@ -1,27 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Parser.Executors.Handlers
 {
     /// <summary>
-    /// These nodes don't need to be executed. Their first data member can be given as the result.
+    /// Handles the execution of for each loops.
     /// </summary>
-    public class HandleValue : ExecutorHandler
+    public class HandleLoopEach : ExecutorHandler
     {
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        GrammarSymbol.ValidID,
-                                                                        GrammarSymbol.Value,
-                                                                        GrammarSymbol.MemberID,
-                                                                        GrammarSymbol.ImportDecl
+                                                                        GrammarSymbol.EachControl
                                                                     };
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public HandleValue(iExecutor pExecutor)
+        public HandleLoopEach(iExecutor pExecutor)
             : base(pExecutor, _nodeTypes)
         {
         }
@@ -31,10 +30,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         public override DataType Handle(Node pNode)
         {
-#if DEBUG
-            ExecutorAssert.Data(pNode, 1);
-#endif
-            return pNode.Data[0];
+            return UndefinedType.Undefined;
         }
     }
 }
