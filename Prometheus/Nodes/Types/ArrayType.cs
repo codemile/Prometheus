@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Runtime;
 using Prometheus.Storage;
 
 namespace Prometheus.Nodes.Types
@@ -81,14 +80,6 @@ namespace Prometheus.Nodes.Types
         public void Add(DataType pItem)
         {
             Values.Add(pItem);
-        }
-
-        /// <summary>
-        /// Appends an array
-        /// </summary>
-        public void AddRange(ArrayType pArr)
-        {
-            Values.AddRange(((ArrayType)pArr.Clone()).Values);
         }
 
         /// <summary>
@@ -258,6 +249,19 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Creates a deep copy of an array.
+        /// </summary>
+        public override DataType Clone()
+        {
+            ArrayType copy = new ArrayType(Values.Count);
+            for (int i = 0, c = Values.Count; i < c; i++)
+            {
+                copy.Add(Values[i].Clone());
+            }
+            return copy;
+        }
+
+        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>
@@ -269,16 +273,11 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
-        /// Creates a deep copy of an array.
+        /// Appends an array
         /// </summary>
-        public override DataType Clone()
+        public void AddRange(ArrayType pArr)
         {
-            ArrayType copy = new ArrayType(Values.Count);
-            for (int i = 0, c = Values.Count; i < c; i++)
-            {
-                copy.Add(Values[i].Clone());
-            }
-            return copy;
+            Values.AddRange(((ArrayType)pArr.Clone()).Values);
         }
     }
 }

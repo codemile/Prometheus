@@ -319,19 +319,23 @@ Comment Line  = '//'
 					| <LoopUntilControl>
 					| <ForControl>
 					| <ForStepControl>
+					| <EachControl>
 					| <BreakControl>
 					| <ContinueControl>
 
-<IfControl>			::= IF '(' <Expression> ')' <Block> 
-					| IF '(' <Expression> ')' <Block> ELSE <Block>
+<IfControl>			::= 'if' '(' <Expression> ')' <Block> 
+					| 'if' '(' <Expression> ')' <Block> 'else' <Block>
 
-<DoWhileControl>	::= WHILE '(' <Expression> ')' <Block>
-<DoUntilControl>	::= UNTIL '(' <Expression> ')' <Block>
-<LoopWhileControl>	::= DO <Block> WHILE '(' <Expression> ')'
-<LoopUntilControl>	::= DO <Block> UNTIL '(' <Expression> ')'
+<DoWhileControl>	::= 'while' '(' <Expression> ')' <Block>
+<DoUntilControl>	::= 'until' '(' <Expression> ')' <Block>
+<LoopWhileControl>	::= 'do' <Block> 'while' '(' <Expression> ')'
+<LoopUntilControl>	::= 'do' <Block> 'until' '(' <Expression> ')'
 
-<ForControl>		::= FOR Identifier '=' <Expression> TO <Expression> <Block>
-<ForStepControl>	::= FOR Identifier '=' <Expression> TO <Expression> STEP <Expression> <Block>
+<ForControl>		::= 'for' Identifier '=' <Expression> 'to' <Expression> <Block>
+<ForStepControl>	::= 'for' Identifier '=' <Expression> 'to' <Expression> 'step' <Expression> <Block>
+
+<EachControl>		::= 'each' <Qualified ID> <Block>
+					| 'each' <Qualified ID> 'as' <Valid ID> <Block>
 
 <BreakControl>		::= BREAK
 <ContinueControl>	::= CONTINUE

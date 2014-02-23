@@ -65,7 +65,7 @@ namespace Prometheus.Runtime
                 return pValue;
             }
 
-            InstanceType _this = (InstanceType)Executor.Cursor.Stack.Get(IdentifierType.THIS);
+            InstanceType _this = (InstanceType)Cursor.Stack.Get(IdentifierType.THIS);
             return new ClosureType(_this, func);
         }
 
@@ -86,52 +86,8 @@ namespace Prometheus.Runtime
         public DataType Assignment(QualifiedType pId, DataType pValue)
         {
             DataType value = ResolveToValue(pValue);
-            Executor.Cursor.Resolve(pId).Write(value);
+            Cursor.Resolve(pId).Write(value);
             return value;
-        }
-
-        /// <summary>
-        /// Decrement
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.PreDecrement)]
-        public DataType PreDec(QualifiedType pId)
-        {
-            iVariablePointer pointer = Executor.Cursor.Resolve(pId);
-
-            NumericType num = pointer.Read() as NumericType;
-            if (num == null)
-            {
-                throw DataTypeException.InvalidTypes("++", pId);
-            }
-
-            pointer.Write(num.isLong
-                ? new NumericType(num.Long - 1)
-                : new NumericType(num.Double - 1.0));
-
-            return num;
-        }
-
-        /// <summary>
-        /// Decrement
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.PostDecrement)]
-        public DataType PostDec(QualifiedType pId)
-        {
-            iVariablePointer pointer = Executor.Cursor.Resolve(pId);
-
-            NumericType num = pointer.Read() as NumericType;
-            if (num == null)
-            {
-                throw DataTypeException.InvalidTypes("--", pId);
-            }
-
-            num =  num.isLong
-                ? new NumericType(num.Long - 1)
-                : new NumericType(num.Double - 1.0);
-
-            pointer.Write(num);
-
-            return num;
         }
 
         /// <summary>
@@ -144,7 +100,7 @@ namespace Prometheus.Runtime
         public DataType Declare(IdentifierType pIdentifier, DataType pValue)
         {
             pValue = ResolveToValue(pValue);
-            Executor.Cursor.Stack.Create(pIdentifier.Name, pValue);
+            Cursor.Stack.Create(pIdentifier.Name, pValue);
             return pValue;
         }
 
@@ -160,12 +116,45 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Decrement
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ListVars)]
+        public DataType ListVars()
+        {
+            Print(Cursor.Stack, 0);
+            return UndefinedType.Undefined;
+        }
+
+        /// <summary>
+        /// Decrement
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PostDecrement)]
+        public DataType PostDec(QualifiedType pId)
+        {
+            iVariablePointer pointer = Cursor.Resolve(pId);
+
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("--", pId);
+            }
+
+            num = num.isLong
+                ? new NumericType(num.Long - 1)
+                : new NumericType(num.Double - 1.0);
+
+            pointer.Write(num);
+
+            return num;
+        }
+
+        /// <summary>
         /// Increment
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PostIncrement)]
         public DataType PostInc(QualifiedType pId)
         {
-            iVariablePointer pointer = Executor.Cursor.Resolve(pId);
+            iVariablePointer pointer = Cursor.Resolve(pId);
 
             NumericType num = pointer.Read() as NumericType;
             if (num == null)
@@ -183,12 +172,33 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Decrement
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.PreDecrement)]
+        public DataType PreDec(QualifiedType pId)
+        {
+            iVariablePointer pointer = Cursor.Resolve(pId);
+
+            NumericType num = pointer.Read() as NumericType;
+            if (num == null)
+            {
+                throw DataTypeException.InvalidTypes("++", pId);
+            }
+
+            pointer.Write(num.isLong
+                ? new NumericType(num.Long - 1)
+                : new NumericType(num.Double - 1.0));
+
+            return num;
+        }
+
+        /// <summary>
         /// Increment
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PreIncrement)]
         public DataType PreInc(QualifiedType pId)
         {
-            iVariablePointer pointer = Executor.Cursor.Resolve(pId);
+            iVariablePointer pointer = Cursor.Resolve(pId);
 
             NumericType num = pointer.Read() as NumericType;
             if (num == null)
@@ -204,16 +214,6 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Decrement
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.ListVars)]
-        public DataType ListVars()
-        {
-            Print(Executor.Cursor.Stack, 0);
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
         /// Returns the value of a variable.
         /// </summary>
         /// <param name="pId">The variable name</param>
@@ -221,7 +221,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.QualifiedID)]
         public DataType Qualified(QualifiedType pId)
         {
-            return Executor.Cursor.Resolve(pId).Read();
+            return Cursor.Resolve(pId).Read();
         }
     }
 }

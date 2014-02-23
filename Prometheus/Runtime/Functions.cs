@@ -37,7 +37,7 @@ namespace Prometheus.Runtime
         {
             try
             {
-                ClosureType func = Executor.Cursor.Get<ClosureType>(pId);
+                ClosureType func = Cursor.Get<ClosureType>(pId);
                 // empty function check
                 if (func.Function.Children.Count == 0)
                 {
@@ -64,7 +64,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
         public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
         {
-            Executor.Cursor.Stack.Create(pFuncName.Name, pFunc);
+            Cursor.Stack.Create(pFuncName.Name, pFunc);
             return UndefinedType.Undefined;
         }
 
@@ -74,7 +74,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
         public DataType FunctionDeclare(IdentifierType pFuncName, IEnumerable<DataType> pParameters, ClosureType pFunc)
         {
-            Executor.Cursor.Stack.Create(pFuncName.Name, new ClosureType(pFunc.Function, pParameters));
+            Cursor.Stack.Create(pFuncName.Name, new ClosureType(pFunc.Function, pParameters));
             return UndefinedType.Undefined;
         }
 

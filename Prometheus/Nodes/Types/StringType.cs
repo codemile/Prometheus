@@ -59,6 +59,11 @@ namespace Prometheus.Nodes.Types
         public readonly eFLAGS Flags;
 
         /// <summary>
+        /// Handle this string as a regex
+        /// </summary>
+        public readonly bool IsRegex;
+
+        /// <summary>
         /// The matching mode
         /// </summary>
         public readonly eMODE Mode;
@@ -67,11 +72,6 @@ namespace Prometheus.Nodes.Types
         /// String value
         /// </summary>
         public readonly string Value;
-
-        /// <summary>
-        /// Handle this string as a regex
-        /// </summary>
-        public readonly bool IsRegex;
 
         /// <summary>
         /// The compiled version of this string as a search term.
@@ -171,6 +171,29 @@ namespace Prometheus.Nodes.Types
         }
 
         /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            string quotes;
+            if (IsRegex)
+            {
+                quotes = (Mode == eMODE.ANYWHERE) ? "/" : "|";
+            }
+            else
+            {
+                quotes = (Mode == eMODE.ANYWHERE) ? "\"" : "'";
+            }
+            string flags = Flags.HasFlag(eFLAGS.IGNORE_CASE) ? "i" : "";
+            flags += Flags.HasFlag(eFLAGS.NO_CACHING) ? "c" : "";
+            flags += Flags.HasFlag(eFLAGS.MATCH_FIRST) ? "f" : "";
+            return string.Format("{0}{1}{0}{2}", quotes, Value, flags);
+        }
+
+        /// <summary>
         /// Compiles this string to a regex.
         /// </summary>
         public Regex Compile()
@@ -194,29 +217,6 @@ namespace Prometheus.Nodes.Types
 
             _regex = new Regex(str);
             return _regex;
-        }
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        public override string ToString()
-        {
-            string quotes;
-            if (IsRegex)
-            {
-                quotes = (Mode == eMODE.ANYWHERE) ? "/" : "|";
-            }
-            else
-            {
-                quotes = (Mode == eMODE.ANYWHERE) ? "\"" : "'";
-            }
-            string flags = Flags.HasFlag(eFLAGS.IGNORE_CASE) ? "i" : "";
-            flags += Flags.HasFlag(eFLAGS.NO_CACHING) ? "c" : "";
-            flags += Flags.HasFlag(eFLAGS.MATCH_FIRST) ? "f" : "";
-            return string.Format("{0}{1}{0}{2}", quotes, Value, flags);
         }
     }
 }

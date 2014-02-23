@@ -11,7 +11,7 @@ namespace Prometheus.Compile.Packaging
         /// <summary>
         /// The files that have been compiled.
         /// </summary>
-        public readonly HashSet<string> Files; 
+        public readonly HashSet<string> Files;
 
         /// <summary>
         /// The compiled files in order of importing.
@@ -21,7 +21,10 @@ namespace Prometheus.Compile.Packaging
         /// <summary>
         /// The original file that was compiled.
         /// </summary>
-        public Node Root { get { return Imported[Imported.Count - 1]; }}
+        public Node Root
+        {
+            get { return Imported[Imported.Count - 1]; }
+        }
 
         /// <summary>
         /// Constructor

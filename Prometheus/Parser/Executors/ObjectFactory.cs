@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Prometheus.Compile.Optimizers;
 using Prometheus.Parser.Executors.Attributes;
+using Prometheus.Parser.Executors.Handlers;
 
 namespace Prometheus.Parser.Executors
 {
@@ -27,8 +29,8 @@ namespace Prometheus.Parser.Executors
         /// <typeparam name="T">The type to create</typeparam>
         /// <param name="pArguments">The constructor arguments</param>
         /// <returns>A collection of those objects</returns>
-        private static IEnumerable<T> CreateExecutorObjects<T>(object[] pArguments)
-            where T : ExecutorBase
+        private static IEnumerable<T> CreateObjects<T>(object[] pArguments)
+            where T : class
         {
             IEnumerable<Type> types = GetTypes<T>();
             return types.Select(pType=>(T)Activator.CreateInstance(pType, pArguments));
@@ -47,7 +49,7 @@ namespace Prometheus.Parser.Executors
             where TValue : ExecutorBase
             where TAttribute : ExecuteAttribute
         {
-            IEnumerable<TValue> objects = CreateExecutorObjects<TValue>(pArguments);
+            IEnumerable<TValue> objects = CreateObjects<TValue>(pArguments);
 
             Dictionary<TKey, TValue> table = new Dictionary<TKey, TValue>();
 
@@ -74,11 +76,19 @@ namespace Prometheus.Parser.Executors
         }
 
         /// <summary>
+        /// Creates an instance of all the classes that implement the iNodeOptimizer interface.
+        /// </summary>
+        public static List<iNodeOptimizer> CreateNodeOptimizers(iExecutor pExecutor)
+        {
+            return CreateObjects<iNodeOptimizer>(new object[] {pExecutor}).ToList();
+        }
+
+        /// <summary>
         /// Finds all the classes of a given type for the current assembly.
         /// </summary>
         /// <returns>A collection of types that extend that type.</returns>
         private static IEnumerable<Type> GetTypes<T>()
-            where T : ExecutorBase
+            where T : class
         {
             Assembly assembly = Assembly.Load("Prometheus");
             Type[] types = (from type in assembly.GetExportedTypes()
@@ -87,6 +97,14 @@ namespace Prometheus.Parser.Executors
                                 !type.IsAbstract
                             select type).ToArray(); // array for debugging
             return types;
+        }
+
+        /// <summary>
+        /// Creates a collection of node handlers.
+        /// </summary>
+        public static List<iExecutorHandler> CreateExecutorHandlers(iExecutor pExecutor)
+        {
+            return CreateObjects<iExecutorHandler>(new object[] {pExecutor}).ToList();
         }
     }
 }

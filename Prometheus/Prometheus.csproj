@@ -43,9 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compile\Builder.cs" />
-    <Compile Include="Compile\Optomizer\Assertion.cs" />
-    <Compile Include="Compile\Optomizer\iNodeOptimizer.cs" />
-    <Compile Include="Compile\Optomizer\Optimizer.cs" />
+    <Compile Include="Compile\Optimizers\Assertion.cs" />
+    <Compile Include="Compile\Optimizers\iNodeOptimizer.cs" />
+    <Compile Include="Compile\Optimizers\Optimizer.cs" />
     <Compile Include="Compile\Packaging\Compiled.cs" />
     <Compile Include="Exceptions\Compiler\OptimizationException.cs" />
     <Compile Include="Exceptions\Compiler\PackageErrorException.cs" />
@@ -80,6 +80,18 @@
     <Compile Include="Nodes\Types\InstanceType.cs" />
     <Compile Include="Parser\Executors\ExecutorAssert.cs" />
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
+    <Compile Include="Parser\Executors\Handlers\ExecutorHandler.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleArrays.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleBlocks.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleClosure.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleLoopDoWhile.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleExceptions.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleLoopFor.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleIfElse.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleLoopWhile.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleValue.cs" />
+    <Compile Include="Parser\Executors\iExecutor.cs" />
+    <Compile Include="Parser\Executors\Handlers\iExecutorHandler.cs" />
     <Compile Include="Runtime\Generics\MathGeneric.cs" />
     <Compile Include="Runtime\SearchOperators.cs" />
     <Compile Include="Runtime\TestGrammar.cs" />

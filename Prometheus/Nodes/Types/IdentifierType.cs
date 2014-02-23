@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Prometheus.Exceptions.Compiler;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types

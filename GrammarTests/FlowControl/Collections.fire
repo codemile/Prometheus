@@ -1,0 +1,42 @@
+Tests;
+
+Test Each_Test {
+	var numbers = [1,2,3,4];
+	var x = 0;
+	Each numbers {
+		x = x + number;
+	};
+	Assert x == 10;
+};
+
+Test Each_As_Test {
+	var numbers = [1,2,3,4];
+	var x = 0;
+	Each numbers As thing {
+		x = x + thing;
+	};
+	Assert x == 10;
+};
+
+Test Each_Break_Test {
+	var numbers = [1,2,3,4];
+	var x = 0;
+	Each numbers {
+		x = x + 1;
+		Break;
+	};
+	Assert x == 1;
+};
+
+Test Each_Continue_Test {
+	var numbers = [1,2,3,4];
+	var x = 0;
+	var y = 0;
+	Each numbers {
+		x = x + 1;
+		Continue;
+		y = 99;
+	};
+	Assert x == 4;
+	Assert y == 0;
+};

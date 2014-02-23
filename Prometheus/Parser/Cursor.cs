@@ -18,6 +18,11 @@ namespace Prometheus.Parser
         public readonly string UnitTest;
 
         /// <summary>
+        /// The current namespace.
+        /// </summary>
+        public QualifiedType NameSpace;
+
+        /// <summary>
         /// The current node being executed.
         /// </summary>
         public Node Node;
@@ -26,11 +31,6 @@ namespace Prometheus.Parser
         /// The current stack of local variables.
         /// </summary>
         public iMemorySpace Stack;
-
-        /// <summary>
-        /// The current namespace.
-        /// </summary>
-        public QualifiedType NameSpace;
 
         /// <summary>
         /// Constructor

@@ -34,7 +34,7 @@ namespace Prometheus.Parser.Executors
 #if DEBUG
             ValidateArguments(pArgCount);
 #endif
-            return _methods[Executor.Cursor.Node.Type][pArgCount];
+            return _methods[Cursor.Node.Type][pArgCount];
         }
 
 #if DEBUG
@@ -44,17 +44,17 @@ namespace Prometheus.Parser.Executors
         /// </summary>
         private void ValidateArguments(int pArgCount)
         {
-            GrammarSymbol type = Executor.Cursor.Node.Type;
+            GrammarSymbol type = Cursor.Node.Type;
             if (!_methods.ContainsKey(type))
             {
                 throw new InvalidArgumentException(
-                    string.Format("{0} does not implement <{1}>", GetType().FullName, type), Executor.Cursor.Node);
+                    string.Format("{0} does not implement <{1}>", GetType().FullName, type), Cursor.Node);
             }
             if (!_methods[type].ContainsKey(pArgCount))
             {
                 throw new InvalidArgumentException(
                     string.Format("{0} does not have {1} argument method for <{2}>", GetType().FullName, pArgCount,
-                        type), Executor.Cursor.Node);
+                        type), Cursor.Node);
             }
         }
 #endif

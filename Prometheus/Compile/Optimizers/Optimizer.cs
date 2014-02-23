@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Prometheus.Exceptions;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -6,7 +7,7 @@ using Prometheus.Nodes.Types;
 using Prometheus.Parser;
 using Prometheus.Parser.Executors;
 
-namespace Prometheus.Compile.Optomizer
+namespace Prometheus.Compile.Optimizers
 {
     /// <summary>
     /// Optimizes a compiled node tree. This code is constantly modified to as grammar rules are changed in the parser, but the
@@ -97,6 +98,11 @@ namespace Prometheus.Compile.Optomizer
                                                                     };
 
         /// <summary>
+        /// The current node being optimized.
+        /// </summary>
+        private Cursor _cursor;
+
+        /// <summary>
         /// Used to perform optimization
         /// </summary>
         private Executor _executor;
@@ -112,24 +118,40 @@ namespace Prometheus.Compile.Optomizer
         private bool _modified;
 
         /// <summary>
-        /// Performs optimization of a node tree.
+        /// Objects that handle optimization of nodes.
         /// </summary>
-        /// <param name="pRoot">The root node</param>
-        /// <returns>A node to used as the new root node.</returns>
-        public Node Optimize(Node pRoot)
+        private List<iNodeOptimizer> _nodeOptimizers;
+
+        /// <summary>
+        /// Performs optimization of a node
+        /// </summary>
+        /// <param name="pNode"></param>
+        /// <returns></returns>
+        private Node CallOptimizers(Node pNode)
         {
-            using (_executor = new Executor(new Cursor()))
+            // run optimizers on the node
+            _cursor.Node = pNode;
+            foreach (iNodeOptimizer nodeOp in _nodeOptimizers)
             {
-                _internalIds = new HashSet<string>(_executor.GetInternalIds());
-
-                do
+                try
                 {
-                    _modified = false;
-                    pRoot = WalkBranch(pRoot) ?? new Node(GrammarSymbol.Statements, Location.None);
-                } while (_modified);
-
-                return pRoot;
+                    _cursor.Node = nodeOp.Optimize(_cursor.Node);
+                    if (_cursor.Node == null)
+                    {
+                        return null;
+                    }
+                }
+                catch (PrometheusException e)
+                {
+                    if (_cursor.Node != null && e.Where == null)
+                    {
+                        e.Where = _cursor.Node.Location;
+                    }
+                    throw;
+                }
             }
+
+            return _cursor.Node;
         }
 
         /// <summary>
@@ -137,14 +159,14 @@ namespace Prometheus.Compile.Optomizer
         /// </summary>
         /// <param name="pNode">The node to optimize</param>
         /// <returns>Same node, a new node or null.</returns>
-        public Node OptimizeNode(Node pNode)
+        private Node OptimizeNode(Node pNode)
         {
             if (pNode.Type == GrammarSymbol.CallGeneric)
             {
                 string name = pNode.FirstData().Cast<IdentifierType>().Name;
                 if (!_internalIds.Contains(name))
                 {
-                    throw new LexicalException(string.Format("Command not supported <{0}>", name),pNode.Location);
+                    throw new LexicalException(string.Format("Command not supported <{0}>", name), pNode.Location);
                 }
             }
 
@@ -204,14 +226,14 @@ namespace Prometheus.Compile.Optomizer
                 pNode.Children.AddRange(children);
             }
 
-            return _executor.Optimize(pNode);
+            return CallOptimizers(pNode);
         }
 
         /// <summary>
         /// Converts the child nodes into a data reference to a qualifier ID.
         /// </summary>
         /// <param name="pNode"></param>
-        public void Qualify(Node pNode)
+        private void Qualify(Node pNode)
         {
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
@@ -231,7 +253,7 @@ namespace Prometheus.Compile.Optomizer
         /// children that are modified, or remove children if a recursive call
         /// returns null for that child.
         /// </summary>
-        public Node WalkBranch(Node pNode)
+        private Node WalkBranch(Node pNode)
         {
             if (pNode.Type == GrammarSymbol.QualifiedID
                 && pNode.Children.Count != 0)
@@ -276,6 +298,29 @@ namespace Prometheus.Compile.Optomizer
             pNode.Reduce();
 
             return OptimizeNode(pNode);
+        }
+
+        /// <summary>
+        /// Performs optimization of a node tree.
+        /// </summary>
+        /// <param name="pRoot">The root node</param>
+        /// <returns>A node to used as the new root node.</returns>
+        public Node Optimize(Node pRoot)
+        {
+            _cursor = new Cursor();
+            using (_executor = new Executor(_cursor))
+            {
+                _nodeOptimizers = ObjectFactory.CreateNodeOptimizers(_executor);
+                _internalIds = new HashSet<string>(_executor.GetInternalIds());
+
+                do
+                {
+                    _modified = false;
+                    pRoot = WalkBranch(pRoot) ?? new Node(GrammarSymbol.Statements, Location.None);
+                } while (_modified);
+
+                return pRoot;
+            }
         }
     }
 }

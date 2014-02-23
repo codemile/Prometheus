@@ -3,3 +3,6 @@ Tests;
 Use "Math/Operators";
 Use "Relational/Operators";
 Use "Relational/Unary";
+Use "FlowControl/If";
+Use "FlowControl/Loops";
+Use "FlowControl/Collections";

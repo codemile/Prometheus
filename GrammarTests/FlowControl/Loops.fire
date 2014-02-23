@@ -113,3 +113,21 @@ Test Do_Until_Continue_Test {
 	Assert x == 10;
 	Assert y == 0;
 };
+
+Test For_To_Test {
+	var y = 0;
+	For x = 0 To 10 {
+		y = y + 1;
+	};
+	print y;
+	Assert y == 10;
+};
+
+Test For_To_Step_Test {
+	var y = 0;
+	For x = 0 To 10 Step 2 {
+		y = y +1;
+	};
+	print y;
+	Assert y == 5;
+};

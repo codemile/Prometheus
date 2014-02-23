@@ -76,7 +76,7 @@ namespace Prometheus.Nodes.Types
         /// </returns>
         public override string ToString()
         {
-            return Value + (isDouble ? "f":"");
+            return Value + (isDouble ? "f" : "");
         }
     }
 }

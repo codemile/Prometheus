@@ -12,16 +12,22 @@ namespace Prometheus.Parser.Executors
     public abstract class ExecutorBase
     {
         /// <summary>
+        /// The current node being executed.
+        /// </summary>
+        protected readonly Cursor Cursor;
+
+        /// <summary>
         /// The executor can be used to run child nodes.
         /// </summary>
-        protected readonly Executor Executor;
+        protected readonly iExecutor Executor;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        protected ExecutorBase(Executor pExecutor)
+        protected ExecutorBase(iExecutor pExecutor)
         {
             Executor = pExecutor;
+            Cursor = pExecutor.GetCursor();
         }
 
         /// <summary>
@@ -36,7 +42,7 @@ namespace Prometheus.Parser.Executors
         protected DataType Resolve(DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
-            return id == null ? pValue : Executor.Cursor.Resolve(id).Read();
+            return id == null ? pValue : Cursor.Resolve(id).Read();
         }
 
         /// <summary>
@@ -45,7 +51,7 @@ namespace Prometheus.Parser.Executors
         protected T Resolve<T>(DataType pValue) where T : DataType
         {
             QualifiedType id = pValue as QualifiedType;
-            return id == null ? (T)pValue : Executor.Cursor.Get<T>(id);
+            return id == null ? (T)pValue : Cursor.Get<T>(id);
         }
 
         /// <summary>
@@ -57,7 +63,7 @@ namespace Prometheus.Parser.Executors
         {
             try
             {
-                MethodInfo method = GetMethod(Executor.Cursor.Node, pValues.Length);
+                MethodInfo method = GetMethod(Cursor.Node, pValues.Length);
                 return (DataType)method.Invoke(this, pValues);
             }
             catch (TargetInvocationException e)
@@ -65,7 +71,7 @@ namespace Prometheus.Parser.Executors
                 RunTimeException inner = e.InnerException as RunTimeException;
                 if (inner != null)
                 {
-                    inner.Where = inner.Where ?? Executor.Cursor.Node.Location;
+                    inner.Where = inner.Where ?? Cursor.Node.Location;
                     throw e.InnerException;
                 }
                 throw;

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prometheus.Compile.Optomizer;
 using Prometheus.Exceptions;
-using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors.Attributes;
+using Prometheus.Parser.Executors.Handlers;
 using Prometheus.Storage;
 
 namespace Prometheus.Parser.Executors
@@ -16,17 +15,12 @@ namespace Prometheus.Parser.Executors
     /// <summary>
     /// Handles execution of a node in the tree.
     /// </summary>
-    public class Executor : IDisposable
+    public class Executor : IDisposable, iExecutor
     {
         /// <summary>
         /// The current cursor
         /// </summary>
-        public readonly Cursor Cursor;
-
-        /// <summary>
-        /// All the objects that implement symbol methods.
-        /// </summary>
-        private readonly Dictionary<GrammarSymbol, ExecutorGrammar> _grammarLookup;
+        private readonly Cursor _cursor;
 
         /// <summary>
         /// All the objects that implement symbol methods.
@@ -34,35 +28,53 @@ namespace Prometheus.Parser.Executors
         private readonly Dictionary<string, ExecutorGeneric> _genericLookup;
 
         /// <summary>
-        /// Creates an array object.
+        /// All the objects that implement symbol methods.
         /// </summary>
-        private DataType CreateArray(Node pParent)
+        private readonly Dictionary<GrammarSymbol, ExecutorGrammar> _grammarLookup;
+
+        /// <summary>
+        /// Objects that handle specific types of nodes.
+        /// </summary>
+        private readonly Dictionary<int, iExecutorHandler> _handlers;
+
+        /// <summary>
+        /// Adds a handler using the hash code of the classname for quicker access.
+        /// </summary>
+        private void AddHandler(iExecutorHandler pHandler)
         {
-            IList<DataType> array;
-            switch (pParent.Type)
-            {
-                case GrammarSymbol.QualifiedID:
-                case GrammarSymbol.ClassNameID:
-                    array = new QualifiedType();
-                    break;
-                default:
-                    array = new ArrayType();
-                    break;
-            }
-            for (int i = 0, c = pParent.Children.Count; i < c; i++)
-            {
-#if DEBUG
-                if (pParent.Type == GrammarSymbol.ParameterArray)
-                {
-                    ExecutorAssert.Data(pParent.Children[i], 1);
-                    ExecutorAssert.DataType(pParent.Children[i], 0, typeof (IdentifierType));
-                }
-#endif
-                array.Add(pParent.Type == GrammarSymbol.ParameterArray
-                    ? pParent.Children[i].Data[0]
-                    : WalkDownChildren(pParent.Children[i]));
-            }
-            return (DataType)array;
+            _handlers.Add(pHandler.GetHandlerCode(), pHandler);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Executor(Cursor pCursor)
+        {
+            _cursor = pCursor;
+
+            _grammarLookup =
+                ObjectFactory.CreateLookupTable<GrammarSymbol, ExecutorGrammar, ExecuteSymbol>(new object[] {this});
+            _genericLookup =
+                ObjectFactory.CreateLookupTable<string, ExecutorGeneric, ExecuteGeneric>(new object[] {this});
+
+            _handlers = new Dictionary<int, iExecutorHandler>();
+            ObjectFactory.CreateExecutorHandlers(this).ForEach(AddHandler);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _cursor.Dispose();
+        }
+
+        /// <summary>
+        /// The current position in the node tree.
+        /// </summary>
+        public Cursor GetCursor()
+        {
+            return _cursor;
         }
 
         /// <summary>
@@ -70,8 +82,9 @@ namespace Prometheus.Parser.Executors
         /// </summary>
         /// <param name="pParent">The parent node</param>
         /// <returns>The resulting data</returns>
-        private DataType WalkDownChildren(Node pParent)
+        public DataType WalkDownChildren(Node pParent)
         {
+/*
             switch (pParent.Type)
             {
                 // these are just holders for constant values
@@ -93,111 +106,111 @@ namespace Prometheus.Parser.Executors
                 case GrammarSymbol.Program:
                 case GrammarSymbol.Block:
                 case GrammarSymbol.Statements:
-                {
-                    for (int i = 0, c = pParent.Children.Count; i < c; i++)
                     {
-                        WalkDownChildren(pParent.Children[i]);
+                        for (int i = 0, c = pParent.Children.Count; i < c; i++)
+                        {
+                            WalkDownChildren(pParent.Children[i]);
+                        }
+                        return UndefinedType.Undefined;
                     }
-                    return UndefinedType.Undefined;
-                }
 
                 case GrammarSymbol.IfControl:
-                {
-                    if (pParent.Children.Count == 2)
                     {
-                        DataType exp = WalkDownChildren(pParent.Children[0]);
-                        if (!exp.getBool())
+                        if (pParent.Children.Count == 2)
                         {
-                            return UndefinedType.Undefined;
-                        }
-                        using (Cursor.Stack = new CursorSpace(Cursor))
-                        {
-                            return WalkDownChildren(pParent.Children[1]);
-                        }
-                    }
-                    if (pParent.Children.Count == 3)
-                    {
-                        DataType _if = WalkDownChildren(pParent.Children[0]);
-                        if (_if.getBool())
-                        {
+                            DataType exp = WalkDownChildren(pParent.Children[0]);
+                            if (!exp.getBool())
+                            {
+                                return UndefinedType.Undefined;
+                            }
                             using (Cursor.Stack = new CursorSpace(Cursor))
                             {
                                 return WalkDownChildren(pParent.Children[1]);
                             }
                         }
-                        using (Cursor.Stack = new CursorSpace(Cursor))
+                        if (pParent.Children.Count == 3)
                         {
-                            return WalkDownChildren(pParent.Children[2]);
+                            DataType _if = WalkDownChildren(pParent.Children[0]);
+                            if (_if.getBool())
+                            {
+                                using (Cursor.Stack = new CursorSpace(Cursor))
+                                {
+                                    return WalkDownChildren(pParent.Children[1]);
+                                }
+                            }
+                            using (Cursor.Stack = new CursorSpace(Cursor))
+                            {
+                                return WalkDownChildren(pParent.Children[2]);
+                            }
                         }
+                        throw new TestException(
+                            string.Format("Invalid child count. Expected (2 or 3) Found <{0}>", pParent.Children.Count),
+                            pParent);
                     }
-                    throw new TestException(
-                        string.Format("Invalid child count. Expected (2 or 3) Found <{0}>", pParent.Children.Count),
-                        pParent);
-                }
 
                 case GrammarSymbol.DoWhileControl:
                 case GrammarSymbol.DoUntilControl:
-                {
-#if DEBUG
-                    ExecutorAssert.Children(pParent, 2);
-#endif
-                    try
                     {
-                        while (pParent.Type == GrammarSymbol.DoWhileControl
-                            ? WalkDownChildren(pParent.Children[0]).getBool()
-                            : !WalkDownChildren(pParent.Children[0]).getBool())
+#if DEBUG
+                        ExecutorAssert.Children(pParent, 2);
+#endif
+                        try
                         {
-                            try
+                            while (pParent.Type == GrammarSymbol.DoWhileControl
+                                ? WalkDownChildren(pParent.Children[0]).getBool()
+                                : !WalkDownChildren(pParent.Children[0]).getBool())
                             {
-                                WalkDownChildren(pParent.Children[1]);
-                            }
-                            catch (ContinueException)
-                            {
+                                try
+                                {
+                                    WalkDownChildren(pParent.Children[1]);
+                                }
+                                catch (ContinueException)
+                                {
+                                }
                             }
                         }
+                        catch (BreakException)
+                        {
+                        }
+                        return UndefinedType.Undefined;
                     }
-                    catch (BreakException)
-                    {
-                    }
-                    return UndefinedType.Undefined;
-                }
 
                 case GrammarSymbol.LoopWhileControl:
                 case GrammarSymbol.LoopUntilControl:
-                {
+                    {
 #if DEBUG
-                    ExecutorAssert.Children(pParent, 2);
+                        ExecutorAssert.Children(pParent, 2);
 #endif
-                    try
-                    {
-                        do
+                        try
                         {
-                            try
+                            do
                             {
-                                WalkDownChildren(pParent.Children[0]);
-                            }
-                            catch (ContinueException)
-                            {
-                            }
-                        } while (pParent.Type == GrammarSymbol.LoopWhileControl
-                            ? WalkDownChildren(pParent.Children[1]).getBool()
-                            : !WalkDownChildren(pParent.Children[1]).getBool());
+                                try
+                                {
+                                    WalkDownChildren(pParent.Children[0]);
+                                }
+                                catch (ContinueException)
+                                {
+                                }
+                            } while (pParent.Type == GrammarSymbol.LoopWhileControl
+                                ? WalkDownChildren(pParent.Children[1]).getBool()
+                                : !WalkDownChildren(pParent.Children[1]).getBool());
+                        }
+                        catch (BreakException)
+                        {
+                        }
+                        return UndefinedType.Undefined;
                     }
-                    catch (BreakException)
-                    {
-                    }
-                    return UndefinedType.Undefined;
-                }
 
                 case GrammarSymbol.ForControl:
                 case GrammarSymbol.ForStepControl:
-                {
+                    {
 #if DEBUG
-                    ExecutorAssert.Children(pParent, (pParent.Type == GrammarSymbol.ForControl) ? 3 : 4);
-                    ExecutorAssert.Data(pParent, 1);
+                        ExecutorAssert.Children(pParent, (pParent.Type == GrammarSymbol.ForControl) ? 3 : 4);
+                        ExecutorAssert.Data(pParent, 1);
 #endif
-                    return UndefinedType.Undefined;
-                }
+                        return UndefinedType.Undefined;
+                    }
 
                 case GrammarSymbol.BreakControl:
                     throw new BreakException();
@@ -212,6 +225,11 @@ namespace Prometheus.Parser.Executors
                 case GrammarSymbol.QualifiedID:
                 case GrammarSymbol.ClassNameID:
                     return CreateArray(pParent);
+            }
+*/
+            if (pParent.Handler != 0)
+            {
+                return _handlers[pParent.Handler].Handle(pParent);
             }
 
             ExecutorBase _base;
@@ -247,7 +265,7 @@ namespace Prometheus.Parser.Executors
 
             try
             {
-                Cursor.Node = pParent;
+                _cursor.Node = pParent;
                 return _base.Execute(values);
             }
             catch (PrometheusException e)
@@ -261,50 +279,12 @@ namespace Prometheus.Parser.Executors
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public Executor(Cursor pCursor)
-        {
-            Cursor = pCursor;
-
-            _grammarLookup =
-                ObjectFactory.CreateLookupTable<GrammarSymbol, ExecutorGrammar, ExecuteSymbol>(new object[] {this});
-            _genericLookup =
-                ObjectFactory.CreateLookupTable<string, ExecutorGeneric, ExecuteGeneric>(new object[] {this});
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Cursor.Dispose();
-        }
-
-        /// <summary>
-        /// Executes an internal API function.
-        /// </summary>
-        /// <param name="pInternal">Name of the API to call</param>
-        /// <param name="pArguments">The arguments</param>
-        /// <returns>The resulting data</returns>
-        public DataType Execute(IdentifierType pInternal, ArrayType pArguments)
-        {
-            object[] values = new object[pArguments.Count];
-            for (int i = 0, c = pArguments.Count; i < c; i++)
-            {
-                values[i] = pArguments[i];
-            }
-
-            return _genericLookup[pInternal.Name].Execute(values);
-        }
-
-        /// <summary>
         /// Executes a node
         /// </summary>
         public DataType Execute(Node pNode, Dictionary<string, DataType> pVariables = null)
         {
             pVariables = pVariables ?? new Dictionary<string, DataType>();
-            using (Cursor.Stack = new CursorSpace(Cursor, pVariables))
+            using (_cursor.Stack = new CursorSpace(_cursor, pVariables))
             {
                 return WalkDownChildren(pNode);
             }
@@ -317,41 +297,6 @@ namespace Prometheus.Parser.Executors
         public IEnumerable<string> GetInternalIds()
         {
             return _genericLookup.Keys.ToList();
-        }
-
-        /// <summary>
-        /// Performs optimization of a node
-        /// </summary>
-        /// <param name="pNode"></param>
-        /// <returns></returns>
-        public Node Optimize(Node pNode)
-        {
-            // run optimizers on the node
-            Cursor.Node = pNode;
-            foreach (iNodeOptimizer nodeOp in from pair in _grammarLookup
-                                              let node = pair.Value as iNodeOptimizer
-                                              where node != null
-                                              select node)
-            {
-                try
-                {
-                    pNode = nodeOp.Optomize(pNode);
-                    if (pNode == null)
-                    {
-                        return null;
-                    }
-                }
-                catch (PrometheusException e)
-                {
-                    if (pNode != null && e.Where == null)
-                    {
-                        e.Where = pNode.Location;
-                    }
-                    throw;
-                }
-            }
-
-            return pNode;
         }
     }
 }

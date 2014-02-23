@@ -34,12 +34,18 @@ namespace Prometheus.Nodes
         public readonly GrammarSymbol Type;
 
         /// <summary>
+        /// Does this node have a special handler.
+        /// </summary>
+        public int Handler { get; set; }
+
+        /// <summary>
         /// Initializes a node.
         /// </summary>
         /// <param name="pType">The node's type.</param>
         /// <param name="pLocation">Location in the source code</param>
         public Node(GrammarSymbol pType, Location pLocation)
         {
+            Handler = 0;
             Type = pType;
             Location = pLocation;
             Data = new List<DataType>();

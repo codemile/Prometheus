@@ -35,7 +35,7 @@ namespace Prometheus.Runtime.Generics
             QualifiedType id = pValue as QualifiedType;
 
             DataType value = id != null
-                ? Executor.Cursor.Resolve(id).Read()
+                ? Cursor.Resolve(id).Read()
                 : pValue;
 
             _logger.Fine(value.ToString());

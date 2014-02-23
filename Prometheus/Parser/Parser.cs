@@ -60,14 +60,6 @@ namespace Prometheus.Parser
         private readonly Dictionary<string, DataType> _customVaraibles;
 
         /// <summary>
-        /// Logs the error
-        /// </summary>
-        public static void HandleError(PrometheusException pException)
-        {
-            _logger.Error("Error: " + pException.Format().Replace("{", "{{").Replace("}", "}}"));
-        }
-
-        /// <summary>
         /// Generates a list of tests to run.
         /// </summary>
         private static IEnumerable<string> getTestSuite(Node pRoot, IEnumerable<string> pUnitTests)
@@ -127,7 +119,7 @@ namespace Prometheus.Parser
 
                 foreach (Node node in pNode)
                 {
-                    using (executor.Cursor.Stack = new CursorSpace(executor.Cursor, globals))
+                    using (pCursor.Stack = new CursorSpace(pCursor, globals))
                     {
                         executor.Execute(node, new Dictionary<string, DataType>());
                     }
@@ -177,6 +169,14 @@ namespace Prometheus.Parser
         {
             _customVaraibles = new Dictionary<string, DataType>();
             _customObjects = new Dictionary<string, object>();
+        }
+
+        /// <summary>
+        /// Logs the error
+        /// </summary>
+        public static void HandleError(PrometheusException pException)
+        {
+            _logger.Error("Error: " + pException.Format().Replace("{", "{{").Replace("}", "}}"));
         }
 
         /// <summary>

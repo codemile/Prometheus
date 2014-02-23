@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Logging;
-using Prometheus.Compile.Optomizer;
+using Prometheus.Compile.Optimizers;
 using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
@@ -38,6 +38,19 @@ namespace Prometheus.Compile
         private static void LogFileName(string pFileName)
         {
             _logger.Fine("Compile: {0}", pFileName);
+        }
+
+        /// <summary>
+        /// Optimizes the compiled node tree to a structure the parser can
+        /// read and make assumptions about.
+        /// </summary>
+        private static Node Optimize(Node pRoot)
+        {
+            PrintCompiled(pRoot);
+            Optimizer optimizer = new Optimizer();
+            pRoot = optimizer.Optimize(pRoot);
+            PrintCompiled(pRoot);
+            return pRoot;
         }
 
         /// <summary>
@@ -141,19 +154,6 @@ namespace Prometheus.Compile
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Optimizes the compiled node tree to a structure the parser can
-        /// read and make assumptions about.
-        /// </summary>
-        private Node Optimize(Node pRoot)
-        {
-            PrintCompiled(pRoot);
-            Optimizer optimizer = new Optimizer();
-            pRoot = optimizer.Optimize(pRoot);
-            PrintCompiled(pRoot);
-            return pRoot;
         }
 
         /// <summary>

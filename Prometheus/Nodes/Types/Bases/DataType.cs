@@ -20,6 +20,14 @@ namespace Prometheus.Nodes.Types.Bases
         }
 
         /// <summary>
+        /// Creates a new copy of the data.
+        /// </summary>
+        public virtual DataType Clone()
+        {
+            return this;
+        }
+
+        /// <summary>
         /// Casts to a required type.
         /// </summary>
         /// <typeparam name="T">The target type</typeparam>
@@ -65,14 +73,6 @@ namespace Prometheus.Nodes.Types.Bases
             }
 
             throw new DataTypeException(string.Format("Cannot convert <{0}> to boolean", GetType().FullName));
-        }
-
-        /// <summary>
-        /// Creates a new copy of the data.
-        /// </summary>
-        public virtual DataType Clone()
-        {
-            return this;
         }
     }
 }

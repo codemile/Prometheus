@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -27,7 +26,7 @@ namespace Prometheus.Runtime
                 return inst;
             }
 
-            DeclarationType baseType = Executor.Cursor.Get<DeclarationType>(pDecl.Base);
+            DeclarationType baseType = Cursor.Get<DeclarationType>(pDecl.Base);
             StackSpace baseSpace = new StackSpace(pSpace);
             InstanceType baseInst = CreateInstance(baseSpace, baseType);
             ClosureType baseFunc = new ClosureType(baseInst, baseType.Constructor);
@@ -54,6 +53,16 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Sets the current namespace
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.NameSpace)]
+        public DataType NameSpace(QualifiedType pNameSpace)
+        {
+            Cursor.NameSpace = pNameSpace;
+            return UndefinedType.Undefined;
+        }
+
+        /// <summary>
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
@@ -70,14 +79,14 @@ namespace Prometheus.Runtime
         {
             // TODO: Create a place to store declarations
             QualifiedType className = new QualifiedType(new IdentifierType(pId.ToString()));
-            DeclarationType decl = Executor.Cursor.Get<DeclarationType>(className);
+            DeclarationType decl = Cursor.Get<DeclarationType>(className);
 
             StackSpace objSpace = new StackSpace();
 
             InstanceType inst = CreateInstance(objSpace, decl);
 
-            iMemorySpace prevStorage = Executor.Cursor.Stack;
-            Executor.Cursor.Stack = inst.GetMembers();
+            iMemorySpace prevStorage = Cursor.Stack;
+            Cursor.Stack = inst.GetMembers();
 
             try
             {
@@ -96,7 +105,7 @@ namespace Prometheus.Runtime
             }
             finally
             {
-                Executor.Cursor.Stack = prevStorage;
+                Cursor.Stack = prevStorage;
             }
 
             return inst;
@@ -117,11 +126,11 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
         public DataType ObjectDeclare(IdentifierType pObjectName, ArrayType pParameters, ClosureType pConstructor)
         {
-            QualifiedType className = new QualifiedType(Executor.Cursor.NameSpace, pObjectName);
+            QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);
             DeclarationType decl = new DeclarationType(
-                className, 
+                className,
                 new ClosureType(pConstructor.Function, pParameters));
-            Executor.Cursor.Stack.Create(className.ToString(), decl);
+            Cursor.Stack.Create(className.ToString(), decl);
             return decl;
         }
 
@@ -132,23 +141,13 @@ namespace Prometheus.Runtime
         public DataType ObjectDeclare(QualifiedType pBaseName, IdentifierType pObjectName, ArrayType pParameters,
                                       ClosureType pConstructor)
         {
-            QualifiedType className = new QualifiedType(Executor.Cursor.NameSpace, pObjectName);
+            QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);
             DeclarationType decl = new DeclarationType(
                 pBaseName,
                 className,
                 new ClosureType(pConstructor.Function, pParameters));
-            Executor.Cursor.Stack.Create(className.ToString(), decl);
+            Cursor.Stack.Create(className.ToString(), decl);
             return decl;
-        }
-
-        /// <summary>
-        /// Sets the current namespace
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.NameSpace)]
-        public DataType NameSpace(QualifiedType pNameSpace)
-        {
-            Executor.Cursor.NameSpace = pNameSpace;
-            return UndefinedType.Undefined;
         }
     }
 }

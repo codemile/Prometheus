@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Prometheus.Compile.Optomizer;
+using Prometheus.Compile.Optimizers;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -56,7 +56,7 @@ namespace Prometheus.Runtime
         /// </summary>
         /// <param name="pNode">The node to reduce</param>
         /// <returns>Same node or a new node.</returns>
-        public Node Optomize(Node pNode)
+        public Node Optimize(Node pNode)
         {
             if (pNode.Children.Count != 2 ||
                 pNode.Data.Count != 0 ||
@@ -219,7 +219,7 @@ namespace Prometheus.Runtime
                 {
                     sb.Append(str1.Value);
                 }
-                return new StringType(str1.IsRegex,sb.ToString(),str1.Mode,str1.Flags);
+                return new StringType(str1.IsRegex, sb.ToString(), str1.Mode, str1.Flags);
             }
 
             ArrayType arr1 = pValue1 as ArrayType;
@@ -302,7 +302,7 @@ namespace Prometheus.Runtime
             if (str1 != null && str2 != null)
             {
                 Regex regex = str2.Compile();
-                return new StringType(str1.IsRegex,regex.Replace(str1.Value, ""),str1.Mode,str1.Flags);
+                return new StringType(str1.IsRegex, regex.Replace(str1.Value, ""), str1.Mode, str1.Flags);
             }
 
             ArrayType arr1 = pValue1 as ArrayType;

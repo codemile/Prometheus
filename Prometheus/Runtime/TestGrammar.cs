@@ -42,8 +42,8 @@ namespace Prometheus.Runtime
         {
             try
             {
-                QualifiedType unit = new QualifiedType(Executor.Cursor.UnitTest);
-                ClosureType func = Executor.Cursor.Get<ClosureType>(unit);
+                QualifiedType unit = new QualifiedType(Cursor.UnitTest);
+                ClosureType func = Cursor.Get<ClosureType>(unit);
                 return func.Function.Children.Count == 0
                     ? UndefinedType.Undefined
                     : Executor.Execute(func.Function);
@@ -87,7 +87,7 @@ namespace Prometheus.Runtime
         public DataType UnitTest(IdentifierType pName, ClosureType pTest)
         {
             _tests.Add(pName.Name);
-            Executor.Cursor.Stack.Create(pName.Name, pTest);
+            Cursor.Stack.Create(pName.Name, pTest);
             return UndefinedType.Undefined;
         }
 
@@ -99,7 +99,7 @@ namespace Prometheus.Runtime
         {
             if (!pValue.getBool())
             {
-                throw new TestException("Assert failed", Executor.Cursor.Node);
+                throw new TestException("Assert failed", Cursor.Node);
             }
             return UndefinedType.Undefined;
         }
@@ -113,10 +113,10 @@ namespace Prometheus.Runtime
             QualifiedType id = pValue as QualifiedType;
 
             DataType value = id != null
-                ? Executor.Cursor.Resolve(id).Read()
+                ? Cursor.Resolve(id).Read()
                 : pValue;
 
-            throw new TestException(string.Format("Failed: {0}", value.ToString()), Executor.Cursor.Node);
+            throw new TestException(string.Format("Failed: {0}", value), Cursor.Node);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.FailProc)]
         public DataType _Fail()
         {
-            throw new TestException("Failed", Executor.Cursor.Node);
+            throw new TestException("Failed", Cursor.Node);
         }
     }
 }
