@@ -54,9 +54,9 @@ Comment Line  = '//'
 <Program>		::= <Program Test>
 				| <Program Code>
 
-<Program Test>	::= <TestSuite Decl> <Import Decls> <Test Decls> <Test Execute>
-				| <TestSuite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute>
-				| <TestSuite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute> <Statements>
+<Program Test>	::= <Test Suite Decl> <Import Decls> <Test Decls> <Test Execute>
+				| <Test Suite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute>
+				| <Test Suite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute> <Statements>
 
 <Program Code>	::= <Import Decls> <Object Decls> 
 				| <Import Decls> <Object Decls> <Statements>
@@ -70,9 +70,10 @@ Comment Line  = '//'
 <Statements>	::= <Statement or Block>
 				| <Statements> <Statement or Block>
 
-<Statement>		::=  <FlowControl> <End>
+<Statement>		::=  <Flow Control> <End>
 				| <Function Decl> <End>
-				| <Procedure> <End>
+				| <All Procedures> <End>
+				| <All Functions> <End>
 				| <Variable Statements> <End>
 				| <Call Expression> <End>
 				| <New Expression> <End>
@@ -82,11 +83,11 @@ Comment Line  = '//'
 ! Unit Tests
 ! ===================================================================
 
-<TestSuite Decl>	::= 'tests' <End>
-					| 'tests' '[' <TestSuite Array> ']' <End>
+<Test Suite Decl>	::= 'tests' <End>
+					| 'tests' '[' <Test Suite Array> ']' <End>
 
-<TestSuite Array>	::= <Valid ID>
-					| <Valid ID> ',' <TestSuite Array>
+<Test Suite Array>	::= <Valid ID>
+					| <Valid ID> ',' <Test Suite Array>
 					| ! or none
 
 <Test Decls>		::= <Test Decl>
@@ -113,81 +114,81 @@ Comment Line  = '//'
 ! ===================================================================
 ! Expressions
 ! ===================================================================
-<Expression>  ::= <SearchChain>
+<Expression>  ::= <Search Chain>
 
 ! ===================================================================
 ! Search Operators
 ! ===================================================================
 
-<SearchChain>			::= <ContainsTerm>
+<Search Chain>			::= <Contains Term>
 
-<ContainsTerm>			::= <ContainsTerm> 'CONTAINS' <BooleanChain>
-						| <ContainsTerm> 'HAS' <BooleanChain> | <BooleanChain>
+<Contains Term>			::= <Contains Term> 'CONTAINS' <Boolean Chain>
+						| <Contains Term> 'HAS' <Boolean Chain> | <Boolean Chain>
 
 ! ===================================================================
 ! Boolean Operators
 ! ===================================================================
 
-<BooleanChain>			::= <GtOperator>
+<Boolean Chain>			::= <Gt Operator>
 
-<GtOperator>			::= <GtOperator> '>' <LtOperator> | <LtOperator>
-<LtOperator>			::= <LtOperator> '<' <GteOperator> | <GteOperator>
-<GteOperator>			::= <GteOperator> '>=' <LteOperator> | <LteOperator>
-<LteOperator>			::= <LteOperator> '<=' <EqualOperator> | <EqualOperator>
+<Gt Operator>			::= <Gt Operator> '>' <Lt Operator> | <Lt Operator>
+<Lt Operator>			::= <Lt Operator> '<' <Gte Operator> | <Gte Operator>
+<Gte Operator>			::= <Gte Operator> '>=' <Lte Operator> | <Lte Operator>
+<Lte Operator>			::= <Lte Operator> '<=' <Equal Operator> | <Equal Operator>
 
-<EqualOperator>			::= <EqualOperator> '==' <NotEqualOperator> | <NotEqualOperator>
-<NotEqualOperator>		::= <NotEqualOperator> '!=' <AndOperator> 
-						| <NotEqualOperator> '<>' <AndOperator> | <AndOperator>
-<AndOperator>			::= <AndOperator> 'AND' <OrOperator> 
-						| <AndOperator> '&&' <OrOperator> | <OrOperator>
-<OrOperator>			::= <OrOperator> 'OR' <MathChain> 
-						| <OrOperator> '||' <MathChain> | <MathChain>
+<Equal Operator>			::= <Equal Operator> '==' <Not Equal Operator> | <Not Equal Operator>
+<Not Equal Operator>		::= <Not Equal Operator> '!=' <And Operator> 
+						| <Not Equal Operator> '<>' <And Operator> | <And Operator>
+<And Operator>			::= <And Operator> 'AND' <Or Operator> 
+						| <And Operator> '&&' <Or Operator> | <Or Operator>
+<Or Operator>			::= <Or Operator> 'OR' <Math Chain> 
+						| <Or Operator> '||' <Math Chain> | <Math Chain>
 
 ! ===================================================================
 ! Math Operators
 ! ===================================================================
 
-<MathChain>				::= <AddExpression>
+<Math Chain>				::= <Add Expression>
 
-<AddExpression>			::= <AddExpression> '+' <SubExpression> | <SubExpression> 
-<SubExpression>			::= <SubExpression> '-' <MultiplyExpression> | <MultiplyExpression> 
-<MultiplyExpression>    ::= <MultiplyExpression> '*' <DivideExpression>  | <DivideExpression> 
-<DivideExpression>		::= <DivideExpression> '/' <RemainderExpression>  | <RemainderExpression>
-<RemainderExpression>	::= <RemainderExpression> '%' <UnaryChain>  | <UnaryChain>
+<Add Expression>			::= <Add Expression> '+' <Sub Expression> | <Sub Expression> 
+<Sub Expression>			::= <Sub Expression> '-' <Multiply Expression> | <Multiply Expression> 
+<Multiply Expression>    ::= <Multiply Expression> '*' <Divide Expression>  | <Divide Expression> 
+<Divide Expression>		::= <Divide Expression> '/' <Remainder Expression>  | <Remainder Expression>
+<Remainder Expression>	::= <Remainder Expression> '%' <Unary Chain>  | <Unary Chain>
 
 
 ! ===================================================================
 ! Unary Operators
 ! ===================================================================
 
-<UnaryChain>			::= <NotOperator>
+<Unary Chain>			::= <Not Operator>
 
-<NotOperator>			::= '!' <Value>
+<Not Operator>			::= '!' <Value>
 						| 'NOT' <Value>
-						| <BitInvertOperator>
+						| <Bit Invert Operator>
 
-<BitInvertOperator>		::= '~' <Value>
-						| <NegOperator>
+<Bit Invert Operator>		::= '~' <Value>
+						| <Neg Operator>
 
-<NegOperator>			::= '-' <Value>
-						| <PlusOperator>
+<Neg Operator>			::= '-' <Value>
+						| <Plus Operator>
 
-<PlusOperator>			::= '+' <Value>
-						| <PreDecOperator>
+<Plus Operator>			::= '+' <Value>
+						| <Pre Dec Operator>
 
-<PreDecOperator>		::= '--' <Qualified ID>
-						| <PostDecOperator>
+<Pre Dec Operator>		::= '--' <Qualified ID>
+						| <Post Dec Operator>
 
-<PostDecOperator>		::= <Qualified ID> '--'
-						| <PreIncOperator>
+<Post Dec Operator>		::= <Qualified ID> '--'
+						| <Pre Inc Operator>
 
-<PreIncOperator>		::= '++' <Qualified ID>
-						| <PostIncOperator>
+<Pre Inc Operator>		::= '++' <Qualified ID>
+						| <Post Inc Operator>
 
-<PostIncOperator>		::= <Qualified ID> '++'
-						| <EachOperator>
+<Post Inc Operator>		::= <Qualified ID> '++'
+						| <Each Operator>
 
-<EachOperator>			::= <EachControl>
+<Each Operator>			::= <Each Control>
 						| <Value>
 
 ! ===================================================================
@@ -229,13 +230,14 @@ Comment Line  = '//'
 					| <Function Expression>
 					| '(' <Expression> ')'
 					| <Call Expression>
+					| <All Functions>
 
 <Variable Statements>	::= <Declare>
 						| <Assignment>
-						| <PostIncrement>
-						| <PreIncrement>
-						| <PostDecrement>
-						| <PreDecrement>
+						| <Post Increment>
+						| <Pre Increment>
+						| <Post Decrement>
+						| <Pre Decrement>
 
 <Array Literal>			::= '[' ']'
 						| '[' <Array Literal List> ']'
@@ -249,10 +251,10 @@ Comment Line  = '//'
 
 <Assignment>		::= <Qualified ID> '=' <Expression>
 
-<PostIncrement>			::= <Qualified ID> '++'
-<PreIncrement>			::= '++' <Qualified ID>
-<PostDecrement>			::= <Qualified ID> '--'
-<PreDecrement>			::= '--' <Qualified ID>
+<Post Increment>		::= <Qualified ID> '++'
+<Pre Increment>			::= '++' <Qualified ID>
+<Post Decrement>		::= <Qualified ID> '--'
+<Pre Decrement>			::= '--' <Qualified ID>
 
 ! ===================================================================
 ! Packages
@@ -315,62 +317,73 @@ Comment Line  = '//'
 ! Flow control
 ! ===================================================================
 
-<FlowControl>		::= <IfControl>
-					| <DoWhileControl>
-					| <DoUntilControl>
-					| <LoopWhileControl>
-					| <LoopUntilControl>
-					| <ForControl>
-					| <EachControl>
-					| <BreakControl>
-					| <ContinueControl>
+<Flow Control>		::= <If Control>
+					| <Do While Control>
+					| <Do Until Control>
+					| <Loop While Control>
+					| <Loop Until Control>
+					| <For Control>
+					| <Each Control>
+					| <Break Control>
+					| <Continue Control>
 
-<IfControl>			::= 'if' '(' <Expression> ')' <Block> 
-					| 'if' '(' <Expression> ')' <Block> 'else' <Block>
+<If Control>			::= 'if' '(' <Expression> ')' <Block> 
+						| 'if' '(' <Expression> ')' <Block> 'else' <Block>
 
-<DoWhileControl>	::= 'while' '(' <Expression> ')' <Block>
-<DoUntilControl>	::= 'until' '(' <Expression> ')' <Block>
-<LoopWhileControl>	::= 'do' <Block> 'while' '(' <Expression> ')'
-<LoopUntilControl>	::= 'do' <Block> 'until' '(' <Expression> ')'
+<Do While Control>		::= 'while' '(' <Expression> ')' <Block>
+<Do Until Control>		::= 'until' '(' <Expression> ')' <Block>
+<Loop While Control>	::= 'do' <Block> 'while' '(' <Expression> ')'
+<Loop Until Control>	::= 'do' <Block> 'until' '(' <Expression> ')'
 
-<ForControl>		::= 'for' '(' <ForDeclare> <ForExpression> <ForStep> ')' <Block>
-<ForDeclare>		::= <Variable Statements> <End>
-					| <End> ! optional
-<ForExpression>		::= <Expression> <End>
-					| <End> ! optional
-<ForStep>			::= <Variable Statements>
-					| ! optional
+<For Control>			::= 'for' '(' <For Declare> <For Expression> <For Step> ')' <Block>
+<For Declare>			::= <Variable Statements> <End>
+						| <End> ! optional
+<For Expression>		::= <Expression> <End>
+						| <End> ! optional
+<For Step>				::= <Variable Statements>
+						| ! optional
 
-<EachControl>		::= 'each' <Plural ID> <Block>
+<Each Control>			::= 'each' <Plural ID> <Block>
 
-<Plural ID>			::= <Expression>
-					| <Expression> 'as' Identifier
+<Plural ID>				::= <Expression>
+						| <Expression> 'as' Identifier
 
-<BreakControl>		::= BREAK
-<ContinueControl>	::= CONTINUE
+<Break Control>			::= 'break'
+<Continue Control>		::= 'continue'
 
 ! ===================================================================
 ! Procedures
 ! ===================================================================
 
-<Procedure>			::= <UnsetProc>
-					| <PrintProc>
-					| <ReturnProc>
-					| <AssertProc>
-					| <FailProc>
-					| <ListVars>
-					| <Call Generic>
+<All Procedures>	::= <Unset Proc>
+					| <Print Proc>
+					| <Return Proc>
+					| <Assert Proc>
+					| <Fail Proc>
+					| <List Vars>
 
-<UnsetProc>			::= 'UNSET' <Qualified ID>
-<PrintProc>			::= 'PRINT' <Expression>
+<Unset Proc>			::= 'unset' <Qualified ID>
+<Print Proc>			::= 'print' <Expression>
 
-<ReturnProc>		::= 'RETURN' <Expression>
-					| 'RETURN'
+<Return Proc>		::= 'return' <Expression>
+					| 'return'
 
-<AssertProc>		::= 'ASSERT' <Expression>
-<FailProc>			::= 'FAIL' <Expression>
-					| 'FAIL'
+<Assert Proc>		::= 'assert' <Expression>
+<Fail Proc>			::= 'fail' <Expression>
+					| 'fail'
 
-<ListVars>			::= 'VARS'
+<List Vars>			::= 'vars'
 
 <Call Generic>		::= Identifier <Argument Array>
+
+! ===================================================================
+! Functions (can be used in expressions)
+! ===================================================================
+
+<All Functions>			::= <Variable Functions>
+
+! VARIABLES
+<Variable Functions>	::= <Isset Func>
+						| <TypeOf Func>
+<Isset Func>			::= 'isset' <Qualified ID>
+<TypeOf Func>			::= 'typeof' <Expression>

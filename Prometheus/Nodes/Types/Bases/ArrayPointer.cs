@@ -41,5 +41,13 @@
             _array[_index] = pValue;
             return true;
         }
+
+        /// <summary>
+        /// Does the pointer reference a valid location.
+        /// </summary>
+        public bool IsValid()
+        {
+            return _index >= 0 && _index < _array.Count;
+        }
     }
 }

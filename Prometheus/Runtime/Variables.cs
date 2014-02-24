@@ -280,5 +280,15 @@ namespace Prometheus.Runtime
         {
             return Cursor.Resolve(pId).Read();
         }
+
+        /// <summary>
+        /// Checks if the qualifier ID is valid.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.IssetFunc)]
+        public DataType Isset(QualifiedType pId)
+        {
+            iVariablePointer pointer = Cursor.Resolve(pId);
+            return new BooleanType(pointer.IsValid());
+        }
     }
 }

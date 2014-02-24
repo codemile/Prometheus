@@ -53,5 +53,13 @@ namespace Prometheus.Storage
             _space.Assign(Name, pValue);
             return true;
         }
+
+        /// <summary>
+        /// Does the pointer reference a valid location.
+        /// </summary>
+        public bool IsValid()
+        {
+            return _space.Has(Name);
+        }
     }
 }

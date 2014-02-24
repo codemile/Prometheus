@@ -16,5 +16,10 @@
         /// Writes over the value.
         /// </summary>
         bool Write(DataType pValue);
+
+        /// <summary>
+        /// Does the pointer reference a valid location.
+        /// </summary>
+        bool IsValid();
     }
 }
