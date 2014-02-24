@@ -291,7 +291,7 @@ Comment Line  = '//'
 
 <Parameter Array>			::= '(' ')'
 							| '(' <Parameter List> ')'
-							| ! none
+							| ! optional
 
 <Parameter List>			::= <Parameter Name>
 							| <Parameter List> ',' <Parameter Name>

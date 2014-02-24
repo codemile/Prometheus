@@ -11,7 +11,7 @@ namespace Prometheus.Parser.Executors.Handlers
     /// <summary>
     /// Base class for node handlers.
     /// </summary>
-    public abstract class ExecutorHandler : iExecutorHandler, iNodeOptimizer
+    public abstract class ExecutorHandler : iExecutorHandler, iOptimizer
     {
         /// <summary>
         /// The cursor
@@ -70,14 +70,6 @@ namespace Prometheus.Parser.Executors.Handlers
         }
 
         /// <summary>
-        /// True if handler processes this node.
-        /// </summary>
-        public bool CanHandleNode(Node pNode)
-        {
-            return _nodeTypes.Contains(pNode.Type);
-        }
-
-        /// <summary>
         /// Handle execution of a node.
         /// </summary>
         public abstract DataType Handle(Node pNode);
@@ -91,17 +83,54 @@ namespace Prometheus.Parser.Executors.Handlers
         }
 
         /// <summary>
-        /// Inspect a node
+        /// Filter what nodes this optimizer is executed for.
         /// </summary>
-        /// <param name="pNode">The node to check</param>
-        /// <returns>Same node, a new node or null to remove it.</returns>
-        public virtual Node Optimize(Node pNode)
+        public virtual bool Optimizable(GrammarSymbol pType)
+        {
+            return _nodeTypes.Contains(pType);
+        }
+
+        /// <summary>
+        /// Called for each node in the tree. Implement this to
+        /// modify just the node.
+        /// </summary>
+        /// <returns>True if tree was modified.</returns>
+        public virtual bool OptimizeNode(Node pNode)
         {
             if (_nodeTypes.Contains(pNode.Type))
             {
                 pNode.Handler = GetHandlerCode();
             }
-            return pNode;
+            return false;
+        }
+
+        /// <summary>
+        /// Inspect a node
+        /// </summary>
+        /// <param name="pParent"></param>
+        /// <param name="pChild"></param>
+        /// <returns>Same node, a new node or null to remove it.</returns>
+        public virtual bool OptimizeChild(Node pParent, Node pChild)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Called when a parent node matches the handled type. Implement this to
+        /// modify the parent to child relationship.
+        /// </summary>
+        /// <returns>True if tree was modified.</returns>
+        public virtual bool OptimizeParent(Node pParent, Node pChild)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Inspect a node after optimization has finished. This method
+        /// is called only once per node.
+        /// </summary>
+        public virtual void OptimizePost(Node pNode)
+        {
         }
     }
 }

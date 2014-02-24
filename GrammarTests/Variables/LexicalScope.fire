@@ -1,5 +1,29 @@
-Tests;
+var x = [1,2,[1,2,3],4,5];
 
+//Tests;
+
+/**
+Test Closure_Scope_Test {
+	function makeFunc {
+		var str = "Hello World";
+		function getMessage {
+			//Assert isset this;
+			//Assert isset str;
+			return str;
+		};
+		str = "Modified";
+		vars;
+		return getMessage;
+	};
+	
+	Assert not isset str;
+	Assert isset makeFunc;
+	
+	var foo = makeFunc();
+	Assert foo() == "Modified";
+};
+**/
+/**
 Test Isset_Function_Scope_Test {
 	var x = 4;
 	var foo = function {
@@ -32,3 +56,4 @@ Test Isset_Deep_Scope_Test {
 	Assert not isset boo;
 	Assert not isset zoo;
 };
+**/

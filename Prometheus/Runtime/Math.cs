@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Prometheus.Compile.Optimizers;
+using Prometheus.Exceptions.Compiler;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -16,19 +17,26 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles basic math operations.
     /// </summary>
-    public class Math : ExecutorGrammar, iNodeOptimizer
+    public class Math : ExecutorGrammar, iOptimizer
     {
         /// <summary>
         /// A list of math operations
         /// </summary>
-        private readonly HashSet<GrammarSymbol> _mathSymbols;
+        private static readonly HashSet<GrammarSymbol> _mathSymbols = new HashSet<GrammarSymbol>
+                                                                      {
+                                                                          GrammarSymbol.AddExpression,
+                                                                          GrammarSymbol.SubExpression,
+                                                                          GrammarSymbol.MultiplyExpression,
+                                                                          GrammarSymbol.DivideExpression,
+                                                                          GrammarSymbol.RemainderExpression
+                                                                      };
 
         /// <summary>
         /// Checks if a node performs math operations on two constant values.
         /// </summary>
         /// <param name="pNode">The node to check</param>
         /// <returns>True if it can be reduced.</returns>
-        private bool CanReduce(Node pNode)
+        private static bool CanReduce(Node pNode)
         {
             return (_mathSymbols.Contains(pNode.Type) &&
                     pNode.Children[0].Type == GrammarSymbol.Value &&
@@ -41,32 +49,29 @@ namespace Prometheus.Runtime
         public Math(Executor pExecutor)
             : base(pExecutor)
         {
-            _mathSymbols = new HashSet<GrammarSymbol>
-                           {
-                               GrammarSymbol.AddExpression,
-                               GrammarSymbol.SubExpression,
-                               GrammarSymbol.MultiplyExpression,
-                               GrammarSymbol.DivideExpression,
-                               GrammarSymbol.RemainderExpression
-                           };
         }
 
         /// <summary>
-        /// Reduces the node to just a constant value.
+        /// Filter what nodes this optimizer is executed for.
         /// </summary>
-        /// <param name="pNode">The node to reduce</param>
-        /// <returns>Same node or a new node.</returns>
-        public Node Optimize(Node pNode)
+        public bool Optimizable(GrammarSymbol pType)
+        {
+            return _mathSymbols.Contains(pType);
+        }
+
+        /// <summary>
+        /// Called for each node in the tree. Implement this to
+        /// modify just the node.
+        /// </summary>
+        /// <returns>True if tree was modified.</returns>
+        public bool OptimizeNode(Node pNode)
         {
             if (pNode.Children.Count != 2 ||
                 pNode.Data.Count != 0 ||
                 !CanReduce(pNode))
             {
-                return pNode;
+                return false;
             }
-
-            // do math operation now
-            Node reduced = new Node(GrammarSymbol.Value, pNode.Location);
 
             DataType valueA = pNode.Children[0].Data[0];
             DataType valueB = pNode.Children[1].Data[0];
@@ -74,23 +79,57 @@ namespace Prometheus.Runtime
             switch (pNode.Type)
             {
                 case GrammarSymbol.AddExpression:
-                    reduced.Data.Add(Add(valueA, valueB));
+                    pNode.Data.Add(Add(valueA, valueB));
                     break;
                 case GrammarSymbol.SubExpression:
-                    reduced.Data.Add(Sub(valueA, valueB));
+                    pNode.Data.Add(Sub(valueA, valueB));
                     break;
                 case GrammarSymbol.MultiplyExpression:
-                    reduced.Data.Add(Mul(valueA, valueB));
+                    pNode.Data.Add(Mul(valueA, valueB));
                     break;
                 case GrammarSymbol.DivideExpression:
-                    reduced.Data.Add(Div(valueA, valueB));
+                    pNode.Data.Add(Div(valueA, valueB));
                     break;
                 case GrammarSymbol.RemainderExpression:
-                    reduced.Data.Add(Remainder(valueA, valueB));
+                    pNode.Data.Add(Remainder(valueA, valueB));
                     break;
+                default:
+                    throw new UnsupportedDataTypeException(string.Format("Cannot optimize <{0}> value type", pNode.Type), Cursor.Node.Location);
             }
 
-            return reduced;
+            pNode.Type = GrammarSymbol.Value;
+            pNode.Children.Clear();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Reduces the node to just a constant value.
+        /// </summary>
+        /// <param name="pParent"></param>
+        /// <param name="pChild"></param>
+        /// <returns>Same node or a new node.</returns>
+        public bool OptimizeChild(Node pParent, Node pChild)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Called when a parent node matches the handled type. Implement this to
+        /// modify the parent to child relationship.
+        /// </summary>
+        /// <returns>True if tree was modified.</returns>
+        public bool OptimizeParent(Node pParent, Node pChild)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Inspect a node after optimization has finished. This method
+        /// is called only once per node.
+        /// </summary>
+        public void OptimizePost(Node pNode)
+        {
         }
 
         /// <summary>

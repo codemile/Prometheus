@@ -1,4 +1,5 @@
 ﻿using Prometheus.Nodes.Types;
+using PrometheusTest.Mock.Storage;
 using PrometheusTest.Mock.Types;
 
 namespace PrometheusTest.Mock.Objects
@@ -9,7 +10,7 @@ namespace PrometheusTest.Mock.Objects
         /// Constructor
         /// </summary>
         public MockDeclarationType()
-            : base(null, new MockClosure())
+            : base(null, new MockFunction())
         {
         }
     }

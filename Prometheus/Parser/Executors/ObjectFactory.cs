@@ -78,9 +78,9 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// Creates an instance of all the classes that implement the iNodeOptimizer interface.
         /// </summary>
-        public static List<iNodeOptimizer> CreateNodeOptimizers(iExecutor pExecutor)
+        public static List<iOptimizer> CreateNodeOptimizers(iExecutor pExecutor)
         {
-            return CreateObjects<iNodeOptimizer>(new object[] {pExecutor}).ToList();
+            return CreateObjects<iOptimizer>(new object[] {pExecutor}).ToList();
         }
 
         /// <summary>

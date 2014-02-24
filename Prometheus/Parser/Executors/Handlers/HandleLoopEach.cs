@@ -70,31 +70,32 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// Inspect a node
         /// </summary>
-        /// <param name="pNode">The node to check</param>
+        /// <param name="pParent"></param>
+        /// <param name="pChild"></param>
         /// <returns>Same node, a new node or null to remove it.</returns>
-        public override Node Optimize(Node pNode)
+        public override bool OptimizeChild(Node pParent, Node pChild)
         {
-            if (pNode.Type != GrammarSymbol.EachControl)
+            if (pChild.Type != GrammarSymbol.EachControl)
             {
-                return base.Optimize(pNode);
+                return base.OptimizeChild(pParent, pChild);
             }
 
 #if DEBUG
-            ExecutorAssert.Children(pNode, 2);
+            ExecutorAssert.Children(pChild, 2);
 #endif
-            Node eachPlural = pNode.Children[0];
+            Node eachPlural = pChild.Children[0];
             if (eachPlural.Type == GrammarSymbol.PluralID)
             {
-                return base.Optimize(pNode);
+                return base.OptimizeChild(pParent, pChild);
             }
 
             // make sure first child is PluralID
             Node plural = new Node(GrammarSymbol.PluralID, eachPlural.Location);
             plural.Add(eachPlural);
-            pNode.Children.RemoveAt(0);
-            pNode.Children.Insert(0, plural);
+            pChild.Children.RemoveAt(0);
+            pChild.Children.Insert(0, plural);
 
-            return base.Optimize(pNode);
+            return base.OptimizeChild(pParent, pChild);
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Prometheus.Exceptions;
-using Prometheus.Exceptions.Compiler;
-using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Nodes.Types;
 using Prometheus.Parser;
 using Prometheus.Parser.Executors;
 
@@ -17,88 +15,6 @@ namespace Prometheus.Compile.Optimizers
     public class Optimizer
     {
         /// <summary>
-        /// Collapses collection symbols to a single array
-        /// </summary>
-        private static readonly HashSet<GrammarSymbol> _arrays = new HashSet<GrammarSymbol>
-                                                                 {
-                                                                     GrammarSymbol.Statements,
-                                                                     GrammarSymbol.ObjectDecls,
-                                                                     GrammarSymbol.TestDecls,
-                                                                     GrammarSymbol.ImportDecls,
-                                                                     GrammarSymbol.Program,
-                                                                     GrammarSymbol.ArgumentArray,
-                                                                     GrammarSymbol.ArrayLiteralList,
-                                                                     GrammarSymbol.ParameterList,
-                                                                     GrammarSymbol.ArgumentList,
-                                                                     GrammarSymbol.QualifiedList
-                                                                 };
-
-        /// <summary>
-        /// Declaration types that contain an executable block of code (like a function or object constructor). The block
-        /// of code is parented to a new node of the value type. This allows that block of code to be stored, and not executed
-        /// by the parser until the declaration is used.
-        /// </summary>
-        private static readonly Dictionary<GrammarSymbol, GrammarSymbol> _declarations =
-            new Dictionary
-                <GrammarSymbol, GrammarSymbol>
-            {
-                {GrammarSymbol.ObjectDecl, GrammarSymbol.ObjectBlock},
-                {GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock},
-                {GrammarSymbol.TestDecl, GrammarSymbol.TestBlock}
-            };
-
-        /// <summary>
-        /// These nodes can be dropped from the tree, if they have no child and no data.
-        /// </summary>
-        private static readonly HashSet<GrammarSymbol> _drop = new HashSet<GrammarSymbol>
-                                                               {
-                                                                   GrammarSymbol.End,
-                                                                   //GrammarSymbol.Block,
-                                                                   GrammarSymbol.Statement,
-                                                                   GrammarSymbol.Statements,
-                                                                   GrammarSymbol.ObjectDecls,
-                                                                   GrammarSymbol.TestDecls,
-                                                                   GrammarSymbol.ImportDecls,
-                                                                   GrammarSymbol.BaseClassID
-                                                               };
-
-        /// <summary>
-        /// These nodes can have their child promoted, if it's only one child.
-        /// </summary>
-        private static readonly HashSet<GrammarSymbol> _promote = new HashSet<GrammarSymbol>
-                                                                  {
-                                                                      GrammarSymbol.Block,
-                                                                      GrammarSymbol.Statements,
-                                                                      GrammarSymbol.Statement,
-                                                                      GrammarSymbol.ObjectDecls,
-                                                                      GrammarSymbol.TestDecls,
-                                                                      GrammarSymbol.ImportDecls,
-                                                                      GrammarSymbol.Value,
-                                                                      GrammarSymbol.QualifiedList,
-                                                                      GrammarSymbol.ClassNameList
-                                                                  };
-
-        /// <summary>
-        /// These nodes are removed but their children are kept and inserted into the same position as the removed node.
-        /// </summary>
-        private static readonly HashSet<GrammarSymbol> _remove = new HashSet<GrammarSymbol>
-                                                                 {
-                                                                     GrammarSymbol.ProgramTest,
-                                                                     GrammarSymbol.ProgramCode,
-                                                                     GrammarSymbol.BaseClassID,
-                                                                     GrammarSymbol.ClassNameList,
-                                                                     GrammarSymbol.ParameterList
-                                                                 };
-
-        /// <summary>
-        /// These nodes have their data moved to their parents.
-        /// </summary>
-        private static readonly HashSet<GrammarSymbol> _shiftData = new HashSet<GrammarSymbol>
-                                                                    {
-                                                                        GrammarSymbol.BaseClassID
-                                                                    };
-
-        /// <summary>
         /// The current node being optimized.
         /// </summary>
         private Cursor _cursor;
@@ -109,187 +25,51 @@ namespace Prometheus.Compile.Optimizers
         private Executor _executor;
 
         /// <summary>
-        /// The identifiers of objects that are implemented internally.
-        /// </summary>
-        private HashSet<string> _internalIds;
-
-        /// <summary>
-        /// Was the node tree modified
-        /// </summary>
-        private bool _modified;
-
-        /// <summary>
         /// Objects that handle optimization of nodes.
         /// </summary>
-        private List<iNodeOptimizer> _nodeOptimizers;
+        private List<iOptimizer> _optimizers;
+
 
         /// <summary>
-        /// Performs optimization of a node
+        /// Optimizes a node and it's children.
         /// </summary>
-        /// <param name="pNode"></param>
-        /// <returns></returns>
-        private Node CallOptimizers(Node pNode)
+        /// <param name="pNode">The node to work on.</param>
+        /// <returns>True if the tree has been modified</returns>
+        private bool OptimizeNode(Node pNode)
         {
-            // run optimizers on the node
             _cursor.Node = pNode;
-            foreach (iNodeOptimizer nodeOp in _nodeOptimizers)
+
+            if (_optimizers
+                .Where(pNodeOp=>pNodeOp.Optimizable(pNode.Type))
+                .Any(pNodeOp=>pNodeOp.OptimizeNode(pNode)))
             {
-                try
-                {
-                    _cursor.Node = nodeOp.Optimize(_cursor.Node);
-                    if (_cursor.Node == null)
-                    {
-                        return null;
-                    }
-                }
-                catch (PrometheusException e)
-                {
-                    if (_cursor.Node != null && e.Where == null)
-                    {
-                        e.Where = _cursor.Node.Location;
-                    }
-                    throw;
-                }
-            }
-
-            return _cursor.Node;
-        }
-
-        /// <summary>
-        /// Performs optimization of a single node.
-        /// </summary>
-        /// <param name="pNode">The node to optimize</param>
-        /// <returns>Same node, a new node or null.</returns>
-        private Node OptimizeNode(Node pNode)
-        {
-            // change MemberID nodes to ValidID nodes (so Identifier is one type only).
-            if (pNode.Type == GrammarSymbol.MemberID)
-            {
-                Node valid = new Node(GrammarSymbol.ValidID, pNode.Location);
-                valid.Data.AddRange(pNode.Data);
-                valid.Children.AddRange(pNode.Children);
-                return valid;
-            }
-
-            // promote a single child up the tree if the current node does no work
-            if (_promote.Contains(pNode.Type)
-                && pNode.Children.Count == 1
-                && pNode.Data.Count == 0)
-            {
-                return pNode.Children[0];
-            }
-
-            // drop an empty node
-            if ((_drop.Contains(pNode.Type) || _arrays.Contains(pNode.Type))
-                && pNode.Children.Count == 0
-                && pNode.Data.Count == 0)
-            {
-                return null;
-            }
-
-            // bring up children from inner array nodes
-            if (_arrays.Contains(pNode.Type))
-            {
-                List<Node> newChildren = new List<Node>();
-                for (int i = 0, c = pNode.Children.Count; i < c; i++)
-                {
-                    if (_arrays.Contains(pNode.Children[i].Type))
-                    {
-                        newChildren.AddRange(pNode.Children[i].Children);
-                        pNode.Children[i].Children.Clear();
-                        _modified = true;
-                    }
-                    else
-                    {
-                        newChildren.Add(pNode.Children[i]);
-                    }
-                }
-                pNode.Children.Clear();
-                pNode.Children.AddRange(newChildren);
-            }
-
-            // bring up children of a certain type
-            if (pNode.Type == GrammarSymbol.ArrayLiteral
-                && pNode.Children.Count == 1
-                && pNode.Children[0].Type == GrammarSymbol.ArrayLiteralList)
-            {
-                List<Node> children = pNode.Children[0].Children;
-                pNode.Children.Clear();
-                pNode.Children.AddRange(children);
-            }
-
-            return CallOptimizers(pNode);
-        }
-
-        /// <summary>
-        /// Converts the child nodes into a data reference to a qualifier ID.
-        /// </summary>
-        /// <param name="pNode"></param>
-        private void Qualify(Node pNode)
-        {
-            for (int i = 0, c = pNode.Children.Count; i < c; i++)
-            {
-                Node child = pNode.Children[i];
-                if (child.Type == GrammarSymbol.QualifiedList)
-                {
-                    pNode.Children.AddRange(child.Children);
-                    pNode.Children[i] = null;
-                    _modified = true;
-                }
-            }
-            pNode.Reduce();
-        }
-
-        /// <summary>
-        /// Process all the nodes in the tree by walking all branches. Update any
-        /// children that are modified, or remove children if a recursive call
-        /// returns null for that child.
-        /// </summary>
-        private Node WalkBranch(Node pNode)
-        {
-            if (pNode.Type == GrammarSymbol.QualifiedID
-                && pNode.Children.Count != 0)
-            {
-                Qualify(pNode);
-            }
-
-            foreach (GrammarSymbol promote in _remove)
-            {
-                Node remove = pNode.FindChild(promote);
-                if (remove == null)
-                {
-                    continue;
-                }
-                pNode.Children.InsertRange(pNode.Children.IndexOf(remove), remove.Children);
-                pNode.Children.Remove(remove);
-                _modified = true;
-            }
-
-            if (_declarations.ContainsKey(pNode.Type)
-                && !pNode.HasChild(_declarations[pNode.Type]))
-            {
-                Node block = pNode.FindChild(GrammarSymbol.Block);
-                pNode.Children.Remove(block);
-                pNode.Children.Add(new Node(_declarations[pNode.Type], block.Location, new[] {block}));
+                return true;
             }
 
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
                 Node child = pNode.Children[i];
-
-                if (_shiftData.Contains(child.Type))
+                foreach (iOptimizer nodeOp in _optimizers)
                 {
-                    pNode.Data.AddRange(child.Data);
-                    pNode.Data.Clear();
+                    if (nodeOp.Optimizable(pNode.Type)
+                        && nodeOp.OptimizeParent(pNode, child))
+                    {
+                        return true;
+                    }
+                    if (nodeOp.Optimizable(child.Type)
+                        && nodeOp.OptimizeChild(pNode, child))
+                    {
+                        return true;
+                    }
                 }
 
-                pNode.Children[i] = WalkBranch(child);
-                _modified |= pNode.Children[i] != child;
+                if (OptimizeNode(child))
+                {
+                    return true;
+                }
             }
 
-            pNode.Reduce();
-
-            return OptimizeNode(pNode);
+            return false;
         }
 
         /// <summary>
@@ -302,16 +82,40 @@ namespace Prometheus.Compile.Optimizers
             _cursor = new Cursor();
             using (_executor = new Executor(_cursor))
             {
-                _nodeOptimizers = ObjectFactory.CreateNodeOptimizers(_executor);
+                _optimizers = ObjectFactory.CreateNodeOptimizers(_executor);
 
-                do
+                try
                 {
-                    _modified = false;
-                    pRoot = WalkBranch(pRoot) ?? new Node(GrammarSymbol.Statements, Location.None);
-                } while (_modified);
+                    while (OptimizeNode(pRoot))
+                    {
+                    }
+
+                    PostOptimize(pRoot);
+                }
+                catch (PrometheusException e)
+                {
+                    if (_cursor.Node != null && e.Where == null)
+                    {
+                        e.Where = _cursor.Node.Location;
+                    }
+                    throw;
+                }
 
                 return pRoot;
             }
+        }
+
+        /// <summary>
+        /// Walks the entire tree calling PostOptimize
+        /// </summary>
+        private void PostOptimize(Node pNode)
+        {
+            _optimizers
+                .Where(pNodeOp=>pNodeOp.Optimizable(pNode.Type))
+                .ToList()
+                .ForEach(pNodeOp=>pNodeOp.OptimizePost(pNode));
+
+            pNode.Children.ForEach(PostOptimize);
         }
     }
 }

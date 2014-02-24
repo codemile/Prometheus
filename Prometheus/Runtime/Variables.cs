@@ -71,12 +71,13 @@ namespace Prometheus.Runtime
         /// Resolves the assignment value to a data type that
         /// can be assigned.
         /// </summary>
+        // TODO: This just seems the wrong way to create a closure. 
         private DataType ResolveToValue(DataType pValue)
         {
             pValue = Resolve(pValue);
 
-            ClosureType func = pValue as ClosureType;
-            if (func == null || func.HasThis())
+            FunctionType func = pValue as FunctionType;
+            if (func == null)
             {
                 return pValue;
             }

@@ -1,5 +1,6 @@
 ﻿using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Storage;
 
 namespace PrometheusTest.Mock.Types
 {
@@ -8,21 +9,8 @@ namespace PrometheusTest.Mock.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public MockClosure(InstanceType pThis, ClosureType pFunction)
+        public MockClosure(InstanceType pThis, FunctionType pFunction)
             : base(pThis, pFunction)
-        {
-        }
-
-        /// <summary>
-        /// Un-compiled closure
-        /// </summary>
-        public MockClosure(Node pFunction)
-            : base(pFunction)
-        {
-        }
-
-        public MockClosure()
-            : this(MockNode.Create())
         {
         }
     }

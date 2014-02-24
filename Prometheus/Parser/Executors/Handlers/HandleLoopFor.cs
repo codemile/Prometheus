@@ -61,35 +61,33 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// Ensure the for statement contains required children.
         /// </summary>
-        public override Node Optimize(Node pNode)
+        public override bool OptimizeChild(Node pParent, Node pChild)
         {
             // promote the child
-            if (pNode.Type == GrammarSymbol.ForExpression)
+            if (pChild.Type == GrammarSymbol.ForExpression)
             {
 #if DEBUG
-                ExecutorAssert.Children(pNode, 1);
+                ExecutorAssert.Children(pChild, 1);
 #endif
-                return pNode.FirstChild();
+                int where = pParent.Children.IndexOf(pChild);
+                pParent.Children.RemoveAt(where);
+                pParent.Children.Insert(where,pChild.FirstChild());
+
+                return true;
             }
 
-            if (pNode.Type != GrammarSymbol.ForControl || pNode.Children.Count == 4)
+            if (pChild.Type != GrammarSymbol.ForControl || pChild.Children.Count == 4)
             {
-                return base.Optimize(pNode);
+                return false;
             }
 
-            if (pNode.Children[0].Type != GrammarSymbol.ForDeclare)
+            if (pChild.Children[0].Type != GrammarSymbol.ForDeclare)
             {
-                pNode.Children.Insert(0, new Node(GrammarSymbol.ForDeclare, pNode.Location));
+                pChild.Children.Insert(0, new Node(GrammarSymbol.ForDeclare, pChild.Location));
+                return true;
             }
 
-/*
-            if (pNode.Children[2].Type != GrammarSymbol.ForStep)
-            {
-                pNode.Children.Insert(2, new Node(GrammarSymbol.ForStep, pNode.Location));
-            }
-*/
-
-            return base.Optimize(pNode);
+            return false;
         }
     }
 }

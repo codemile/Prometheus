@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
+using Prometheus.Storage;
 
 namespace Prometheus.Nodes.Types
 {
@@ -14,88 +15,56 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// The function
         /// </summary>
-        public readonly Node Function;
+        public readonly FunctionType Function;
 
         /// <summary>
-        /// The function parameters
+        /// Name of the instance object.
         /// </summary>
-        public readonly ArrayType Parameters;
+        private readonly string _name;
 
         /// <summary>
         /// Reference to "this"
         /// </summary>
-        public readonly InstanceType This;
+        private readonly InstanceType _this;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ClosureType(InstanceType pThis, ClosureType pFunction)
+        public ClosureType(InstanceType pThis, FunctionType pFunction)
         {
-            This = pThis;
-            Function = pFunction.Function;
-            Parameters = (ArrayType)pFunction.Parameters.Clone();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ClosureType(Node pFunction)
-        {
+            _name = IdentifierType.THIS;
+            _this = pThis;
             Function = pFunction;
-            Parameters = new ArrayType();
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ClosureType(Node pFunction, IEnumerable<DataType> pParameters)
-            : this(pFunction)
+        public ClosureType(FunctionType pFunction)
         {
-            Parameters.Values.AddRange(pParameters);
+            _name = IdentifierType.FUNC;
+            _this = new InstanceType();
         }
 
         /// <summary>
-        /// Returns "function"
+        /// Returns "closure"
         /// </summary>
         public override string ToString()
         {
-            return "function";
+            return "closure";
         }
 
         /// <summary>
         /// Creates the variables to be sent when executing the function.
         /// </summary>
-        public Dictionary<string, DataType> CreateArguments(DataType[] pArgs)
+        public Dictionary<string, DataType> CreateArguments(DataType[] pArgs = null)
         {
-            if (pArgs.Length != Parameters.Count)
-            {
-                throw new InvalidArgumentException(string.Format(
-                    "Function was expecting {0} parameters but was past {1} instead.", Parameters.Count,
-                    pArgs.Length));
-            }
-
-            Dictionary<string, DataType> variables = new Dictionary<string, DataType>();
-
-            for (int i = 0, c = pArgs.Length; i < c; i++)
-            {
-                IdentifierType name = (IdentifierType)Parameters[i];
-                variables.Add(name.Name, pArgs[i]);
-            }
-
-            if (This != null)
-            {
-                variables.Add(IdentifierType.THIS, This);
-            }
-
+            Dictionary<string, DataType> variables = (pArgs != null)
+                ? Function.CreateArguments(pArgs)
+                : new Dictionary<string, DataType>();
+            variables.Add(_name, _this);
             return variables;
         }
 
-        /// <summary>
-        /// True if this closure has been compiled.
-        /// </summary>
-        public bool HasThis()
-        {
-            return This != null;
-        }
     }
 }

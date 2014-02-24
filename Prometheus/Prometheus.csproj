@@ -44,8 +44,17 @@
   <ItemGroup>
     <Compile Include="Compile\Builder.cs" />
     <Compile Include="Compile\Optimizers\Assertion.cs" />
-    <Compile Include="Compile\Optimizers\iNodeOptimizer.cs" />
+    <Compile Include="Compile\Optimizers\BaseOptimizer.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeArrays.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeRemoveNodes.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeLists.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeCollapseNode.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeEmptyNode.cs" />
+    <Compile Include="Compile\Optimizers\iOptimizer.cs" />
     <Compile Include="Compile\Optimizers\Optimizer.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeQualifier.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeTest.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeValue.cs" />
     <Compile Include="Compile\Packaging\Compiled.cs" />
     <Compile Include="Exceptions\Compiler\OptimizationException.cs" />
     <Compile Include="Exceptions\Compiler\PackageErrorException.cs" />
@@ -68,6 +77,7 @@
     <Compile Include="Exceptions\Executor\TestException.cs" />
     <Compile Include="Exceptions\PrometheusException.cs" />
     <Compile Include="Nodes\Inflector.cs" />
+    <Compile Include="Nodes\NodeExtension.cs" />
     <Compile Include="Nodes\RegexFactory.cs" />
     <Compile Include="Nodes\Types\ArrayType.cs" />
     <Compile Include="Nodes\Types\Bases\ArrayPointer.cs" />
@@ -75,6 +85,7 @@
     <Compile Include="Nodes\Types\Bases\iSearchNeedle.cs" />
     <Compile Include="Nodes\Types\BooleanType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
+    <Compile Include="Nodes\Types\FunctionType.cs" />
     <Compile Include="Nodes\Types\NumericType.cs" />
     <Compile Include="Nodes\Types\PluralType.cs" />
     <Compile Include="Nodes\Types\QualifiedType.cs" />

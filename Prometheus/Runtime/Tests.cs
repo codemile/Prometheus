@@ -43,10 +43,12 @@ namespace Prometheus.Runtime
             try
             {
                 QualifiedType unit = new QualifiedType(Cursor.UnitTest);
-                ClosureType func = Cursor.Get<ClosureType>(unit);
-                return func.Function.Children.Count == 0
-                    ? UndefinedType.Undefined
-                    : Executor.Execute(func.Function);
+                FunctionType func = Cursor.Get<FunctionType>(unit);
+
+                InstanceType inst = new InstanceType();
+                ClosureType closure = new ClosureType(inst, func);
+
+                return Executor.Execute(closure.Function.Entry, closure.CreateArguments(new DataType[0]));
             }
             catch (ReturnException returnData)
             {
@@ -84,7 +86,7 @@ namespace Prometheus.Runtime
         /// Declares a unit test.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.TestDecl)]
-        public DataType UnitTest(IdentifierType pName, ClosureType pTest)
+        public DataType UnitTest(IdentifierType pName, FunctionType pTest)
         {
             _tests.Add(pName.Name);
             Cursor.Stack.Create(pName.Name, pTest);

@@ -9,11 +9,6 @@ namespace Prometheus.Parser.Executors.Handlers
     public interface iExecutorHandler
     {
         /// <summary>
-        /// True if handler processes this node.
-        /// </summary>
-        bool CanHandleNode(Node pNode);
-
-        /// <summary>
         /// The unique ID of the handler.
         /// </summary>
         int GetHandlerCode();

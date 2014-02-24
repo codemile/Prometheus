@@ -97,7 +97,7 @@ namespace Prometheus.Runtime
                 }
                 Dictionary<string, DataType> dataTypes = decl.Constructor.CreateArguments(arguments);
                 dataTypes.Add(IdentifierType.THIS, inst);
-                Executor.Execute(decl.Constructor.Function, dataTypes);
+                Executor.Execute(decl.Constructor.Entry, dataTypes);
             }
             catch (ReturnException)
             {
@@ -115,7 +115,7 @@ namespace Prometheus.Runtime
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(IdentifierType pObjectName, ClosureType pConstructor)
+        public DataType ObjectDeclare(IdentifierType pObjectName, FunctionType pConstructor)
         {
             return ObjectDeclare(pObjectName, ArrayType.Empty, pConstructor);
         }
@@ -124,12 +124,12 @@ namespace Prometheus.Runtime
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(IdentifierType pObjectName, ArrayType pParameters, ClosureType pConstructor)
+        public DataType ObjectDeclare(IdentifierType pObjectName, ArrayType pParameters, FunctionType pConstructor)
         {
             QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);
             DeclarationType decl = new DeclarationType(
                 className,
-                new ClosureType(pConstructor.Function, pParameters));
+                new FunctionType(pConstructor.Entry, pParameters));
             Cursor.Stack.Create(className.ToString(), decl);
             return decl;
         }
@@ -139,13 +139,13 @@ namespace Prometheus.Runtime
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
         public DataType ObjectDeclare(QualifiedType pBaseName, IdentifierType pObjectName, ArrayType pParameters,
-                                      ClosureType pConstructor)
+                                      FunctionType pConstructor)
         {
             QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);
             DeclarationType decl = new DeclarationType(
                 pBaseName,
                 className,
-                new ClosureType(pConstructor.Function, pParameters));
+                new FunctionType(pConstructor.Entry, pParameters));
             Cursor.Stack.Create(className.ToString(), decl);
             return decl;
         }

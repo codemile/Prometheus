@@ -39,7 +39,7 @@ namespace Prometheus.Runtime
             {
                 ClosureType func = Cursor.Get<ClosureType>(pId);
                 // empty function check
-                if (func.Function.Children.Count == 0)
+                if (func.Function.Entry.Children.Count == 0)
                 {
                     return UndefinedType.Undefined;
                 }
@@ -50,7 +50,7 @@ namespace Prometheus.Runtime
                     arguments[i] = Resolve(pArguments[i]);
                 }
                 // call the function
-                return Executor.Execute(func.Function, func.CreateArguments(arguments));
+                return Executor.Execute(func.Function.Entry, func.CreateArguments(arguments));
             }
             catch (ReturnException returnData)
             {
@@ -62,19 +62,14 @@ namespace Prometheus.Runtime
         /// Declares a new function type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(IdentifierType pFuncName, ClosureType pFunc)
+        public DataType FunctionDeclare(IdentifierType pFuncName, FunctionType pFunc)
         {
-            Cursor.Stack.Create(pFuncName.Name, pFunc);
-            return UndefinedType.Undefined;
-        }
+            //InstanceType inst = new InstanceType();
+            InstanceType inst = Resolve<InstanceType>(IdentifierType.This);
+            ClosureType closure = new ClosureType(inst,pFunc);
 
-        /// <summary>
-        /// Declares a new function type
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(IdentifierType pFuncName, IEnumerable<DataType> pParameters, ClosureType pFunc)
-        {
-            Cursor.Stack.Create(pFuncName.Name, new ClosureType(pFunc.Function, pParameters));
+            Cursor.Stack.Create(pFuncName.Name, closure);
+
             return UndefinedType.Undefined;
         }
 
@@ -93,7 +88,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.ReturnProc)]
         public DataType Return(DataType pDataType)
         {
-            throw new ReturnException(pDataType);
+            throw new ReturnException(Resolve(pDataType));
         }
     }
 }

@@ -22,12 +22,12 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// The constructor function.
         /// </summary>
-        public readonly ClosureType Constructor;
+        public readonly FunctionType Constructor;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public DeclarationType(QualifiedType pBase, QualifiedType pClassName, ClosureType pConstructor)
+        public DeclarationType(QualifiedType pBase, QualifiedType pClassName, FunctionType pConstructor)
             : this(pClassName, pConstructor)
         {
             ClassName = pClassName;
@@ -37,7 +37,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public DeclarationType(QualifiedType pClassName, ClosureType pConstructor)
+        public DeclarationType(QualifiedType pClassName, FunctionType pConstructor)
         {
             ClassName = pClassName;
             Constructor = pConstructor;

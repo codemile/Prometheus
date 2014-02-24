@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using Prometheus.Compile;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types.Bases;
 
@@ -26,12 +27,12 @@ namespace Prometheus.Nodes
         /// <summary>
         /// Where in the source code this node came from.
         /// </summary>
-        public readonly Location Location;
+        public Location Location;
 
         /// <summary>
         /// The type of node.
         /// </summary>
-        public readonly GrammarSymbol Type;
+        public GrammarSymbol Type;
 
         /// <summary>
         /// Does this node have a special handler.
@@ -67,6 +68,28 @@ namespace Prometheus.Nodes
         public static Node NoOp()
         {
             return new Node(GrammarSymbol.Statement, Location.None);
+        }
+
+        /// <summary>
+        /// Sets this node to all the values of the other node.
+        /// </summary>
+        public void Set(Node pNode)
+        {
+#if DEBUG
+            if (this == pNode)
+            {
+                throw new InvalidArgumentException("Cannot set node with itself",pNode);
+            }
+#endif
+
+            Children.Clear();
+            Data.Clear();
+
+            Type = pNode.Type;
+            Handler = pNode.Handler;
+            Location = pNode.Location;
+            Children.AddRange(pNode.Children);
+            Data.AddRange(pNode.Data);
         }
 
         /// <summary>
@@ -148,6 +171,14 @@ namespace Prometheus.Nodes
         {
             Children.RemoveAll(pChild=>pChild == null);
             Data.RemoveAll(pData=>pData == null);
+        }
+
+        /// <summary>
+        /// True if this node contains no data and no children.
+        /// </summary>
+        public bool IsEmpty()
+        {
+            return Children.Count == 0 && Data.Count == 0;
         }
     }
 }

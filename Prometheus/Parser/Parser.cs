@@ -95,7 +95,7 @@ namespace Prometheus.Parser
         {
             return (from child in pImported.Children
                     where child.Type == GrammarSymbol.TestDecl
-                    select child.FirstChild().FirstData().Cast<IdentifierType>().Name).ToList();
+                    select child.FirstData().Cast<IdentifierType>().Name).ToList();
         }
 
         /// <summary>

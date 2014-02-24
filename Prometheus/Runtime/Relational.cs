@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prometheus.Compile.Optimizers;
+using Prometheus.Exceptions.Compiler;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -14,23 +15,33 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Implements the operators for greater than and less than.
     /// </summary>
-    public class Relational : ExecutorGrammar, iNodeOptimizer
+    public class Relational : ExecutorGrammar, iOptimizer
     {
         /// <summary>
         /// A list of relational operators
         /// </summary>
-        private readonly HashSet<GrammarSymbol> _compareSymbols;
+        private static readonly HashSet<GrammarSymbol> _compareSymbols = new HashSet<GrammarSymbol>
+                                                                         {
+                                                                             GrammarSymbol.GtOperator,
+                                                                             GrammarSymbol.LtOperator,
+                                                                             GrammarSymbol.GteOperator,
+                                                                             GrammarSymbol.LteOperator,
+                                                                             GrammarSymbol.EqualOperator,
+                                                                             GrammarSymbol.NotEqualOperator,
+                                                                             GrammarSymbol.AndOperator,
+                                                                             GrammarSymbol.OrOperator
+                                                                         };
 
         /// <summary>
         /// Checks if a node performs math operations on two constant values.
         /// </summary>
         /// <param name="pNode">The node to check</param>
         /// <returns>True if it can be reduced.</returns>
-        private bool CanReduce(Node pNode)
+        private static bool CanReduce(Node pNode)
         {
-            return (_compareSymbols.Contains(pNode.Type) &&
-                    pNode.Children[0].Type == GrammarSymbol.Value &&
-                    pNode.Children[1].Type == GrammarSymbol.Value);
+            return (_compareSymbols.Contains(pNode.Type)
+                    && pNode.Children[0].Type == GrammarSymbol.Value
+                    && pNode.Children[1].Type == GrammarSymbol.Value);
         }
 
         /// <summary>
@@ -39,68 +50,97 @@ namespace Prometheus.Runtime
         public Relational(Executor pExecutor)
             : base(pExecutor)
         {
-            _compareSymbols = new HashSet<GrammarSymbol>
-                              {
-                                  GrammarSymbol.GtOperator,
-                                  GrammarSymbol.LtOperator,
-                                  GrammarSymbol.GteOperator,
-                                  GrammarSymbol.LteOperator,
-                                  GrammarSymbol.EqualOperator,
-                                  GrammarSymbol.NotEqualOperator,
-                                  GrammarSymbol.AndOperator,
-                                  GrammarSymbol.OrOperator
-                              };
         }
 
         /// <summary>
-        /// Inspect a node
+        /// Filter what nodes this optimizer is executed for.
         /// </summary>
-        /// <param name="pNode">The node to check</param>
-        /// <returns>Same node, a new node or null to remove it.</returns>
-        public Node Optimize(Node pNode)
+        public bool Optimizable(GrammarSymbol pType)
+        {
+            return _compareSymbols.Contains(pType);
+        }
+
+        /// <summary>
+        /// Called for each node in the tree. Implement this to
+        /// modify just the node.
+        /// </summary>
+        /// <returns>True if tree was modified.</returns>
+        public bool OptimizeNode(Node pNode)
         {
             if (pNode.Children.Count != 2 ||
                 pNode.Data.Count != 0 ||
                 !CanReduce(pNode))
             {
-                return pNode;
+                return false;
             }
-
-            // do relational operation now
-            Node reduced = new Node(GrammarSymbol.Value, pNode.Location);
 
             DataType valueA = pNode.Children[0].Data[0];
             DataType valueB = pNode.Children[1].Data[0];
 
+            pNode.Children.Clear();
+
             switch (pNode.Type)
             {
                 case GrammarSymbol.GtOperator:
-                    reduced.Data.Add(GreaterThan(valueA, valueB));
+                    pNode.Data.Add(GreaterThan(valueA, valueB));
                     break;
                 case GrammarSymbol.LtOperator:
-                    reduced.Data.Add(LessThan(valueA, valueB));
+                    pNode.Data.Add(LessThan(valueA, valueB));
                     break;
                 case GrammarSymbol.GteOperator:
-                    reduced.Data.Add(GreaterThanEqual(valueA, valueB));
+                    pNode.Data.Add(GreaterThanEqual(valueA, valueB));
                     break;
                 case GrammarSymbol.LteOperator:
-                    reduced.Data.Add(LessThanEqual(valueA, valueB));
+                    pNode.Data.Add(LessThanEqual(valueA, valueB));
                     break;
                 case GrammarSymbol.EqualOperator:
-                    reduced.Data.Add(Equal(valueA, valueB));
+                    pNode.Data.Add(Equal(valueA, valueB));
                     break;
                 case GrammarSymbol.NotEqualOperator:
-                    reduced.Data.Add(NotEqual(valueA, valueB));
+                    pNode.Data.Add(NotEqual(valueA, valueB));
                     break;
                 case GrammarSymbol.AndOperator:
-                    reduced.Data.Add(AndOp(valueA, valueB));
+                    pNode.Data.Add(AndOp(valueA, valueB));
                     break;
                 case GrammarSymbol.OrOperator:
-                    reduced.Data.Add(OrOp(valueA, valueB));
+                    pNode.Data.Add(OrOp(valueA, valueB));
                     break;
+                default:
+                    throw new UnsupportedDataTypeException(string.Format("Cannot optimize <{0}> value type",pNode.Type),Cursor.Node.Location);
             }
 
-            return reduced;
+            pNode.Type = GrammarSymbol.Value;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Inspect a node
+        /// </summary>
+        /// <param name="pParent"></param>
+        /// <param name="pChild"></param>
+        /// <returns>Same node, a new node or null to remove it.</returns>
+        public bool OptimizeChild(Node pParent, Node pChild)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Called when a parent node matches the handled type. Implement this to
+        /// modify the parent to child relationship.
+        /// </summary>
+        /// <returns>True if tree was modified.</returns>
+        public bool OptimizeParent(Node pParent, Node pChild)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Inspect a node after optimization has finished. This method
+        /// is called only once per node.
+        /// </summary>
+        public void OptimizePost(Node pNode)
+        {
         }
 
         /// <summary>
