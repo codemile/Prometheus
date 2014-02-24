@@ -101,5 +101,23 @@ namespace Prometheus.Storage
             }
             throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
         }
+
+        /// <summary>
+        /// Checks if the storage contains a variable.
+        /// </summary>
+        /// <param name="pName">The name to create</param>
+        /// <returns>True if exists</returns>
+        public override bool Has(string pName)
+        {
+            if (base.Has(pName))
+            {
+                return true;
+            }
+            if (Parent != null)
+            {
+                return Parent.Has(pName);
+            }
+            return false;
+        }
     }
 }

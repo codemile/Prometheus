@@ -55,12 +55,6 @@ namespace Prometheus.Storage
         /// <returns>The data</returns>
         public virtual DataType Get(string pName)
         {
-/*
-            if (!_storage.ContainsKey(pName))
-            {
-                throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
-            }
-*/
             return _storage.ContainsKey(pName) ? _storage[pName] : null;
         }
 
@@ -132,7 +126,7 @@ namespace Prometheus.Storage
         /// </summary>
         /// <param name="pName">The name to create</param>
         /// <returns>True if exists</returns>
-        public bool Has(string pName)
+        public virtual bool Has(string pName)
         {
             return _storage.ContainsKey(pName);
         }

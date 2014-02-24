@@ -7,3 +7,4 @@ Use "FlowControl/If";
 Use "FlowControl/Loops";
 Use "FlowControl/Collections";
 Use "Closures/Functions";
+Use "Variables/Scope";

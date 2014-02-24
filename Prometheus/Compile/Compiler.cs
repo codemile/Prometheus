@@ -103,7 +103,7 @@ namespace Prometheus.Compile
             {
                 int x = _parser.CurrentPosition().Line + 1;
                 int y = _parser.CurrentPosition().Column + 1;
-                Location location = new Location(pFileName, lines[x - 1].Trim(), x, y);
+                Location location = new Location(pFileName, lines[x - 1].Replace("\t"," "), x, y);
 
                 try
                 {
