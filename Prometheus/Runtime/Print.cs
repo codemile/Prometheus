@@ -5,22 +5,22 @@ using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 
-namespace Prometheus.Runtime.Generics
+namespace Prometheus.Runtime
 {
     /// <summary>
     /// Prints a string to the output.
     /// </summary>
-    public class PrintCommand : ExecutorGrammar
+    public class Print : ExecutorGrammar
     {
         /// <summary>
         /// Logging
         /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof (PrintCommand));
+        private static readonly Logger _logger = Logger.Create(typeof (Print));
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public PrintCommand(Executor pExecutor)
+        public Print(Executor pExecutor)
             : base(pExecutor)
         {
         }
@@ -30,7 +30,7 @@ namespace Prometheus.Runtime.Generics
         /// </summary>
         /// <param name="pValue">The message to print.</param>
         [ExecuteSymbol(GrammarSymbol.PrintProc)]
-        public DataType Print(DataType pValue)
+        public DataType PrintProc(DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
 

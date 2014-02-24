@@ -16,7 +16,7 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles basic math operations.
     /// </summary>
-    public class MathOperators : ExecutorGrammar, iNodeOptimizer
+    public class Math : ExecutorGrammar, iNodeOptimizer
     {
         /// <summary>
         /// A list of math operations
@@ -38,7 +38,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public MathOperators(Executor pExecutor)
+        public Math(Executor pExecutor)
             : base(pExecutor)
         {
             _mathSymbols = new HashSet<GrammarSymbol>
@@ -263,7 +263,7 @@ namespace Prometheus.Runtime
                 && num2.isLong
                 && num2.Long >= 0)
             {
-                int c = Math.Min((int)num2.Long, arr1.Count);
+                int c = System.Math.Min((int)num2.Long, arr1.Count);
                 if (c == 0)
                 {
                     return arr1.Clone();
@@ -312,7 +312,7 @@ namespace Prometheus.Runtime
                 ArrayType arr = new ArrayType();
                 for (int i = 0, ic = arr1.Count; i < ic; i++)
                 {
-                    if (RelationalOperators.Contains(arr2, arr1[i]))
+                    if (Relational.Contains(arr2, arr1[i]))
                     {
                         continue;
                     }

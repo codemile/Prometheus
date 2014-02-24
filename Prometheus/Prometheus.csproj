@@ -96,9 +96,8 @@
     <Compile Include="Parser\Executors\Handlers\HandleValue.cs" />
     <Compile Include="Parser\Executors\iExecutor.cs" />
     <Compile Include="Parser\Executors\Handlers\iExecutorHandler.cs" />
-    <Compile Include="Runtime\Generics\MathGeneric.cs" />
-    <Compile Include="Runtime\SearchOperators.cs" />
-    <Compile Include="Runtime\TestGrammar.cs" />
+    <Compile Include="Runtime\Search.cs" />
+    <Compile Include="Runtime\Tests.cs" />
     <Compile Include="Packages\Reader.cs" />
     <Compile Include="Storage\iMemoryDump.cs" />
     <Compile Include="Storage\iMemorySpace.cs" />
@@ -127,10 +126,9 @@
     <Compile Include="Parser\Executors\ExecutorGrammar.cs" />
     <Compile Include="Runtime\Arguments.cs" />
     <Compile Include="Runtime\Functions.cs" />
-    <Compile Include="Runtime\MathOperators.cs" />
-    <Compile Include="Runtime\ObjectGrammar.cs" />
-    <Compile Include="Runtime\RelationalOperators.cs" />
-    <Compile Include="Runtime\Generics\StringGeneric.cs" />
+    <Compile Include="Runtime\Math.cs" />
+    <Compile Include="Runtime\Objects.cs" />
+    <Compile Include="Runtime\Relational.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Runtime\Variables.cs" />
     <Compile Include="Nodes\Node.cs" />
@@ -150,7 +148,7 @@
     <Compile Include="Exceptions\Compiler\SyntaxException.cs" />
     <Compile Include="Compile\Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runtime\PrintCommand.cs" />
+    <Compile Include="Runtime\Print.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Errors.resx">

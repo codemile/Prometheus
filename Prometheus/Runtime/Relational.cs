@@ -14,7 +14,7 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Implements the operators for greater than and less than.
     /// </summary>
-    public class RelationalOperators : ExecutorGrammar, iNodeOptimizer
+    public class Relational : ExecutorGrammar, iNodeOptimizer
     {
         /// <summary>
         /// A list of relational operators
@@ -36,7 +36,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public RelationalOperators(Executor pExecutor)
+        public Relational(Executor pExecutor)
             : base(pExecutor)
         {
             _compareSymbols = new HashSet<GrammarSymbol>
@@ -148,7 +148,7 @@ namespace Prometheus.Runtime
                 {
                     return num1.Long == num2.Long;
                 }
-                return Math.Abs(num1.Double - num2.Double) < 0.0000000000001;
+                return System.Math.Abs(num1.Double - num2.Double) < 0.0000000000001;
             }
 
             // compare boolean

@@ -11,12 +11,12 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Implements the search operators and terms.
     /// </summary>
-    public class SearchOperators : ExecutorGrammar
+    public class Search : ExecutorGrammar
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public SearchOperators(Executor pExecutor)
+        public Search(Executor pExecutor)
             : base(pExecutor)
         {
         }

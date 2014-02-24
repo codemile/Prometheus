@@ -12,7 +12,7 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles grammar related to running unit tests.
     /// </summary>
-    public class TestGrammar : ExecutorGrammar
+    public class Tests : ExecutorGrammar
     {
         /// <summary>
         /// List of unit tests to execute.
@@ -27,7 +27,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public TestGrammar(Executor pExecutor)
+        public Tests(Executor pExecutor)
             : base(pExecutor)
         {
             _tests = new List<string>();

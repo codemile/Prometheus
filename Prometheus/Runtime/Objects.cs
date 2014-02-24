@@ -12,7 +12,7 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles grammar related to declaring objects.
     /// </summary>
-    public class ObjectGrammar : ExecutorGrammar
+    public class Objects : ExecutorGrammar
     {
         /// <summary>
         /// Walks the inheritance of declarations creating each from the
@@ -38,7 +38,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public ObjectGrammar(Executor pExecutor)
+        public Objects(Executor pExecutor)
             : base(pExecutor)
         {
         }

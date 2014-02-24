@@ -22,36 +22,3 @@ Test Isset_Function_Test {
 	};
 	Assert isset foo;
 };
-
-Test Isset_Function_Scope_Test {
-	var x = 4;
-	var foo = function {
-		Assert isset x;
-		return "done";
-	};
-	function boo {
-		Assert isset x;
-		return "done";
-	};
-	Assert foo() == "done";
-	Assert boo()  == "done";
-};
-
-Test Isset_Deep_Scope_Test {
-	var x = 4;
-	var foo = function {
-		var boo = function {
-			var zoo = function {
-				Assert isset x;
-				return "done";
-			};
-			Assert zoo() == "done";
-			return "done";
-		};
-		Assert boo() == "done";
-		return "done";
-	};
-	Assert foo() == "done";
-	Assert not isset boo;
-	Assert not isset zoo;
-};
