@@ -374,8 +374,6 @@ Comment Line  = '//'
 
 <List Vars>			::= 'vars'
 
-<Call Generic>		::= Identifier <Argument Array>
-
 ! ===================================================================
 ! Functions (can be used in expressions)
 ! ===================================================================

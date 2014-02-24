@@ -1,0 +1,50 @@
+Tests;
+
+Test Declare_Function_Test {
+	function foo {
+	};
+	Assert isset foo;
+};
+
+Test Return_Test {
+	function foo {
+		return "done";
+	};
+	Assert isset foo;
+	Assert foo() == "done";
+};
+
+Test Variable_Function_Test {
+	var foo = function {
+	};
+	Assert isset foo;
+};
+
+Test Variable_Return_Test {
+	var foo = function {
+		return "done";
+	};
+	Assert isset foo;
+	Assert foo() == "done";
+};
+
+Test Declare_Argument_Test {
+	function foo(arg) {
+		return arg * 3;
+	};
+	Assert foo(3) == 9;
+};
+
+Test Declare_Arguments_Test {
+	function foo(arg1,arg2,arg3) {
+		return arg1 + arg2 + arg3;
+	};
+	Assert foo(1,2,3) == 6;
+};
+
+Test Variable_Arguments_Test {
+	var foo = function(arg1,arg2,arg3) {
+		return arg1 + arg2 + arg3;
+	};
+	Assert foo(1,2,3) == 6;
+};

@@ -25,11 +25,6 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// All the objects that implement symbol methods.
         /// </summary>
-        private readonly Dictionary<string, ExecutorGeneric> _genericLookup;
-
-        /// <summary>
-        /// All the objects that implement symbol methods.
-        /// </summary>
         private readonly Dictionary<GrammarSymbol, ExecutorGrammar> _grammarLookup;
 
         /// <summary>
@@ -54,8 +49,6 @@ namespace Prometheus.Parser.Executors
 
             _grammarLookup =
                 ObjectFactory.CreateLookupTable<GrammarSymbol, ExecutorGrammar, ExecuteSymbol>(new object[] {this});
-            _genericLookup =
-                ObjectFactory.CreateLookupTable<string, ExecutorGeneric, ExecuteGeneric>(new object[] {this});
 
             _handlers = new Dictionary<int, iExecutorHandler>();
             ObjectFactory.CreateExecutorHandlers(this).ForEach(AddHandler);
@@ -235,22 +228,10 @@ namespace Prometheus.Parser.Executors
             ExecutorBase _base;
             int dCount = pParent.Data.Count;
 
-            if (pParent.Type == GrammarSymbol.CallGeneric)
-            {
-                string name = pParent.Data[0].Cast<IdentifierType>().Name;
-#if DEBUG
-                ExecutorAssert.Node(_genericLookup, name, pParent);
-#endif
-                _base = _genericLookup[name];
-                dCount--;
-            }
-            else
-            {
 #if DEBUG
                 ExecutorAssert.Node(_grammarLookup, pParent.Type, pParent);
 #endif
-                _base = _grammarLookup[pParent.Type];
-            }
+            _base = _grammarLookup[pParent.Type];
 
             int cChild = pParent.Children.Count;
             object[] values = new object[cChild + dCount];
@@ -288,15 +269,6 @@ namespace Prometheus.Parser.Executors
             {
                 return WalkDownChildren(pNode);
             }
-        }
-
-        /// <summary>
-        /// Returns a list of internal API functions that are reserved words.
-        /// </summary>
-        /// <returns>A collection of internal names.</returns>
-        public IEnumerable<string> GetInternalIds()
-        {
-            return _genericLookup.Keys.ToList();
         }
     }
 }

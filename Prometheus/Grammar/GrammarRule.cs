@@ -211,11 +211,10 @@ namespace Prometheus.Grammar
 		@FailProc_fail = 200,                            // <Fail Proc> ::= fail <Expression>
 		@FailProc_fail2 = 201,                           // <Fail Proc> ::= fail
 		@ListVars_vars = 202,                            // <List Vars> ::= vars
-		@CallGeneric_Identifier = 203,                   // <Call Generic> ::= Identifier <Argument Array>
-		@AllFunctions = 204,                             // <All Functions> ::= <Variable Functions>
-		@VariableFunctions = 205,                        // <Variable Functions> ::= <Isset Func>
-		@VariableFunctions2 = 206,                       // <Variable Functions> ::= <TypeOf Func>
-		@IssetFunc_isset = 207,                          // <Isset Func> ::= isset <Qualified ID>
-		@TypeOfFunc_typeof = 208                         // <TypeOf Func> ::= typeof <Expression>
+		@AllFunctions = 203,                             // <All Functions> ::= <Variable Functions>
+		@VariableFunctions = 204,                        // <Variable Functions> ::= <Isset Func>
+		@VariableFunctions2 = 205,                       // <Variable Functions> ::= <TypeOf Func>
+		@IssetFunc_isset = 206,                          // <Isset Func> ::= isset <Qualified ID>
+		@TypeOfFunc_typeof = 207                         // <TypeOf Func> ::= typeof <Expression>
 	}
 }

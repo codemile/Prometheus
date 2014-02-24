@@ -35,7 +35,16 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         public override DataType Handle(Node pNode)
         {
-            return new ClosureType(pNode.FirstChild());
+            if (pNode.Type != GrammarSymbol.FunctionExpression
+                || pNode.Children.Count == 1)
+            {
+                return new ClosureType(pNode.FirstChild());
+            }
+
+            ArrayType arguments = Executor.WalkDownChildren(pNode.Children[0]).Cast<ArrayType>();
+            Node func = pNode.Children[1];
+
+            return new ClosureType(func, arguments);
         }
     }
 }

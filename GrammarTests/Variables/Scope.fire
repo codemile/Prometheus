@@ -8,3 +8,11 @@ Test Isset_Test {
 Test Not_Isset_Test {
 	Assert not isset x;
 };
+
+Test Isset_Function_Test {
+	var foo = function() {
+		return "done";
+	};
+	Assert isset foo;
+	print foo();
+};

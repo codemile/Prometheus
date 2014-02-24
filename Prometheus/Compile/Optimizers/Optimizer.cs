@@ -86,7 +86,8 @@ namespace Prometheus.Compile.Optimizers
                                                                      GrammarSymbol.ProgramTest,
                                                                      GrammarSymbol.ProgramCode,
                                                                      GrammarSymbol.BaseClassID,
-                                                                     GrammarSymbol.ClassNameList
+                                                                     GrammarSymbol.ClassNameList,
+                                                                     GrammarSymbol.ParameterList
                                                                  };
 
         /// <summary>
@@ -161,15 +162,6 @@ namespace Prometheus.Compile.Optimizers
         /// <returns>Same node, a new node or null.</returns>
         private Node OptimizeNode(Node pNode)
         {
-            if (pNode.Type == GrammarSymbol.CallGeneric)
-            {
-                string name = pNode.FirstData().Cast<IdentifierType>().Name;
-                if (!_internalIds.Contains(name))
-                {
-                    throw new LexicalException(string.Format("Command not supported <{0}>", name), pNode.Location);
-                }
-            }
-
             // change MemberID nodes to ValidID nodes (so Identifier is one type only).
             if (pNode.Type == GrammarSymbol.MemberID)
             {
@@ -311,7 +303,6 @@ namespace Prometheus.Compile.Optimizers
             using (_executor = new Executor(_cursor))
             {
                 _nodeOptimizers = ObjectFactory.CreateNodeOptimizers(_executor);
-                _internalIds = new HashSet<string>(_executor.GetInternalIds());
 
                 do
                 {
