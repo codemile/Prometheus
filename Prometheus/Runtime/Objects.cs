@@ -129,7 +129,7 @@ namespace Prometheus.Runtime
             QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);
             DeclarationType decl = new DeclarationType(
                 className,
-                new FunctionType(pConstructor.Entry, pParameters));
+                new FunctionType(pConstructor.Entry, pParameters, true));
             Cursor.Stack.Create(className.ToString(), decl);
             return decl;
         }
@@ -145,7 +145,7 @@ namespace Prometheus.Runtime
             DeclarationType decl = new DeclarationType(
                 pBaseName,
                 className,
-                new FunctionType(pConstructor.Entry, pParameters));
+                new FunctionType(pConstructor.Entry, pParameters, true));
             Cursor.Stack.Create(className.ToString(), decl);
             return decl;
         }

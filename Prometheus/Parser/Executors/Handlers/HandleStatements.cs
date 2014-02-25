@@ -7,21 +7,20 @@ using Prometheus.Nodes.Types.Bases;
 namespace Prometheus.Parser.Executors.Handlers
 {
     /// <summary>
-    /// Handles generic blocks of code where the child should be executed in order.
+    /// Handles node that are only responsible for executing their children.
     /// </summary>
-    public class HandleBlocks : ExecutorHandler
+    public class HandleStatements : ExecutorHandler
     {
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
                                                                         GrammarSymbol.Program,
-                                                                        GrammarSymbol.Block,
                                                                         GrammarSymbol.Statements
                                                                     };
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public HandleBlocks(iExecutor pExecutor)
+        public HandleStatements(iExecutor pExecutor)
             : base(pExecutor, _nodeTypes)
         {
         }

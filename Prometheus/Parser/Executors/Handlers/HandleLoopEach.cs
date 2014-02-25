@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -10,6 +11,7 @@ namespace Prometheus.Parser.Executors.Handlers
     /// <summary>
     /// Handles the execution of for each loops.
     /// </summary>
+    [Obsolete]
     public class HandleLoopEach : ExecutorHandler
     {
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>

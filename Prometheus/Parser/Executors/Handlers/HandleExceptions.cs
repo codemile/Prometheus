@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -37,7 +38,11 @@ namespace Prometheus.Parser.Executors.Handlers
             {
                 throw new BreakException();
             }
-            throw new ContinueException();
+            if (pNode.Type == GrammarSymbol.ContinueControl)
+            {
+                throw new ContinueException();
+            }
+            throw new NotImplementedException();
         }
     }
 }

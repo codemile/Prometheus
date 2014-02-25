@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Parser.Executors
@@ -23,5 +24,17 @@ namespace Prometheus.Parser.Executors
         /// Processes a branch of the node tree.
         /// </summary>
         DataType WalkDownChildren(Node pParent);
+
+        /// <summary>
+        /// Executes a function reference.
+        /// </summary>
+        DataType Execute(FunctionType pBlock);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pBlock"></param>
+        /// <returns></returns>
+        DataType ExecuteContinuable(FunctionType pBlock);
     }
 }

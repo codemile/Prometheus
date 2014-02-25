@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Prometheus.Exceptions;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -77,161 +77,12 @@ namespace Prometheus.Parser.Executors
         /// <returns>The resulting data</returns>
         public DataType WalkDownChildren(Node pParent)
         {
-/*
-            switch (pParent.Type)
-            {
-                // these are just holders for constant values
-                case GrammarSymbol.ValidID:
-                case GrammarSymbol.Value:
-                case GrammarSymbol.MemberID:
-                case GrammarSymbol.ImportDecl:
-#if DEBUG
-                    ExecutorAssert.Data(pParent, 1);
-#endif
-                    return pParent.Data[0];
-
-                case GrammarSymbol.ObjectBlock:
-                case GrammarSymbol.FunctionBlock:
-                case GrammarSymbol.TestBlock:
-                case GrammarSymbol.FunctionExpression:
-                    return new ClosureType(pParent.FirstChild());
-
-                case GrammarSymbol.Program:
-                case GrammarSymbol.Block:
-                case GrammarSymbol.Statements:
-                    {
-                        for (int i = 0, c = pParent.Children.Count; i < c; i++)
-                        {
-                            WalkDownChildren(pParent.Children[i]);
-                        }
-                        return UndefinedType.Undefined;
-                    }
-
-                case GrammarSymbol.IfControl:
-                    {
-                        if (pParent.Children.Count == 2)
-                        {
-                            DataType exp = WalkDownChildren(pParent.Children[0]);
-                            if (!exp.getBool())
-                            {
-                                return UndefinedType.Undefined;
-                            }
-                            using (Cursor.Stack = new CursorSpace(Cursor))
-                            {
-                                return WalkDownChildren(pParent.Children[1]);
-                            }
-                        }
-                        if (pParent.Children.Count == 3)
-                        {
-                            DataType _if = WalkDownChildren(pParent.Children[0]);
-                            if (_if.getBool())
-                            {
-                                using (Cursor.Stack = new CursorSpace(Cursor))
-                                {
-                                    return WalkDownChildren(pParent.Children[1]);
-                                }
-                            }
-                            using (Cursor.Stack = new CursorSpace(Cursor))
-                            {
-                                return WalkDownChildren(pParent.Children[2]);
-                            }
-                        }
-                        throw new TestException(
-                            string.Format("Invalid child count. Expected (2 or 3) Found <{0}>", pParent.Children.Count),
-                            pParent);
-                    }
-
-                case GrammarSymbol.DoWhileControl:
-                case GrammarSymbol.DoUntilControl:
-                    {
-#if DEBUG
-                        ExecutorAssert.Children(pParent, 2);
-#endif
-                        try
-                        {
-                            while (pParent.Type == GrammarSymbol.DoWhileControl
-                                ? WalkDownChildren(pParent.Children[0]).getBool()
-                                : !WalkDownChildren(pParent.Children[0]).getBool())
-                            {
-                                try
-                                {
-                                    WalkDownChildren(pParent.Children[1]);
-                                }
-                                catch (ContinueException)
-                                {
-                                }
-                            }
-                        }
-                        catch (BreakException)
-                        {
-                        }
-                        return UndefinedType.Undefined;
-                    }
-
-                case GrammarSymbol.LoopWhileControl:
-                case GrammarSymbol.LoopUntilControl:
-                    {
-#if DEBUG
-                        ExecutorAssert.Children(pParent, 2);
-#endif
-                        try
-                        {
-                            do
-                            {
-                                try
-                                {
-                                    WalkDownChildren(pParent.Children[0]);
-                                }
-                                catch (ContinueException)
-                                {
-                                }
-                            } while (pParent.Type == GrammarSymbol.LoopWhileControl
-                                ? WalkDownChildren(pParent.Children[1]).getBool()
-                                : !WalkDownChildren(pParent.Children[1]).getBool());
-                        }
-                        catch (BreakException)
-                        {
-                        }
-                        return UndefinedType.Undefined;
-                    }
-
-                case GrammarSymbol.ForControl:
-                case GrammarSymbol.ForStepControl:
-                    {
-#if DEBUG
-                        ExecutorAssert.Children(pParent, (pParent.Type == GrammarSymbol.ForControl) ? 3 : 4);
-                        ExecutorAssert.Data(pParent, 1);
-#endif
-                        return UndefinedType.Undefined;
-                    }
-
-                case GrammarSymbol.BreakControl:
-                    throw new BreakException();
-
-                case GrammarSymbol.ContinueControl:
-                    throw new ContinueException();
-
-                case GrammarSymbol.ArrayLiteral:
-                case GrammarSymbol.ArgumentArray:
-                case GrammarSymbol.ParameterArray:
-                case GrammarSymbol.TestSuiteArray:
-                case GrammarSymbol.QualifiedID:
-                case GrammarSymbol.ClassNameID:
-                    return CreateArray(pParent);
-            }
-*/
             if (pParent.Handler != 0)
             {
                 return _handlers[pParent.Handler].Handle(pParent);
             }
 
-            ExecutorBase _base;
             int dCount = pParent.Data.Count;
-
-#if DEBUG
-                ExecutorAssert.Node(_grammarLookup, pParent.Type, pParent);
-#endif
-            _base = _grammarLookup[pParent.Type];
 
             int cChild = pParent.Children.Count;
             object[] values = new object[cChild + dCount];
@@ -247,6 +98,10 @@ namespace Prometheus.Parser.Executors
             try
             {
                 _cursor.Node = pParent;
+#if DEBUG
+                ExecutorAssert.Node(_grammarLookup, pParent.Type, pParent);
+#endif
+                ExecutorBase _base = _grammarLookup[pParent.Type];
                 return _base.Execute(values);
             }
             catch (PrometheusException e)
@@ -257,6 +112,33 @@ namespace Prometheus.Parser.Executors
                 }
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Executes a function reference.
+        /// </summary>
+        public DataType Execute(FunctionType pBlock)
+        {
+            using (_cursor.Stack = new CursorSpace(_cursor))
+            {
+                return WalkDownChildren(pBlock.Entry);
+            }
+        }
+
+        /// <summary>
+        /// Executes a block of code that supports the continue statement
+        /// to forward a loop.
+        /// </summary>
+        public DataType ExecuteContinuable(FunctionType pBlock)
+        {
+            try
+            {
+                return Execute(pBlock);
+            }
+            catch (ContinueException)
+            {
+            }
+            return UndefinedType.Undefined;
         }
 
         /// <summary>

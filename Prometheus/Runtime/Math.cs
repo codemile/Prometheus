@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Prometheus.Compile;
 using Prometheus.Compile.Optimizers;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Exceptions.Executor;

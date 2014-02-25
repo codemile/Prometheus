@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Prometheus.Compile;
 using Prometheus.Compile.Optimizers;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Parser.Executors.Handlers;
@@ -84,17 +85,21 @@ namespace Prometheus.Parser.Executors
         }
 
         /// <summary>
-        /// Finds all the classes of a given type for the current assembly.
+        /// Finds all the public classes of a given type for the current assembly. Any classes
+        /// marked obsolete will be ignored.
         /// </summary>
         /// <returns>A collection of types that extend that type.</returns>
         private static IEnumerable<Type> GetTypes<T>()
             where T : class
         {
+            Type assign = typeof (T);
             Assembly assembly = Assembly.Load("Prometheus");
-            Type[] types = (from type in assembly.GetExportedTypes()
+            Type[] types = (from type in assembly.GetExportedTypes() 
                             where
-                                typeof (T).IsAssignableFrom(type) &&
-                                !type.IsAbstract
+                                type.IsPublic
+                                && !type.IsAbstract
+                                && Attribute.GetCustomAttribute(type,typeof(ObsoleteAttribute)) == null
+                                && assign.IsAssignableFrom(type) 
                             select type).ToArray(); // array for debugging
             return types;
         }

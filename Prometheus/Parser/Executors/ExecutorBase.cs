@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -53,6 +54,16 @@ namespace Prometheus.Parser.Executors
             QualifiedType id = pValue as QualifiedType;
             return id == null ? (T)pValue : Cursor.Get<T>(id);
         }
+
+        /// <summary>
+        /// Resolves a data reference to a boolean result.
+        /// </summary>
+        protected bool ResolveBool(DataType pCondition)
+        {
+            DataType value = Resolve(pCondition);
+            return value.getBool();
+        }
+
 
         /// <summary>
         /// Executes a method on this object that matches the argument types.

@@ -1,7 +1,7 @@
 ﻿using Prometheus.Grammar;
 using Prometheus.Nodes;
 
-namespace Prometheus.Compile.Optimizers
+namespace Prometheus.Compile
 {
     /// <summary>
     /// A node trimmer will check if a node in the tree

@@ -43,15 +43,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compile\Builder.cs" />
-    <Compile Include="Compile\Optimizers\Assertion.cs" />
-    <Compile Include="Compile\Optimizers\BaseOptimizer.cs" />
+    <Compile Include="Compile\Assertion.cs" />
+    <Compile Include="Compile\BaseOptimizer.cs" />
     <Compile Include="Compile\Optimizers\OptimizeArrays.cs" />
     <Compile Include="Compile\Optimizers\OptimizeRemoveNodes.cs" />
     <Compile Include="Compile\Optimizers\OptimizeLists.cs" />
     <Compile Include="Compile\Optimizers\OptimizeCollapseNode.cs" />
     <Compile Include="Compile\Optimizers\OptimizeEmptyNode.cs" />
-    <Compile Include="Compile\Optimizers\iOptimizer.cs" />
-    <Compile Include="Compile\Optimizers\Optimizer.cs" />
+    <Compile Include="Compile\iOptimizer.cs" />
+    <Compile Include="Compile\Optimizer.cs" />
     <Compile Include="Compile\Optimizers\OptimizeQualifier.cs" />
     <Compile Include="Compile\Optimizers\OptimizeTest.cs" />
     <Compile Include="Compile\Optimizers\OptimizeValue.cs" />
@@ -96,17 +96,16 @@
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
     <Compile Include="Parser\Executors\Handlers\ExecutorHandler.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleArrays.cs" />
-    <Compile Include="Parser\Executors\Handlers\HandleBlocks.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleStatements.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleClosure.cs" />
-    <Compile Include="Parser\Executors\Handlers\HandleLoopDoWhile.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleExceptions.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleLoopEach.cs" />
-    <Compile Include="Parser\Executors\Handlers\HandleLoopFor.cs" />
-    <Compile Include="Parser\Executors\Handlers\HandleIfElse.cs" />
-    <Compile Include="Parser\Executors\Handlers\HandleLoopWhile.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleBlock.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleValue.cs" />
     <Compile Include="Parser\Executors\iExecutor.cs" />
     <Compile Include="Parser\Executors\Handlers\iExecutorHandler.cs" />
+    <Compile Include="Runtime\Conditional.cs" />
+    <Compile Include="Runtime\Loops.cs" />
     <Compile Include="Runtime\Search.cs" />
     <Compile Include="Runtime\Tests.cs" />
     <Compile Include="Packages\Reader.cs" />

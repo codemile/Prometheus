@@ -129,7 +129,7 @@ namespace Prometheus.Compile
                 throw new InternalErrorException(Errors.ProgramMissing, Location.None);
             }
 
-            // always make Program the root node
+            // always make Block the root node
             if (node.Type == GrammarSymbol.Program)
             {
                 return node;

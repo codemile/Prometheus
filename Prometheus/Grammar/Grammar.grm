@@ -70,8 +70,8 @@ Comment Line  = '//'
 <Statements>	::= <Statement or Block>
 				| <Statements> <Statement or Block>
 
-<Statement>		::=  <Flow Control> <End>
-				| <Function Decl> <End>
+<Statement>		::=  <Flow Control>
+				| <Function Decl>
 				| <All Procedures> <End>
 				| <All Functions> <End>
 				| <Variable Statements> <End>
@@ -106,10 +106,6 @@ Comment Line  = '//'
 
 <End Opt>			::= <End>
 					| ! Nothing
-
-<Block or End>		::= <Block>
-					|  <End>
-
 
 ! ===================================================================
 ! Expressions
@@ -289,6 +285,7 @@ Comment Line  = '//'
 
 <Function Expression>		::= 'function' <Parameter Array> <Block>
 
+
 <Parameter Array>			::= '(' ')'
 							| '(' <Parameter List> ')'
 							| ! optional
@@ -324,8 +321,8 @@ Comment Line  = '//'
 					| <Loop Until Control>
 					| <For Control>
 					| <Each Control>
-					| <Break Control>
-					| <Continue Control>
+					| <Break Control> <End>
+					| <Continue Control> <End>
 
 <If Control>			::= 'if' '(' <Expression> ')' <Block> 
 						| 'if' '(' <Expression> ')' <Block> 'else' <Block>
@@ -335,13 +332,13 @@ Comment Line  = '//'
 <Loop While Control>	::= 'do' <Block> 'while' '(' <Expression> ')'
 <Loop Until Control>	::= 'do' <Block> 'until' '(' <Expression> ')'
 
-<For Control>			::= 'for' '(' <For Declare> <For Expression> <For Step> ')' <Block>
-<For Declare>			::= <Variable Statements> <End>
-						| <End> ! optional
+<For Control>			::= 'for' <For Declare> <For Expression> <For Step> <Block>
+<For Declare>			::= '(' <Variable Statements> <End>
+						| '(' <End>
 <For Expression>		::= <Expression> <End>
-						| <End> ! optional
-<For Step>				::= <Variable Statements>
-						| ! optional
+						| <End>
+<For Step>				::= <Expression> ')'
+						| ')' 
 
 <Each Control>			::= 'each' <Plural ID> <Block>
 

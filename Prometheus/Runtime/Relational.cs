@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Prometheus.Compile;
 using Prometheus.Compile.Optimizers;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Exceptions.Executor;

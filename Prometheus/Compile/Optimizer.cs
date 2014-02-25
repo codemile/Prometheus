@@ -5,7 +5,7 @@ using Prometheus.Nodes;
 using Prometheus.Parser;
 using Prometheus.Parser.Executors;
 
-namespace Prometheus.Compile.Optimizers
+namespace Prometheus.Compile
 {
     /// <summary>
     /// Optimizes a compiled node tree. This code is constantly modified to as grammar rules are changed in the parser, but the

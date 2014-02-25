@@ -13,7 +13,7 @@ namespace Prometheus.Parser.Executors.Handlers
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
                                                                         GrammarSymbol.ValidID,
-                                                                        //GrammarSymbol.Value,
+                                                                        GrammarSymbol.Value,
                                                                         GrammarSymbol.MemberID,
                                                                         GrammarSymbol.ImportDecl
                                                                     };

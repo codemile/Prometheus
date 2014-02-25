@@ -3,7 +3,7 @@ using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Parser.Executors;
 
-namespace Prometheus.Compile.Optimizers
+namespace Prometheus.Compile
 {
     /// <summary>
     /// Convenience class for iOptimier implementations.

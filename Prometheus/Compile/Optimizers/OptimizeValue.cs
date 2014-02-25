@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Parser.Executors;
@@ -8,6 +9,7 @@ namespace Prometheus.Compile.Optimizers
     /// <summary>
     /// Value nodes can have their data assigned to their parents, and then be dropped from the tree.
     /// </summary>
+    [Obsolete]
     public class OptimizeValue : BaseOptimizer
     {
         /// <summary>

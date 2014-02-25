@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
+using Prometheus.Grammar;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -31,7 +33,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public FunctionType(Node pEntry, IEnumerable<DataType> pParameters)
+        public FunctionType(Node pEntry, IEnumerable<DataType> pParameters, bool pCreateStack)
             : this(pEntry)
         {
             _parameters.Values.AddRange(pParameters);

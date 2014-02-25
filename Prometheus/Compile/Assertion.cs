@@ -4,7 +4,7 @@ using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types.Bases;
 
-namespace Prometheus.Compile.Optimizers
+namespace Prometheus.Compile
 {
     /// <summary>
     /// Optimization safety checks.

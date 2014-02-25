@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Prometheus.Compile;
 using Prometheus.Compile.Optimizers;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
+using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 
@@ -44,6 +47,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// space required for the loop, and handling a continue
         /// exception.
         /// </summary>
+        [Obsolete]
         protected void ExecuteBlock(Node pBlock, Dictionary<string, DataType> pVariables = null)
         {
             using (Cursor.Stack = new CursorSpace(Cursor, pVariables ?? new Dictionary<string, DataType>()))
@@ -65,7 +69,13 @@ namespace Prometheus.Parser.Executors.Handlers
         {
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
-                Executor.WalkDownChildren(pNode.Children[i]);
+                DataType result = Executor.WalkDownChildren(pNode.Children[i]);
+                // handle nested inner blocks.
+                FunctionType block = result as FunctionType;
+                if (block != null)
+                {
+                    Executor.Execute(block);
+                }
             }
         }
 

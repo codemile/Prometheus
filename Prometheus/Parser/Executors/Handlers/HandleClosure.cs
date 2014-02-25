@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -24,15 +25,20 @@ namespace Prometheus.Parser.Executors.Handlers
             new Dictionary
                 <GrammarSymbol, GrammarSymbol>
             {
-                {GrammarSymbol.ObjectDecl, GrammarSymbol.ObjectBlock},
-                {GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock}
+                //{GrammarSymbol.ObjectDecl, GrammarSymbol.ObjectBlock},
+                //{GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock}
             };
 
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        GrammarSymbol.ObjectBlock,
-                                                                        //GrammarSymbol.FunctionBlock,
-                                                                        GrammarSymbol.FunctionExpression
+                                                                        GrammarSymbol.Block,
+                                                                        GrammarSymbol.ForDeclare,
+                                                                        GrammarSymbol.ForExpression,
+                                                                        GrammarSymbol.ForStep,
+
+
+                                                                        //GrammarSymbol.ObjectBlock,
+                                                                        //GrammarSymbol.FunctionExpression
                                                                     };
 
         /// <summary>
@@ -48,6 +54,11 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         public override DataType Handle(Node pNode)
         {
+            return pNode.Type == GrammarSymbol.Block
+                ? new FunctionType(pNode)
+                : new FunctionType(pNode.FirstChild());
+/*
+
             if (pNode.Type != GrammarSymbol.FunctionExpression
                 || pNode.Children.Count == 1)
             {
@@ -58,11 +69,13 @@ namespace Prometheus.Parser.Executors.Handlers
             Node func = pNode.Children[1];
 
             return new FunctionType(func, arguments);
+*/
         }
 
         /// <summary>
         /// Creates declaration types.
         /// </summary>
+/*
         public override bool OptimizeChild(Node pParent, Node pChild1)
         {
             // TODO: FunctionBlock is no longer required.
@@ -88,6 +101,7 @@ namespace Prometheus.Parser.Executors.Handlers
 
             return true;
         }
+*/
 
 /*
         public override bool OptimizeNode(Node pNode)
