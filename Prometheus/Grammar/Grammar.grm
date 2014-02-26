@@ -315,10 +315,10 @@ Comment Line  = '//'
 ! ===================================================================
 
 <Flow Control>		::= <If Control>
+					| <While Control>
+					| <Until Control>
 					| <Do While Control>
 					| <Do Until Control>
-					| <Loop While Control>
-					| <Loop Until Control>
 					| <For Control>
 					| <Each Control>
 					| <Break Control> <End>
@@ -327,10 +327,12 @@ Comment Line  = '//'
 <If Control>			::= 'if' '(' <Expression> ')' <Block> 
 						| 'if' '(' <Expression> ')' <Block> 'else' <Block>
 
-<Do While Control>		::= 'while' '(' <Expression> ')' <Block>
-<Do Until Control>		::= 'until' '(' <Expression> ')' <Block>
-<Loop While Control>	::= 'do' <Block> 'while' '(' <Expression> ')'
-<Loop Until Control>	::= 'do' <Block> 'until' '(' <Expression> ')'
+<While Control>		::= 'while' <While Expression> <Block>
+<Until Control>		::= 'until' <While Expression> <Block>
+<Do While Control>	::= 'do' <Block> 'while' <While Expression>
+<Do Until Control>	::= 'do' <Block> 'until' <While Expression>
+
+<While Expression>	::= '(' <Expression> ')'
 
 <For Control>			::= 'for' <For Declare> <For Expression> <For Step> <Block>
 <For Declare>			::= '(' <Variable Statements> <End>

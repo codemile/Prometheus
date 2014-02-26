@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using GOLD;
+using Prometheus.Compile.Packaging;
 using Prometheus.Exceptions;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Grammar;
@@ -81,9 +82,9 @@ namespace Prometheus.Compile
         /// <summary>
         /// Calculates the command tree from the source code and returns the root node.
         /// </summary>
-        /// <param name="pFileName">The name of the source file.</param>
+        /// <param name="pImported">The name of the source file.</param>
         /// <param name="pSourceCode">The source code to compile.</param>
-        public Node Compile(string pFileName, string pSourceCode)
+        public Node Compile(Imported pImported, string pSourceCode)
         {
             //This procedure starts the GOLD Parser Engine and handles each of the
             //messages it returns. Each time a reduction is made, you can create new
@@ -103,7 +104,7 @@ namespace Prometheus.Compile
             {
                 int x = _parser.CurrentPosition().Line + 1;
                 int y = _parser.CurrentPosition().Column + 1;
-                Location location = new Location(pFileName, lines[x - 1].Replace("\t"," "), x, y);
+                Location location = new Location(pImported, lines[x - 1].Replace("\t"," "), x, y);
 
                 try
                 {

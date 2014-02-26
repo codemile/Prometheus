@@ -35,6 +35,7 @@ namespace Prometheus.Parser.Executors.Handlers
                                                                         GrammarSymbol.ForDeclare,
                                                                         GrammarSymbol.ForExpression,
                                                                         GrammarSymbol.ForStep,
+                                                                        GrammarSymbol.WhileExpression
 
 
                                                                         //GrammarSymbol.ObjectBlock,

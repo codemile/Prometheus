@@ -1,4 +1,5 @@
 ﻿using Prometheus.Compile;
+using Prometheus.Compile.Packaging;
 
 namespace PrometheusTest.Mock.Compile
 {
@@ -8,7 +9,7 @@ namespace PrometheusTest.Mock.Compile
         /// Constructor
         /// </summary>
         public MockLocation()
-            : base("source.fire", "MockLocation", 0, 0)
+            : base(new Imported("source.fire","Source"), "MockLocation", 0, 0)
         {
         }
     }

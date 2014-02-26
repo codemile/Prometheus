@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -33,27 +35,6 @@ namespace Prometheus.Compile
         private readonly List<string> _includePath;
 
         /// <summary>
-        /// Logs what file is being built.
-        /// </summary>
-        private static void LogFileName(string pFileName)
-        {
-            _logger.Fine("Compile: {0}", pFileName);
-        }
-
-        /// <summary>
-        /// Optimizes the compiled node tree to a structure the parser can
-        /// read and make assumptions about.
-        /// </summary>
-        private static Node Optimize(Node pRoot)
-        {
-            PrintCompiled(pRoot);
-            Optimizer optimizer = new Optimizer();
-            pRoot = optimizer.Optimize(pRoot);
-            PrintCompiled(pRoot);
-            return pRoot;
-        }
-
-        /// <summary>
         /// Walks the tree of nodes displaying details about each node.
         /// </summary>
         private static void PrintCode(Node pNode, int pIndent = 0)
@@ -79,18 +60,37 @@ namespace Prometheus.Compile
         /// <summary>
         /// Compiles a file.
         /// </summary>
-        private Node BuildFile(string pFileName)
+        private Node BuildFile(Imported pImported)
         {
-            LogFileName(pFileName);
 
-            using (StreamReader reader = new StreamReader(pFileName))
+            using (StreamReader reader = new StreamReader(pImported.FileName))
             {
-                string sourceCode = reader.ReadToEnd();
-                Node root = _compiler.Compile(pFileName, sourceCode);
-                return Optimize(root);
+                Stopwatch timer = Stopwatch.StartNew();
+                int iterations = 0;
+                try
+                {
+                    string sourceCode = reader.ReadToEnd();
+                    Node root = _compiler.Compile(pImported, sourceCode);
+
+                    PrintCompiled(root);
+                    Optimizer optimizer = new Optimizer();
+                    root = optimizer.Optimize(root);
+                    iterations = optimizer.Interations;
+                    PrintCompiled(root);
+                    return root;
+                }
+                finally
+                {
+                    timer.Stop();
+                    _logger.Fine("Compile: {0} {1}s Optimizer: {2}", pImported.Name, timer.Elapsed.ToString(@"s\.ff"), iterations);
+                }
             }
+
         }
 
+        /// <summary>
+        /// Handles the loading of a package.
+        /// </summary>
         private void BuildImports(Compiled pCode, string pRelative, string pFileName)
         {
             string file = FindFile(pRelative, pFileName);
@@ -105,7 +105,7 @@ namespace Prometheus.Compile
                 return;
             }
 
-            Node root = BuildFile(file);
+            Node root = BuildFile(new Imported(file, PackageName(pRelative, pFileName)));
             pCode.Files.Add(file);
 
             // place imported code before main file
@@ -117,6 +117,30 @@ namespace Prometheus.Compile
             }
 
             pCode.Imported.Add(root);
+        }
+
+        /// <summary>
+        /// Creates a package name if pPackageName references a file directly.
+        /// </summary>
+        private static string PackageName(string pRelative, string pPackageName)
+        {
+            if (!pPackageName.EndsWith(".fire"))
+            {
+                return pPackageName;
+            }
+
+            pPackageName = pPackageName.Substring(0, pPackageName.Length - 5);
+            if (pPackageName.StartsWith(pRelative))
+            {
+                pPackageName = pPackageName.Substring(pRelative.Length);
+            }
+
+            if (pPackageName.StartsWith(@"\") || pPackageName.StartsWith("/"))
+            {
+                pPackageName = pPackageName.Substring(1);
+            }
+
+            return pPackageName;
         }
 
         /// <summary>
@@ -186,10 +210,20 @@ namespace Prometheus.Compile
         /// </summary>
         public Compiled Build(string pFileName)
         {
-            Compiled compiled = new Compiled();
-            string relative = Path.GetDirectoryName(pFileName);
-            BuildImports(compiled, relative, pFileName);
-            return compiled;
+            Stopwatch timer = Stopwatch.StartNew();
+
+            try
+            {
+                Compiled compiled = new Compiled();
+                string relative = Path.GetDirectoryName(pFileName);
+                BuildImports(compiled, relative, pFileName);
+                return compiled;
+            }
+            finally
+            {
+                timer.Stop();
+                _logger.Fine("Finished: {0}s", timer.Elapsed.ToString(@"s\.ff"));
+            }
         }
     }
 }

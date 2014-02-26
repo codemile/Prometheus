@@ -29,6 +29,11 @@ namespace Prometheus.Compile
         /// </summary>
         private List<iOptimizer> _optimizers;
 
+        /// <summary>
+        /// The number of times the tree was iterated.
+        /// </summary>
+        public int Interations { get; private set; }
+
 
         /// <summary>
         /// Optimizes a node and it's children.
@@ -86,8 +91,10 @@ namespace Prometheus.Compile
 
                 try
                 {
+                    Interations = 0;
                     while (OptimizeNode(pRoot))
                     {
+                        Interations++;
                     }
 
                     PostOptimize(pRoot);

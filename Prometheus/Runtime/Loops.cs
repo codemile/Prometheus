@@ -24,12 +24,12 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Handles while loop block.
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.LoopWhileControl)]
-        public UndefinedType LoopWhile(DataType pCondition, FunctionType pBlock)
+        [ExecuteSymbol(GrammarSymbol.WhileControl)]
+        public UndefinedType LoopWhile(FunctionType pExpression, FunctionType pBlock)
         {
             try
             {
-                while (ResolveBool(pCondition))
+                while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)))
                 {
                     Executor.ExecuteContinuable(pBlock);
                 }
@@ -43,12 +43,12 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Handles until loop block.
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.LoopUntilControl)]
-        public UndefinedType LoopUntil(DataType pCondition, FunctionType pBlock)
+        [ExecuteSymbol(GrammarSymbol.UntilControl)]
+        public UndefinedType LoopUntil(FunctionType pExpression, FunctionType pBlock)
         {
             try
             {
-                while (!ResolveBool(pCondition))
+                while (!ResolveBool(Executor.WalkDownChildren(pExpression.Entry)))
                 {
                     Executor.ExecuteContinuable(pBlock);
                 }
@@ -63,14 +63,14 @@ namespace Prometheus.Runtime
         /// Handles while loop block.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.DoWhileControl)]
-        public UndefinedType LoopDoWhile(DataType pCondition, FunctionType pBlock)
+        public UndefinedType LoopDoWhile(FunctionType pExpression, FunctionType pBlock)
         {
             try
             {
                 do
                 {
                     Executor.ExecuteContinuable(pBlock);
-                } while (ResolveBool(pCondition));
+                } while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)));
             }
             catch (BreakException)
             {
@@ -82,14 +82,14 @@ namespace Prometheus.Runtime
         /// Handles until loop block.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.DoUntilControl)]
-        public UndefinedType LoopDoUntil(DataType pCondition, FunctionType pBlock)
+        public UndefinedType LoopDoUntil(FunctionType pExpression, FunctionType pBlock)
         {
             try
             {
                 do
                 {
                     Executor.ExecuteContinuable(pBlock);
-                } while (!ResolveBool(pCondition));
+                } while (!ResolveBool(Executor.WalkDownChildren(pExpression.Entry)));
             }
             catch (BreakException)
             {
@@ -108,12 +108,10 @@ namespace Prometheus.Runtime
                 Executor.WalkDownChildren(pDeclare.Entry);
                 try
                 {
-                    DataType value = Executor.WalkDownChildren(pExpression.Entry);
-                    while (ResolveBool(value))
+                    while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)))
                     {
                         Executor.ExecuteContinuable(pBlock);
                         Executor.WalkDownChildren(pStep.Entry);
-                        value = Executor.WalkDownChildren(pExpression.Entry);
                     }
                 }
                 catch (BreakException)
@@ -122,6 +120,5 @@ namespace Prometheus.Runtime
             }
             return UndefinedType.Undefined;
         }
-
     }
 }

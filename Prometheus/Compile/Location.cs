@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Prometheus.Compile.Packaging;
 
 namespace Prometheus.Compile
 {
@@ -22,7 +23,7 @@ namespace Prometheus.Compile
         /// <summary>
         /// The source for the source code.
         /// </summary>
-        public readonly string FileName;
+        public readonly Imported ImportFile;
 
         /// <summary>
         /// A copy of the current line from the source file.
@@ -37,9 +38,9 @@ namespace Prometheus.Compile
         /// <summary>
         /// Constructor
         /// </summary>
-        public Location(string pFileName, string pLine, int pRow, int pColumn)
+        public Location(Imported pFileName, string pLine, int pRow, int pColumn)
         {
-            FileName = pFileName ?? "";
+            ImportFile = pFileName;
             Line = pLine ?? "";
 
             Row = pRow;
@@ -51,9 +52,9 @@ namespace Prometheus.Compile
         /// </summary>
         public override string ToString()
         {
-            return FileName == null
+            return ImportFile == null
                 ? "in undefined source."
-                : string.Format("in {0} at: {1}, {2}", FileName, Row, Column);
+                : string.Format("in {0} at: {1}, {2}", ImportFile.Name, Row, Column);
         }
     }
 }

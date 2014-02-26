@@ -141,6 +141,10 @@ namespace Prometheus.Parser
             {
                 HandleError(e);
             }
+            catch (Exception e)
+            {
+                _logger.Exception(e);
+            }
             return false;
         }
 
@@ -151,13 +155,14 @@ namespace Prometheus.Parser
         {
             foreach (Node imported in pCompiled.Imported)
             {
+                _logger.Fine("");
+                _logger.Fine("Testing {0}", imported.Location.ImportFile.Name);
+
                 IEnumerable<string> unitTests = getUnitTests(imported);
                 foreach (string test in getTestSuite(imported, unitTests))
                 {
-                    if (ExecuteSafely(new[] {imported}, new Cursor(test)))
-                    {
-                        _logger.Fine("Test {0}: passed", test);
-                    }
+                    bool result = ExecuteSafely(new[] {imported}, new Cursor(test));
+                    _logger.Fine("{0} {1}::{2}", result ? "Pass" : "Fail", imported.Location.ImportFile.Name,  test);
                 }
             }
         }
