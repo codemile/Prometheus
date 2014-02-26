@@ -26,11 +26,20 @@ namespace Prometheus.Parser.Executors.Handlers
         }
 
         /// <summary>
-        /// Handle execution of a node.
+        /// Executes a node group and returns the result of the last node.
         /// </summary>
         public override DataType Handle(Node pNode)
         {
-            ExecuteChildren(pNode);
+            for (int i = 0, c = pNode.Children.Count; i < c; i++)
+            {
+                DataType result = Executor.WalkDownChildren(pNode.Children[i]);
+                // handle nested inner blocks.
+                FunctionType block = result as FunctionType;
+                if (block != null)
+                {
+                    Executor.Execute(block);
+                }
+            }
             return UndefinedType.Undefined;
         }
     }

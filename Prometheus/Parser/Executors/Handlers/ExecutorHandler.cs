@@ -62,23 +62,6 @@ namespace Prometheus.Parser.Executors.Handlers
         }
 
         /// <summary>
-        /// Executes only the children of a node.
-        /// </summary>
-        protected void ExecuteChildren(Node pNode)
-        {
-            for (int i = 0, c = pNode.Children.Count; i < c; i++)
-            {
-                DataType result = Executor.WalkDownChildren(pNode.Children[i]);
-                // handle nested inner blocks.
-                FunctionType block = result as FunctionType;
-                if (block != null)
-                {
-                    Executor.Execute(block);
-                }
-            }
-        }
-
-        /// <summary>
         /// Handle execution of a node.
         /// </summary>
         public abstract DataType Handle(Node pNode);

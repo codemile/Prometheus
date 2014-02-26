@@ -25,7 +25,7 @@ namespace Prometheus.Runtime
         /// Handles until loop block.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.DoUntilControl)]
-        public UndefinedType LoopDoUntil(Node pNode, FunctionType pExpression, FunctionType pBlock)
+        public UndefinedType LoopDoUntil(Node pNode, FunctionType pBlock, FunctionType pExpression)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace Prometheus.Runtime
         /// Handles while loop block.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.DoWhileControl)]
-        public UndefinedType LoopDoWhile(Node pNode, FunctionType pExpression, FunctionType pBlock)
+        public UndefinedType LoopDoWhile(Node pNode, FunctionType pBlock, FunctionType pExpression)
         {
             try
             {

@@ -133,6 +133,16 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Checks if the qualifier ID is valid.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.IssetFunc)]
+        public DataType Isset(Node pNode, QualifiedType pId)
+        {
+            iVariablePointer pointer = Cursor.Resolve(pId);
+            return new BooleanType(pointer.IsValid());
+        }
+
+        /// <summary>
         /// Decrement
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ListVars)]
@@ -280,16 +290,6 @@ namespace Prometheus.Runtime
         public DataType Qualified(Node pNode, QualifiedType pId)
         {
             return Cursor.Resolve(pId).Read();
-        }
-
-        /// <summary>
-        /// Checks if the qualifier ID is valid.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.IssetFunc)]
-        public DataType Isset(Node pNode, QualifiedType pId)
-        {
-            iVariablePointer pointer = Cursor.Resolve(pId);
-            return new BooleanType(pointer.IsValid());
         }
     }
 }
