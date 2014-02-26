@@ -11,6 +11,14 @@ namespace Prometheus.Parser.Executors.Handlers
     /// </summary>
     public class HandleStatements : ExecutorHandler
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly int _code = typeof (HandleStatements).Name.GetHashCode();
+
+        /// <summary>
+        /// The node types supported.
+        /// </summary>
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
                                                                         GrammarSymbol.Program,
@@ -23,6 +31,24 @@ namespace Prometheus.Parser.Executors.Handlers
         public HandleStatements(iExecutor pExecutor)
             : base(pExecutor, _nodeTypes)
         {
+        }
+
+        /// <summary>
+        /// The handler's code.
+        /// </summary>
+        public override int GetHandlerCode()
+        {
+            return _code;
+        }
+
+        /// <summary>
+        /// Creates a statements block from the children of another node.
+        /// </summary>
+        public static Node Create(Node pNode)
+        {
+            Node node = new Node(GrammarSymbol.Statements, pNode.Location, _code);
+            node.Children.AddRange(pNode.Children);
+            return node;
         }
 
         /// <summary>

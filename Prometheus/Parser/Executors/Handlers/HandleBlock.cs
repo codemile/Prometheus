@@ -36,9 +36,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         public override DataType Handle(Node pNode)
         {
-            Node block = new Node(GrammarSymbol.Statements, pNode.Location) {Handler = _code};
-            block.Children.AddRange(pNode.Children);
-            return new FunctionType(block);
+            return new FunctionType(HandleStatements.Create(pNode));
         }
     }
 }

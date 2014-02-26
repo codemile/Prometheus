@@ -48,7 +48,9 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         public override DataType Handle(Node pNode)
         {
-            return new FunctionType(pNode.FirstChild());
+            return pNode.Children.Count == 0
+                ? new FunctionType(HandleStatements.Create(pNode))
+                : new FunctionType(pNode.FirstChild());
 /*
 
             if (pNode.Type != GrammarSymbol.FunctionExpression

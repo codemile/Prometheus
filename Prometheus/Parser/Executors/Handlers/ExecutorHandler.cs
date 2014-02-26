@@ -69,7 +69,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <summary>
         /// The unique ID of the handler.
         /// </summary>
-        public int GetHandlerCode()
+        public virtual int GetHandlerCode()
         {
             return GetType().Name.GetHashCode();
         }

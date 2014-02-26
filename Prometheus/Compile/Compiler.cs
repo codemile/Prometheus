@@ -16,11 +16,6 @@ namespace Prometheus.Compile
     public class Compiler
     {
         /// <summary>
-        /// Used to create nodes.
-        /// </summary>
-        private readonly NodeFactory _factory;
-
-        /// <summary>
         /// The GOLD parser.
         /// </summary>
         private readonly GOLD.Parser _parser;
@@ -61,8 +56,6 @@ namespace Prometheus.Compile
         public Compiler()
         {
             _parser = new GOLD.Parser();
-
-            _factory = new NodeFactory();
 
             const string fullResourceName = "Prometheus.Grammar.Grammar.egt";
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fullResourceName))
@@ -114,7 +107,7 @@ namespace Prometheus.Compile
                     }
                     Reduction reduction = _parser.CurrentReduction as Reduction;
                     _parser.CurrentReduction = (reduction != null)
-                        ? _factory.Create(reduction, location)
+                        ? NodeFactory.Create(reduction, location)
                         : _parser.CurrentReduction;
                 }
                 catch (PrometheusException e)

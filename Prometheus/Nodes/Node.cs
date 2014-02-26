@@ -44,30 +44,14 @@ namespace Prometheus.Nodes
         /// </summary>
         /// <param name="pSymbol">The node's type.</param>
         /// <param name="pLocation">Location in the source code</param>
-        public Node(GrammarSymbol pSymbol, Location pLocation)
+        /// <param name="pHandler"></param>
+        public Node(GrammarSymbol pSymbol, Location pLocation, int pHandler = 0)
         {
-            Handler = 0;
+            Handler = pHandler;
             Symbol = pSymbol;
             Location = pLocation;
             Data = new List<DataType>();
             Children = new List<Node>();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Node(GrammarSymbol pSymbol, Location pLocation, IEnumerable<Node> pChildren)
-            : this(pSymbol, pLocation)
-        {
-            Children.AddRange(pChildren);
-        }
-
-        /// <summary>
-        /// A statement that performs no operation.
-        /// </summary>
-        public static Node NoOp()
-        {
-            return new Node(GrammarSymbol.Statement, Location.None);
         }
 
         /// <summary>

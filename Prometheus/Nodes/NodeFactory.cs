@@ -1,6 +1,7 @@
 ﻿using GOLD;
 using Prometheus.Compile;
 using Prometheus.Grammar;
+using Prometheus.Parser.Executors.Handlers;
 
 namespace Prometheus.Nodes
 {
@@ -9,7 +10,7 @@ namespace Prometheus.Nodes
     /// the parser into a top down tree of nodes that this
     /// library can run as commands.
     /// </summary>
-    public class NodeFactory
+    public static class NodeFactory
     {
         /// <summary>
         /// Gets the grammar symbol.
@@ -30,7 +31,7 @@ namespace Prometheus.Nodes
         /// <param name="pReduction">The reduction object.</param>
         /// <param name="pLocation">The location in the code.</param>
         /// <returns>The new node</returns>
-        public Node Create(Reduction pReduction, Location pLocation)
+        public static Node Create(Reduction pReduction, Location pLocation)
         {
             GrammarSymbol symbol = getSymbol(pReduction);
 

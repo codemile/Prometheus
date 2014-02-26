@@ -161,7 +161,7 @@ Test For_Break_Test {
 		x = x + 1;
 		break;
 	};
-	Assert y == 0;
+	Assert not isset y;
 	Assert x == 1;
 };
 
@@ -172,6 +172,6 @@ Test For_Continue_Test {
 		continue;
 		x = x + 1;
 	};
-	Assert y == 10;
+	Assert not isset y;
 	Assert x == 0;
 };

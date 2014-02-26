@@ -1,9 +1,12 @@
 Tests;
 
-Test Do_While_Test {
+Test For_Break_Test {
 	var x = 0;
-	Do {
+	For(var y=0; y < 10; y++)
+	{
 		x = x + 1;
-	} While (x < 10);
-	Assert x == 10;
+		break;
+	};
+	Assert y == 0;
+	Assert x == 1;
 };
