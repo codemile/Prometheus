@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Storage;
 
 namespace Prometheus.Nodes.Types
 {
@@ -65,6 +63,5 @@ namespace Prometheus.Nodes.Types
             variables.Add(_name, _this);
             return variables;
         }
-
     }
 }

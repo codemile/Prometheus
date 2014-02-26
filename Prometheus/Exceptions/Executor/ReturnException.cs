@@ -1,4 +1,5 @@
-﻿using Prometheus.Nodes.Types.Bases;
+﻿using Prometheus.Nodes;
+using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Exceptions.Executor
 {
@@ -14,7 +15,9 @@ namespace Prometheus.Exceptions.Executor
         /// <summary>
         /// Constructor
         /// </summary>
-        public ReturnException(DataType pValue)
+        public ReturnException(DataType pValue, Node pNode)
+            : base("return", pNode)
+
         {
             Value = pValue;
         }

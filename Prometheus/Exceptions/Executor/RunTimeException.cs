@@ -1,4 +1,5 @@
 ﻿using System;
+using Prometheus.Compile;
 using Prometheus.Nodes;
 
 namespace Prometheus.Exceptions.Executor
@@ -41,6 +42,14 @@ namespace Prometheus.Exceptions.Executor
         /// <param name="pInner">Inner exception</param>
         protected RunTimeException(string pMessage, Exception pInner)
             : base(pMessage, pInner)
+        {
+        }
+
+        /// <summary>
+        /// Wraps around another exception.
+        /// </summary>
+        public RunTimeException(string pMessage, Location pLocation, Exception pInnerException)
+            : base(pMessage, pLocation, pInnerException)
         {
         }
     }

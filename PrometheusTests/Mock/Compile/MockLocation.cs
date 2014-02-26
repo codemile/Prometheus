@@ -9,7 +9,7 @@ namespace PrometheusTest.Mock.Compile
         /// Constructor
         /// </summary>
         public MockLocation()
-            : base(new Imported("source.fire","Source"), "MockLocation", 0, 0)
+            : base(new Imported("source.fire", "Source"), "MockLocation", 0, 0)
         {
         }
     }

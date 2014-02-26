@@ -20,7 +20,7 @@ namespace Prometheus.Compile
             {
                 throw new OptimizationException(
                     string.Format("Expected <{0}> to have <{1}> children, but has {2} children instead",
-                        pNode.Type,
+                        pNode.Symbol,
                         pCount,
                         pNode.Children.Count),
                     pNode.Location);
@@ -36,7 +36,7 @@ namespace Prometheus.Compile
             {
                 throw new OptimizationException(
                     string.Format("Expected <{0}> to have {1} data, but has {2} data instead",
-                        pNode.Type,
+                        pNode.Symbol,
                         pCount,
                         pNode.Data.Count),
                     pNode.Location);
@@ -51,7 +51,7 @@ namespace Prometheus.Compile
             if (pNode.Children.Count == 0 && pNode.Data.Count == 0)
             {
                 throw new OptimizationException(
-                    string.Format("Node <{0}> is not empty", pNode.Type),
+                    string.Format("Node <{0}> is not empty", pNode.Symbol),
                     pNode.Location);
             }
         }
@@ -65,7 +65,7 @@ namespace Prometheus.Compile
             {
                 throw new OptimizationException(
                     string.Format("<{0}> has {1} data, but expected at least {2}",
-                        pNode.Type,
+                        pNode.Symbol,
                         pNode.Data.Count,
                         pIndex),
                     pNode.Location);
@@ -76,7 +76,7 @@ namespace Prometheus.Compile
             {
                 throw new OptimizationException(
                     string.Format("Expected <{0}> data {1} to be type <{2}> but found <{3}> instead",
-                        pNode.Type,
+                        pNode.Symbol,
                         pIndex,
                         type.Name,
                         dataType.GetType().Name),
@@ -90,10 +90,10 @@ namespace Prometheus.Compile
         /// </summary>
         public static void Symbol(GrammarSymbol pSymbol, Node pNode)
         {
-            if (pNode.Type != pSymbol)
+            if (pNode.Symbol != pSymbol)
             {
                 throw new OptimizationException(
-                    string.Format("Unexpected node <{0}> in tree graph", pNode.Type),
+                    string.Format("Unexpected node <{0}> in tree graph", pNode.Symbol),
                     pNode.Location);
             }
         }

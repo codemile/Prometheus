@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Prometheus.Compile;
-using Prometheus.Compile.Optimizers;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Parser.Executors.Handlers;
 
@@ -94,12 +93,12 @@ namespace Prometheus.Parser.Executors
         {
             Type assign = typeof (T);
             Assembly assembly = Assembly.Load("Prometheus");
-            Type[] types = (from type in assembly.GetExportedTypes() 
+            Type[] types = (from type in assembly.GetExportedTypes()
                             where
                                 type.IsPublic
                                 && !type.IsAbstract
-                                && Attribute.GetCustomAttribute(type,typeof(ObsoleteAttribute)) == null
-                                && assign.IsAssignableFrom(type) 
+                                && Attribute.GetCustomAttribute(type, typeof (ObsoleteAttribute)) == null
+                                && assign.IsAssignableFrom(type)
                             select type).ToArray(); // array for debugging
             return types;
         }

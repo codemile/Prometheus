@@ -1,7 +1,7 @@
 ﻿using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
-using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
@@ -22,17 +22,17 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Handles while loop block.
+        /// Handles until loop block.
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.WhileControl)]
-        public UndefinedType LoopWhile(FunctionType pExpression, FunctionType pBlock)
+        [ExecuteSymbol(GrammarSymbol.DoUntilControl)]
+        public UndefinedType LoopDoUntil(Node pNode, FunctionType pExpression, FunctionType pBlock)
         {
             try
             {
-                while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)))
+                do
                 {
                     Executor.ExecuteContinuable(pBlock);
-                }
+                } while (!ResolveBool(Executor.WalkDownChildren(pExpression.Entry)));
             }
             catch (BreakException)
             {
@@ -41,10 +41,54 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Handles while loop block.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.DoWhileControl)]
+        public UndefinedType LoopDoWhile(Node pNode, FunctionType pExpression, FunctionType pBlock)
+        {
+            try
+            {
+                do
+                {
+                    Executor.ExecuteContinuable(pBlock);
+                } while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)));
+            }
+            catch (BreakException)
+            {
+            }
+            return UndefinedType.Undefined;
+        }
+
+        /// <summary>
+        /// Handles execution of a for loop.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ForControl)]
+        public UndefinedType LoopFor(Node pNode, FunctionType pDeclare, FunctionType pExpression, FunctionType pStep,
+                                     FunctionType pBlock)
+        {
+            using (Cursor.Stack = new CursorSpace(Cursor))
+            {
+                Executor.WalkDownChildren(pDeclare.Entry);
+                try
+                {
+                    while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)))
+                    {
+                        Executor.ExecuteContinuable(pBlock);
+                        Executor.WalkDownChildren(pStep.Entry);
+                    }
+                }
+                catch (BreakException)
+                {
+                }
+            }
+            return UndefinedType.Undefined;
+        }
+
+        /// <summary>
         /// Handles until loop block.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.UntilControl)]
-        public UndefinedType LoopUntil(FunctionType pExpression, FunctionType pBlock)
+        public UndefinedType LoopUntil(Node pNode, FunctionType pExpression, FunctionType pBlock)
         {
             try
             {
@@ -62,61 +106,18 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Handles while loop block.
         /// </summary>
-        [ExecuteSymbol(GrammarSymbol.DoWhileControl)]
-        public UndefinedType LoopDoWhile(FunctionType pExpression, FunctionType pBlock)
+        [ExecuteSymbol(GrammarSymbol.WhileControl)]
+        public UndefinedType LoopWhile(Node pNode, FunctionType pExpression, FunctionType pBlock)
         {
             try
             {
-                do
+                while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)))
                 {
                     Executor.ExecuteContinuable(pBlock);
-                } while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)));
+                }
             }
             catch (BreakException)
             {
-            }
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
-        /// Handles until loop block.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.DoUntilControl)]
-        public UndefinedType LoopDoUntil(FunctionType pExpression, FunctionType pBlock)
-        {
-            try
-            {
-                do
-                {
-                    Executor.ExecuteContinuable(pBlock);
-                } while (!ResolveBool(Executor.WalkDownChildren(pExpression.Entry)));
-            }
-            catch (BreakException)
-            {
-            }
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
-        /// Handles execution of a for loop.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.ForControl)]
-        public UndefinedType LoopFor(FunctionType pDeclare, FunctionType pExpression, FunctionType pStep, FunctionType pBlock)
-        {
-            using (Cursor.Stack = new CursorSpace(Cursor))
-            {
-                Executor.WalkDownChildren(pDeclare.Entry);
-                try
-                {
-                    while (ResolveBool(Executor.WalkDownChildren(pExpression.Entry)))
-                    {
-                        Executor.ExecuteContinuable(pBlock);
-                        Executor.WalkDownChildren(pStep.Entry);
-                    }
-                }
-                catch (BreakException)
-                {
-                }
             }
             return UndefinedType.Undefined;
         }

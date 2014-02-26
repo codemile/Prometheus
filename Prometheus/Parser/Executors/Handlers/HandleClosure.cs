@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -23,11 +21,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         private static readonly Dictionary<GrammarSymbol, GrammarSymbol> _declarations =
             new Dictionary
-                <GrammarSymbol, GrammarSymbol>
-            {
-                //{GrammarSymbol.ObjectDecl, GrammarSymbol.ObjectBlock},
-                //{GrammarSymbol.FunctionDecl, GrammarSymbol.FunctionBlock}
-            };
+                <GrammarSymbol, GrammarSymbol>();
 
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {

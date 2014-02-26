@@ -77,7 +77,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <returns>Same node, a new node or null to remove it.</returns>
         public override bool OptimizeChild(Node pParent, Node pChild)
         {
-            if (pChild.Type != GrammarSymbol.EachControl)
+            if (pChild.Symbol != GrammarSymbol.EachControl)
             {
                 return base.OptimizeChild(pParent, pChild);
             }
@@ -86,7 +86,7 @@ namespace Prometheus.Parser.Executors.Handlers
             ExecutorAssert.Children(pChild, 2);
 #endif
             Node eachPlural = pChild.Children[0];
-            if (eachPlural.Type == GrammarSymbol.PluralID)
+            if (eachPlural.Symbol == GrammarSymbol.PluralID)
             {
                 return base.OptimizeChild(pParent, pChild);
             }

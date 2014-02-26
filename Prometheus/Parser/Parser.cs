@@ -70,14 +70,14 @@ namespace Prometheus.Parser
                 return pUnitTests;
             }
 
-            if (testSuite.FirstChild().Type == GrammarSymbol.TestSuiteArray)
+            if (testSuite.FirstChild().Symbol == GrammarSymbol.TestSuiteArray)
             {
                 return from id in testSuite.FirstChild().Children
-                       where id.Type == GrammarSymbol.ValidID
+                       where id.Symbol == GrammarSymbol.ValidID
                              && id.FirstData() is IdentifierType
                        select id.FirstData().Cast<IdentifierType>().Name;
             }
-            if (testSuite.FirstChild().Type == GrammarSymbol.ValidID)
+            if (testSuite.FirstChild().Symbol == GrammarSymbol.ValidID)
             {
                 return from id in testSuite.FirstChild().Data
                        where id is IdentifierType
@@ -94,7 +94,7 @@ namespace Prometheus.Parser
         private static IEnumerable<string> getUnitTests(Node pImported)
         {
             return (from child in pImported.Children
-                    where child.Type == GrammarSymbol.TestDecl
+                    where child.Symbol == GrammarSymbol.TestDecl
                     select child.FirstData().Cast<IdentifierType>().Name).ToList();
         }
 
@@ -162,7 +162,7 @@ namespace Prometheus.Parser
                 foreach (string test in getTestSuite(imported, unitTests))
                 {
                     bool result = ExecuteSafely(new[] {imported}, new Cursor(test));
-                    _logger.Fine("{0} {1}::{2}", result ? "Pass" : "Fail", imported.Location.ImportFile.Name,  test);
+                    _logger.Fine("{0} {1}::{2}", result ? "Pass" : "Fail", imported.Location.ImportFile.Name, test);
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -47,7 +48,7 @@ namespace Prometheus.Runtime
         /// Set what packages are being used by the current code.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ImportDecl)]
-        public DataType Import(QualifiedType pPackage)
+        public DataType Import(Node pNode, QualifiedType pPackage)
         {
             return UndefinedType.Undefined;
         }
@@ -56,7 +57,7 @@ namespace Prometheus.Runtime
         /// Sets the current namespace
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NameSpace)]
-        public DataType NameSpace(QualifiedType pNameSpace)
+        public DataType NameSpace(Node pNode, QualifiedType pNameSpace)
         {
             Cursor.NameSpace = pNameSpace;
             return UndefinedType.Undefined;
@@ -66,16 +67,16 @@ namespace Prometheus.Runtime
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(QualifiedType pId)
+        public DataType New(Node pNode, QualifiedType pId)
         {
-            return New(pId, ArrayType.Empty);
+            return New(pNode, pId, ArrayType.Empty);
         }
 
         /// <summary>
         /// Instantiates an object instance and returns a reference to that object.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
-        public DataType New(QualifiedType pId, ArrayType pArguments)
+        public DataType New(Node pNode, QualifiedType pId, ArrayType pArguments)
         {
             // TODO: Create a place to store declarations
             QualifiedType className = new QualifiedType(new IdentifierType(pId.ToString()));
@@ -115,16 +116,17 @@ namespace Prometheus.Runtime
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(IdentifierType pObjectName, FunctionType pConstructor)
+        public DataType ObjectDeclare(Node pNode, IdentifierType pObjectName, FunctionType pConstructor)
         {
-            return ObjectDeclare(pObjectName, ArrayType.Empty, pConstructor);
+            return ObjectDeclare(pNode, pObjectName, ArrayType.Empty, pConstructor);
         }
 
         /// <summary>
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(IdentifierType pObjectName, ArrayType pParameters, FunctionType pConstructor)
+        public DataType ObjectDeclare(Node pNode, IdentifierType pObjectName, ArrayType pParameters,
+                                      FunctionType pConstructor)
         {
             QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);
             DeclarationType decl = new DeclarationType(
@@ -138,7 +140,8 @@ namespace Prometheus.Runtime
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(QualifiedType pBaseName, IdentifierType pObjectName, ArrayType pParameters,
+        public DataType ObjectDeclare(Node pNode, QualifiedType pBaseName, IdentifierType pObjectName,
+                                      ArrayType pParameters,
                                       FunctionType pConstructor)
         {
             QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);

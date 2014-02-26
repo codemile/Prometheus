@@ -45,7 +45,7 @@ namespace Prometheus.Compile.Optimizers
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
                 Node child = pNode.Children[i];
-                if (_nodeTypes.Contains(child.Type))
+                if (_nodeTypes.Contains(child.Symbol))
                 {
                     newChildren.AddRange(child.Children);
                     child.Children.Clear();

@@ -133,7 +133,6 @@
     <Compile Include="Parser\Executors\ExecutorBase.cs" />
     <Compile Include="Parser\Executors\ExecutorReflector.cs" />
     <Compile Include="Parser\Executors\ObjectFactory.cs" />
-    <Compile Include="Parser\Executors\ExecutorGeneric.cs" />
     <Compile Include="Parser\Executors\ExecutorGrammar.cs" />
     <Compile Include="Runtime\Arguments.cs" />
     <Compile Include="Runtime\Functions.cs" />

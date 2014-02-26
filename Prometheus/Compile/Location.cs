@@ -54,7 +54,7 @@ namespace Prometheus.Compile
         {
             return ImportFile == null
                 ? "in undefined source."
-                : string.Format("in {0} at: {1}, {2}", ImportFile.Name, Row, Column);
+                : string.Format("in {0} at: {1}, {2}", ImportFile.FileName, Row, Column);
         }
     }
 }

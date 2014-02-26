@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prometheus.Compile;
-using Prometheus.Compile.Optimizers;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
@@ -40,9 +39,9 @@ namespace Prometheus.Runtime
         /// <returns>True if it can be reduced.</returns>
         private static bool CanReduce(Node pNode)
         {
-            return (_compareSymbols.Contains(pNode.Type)
-                    && pNode.Children[0].Type == GrammarSymbol.Value
-                    && pNode.Children[1].Type == GrammarSymbol.Value);
+            return (_compareSymbols.Contains(pNode.Symbol)
+                    && pNode.Children[0].Symbol == GrammarSymbol.Value
+                    && pNode.Children[1].Symbol == GrammarSymbol.Value);
         }
 
         /// <summary>
@@ -80,37 +79,38 @@ namespace Prometheus.Runtime
 
             pNode.Children.Clear();
 
-            switch (pNode.Type)
+            switch (pNode.Symbol)
             {
                 case GrammarSymbol.GtOperator:
-                    pNode.Data.Add(GreaterThan(valueA, valueB));
+                    pNode.Data.Add(GreaterThan(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.LtOperator:
-                    pNode.Data.Add(LessThan(valueA, valueB));
+                    pNode.Data.Add(LessThan(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.GteOperator:
-                    pNode.Data.Add(GreaterThanEqual(valueA, valueB));
+                    pNode.Data.Add(GreaterThanEqual(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.LteOperator:
-                    pNode.Data.Add(LessThanEqual(valueA, valueB));
+                    pNode.Data.Add(LessThanEqual(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.EqualOperator:
-                    pNode.Data.Add(Equal(valueA, valueB));
+                    pNode.Data.Add(Equal(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.NotEqualOperator:
-                    pNode.Data.Add(NotEqual(valueA, valueB));
+                    pNode.Data.Add(NotEqual(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.AndOperator:
-                    pNode.Data.Add(AndOp(valueA, valueB));
+                    pNode.Data.Add(AndOp(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.OrOperator:
-                    pNode.Data.Add(OrOp(valueA, valueB));
+                    pNode.Data.Add(OrOp(pNode, valueA, valueB));
                     break;
                 default:
-                    throw new UnsupportedDataTypeException(string.Format("Cannot optimize <{0}> value type",pNode.Type),Cursor.Node.Location);
+                    throw new UnsupportedDataTypeException(
+                        string.Format("Cannot optimize <{0}> value type", pNode.Symbol), pNode.Location);
             }
 
-            pNode.Type = GrammarSymbol.Value;
+            pNode.Symbol = GrammarSymbol.Value;
 
             return true;
         }
@@ -245,7 +245,7 @@ namespace Prometheus.Runtime
         /// AND operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.AndOperator)]
-        public DataType AndOp(DataType pValue1, DataType pValue2)
+        public DataType AndOp(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -264,7 +264,7 @@ namespace Prometheus.Runtime
         /// ~ operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.BitInvertOperator)]
-        public DataType Bitwise(DataType pValue)
+        public DataType Bitwise(Node pNode, DataType pValue)
         {
             pValue = Resolve(pValue);
 
@@ -281,7 +281,7 @@ namespace Prometheus.Runtime
         /// Equal
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.EqualOperator)]
-        public DataType Equal(DataType pValue1, DataType pValue2)
+        public DataType Equal(Node pNode, DataType pValue1, DataType pValue2)
         {
             DataType data1 = Resolve(pValue1);
             DataType data2 = Resolve(pValue2);
@@ -292,7 +292,7 @@ namespace Prometheus.Runtime
         /// Not operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NotOperator)]
-        public DataType Equal(DataType pValue1)
+        public DataType Equal(Node pNode, DataType pValue1)
         {
             pValue1 = Resolve(pValue1);
 
@@ -309,7 +309,7 @@ namespace Prometheus.Runtime
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.GtOperator)]
-        public DataType GreaterThan(DataType pValue1, DataType pValue2)
+        public DataType GreaterThan(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -339,7 +339,7 @@ namespace Prometheus.Runtime
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.GteOperator)]
-        public DataType GreaterThanEqual(DataType pValue1, DataType pValue2)
+        public DataType GreaterThanEqual(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -369,7 +369,7 @@ namespace Prometheus.Runtime
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.LtOperator)]
-        public DataType LessThan(DataType pValue1, DataType pValue2)
+        public DataType LessThan(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -399,7 +399,7 @@ namespace Prometheus.Runtime
         /// Greater Than
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.LteOperator)]
-        public DataType LessThanEqual(DataType pValue1, DataType pValue2)
+        public DataType LessThanEqual(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -429,7 +429,7 @@ namespace Prometheus.Runtime
         /// - operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NegOperator)]
-        public DataType Negative(DataType pValue)
+        public DataType Negative(Node pNode, DataType pValue)
         {
             pValue = Resolve(pValue);
 
@@ -447,7 +447,7 @@ namespace Prometheus.Runtime
         /// Not equal
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NotEqualOperator)]
-        public DataType NotEqual(DataType pValue1, DataType pValue2)
+        public DataType NotEqual(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -459,7 +459,7 @@ namespace Prometheus.Runtime
         /// OR operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.OrOperator)]
-        public DataType OrOp(DataType pValue1, DataType pValue2)
+        public DataType OrOp(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -479,7 +479,7 @@ namespace Prometheus.Runtime
         /// Doesn't change the value, but can only work on numeric types.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PlusOperator)]
-        public DataType Plus(DataType pValue)
+        public DataType Plus(Node pNode, DataType pValue)
         {
             pValue = Resolve(pValue);
 
@@ -495,7 +495,7 @@ namespace Prometheus.Runtime
         /// x-- operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PostDecOperator)]
-        public DataType PostDec(QualifiedType pValue)
+        public DataType PostDec(Node pNode, QualifiedType pValue)
         {
             iVariablePointer pointer = Cursor.Resolve(pValue);
             NumericType num = pointer.Read() as NumericType;
@@ -515,7 +515,7 @@ namespace Prometheus.Runtime
         /// x++ operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PostIncOperator)]
-        public DataType PostInc(QualifiedType pValue)
+        public DataType PostInc(Node pNode, QualifiedType pValue)
         {
             iVariablePointer pointer = Cursor.Resolve(pValue);
             NumericType num = pointer.Read() as NumericType;
@@ -536,7 +536,7 @@ namespace Prometheus.Runtime
         /// --x operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PreDecOperator)]
-        public DataType PreDec(QualifiedType pValue)
+        public DataType PreDec(Node pNode, QualifiedType pValue)
         {
             iVariablePointer pointer = Cursor.Resolve(pValue);
             NumericType num = pointer.Read() as NumericType;
@@ -555,7 +555,7 @@ namespace Prometheus.Runtime
         /// ++x operator
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PreIncOperator)]
-        public DataType PreInc(QualifiedType pValue)
+        public DataType PreInc(Node pNode, QualifiedType pValue)
         {
             iVariablePointer pointer = Cursor.Resolve(pValue);
             NumericType num = pointer.Read() as NumericType;

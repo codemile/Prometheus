@@ -19,7 +19,7 @@ namespace Prometheus.Compile.Optimizers
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptimizeQualifier(iExecutor pExecutor) 
+        public OptimizeQualifier(iExecutor pExecutor)
             : base(pExecutor, _nodeTypes)
         {
         }
@@ -31,13 +31,13 @@ namespace Prometheus.Compile.Optimizers
         /// <returns>True if tree was modified.</returns>
         public override bool OptimizeNode(Node pNode)
         {
-            if (pNode.Type == GrammarSymbol.MemberID)
+            if (pNode.Symbol == GrammarSymbol.MemberID)
             {
-                pNode.Type = GrammarSymbol.ValidID;
+                pNode.Symbol = GrammarSymbol.ValidID;
                 return true;
             }
 
-            if (pNode.Type != GrammarSymbol.QualifiedID 
+            if (pNode.Symbol != GrammarSymbol.QualifiedID
                 || pNode.Children.Count == 0)
             {
                 return false;
@@ -47,7 +47,7 @@ namespace Prometheus.Compile.Optimizers
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
                 Node child = pNode.Children[i];
-                if (child.Type != GrammarSymbol.QualifiedList)
+                if (child.Symbol != GrammarSymbol.QualifiedList)
                 {
                     continue;
                 }

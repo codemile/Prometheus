@@ -16,6 +16,17 @@ namespace Prometheus.Parser.Executors
         DataType Execute(Node pNode, Dictionary<string, DataType> pVariables = null);
 
         /// <summary>
+        /// Executes a function reference.
+        /// </summary>
+        DataType Execute(FunctionType pBlock);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="pBlock"></param>
+        /// <returns></returns>
+        DataType ExecuteContinuable(FunctionType pBlock);
+
+        /// <summary>
         /// The current position in the node tree.
         /// </summary>
         Cursor GetCursor();
@@ -24,17 +35,5 @@ namespace Prometheus.Parser.Executors
         /// Processes a branch of the node tree.
         /// </summary>
         DataType WalkDownChildren(Node pNode);
-
-        /// <summary>
-        /// Executes a function reference.
-        /// </summary>
-        DataType Execute(FunctionType pBlock);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pBlock"></param>
-        /// <returns></returns>
-        DataType ExecuteContinuable(FunctionType pBlock);
     }
 }

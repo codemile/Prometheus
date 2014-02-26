@@ -20,12 +20,7 @@ namespace Prometheus.Parser
         /// <summary>
         /// The current namespace.
         /// </summary>
-        public QualifiedType NameSpace;
-
-        /// <summary>
-        /// The current node being executed.
-        /// </summary>
-        public Node Node;
+        [Obsolete("Not reliable in cursor. Must be passed down call stack.")] public QualifiedType NameSpace;
 
         /// <summary>
         /// The current stack of local variables.
@@ -33,12 +28,20 @@ namespace Prometheus.Parser
         public iMemorySpace Stack;
 
         /// <summary>
+        /// The current node being executed.
+        /// </summary>
+        [Obsolete]
+        public Node Node
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Cursor()
         {
             Stack = null;
-            Node = null;
             UnitTest = null;
             NameSpace = new QualifiedType("Global");
         }
@@ -62,7 +65,6 @@ namespace Prometheus.Parser
             {
                 Stack.Dispose();
             }
-            Node = null;
         }
 
         /// <summary>

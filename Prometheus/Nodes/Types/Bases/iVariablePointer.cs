@@ -8,6 +8,11 @@
     public interface iVariablePointer
     {
         /// <summary>
+        /// Does the pointer reference a valid location.
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
         /// Reads the value
         /// </summary>
         DataType Read();
@@ -16,10 +21,5 @@
         /// Writes over the value.
         /// </summary>
         bool Write(DataType pValue);
-
-        /// <summary>
-        /// Does the pointer reference a valid location.
-        /// </summary>
-        bool IsValid();
     }
 }

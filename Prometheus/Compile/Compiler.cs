@@ -104,7 +104,7 @@ namespace Prometheus.Compile
             {
                 int x = _parser.CurrentPosition().Line + 1;
                 int y = _parser.CurrentPosition().Column + 1;
-                Location location = new Location(pImported, lines[x - 1].Replace("\t"," "), x, y);
+                Location location = new Location(pImported, lines[x - 1].Replace("\t", " "), x, y);
 
                 try
                 {
@@ -131,7 +131,7 @@ namespace Prometheus.Compile
             }
 
             // always make Block the root node
-            if (node.Type == GrammarSymbol.Program)
+            if (node.Symbol == GrammarSymbol.Program)
             {
                 return node;
             }

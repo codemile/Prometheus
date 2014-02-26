@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -28,7 +29,7 @@ namespace Prometheus.Runtime
         /// <param name="pNeedles">The terms to find</param>
         /// <returns>Boolean result</returns>
         [ExecuteSymbol(GrammarSymbol.ContainsTerm)]
-        public DataType Contains(DataType pHaystacks, DataType pNeedles)
+        public DataType Contains(Node pNode, DataType pHaystacks, DataType pNeedles)
         {
             pHaystacks = Resolve(pHaystacks);
             pNeedles = Resolve(pNeedles);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -10,7 +7,6 @@ using Prometheus.Parser.Executors;
 namespace Prometheus.Compile.Optimizers
 {
     /// <summary>
-    /// 
     /// </summary>
     public class OptimizeTest : BaseOptimizer
     {

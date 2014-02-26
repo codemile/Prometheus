@@ -32,9 +32,9 @@ namespace Prometheus.Parser.Executors
         protected override MethodInfo GetMethod(Node pNode, int pArgCount)
         {
 #if DEBUG
-            ValidateArguments(pArgCount);
+            ValidateArguments(pNode, pArgCount);
 #endif
-            return _methods[Cursor.Node.Type][pArgCount];
+            return _methods[pNode.Symbol][pArgCount];
         }
 
 #if DEBUG
@@ -42,9 +42,9 @@ namespace Prometheus.Parser.Executors
         /// Performs a safety check in debug mode. The node tree should be in a stable state
         /// after being compiled. These errors should happen in a stable release.
         /// </summary>
-        private void ValidateArguments(int pArgCount)
+        private void ValidateArguments(Node pNode, int pArgCount)
         {
-            GrammarSymbol type = Cursor.Node.Type;
+            GrammarSymbol type = pNode.Symbol;
             if (!_methods.ContainsKey(type))
             {
                 throw new InvalidArgumentException(
@@ -54,7 +54,7 @@ namespace Prometheus.Parser.Executors
             {
                 throw new InvalidArgumentException(
                     string.Format("{0} does not have {1} argument method for <{2}>", GetType().FullName, pArgCount,
-                        type), Cursor.Node);
+                        type), pNode);
             }
         }
 #endif

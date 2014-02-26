@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Grammar;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -69,6 +67,5 @@ namespace Prometheus.Nodes.Types
 
             return variables;
         }
-
     }
 }

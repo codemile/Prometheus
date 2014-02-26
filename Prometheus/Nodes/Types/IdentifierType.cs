@@ -10,14 +10,14 @@ namespace Prometheus.Nodes.Types
     public class IdentifierType : DataType
     {
         /// <summary>
-        /// Constant this
-        /// </summary>
-        public static readonly QualifiedType This = new QualifiedType(THIS);
-
-        /// <summary>
         /// Reference to "base"
         /// </summary>
         public const string BASE = "base";
+
+        /// <summary>
+        /// Reference to closure function scope.
+        /// </summary>
+        public const string FUNC = "func";
 
         /// <summary>
         /// Reference to "this"
@@ -25,9 +25,9 @@ namespace Prometheus.Nodes.Types
         public const string THIS = "this";
 
         /// <summary>
-        /// Reference to closure function scope.
+        /// Constant this
         /// </summary>
-        public const string FUNC = "func";
+        public static readonly QualifiedType This = new QualifiedType(THIS);
 
         /// <summary>
         /// the display name

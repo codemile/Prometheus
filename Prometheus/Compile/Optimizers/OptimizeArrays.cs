@@ -33,7 +33,7 @@ namespace Prometheus.Compile.Optimizers
         /// </summary>
         public override bool OptimizeParent(Node pParent, Node pChild)
         {
-            if (pChild.Type != GrammarSymbol.ArrayLiteralList)
+            if (pChild.Symbol != GrammarSymbol.ArrayLiteralList)
             {
                 return false;
             }

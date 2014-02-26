@@ -14,16 +14,16 @@ namespace Prometheus.Compile.Optimizers
         /// These nodes can have their child promoted, if it's only one child.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
-                                                                  {
-                                                                      //GrammarSymbol.Block,
-                                                                      GrammarSymbol.Statements,
-                                                                      GrammarSymbol.Statement,
-                                                                  };
+                                                                    {
+                                                                        //GrammarSymbol.Block,
+                                                                        GrammarSymbol.Statements,
+                                                                        GrammarSymbol.Statement,
+                                                                    };
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptimizeCollapseNode(iExecutor pExecutor) 
+        public OptimizeCollapseNode(iExecutor pExecutor)
             : base(pExecutor, _nodeTypes)
         {
         }

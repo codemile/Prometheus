@@ -2,6 +2,7 @@
 using System.Linq;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -35,10 +36,21 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Declares a unit test.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.TestDecl)]
+        public DataType TestDecl(Node pNode, IdentifierType pName, FunctionType pTest)
+        {
+            _tests.Add(pName.Name);
+            Cursor.Stack.Create(pName.Name, pTest);
+            return UndefinedType.Undefined;
+        }
+
+        /// <summary>
         /// Executes the current unit test.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.TestExecute)]
-        public DataType TestExecute()
+        public DataType TestExecute(Node pNode)
         {
             try
             {
@@ -56,7 +68,7 @@ namespace Prometheus.Runtime
         /// Declares a source file as a test suite.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.TestSuiteDecl)]
-        public DataType TestSuite()
+        public DataType TestSuite(Node pNode)
         {
             return UndefinedType.Undefined;
         }
@@ -65,7 +77,7 @@ namespace Prometheus.Runtime
         /// Declares a source file as a test suite.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.TestSuiteDecl)]
-        public DataType TestSuite(DataType pTests)
+        public DataType TestSuite(Node pNode, DataType pTests)
         {
             ArrayType arr = pTests is ArrayType
                 ? (ArrayType)pTests
@@ -79,25 +91,14 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Declares a unit test.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.TestDecl)]
-        public DataType TestDecl(IdentifierType pName, FunctionType pTest)
-        {
-            _tests.Add(pName.Name);
-            Cursor.Stack.Create(pName.Name, pTest);
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
         /// Handles a basic assert
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.AssertProc)]
-        public DataType _Assert(DataType pValue)
+        public DataType _Assert(Node pNode, DataType pValue)
         {
             if (!pValue.getBool())
             {
-                throw new TestException("Assert failed", Cursor.Node);
+                throw new TestException("Assert failed", pNode);
             }
             return UndefinedType.Undefined;
         }
@@ -106,7 +107,7 @@ namespace Prometheus.Runtime
         /// Triggers the failure of a test.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.FailProc)]
-        public DataType _Fail(DataType pValue)
+        public DataType _Fail(Node pNode, DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
 
@@ -114,16 +115,16 @@ namespace Prometheus.Runtime
                 ? Cursor.Resolve(id).Read()
                 : pValue;
 
-            throw new TestException(string.Format("Failed: {0}", value), Cursor.Node);
+            throw new TestException(string.Format("Failed: {0}", value), pNode);
         }
 
         /// <summary>
         /// Triggers the failure of a test.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.FailProc)]
-        public DataType _Fail()
+        public DataType _Fail(Node pNode)
         {
-            throw new TestException("Failed", Cursor.Node);
+            throw new TestException("Failed", pNode);
         }
     }
 }

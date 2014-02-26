@@ -84,6 +84,24 @@ namespace Prometheus.Storage
         }
 
         /// <summary>
+        /// Checks if the storage contains a variable.
+        /// </summary>
+        /// <param name="pName">The name to create</param>
+        /// <returns>True if exists</returns>
+        public override bool Has(string pName)
+        {
+            if (base.Has(pName))
+            {
+                return true;
+            }
+            if (Parent != null)
+            {
+                return Parent.Has(pName);
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Looks for the identifier in the current scope, and
         /// all parent scopes.
         /// </summary>
@@ -100,24 +118,6 @@ namespace Prometheus.Storage
                 return Parent.Set(pName, pDataType);
             }
             throw new IdentifierInnerException(string.Format(Errors.IdentifierNotDefined, pName));
-        }
-
-        /// <summary>
-        /// Checks if the storage contains a variable.
-        /// </summary>
-        /// <param name="pName">The name to create</param>
-        /// <returns>True if exists</returns>
-        public override bool Has(string pName)
-        {
-            if (base.Has(pName))
-            {
-                return true;
-            }
-            if (Parent != null)
-            {
-                return Parent.Has(pName);
-            }
-            return false;
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Prometheus.Exceptions.Executor;
+﻿using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -24,16 +24,16 @@ namespace Prometheus.Runtime
         /// Executes an identify as a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public DataType Call(QualifiedType pId)
+        public DataType Call(Node pNode, QualifiedType pId)
         {
-            return Call(pId, ArrayType.Empty);
+            return Call(pNode, pId, ArrayType.Empty);
         }
 
         /// <summary>
         /// Executes a closure a function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.CallExpression)]
-        public DataType Call(QualifiedType pId, ArrayType pArguments)
+        public DataType Call(Node pNode, QualifiedType pId, ArrayType pArguments)
         {
             try
             {
@@ -62,11 +62,11 @@ namespace Prometheus.Runtime
         /// Declares a new function type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(IdentifierType pFuncName, FunctionType pFunc)
+        public DataType FunctionDeclare(Node pNode, IdentifierType pFuncName, FunctionType pFunc)
         {
             //InstanceType inst = new InstanceType();
             InstanceType inst = Resolve<InstanceType>(IdentifierType.This);
-            ClosureType closure = new ClosureType(inst,pFunc);
+            ClosureType closure = new ClosureType(inst, pFunc);
 
             Cursor.Stack.Create(pFuncName.Name, closure);
 
@@ -77,18 +77,18 @@ namespace Prometheus.Runtime
         /// Performs a return exception to break out of the function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ReturnProc)]
-        public DataType Return()
+        public DataType Return(Node pNode)
         {
-            throw new ReturnException(UndefinedType.Undefined);
+            throw new ReturnException(UndefinedType.Undefined, pNode);
         }
 
         /// <summary>
         /// Performs a return exception to break out of the function.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ReturnProc)]
-        public DataType Return(DataType pDataType)
+        public DataType Return(Node pNode, DataType pDataType)
         {
-            throw new ReturnException(Resolve(pDataType));
+            throw new ReturnException(Resolve(pDataType), pNode);
         }
     }
 }

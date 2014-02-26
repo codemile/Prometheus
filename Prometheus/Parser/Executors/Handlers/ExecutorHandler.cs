@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Prometheus.Compile;
-using Prometheus.Compile.Optimizers;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
@@ -107,7 +106,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// <returns>True if tree was modified.</returns>
         public virtual bool OptimizeNode(Node pNode)
         {
-            if (_nodeTypes.Contains(pNode.Type))
+            if (_nodeTypes.Contains(pNode.Symbol))
             {
                 pNode.Handler = GetHandlerCode();
             }

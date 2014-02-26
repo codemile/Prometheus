@@ -34,13 +34,13 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         public override DataType Handle(Node pNode)
         {
-            if (pNode.Type == GrammarSymbol.BreakControl)
+            if (pNode.Symbol == GrammarSymbol.BreakControl)
             {
-                throw new BreakException();
+                throw new BreakException(pNode);
             }
-            if (pNode.Type == GrammarSymbol.ContinueControl)
+            if (pNode.Symbol == GrammarSymbol.ContinueControl)
             {
-                throw new ContinueException();
+                throw new ContinueException(pNode);
             }
             throw new NotImplementedException();
         }

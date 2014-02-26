@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Prometheus.Exceptions;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -64,7 +65,6 @@ namespace Prometheus.Parser.Executors
             return value.getBool();
         }
 
-
         /// <summary>
         /// Executes a method on this object that matches the argument types.
         /// </summary>
@@ -74,18 +74,23 @@ namespace Prometheus.Parser.Executors
         {
             try
             {
-                MethodInfo method = GetMethod(Cursor.Node, pValues.Length);
+                MethodInfo method = GetMethod((Node)pValues[0], pValues.Length);
                 return (DataType)method.Invoke(this, pValues);
             }
             catch (TargetInvocationException e)
             {
-                RunTimeException inner = e.InnerException as RunTimeException;
-                if (inner != null)
+                PrometheusException inner = e.InnerException as PrometheusException;
+                if (inner == null)
                 {
-                    inner.Where = inner.Where ?? Cursor.Node.Location;
-                    throw e.InnerException;
+                    throw;
                 }
-                throw;
+                inner.Where = inner.Where ?? ((Node)pValues[0]).Location;
+                throw e.InnerException;
+            }
+            catch (ArgumentException e)
+            {
+                string str = string.Format("{0} for class '{1}'", e.Message, GetType().Name);
+                throw new RunTimeException(str, ((Node)pValues[0]).Location, e);
             }
         }
     }

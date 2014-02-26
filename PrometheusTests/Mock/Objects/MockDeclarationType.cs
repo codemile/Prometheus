@@ -1,5 +1,4 @@
 ﻿using Prometheus.Nodes.Types;
-using PrometheusTest.Mock.Storage;
 using PrometheusTest.Mock.Types;
 
 namespace PrometheusTest.Mock.Objects

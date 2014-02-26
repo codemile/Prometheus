@@ -85,23 +85,23 @@ namespace Prometheus.Parser.Executors
             int dCount = pNode.Data.Count;
 
             int cChild = pNode.Children.Count;
-            object[] values = new object[cChild + dCount];
-            for (int i = 0, c = dCount; i < c; i++)
+            object[] values = new object[cChild + dCount + 1];
+            values[0] = pNode;
+            for (int i = 0, j = 1, c = dCount; i < c; i++, j++)
             {
-                values[i] = pNode.Data[i];
+                values[j] = pNode.Data[i];
             }
-            for (int i = 0, j = dCount, c = cChild; i < c; i++, j++)
+            for (int i = 0, j = dCount + 1, c = cChild; i < c; i++, j++)
             {
                 values[j] = WalkDownChildren(pNode.Children[i]);
             }
 
             try
             {
-                _cursor.Node = pNode;
 #if DEBUG
-                ExecutorAssert.Node(_grammarLookup, pNode.Type, pNode);
+                ExecutorAssert.Node(_grammarLookup, pNode.Symbol, pNode);
 #endif
-                ExecutorBase _base = _grammarLookup[pNode.Type];
+                ExecutorBase _base = _grammarLookup[pNode.Symbol];
                 return _base.Execute(values);
             }
             catch (PrometheusException e)

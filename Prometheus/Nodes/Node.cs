@@ -11,7 +11,7 @@ namespace Prometheus.Nodes
     /// <summary>
     /// Node in the tree of code.
     /// </summary>
-    [DebuggerDisplay("{Type}")]
+    [DebuggerDisplay("{Symbol}")]
     public class Node
     {
         /// <summary>
@@ -32,7 +32,7 @@ namespace Prometheus.Nodes
         /// <summary>
         /// The type of node.
         /// </summary>
-        public GrammarSymbol Type;
+        public GrammarSymbol Symbol;
 
         /// <summary>
         /// Does this node have a special handler.
@@ -42,12 +42,12 @@ namespace Prometheus.Nodes
         /// <summary>
         /// Initializes a node.
         /// </summary>
-        /// <param name="pType">The node's type.</param>
+        /// <param name="pSymbol">The node's type.</param>
         /// <param name="pLocation">Location in the source code</param>
-        public Node(GrammarSymbol pType, Location pLocation)
+        public Node(GrammarSymbol pSymbol, Location pLocation)
         {
             Handler = 0;
-            Type = pType;
+            Symbol = pSymbol;
             Location = pLocation;
             Data = new List<DataType>();
             Children = new List<Node>();
@@ -56,8 +56,8 @@ namespace Prometheus.Nodes
         /// <summary>
         /// Constructor
         /// </summary>
-        public Node(GrammarSymbol pType, Location pLocation, IEnumerable<Node> pChildren)
-            : this(pType, pLocation)
+        public Node(GrammarSymbol pSymbol, Location pLocation, IEnumerable<Node> pChildren)
+            : this(pSymbol, pLocation)
         {
             Children.AddRange(pChildren);
         }
@@ -71,28 +71,6 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
-        /// Sets this node to all the values of the other node.
-        /// </summary>
-        public void Set(Node pNode)
-        {
-#if DEBUG
-            if (this == pNode)
-            {
-                throw new InvalidArgumentException("Cannot set node with itself",pNode);
-            }
-#endif
-
-            Children.Clear();
-            Data.Clear();
-
-            Type = pNode.Type;
-            Handler = pNode.Handler;
-            Location = pNode.Location;
-            Children.AddRange(pNode.Children);
-            Data.AddRange(pNode.Data);
-        }
-
-        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>
@@ -100,7 +78,7 @@ namespace Prometheus.Nodes
         /// </returns>
         public override string ToString()
         {
-            return string.Format("'{0}' {1}", Type, Location);
+            return string.Format("'{0}' {1}", Symbol, Location);
         }
 
         /// <summary>
@@ -126,7 +104,7 @@ namespace Prometheus.Nodes
         /// </summary>
         public Node FindChild(GrammarSymbol pSymbol)
         {
-            return Children.FirstOrDefault(pNode=>pNode.Type == pSymbol);
+            return Children.FirstOrDefault(pNode=>pNode.Symbol == pSymbol);
         }
 
         /// <summary>
@@ -152,7 +130,15 @@ namespace Prometheus.Nodes
         /// <returns>True if found</returns>
         public bool HasChild(GrammarSymbol pSymbol)
         {
-            return Children.Any(pChild=>pChild.Type == pSymbol);
+            return Children.Any(pChild=>pChild.Symbol == pSymbol);
+        }
+
+        /// <summary>
+        /// True if this node contains no data and no children.
+        /// </summary>
+        public bool IsEmpty()
+        {
+            return Children.Count == 0 && Data.Count == 0;
         }
 
         /// <summary>
@@ -174,11 +160,25 @@ namespace Prometheus.Nodes
         }
 
         /// <summary>
-        /// True if this node contains no data and no children.
+        /// Sets this node to all the values of the other node.
         /// </summary>
-        public bool IsEmpty()
+        public void Set(Node pNode)
         {
-            return Children.Count == 0 && Data.Count == 0;
+#if DEBUG
+            if (this == pNode)
+            {
+                throw new InvalidArgumentException("Cannot set node with itself", pNode);
+            }
+#endif
+
+            Children.Clear();
+            Data.Clear();
+
+            Symbol = pNode.Symbol;
+            Handler = pNode.Handler;
+            Location = pNode.Location;
+            Children.AddRange(pNode.Children);
+            Data.AddRange(pNode.Data);
         }
     }
 }

@@ -100,7 +100,7 @@ namespace Prometheus.Runtime
         /// <param name="pId">The variable name</param>
         /// <param name="pValue">The value to assign</param>
         [ExecuteSymbol(GrammarSymbol.Assignment)]
-        public DataType Assignment(QualifiedType pId, DataType pValue)
+        public DataType Assignment(Node pNode, QualifiedType pId, DataType pValue)
         {
             DataType value = ResolveToValue(pValue);
             Cursor.Resolve(pId).Write(value);
@@ -114,7 +114,7 @@ namespace Prometheus.Runtime
         /// <param name="pValue">The value</param>
         /// <returns>The value assigned</returns>
         [ExecuteSymbol(GrammarSymbol.Declare)]
-        public DataType Declare(IdentifierType pIdentifier, DataType pValue)
+        public DataType Declare(Node pNode, IdentifierType pIdentifier, DataType pValue)
         {
             pValue = ResolveToValue(pValue);
             Cursor.Stack.Create(pIdentifier.Name, pValue);
@@ -127,16 +127,16 @@ namespace Prometheus.Runtime
         /// <param name="pIdentifier">Name of the variable</param>
         /// <returns>The value assigned</returns>
         [ExecuteSymbol(GrammarSymbol.Declare)]
-        public DataType Declare(IdentifierType pIdentifier)
+        public DataType Declare(Node pNode, IdentifierType pIdentifier)
         {
-            return Declare(pIdentifier, UndefinedType.Undefined);
+            return Declare(pNode, pIdentifier, UndefinedType.Undefined);
         }
 
         /// <summary>
         /// Decrement
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ListVars)]
-        public DataType ListVars()
+        public DataType ListVars(Node pNode)
         {
             Print(Cursor.Stack, 0);
             return UndefinedType.Undefined;
@@ -146,7 +146,7 @@ namespace Prometheus.Runtime
         /// Creates a singular identifier from a reference to a plural identifier.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PluralID)]
-        public DataType Plural(QualifiedType pId)
+        public DataType Plural(Node pNode, QualifiedType pId)
         {
             iVariablePointer pointer = Cursor.Resolve(pId);
             if (pointer is ArrayPointer)
@@ -178,7 +178,7 @@ namespace Prometheus.Runtime
         /// Creates a plural data type when singular name is provided.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PluralID)]
-        public DataType Plural(IdentifierType pSingular, DataType pData)
+        public DataType Plural(Node pNode, IdentifierType pSingular, DataType pData)
         {
             return CreatePlural(Resolve(pData), pSingular);
         }
@@ -187,7 +187,7 @@ namespace Prometheus.Runtime
         /// Decrement
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PostDecrement)]
-        public DataType PostDec(QualifiedType pId)
+        public DataType PostDec(Node pNode, QualifiedType pId)
         {
             iVariablePointer pointer = Cursor.Resolve(pId);
 
@@ -210,7 +210,7 @@ namespace Prometheus.Runtime
         /// Increment
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PostIncrement)]
-        public DataType PostInc(QualifiedType pId)
+        public DataType PostInc(Node pNode, QualifiedType pId)
         {
             iVariablePointer pointer = Cursor.Resolve(pId);
 
@@ -233,7 +233,7 @@ namespace Prometheus.Runtime
         /// Decrement
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PreDecrement)]
-        public DataType PreDec(QualifiedType pId)
+        public DataType PreDec(Node pNode, QualifiedType pId)
         {
             iVariablePointer pointer = Cursor.Resolve(pId);
 
@@ -254,7 +254,7 @@ namespace Prometheus.Runtime
         /// Increment
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.PreIncrement)]
-        public DataType PreInc(QualifiedType pId)
+        public DataType PreInc(Node pNode, QualifiedType pId)
         {
             iVariablePointer pointer = Cursor.Resolve(pId);
 
@@ -277,7 +277,7 @@ namespace Prometheus.Runtime
         /// <param name="pId">The variable name</param>
         /// <returns>The value or undefined.</returns>
         [ExecuteSymbol(GrammarSymbol.QualifiedID)]
-        public DataType Qualified(QualifiedType pId)
+        public DataType Qualified(Node pNode, QualifiedType pId)
         {
             return Cursor.Resolve(pId).Read();
         }
@@ -286,7 +286,7 @@ namespace Prometheus.Runtime
         /// Checks if the qualifier ID is valid.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.IssetFunc)]
-        public DataType Isset(QualifiedType pId)
+        public DataType Isset(Node pNode, QualifiedType pId)
         {
             iVariablePointer pointer = Cursor.Resolve(pId);
             return new BooleanType(pointer.IsValid());

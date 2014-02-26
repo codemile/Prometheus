@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Prometheus.Grammar;
+﻿using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -18,7 +14,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Constructor
         /// </summary>
-        public Conditional(Executor pExecutor) 
+        public Conditional(Executor pExecutor)
             : base(pExecutor)
         {
         }

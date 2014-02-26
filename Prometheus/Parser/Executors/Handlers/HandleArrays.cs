@@ -38,7 +38,7 @@ namespace Prometheus.Parser.Executors.Handlers
         public override DataType Handle(Node pNode)
         {
             IList<DataType> array;
-            switch (pNode.Type)
+            switch (pNode.Symbol)
             {
                 case GrammarSymbol.QualifiedID:
                 case GrammarSymbol.ClassNameID:
@@ -51,13 +51,13 @@ namespace Prometheus.Parser.Executors.Handlers
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
 #if DEBUG
-                if (pNode.Type == GrammarSymbol.ParameterArray)
+                if (pNode.Symbol == GrammarSymbol.ParameterArray)
                 {
                     ExecutorAssert.Data(pNode.Children[i], 1);
                     ExecutorAssert.DataType(pNode.Children[i], 0, typeof (IdentifierType));
                 }
 #endif
-                array.Add(pNode.Type == GrammarSymbol.ParameterArray
+                array.Add(pNode.Symbol == GrammarSymbol.ParameterArray
                     ? pNode.Children[i].Data[0]
                     : Executor.WalkDownChildren(pNode.Children[i]));
             }

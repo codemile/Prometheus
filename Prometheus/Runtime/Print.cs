@@ -1,5 +1,6 @@
 ﻿using Logging;
 using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -30,7 +31,7 @@ namespace Prometheus.Runtime
         /// </summary>
         /// <param name="pValue">The message to print.</param>
         [ExecuteSymbol(GrammarSymbol.PrintProc)]
-        public DataType PrintProc(DataType pValue)
+        public DataType PrintProc(Node pNode, DataType pValue)
         {
             QualifiedType id = pValue as QualifiedType;
 

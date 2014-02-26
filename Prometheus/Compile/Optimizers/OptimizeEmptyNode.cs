@@ -14,21 +14,20 @@ namespace Prometheus.Compile.Optimizers
         /// These nodes can be dropped from the tree, if they have no child and no data.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
-                                                               {
-                                                                   GrammarSymbol.End,
-                                                                   GrammarSymbol.Statement,
-                                                                   GrammarSymbol.Statements,
-                                                                   GrammarSymbol.Program,
-
-                                                                   GrammarSymbol.ProgramCode,
-                                                                   GrammarSymbol.ImportDecls,
-                                                                   GrammarSymbol.ObjectDecls
-                                                               };
+                                                                    {
+                                                                        GrammarSymbol.End,
+                                                                        GrammarSymbol.Statement,
+                                                                        GrammarSymbol.Statements,
+                                                                        GrammarSymbol.Program,
+                                                                        GrammarSymbol.ProgramCode,
+                                                                        GrammarSymbol.ImportDecls,
+                                                                        GrammarSymbol.ObjectDecls
+                                                                    };
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptimizeEmptyNode(iExecutor pExecutor) 
+        public OptimizeEmptyNode(iExecutor pExecutor)
             : base(pExecutor, _nodeTypes)
         {
         }

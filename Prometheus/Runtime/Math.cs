@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Prometheus.Compile;
-using Prometheus.Compile.Optimizers;
 using Prometheus.Exceptions.Compiler;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
@@ -39,9 +38,9 @@ namespace Prometheus.Runtime
         /// <returns>True if it can be reduced.</returns>
         private static bool CanReduce(Node pNode)
         {
-            return (_mathSymbols.Contains(pNode.Type) &&
-                    pNode.Children[0].Type == GrammarSymbol.Value &&
-                    pNode.Children[1].Type == GrammarSymbol.Value);
+            return (_mathSymbols.Contains(pNode.Symbol) &&
+                    pNode.Children[0].Symbol == GrammarSymbol.Value &&
+                    pNode.Children[1].Symbol == GrammarSymbol.Value);
         }
 
         /// <summary>
@@ -77,28 +76,29 @@ namespace Prometheus.Runtime
             DataType valueA = pNode.Children[0].Data[0];
             DataType valueB = pNode.Children[1].Data[0];
 
-            switch (pNode.Type)
+            switch (pNode.Symbol)
             {
                 case GrammarSymbol.AddExpression:
-                    pNode.Data.Add(Add(valueA, valueB));
+                    pNode.Data.Add(Add(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.SubExpression:
-                    pNode.Data.Add(Sub(valueA, valueB));
+                    pNode.Data.Add(Sub(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.MultiplyExpression:
-                    pNode.Data.Add(Mul(valueA, valueB));
+                    pNode.Data.Add(Mul(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.DivideExpression:
-                    pNode.Data.Add(Div(valueA, valueB));
+                    pNode.Data.Add(Div(pNode, valueA, valueB));
                     break;
                 case GrammarSymbol.RemainderExpression:
-                    pNode.Data.Add(Remainder(valueA, valueB));
+                    pNode.Data.Add(Remainder(pNode, valueA, valueB));
                     break;
                 default:
-                    throw new UnsupportedDataTypeException(string.Format("Cannot optimize <{0}> value type", pNode.Type), Cursor.Node.Location);
+                    throw new UnsupportedDataTypeException(
+                        string.Format("Cannot optimize <{0}> value type", pNode.Symbol), pNode.Location);
             }
 
-            pNode.Type = GrammarSymbol.Value;
+            pNode.Symbol = GrammarSymbol.Value;
             pNode.Children.Clear();
 
             return true;
@@ -137,7 +137,7 @@ namespace Prometheus.Runtime
         /// Addition
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.AddExpression)]
-        public DataType Add(DataType pValue1, DataType pValue2)
+        public DataType Add(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -177,7 +177,7 @@ namespace Prometheus.Runtime
         /// Division
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.DivideExpression)]
-        public DataType Div(DataType pValue1, DataType pValue2)
+        public DataType Div(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -235,7 +235,7 @@ namespace Prometheus.Runtime
         /// Multiplication
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.MultiplyExpression)]
-        public DataType Mul(DataType pValue1, DataType pValue2)
+        public DataType Mul(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -283,7 +283,7 @@ namespace Prometheus.Runtime
         /// Remainder
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.RemainderExpression)]
-        public DataType Remainder(DataType pValue1, DataType pValue2)
+        public DataType Remainder(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);
@@ -323,7 +323,7 @@ namespace Prometheus.Runtime
         /// Subtraction
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.SubExpression)]
-        public DataType Sub(DataType pValue1, DataType pValue2)
+        public DataType Sub(Node pNode, DataType pValue1, DataType pValue2)
         {
             pValue1 = Resolve(pValue1);
             pValue2 = Resolve(pValue2);

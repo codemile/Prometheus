@@ -14,21 +14,18 @@ namespace Prometheus.Compile.Optimizers
         /// These nodes can have their child promoted, if it's only one child.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
-                                                                  {
-                                                                      GrammarSymbol.ObjectDecls,
-                                                                      GrammarSymbol.TestDecls,
-                                                                      GrammarSymbol.ImportDecls,
-
-                                                                      GrammarSymbol.ProgramTest,
-                                                                      GrammarSymbol.ProgramCode,
-
-                                                                      GrammarSymbol.BaseClassID,
-
-                                                                      GrammarSymbol.QualifiedList,
-                                                                      GrammarSymbol.ClassNameList,
-                                                                      GrammarSymbol.ClassNameList,
-                                                                      GrammarSymbol.ParameterList
-                                                                  };
+                                                                    {
+                                                                        GrammarSymbol.ObjectDecls,
+                                                                        GrammarSymbol.TestDecls,
+                                                                        GrammarSymbol.ImportDecls,
+                                                                        GrammarSymbol.ProgramTest,
+                                                                        GrammarSymbol.ProgramCode,
+                                                                        GrammarSymbol.BaseClassID,
+                                                                        GrammarSymbol.QualifiedList,
+                                                                        GrammarSymbol.ClassNameList,
+                                                                        GrammarSymbol.ClassNameList,
+                                                                        GrammarSymbol.ParameterList
+                                                                    };
 
         /// <summary>
         /// Constructor
