@@ -1,4 +1,5 @@
 ﻿using Prometheus.Grammar;
+using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
@@ -23,7 +24,7 @@ namespace Prometheus.Runtime
         /// Execute a block if condition is true.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.IfControl)]
-        public DataType IfThen(DataType pCondition, FunctionType pThen)
+        public DataType IfThen(Node pNode, DataType pCondition, FunctionType pThen)
         {
             DataType value = Resolve(pCondition);
             return value.getBool()
@@ -35,7 +36,7 @@ namespace Prometheus.Runtime
         /// Execute a block if condition is true.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.IfControl)]
-        public DataType IfThenElse(DataType pCondition, FunctionType pThen, FunctionType pElse)
+        public DataType IfThenElse(Node pNode, DataType pCondition, FunctionType pThen, FunctionType pElse)
         {
             DataType value = Resolve(pCondition);
             return value.getBool()
