@@ -28,20 +28,11 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public ClosureType(InstanceType pThis, FunctionType pFunction)
+        public ClosureType(InstanceType pThis, IEnumerable<DataType> pParameters, Node pBlock)
         {
             _name = IdentifierType.THIS;
             _this = pThis;
-            Function = pFunction;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ClosureType(FunctionType pFunction)
-        {
-            _name = IdentifierType.FUNC;
-            _this = new InstanceType();
+            Function = new FunctionType(pBlock, pParameters);
         }
 
         /// <summary>

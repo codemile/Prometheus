@@ -1,13 +1,7 @@
 Tests;
 
-Test Each_Test {
-	var numbers = [1,2,3,4];
-	var x = 0;
-	var y = 0;
-	Each (numbers) {
-		x = x + number;
-		y++;
+Test Variable_Function_Test {
+	var foo = function {
 	};
-	Assert x == 10;
-	Assert y == 4;
+	Assert isset foo;
 };

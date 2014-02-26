@@ -19,7 +19,7 @@ namespace Prometheus.Runtime
         /// Walks the inheritance of declarations creating each from the
         /// bottom up.
         /// </summary>
-        private InstanceType CreateInstance(StackSpace pSpace, DeclarationType pDecl)
+        private InstanceType CreateInstance(iMemorySpace pSpace, DeclarationType pDecl)
         {
             InstanceType inst = new InstanceType(pSpace);
             if (pDecl.Base == null)
@@ -30,7 +30,7 @@ namespace Prometheus.Runtime
             DeclarationType baseType = Cursor.Get<DeclarationType>(pDecl.Base);
             StackSpace baseSpace = new StackSpace(pSpace);
             InstanceType baseInst = CreateInstance(baseSpace, baseType);
-            ClosureType baseFunc = new ClosureType(baseInst, baseType.Constructor);
+            ClosureType baseFunc = new ClosureType(baseInst, new DataType[0], baseType.Constructor.Entry);
             inst.GetMembers().Create(IdentifierType.BASE, baseFunc);
 
             return inst;
@@ -48,7 +48,7 @@ namespace Prometheus.Runtime
         /// Set what packages are being used by the current code.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ImportDecl)]
-        public DataType Import(Node pNode, QualifiedType pPackage)
+        public UndefinedType Import(Node pNode, QualifiedType pPackage)
         {
             return UndefinedType.Undefined;
         }
@@ -57,7 +57,7 @@ namespace Prometheus.Runtime
         /// Sets the current namespace
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.NameSpace)]
-        public DataType NameSpace(Node pNode, QualifiedType pNameSpace)
+        public UndefinedType NameSpace(Node pNode, QualifiedType pNameSpace)
         {
             Cursor.NameSpace = pNameSpace;
             return UndefinedType.Undefined;
@@ -116,7 +116,7 @@ namespace Prometheus.Runtime
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(Node pNode, IdentifierType pObjectName, FunctionType pConstructor)
+        public DeclarationType ObjectDeclare(Node pNode, IdentifierType pObjectName, FunctionType pConstructor)
         {
             return ObjectDeclare(pNode, pObjectName, ArrayType.Empty, pConstructor);
         }
@@ -125,13 +125,13 @@ namespace Prometheus.Runtime
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(Node pNode, IdentifierType pObjectName, ArrayType pParameters,
-                                      FunctionType pConstructor)
+        public DeclarationType ObjectDeclare(Node pNode, IdentifierType pObjectName, IEnumerable<DataType> pParameters,
+                                             FunctionType pConstructor)
         {
             QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);
             DeclarationType decl = new DeclarationType(
                 className,
-                new FunctionType(pConstructor.Entry, pParameters, true));
+                new FunctionType(pConstructor.Entry, pParameters));
             Cursor.Stack.Create(className.ToString(), decl);
             return decl;
         }
@@ -140,15 +140,15 @@ namespace Prometheus.Runtime
         /// Declares a new object type
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.ObjectDecl)]
-        public DataType ObjectDeclare(Node pNode, QualifiedType pBaseName, IdentifierType pObjectName,
-                                      ArrayType pParameters,
-                                      FunctionType pConstructor)
+        public DeclarationType ObjectDeclare(Node pNode, QualifiedType pBaseName, IdentifierType pObjectName,
+                                             IEnumerable<DataType> pParameters,
+                                             FunctionType pConstructor)
         {
             QualifiedType className = new QualifiedType(Cursor.NameSpace, pObjectName);
             DeclarationType decl = new DeclarationType(
                 pBaseName,
                 className,
-                new FunctionType(pConstructor.Entry, pParameters, true));
+                new FunctionType(pConstructor.Entry, pParameters));
             Cursor.Stack.Create(className.ToString(), decl);
             return decl;
         }

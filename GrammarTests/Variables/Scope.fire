@@ -1,24 +1,13 @@
 Tests;
 
-Test Isset_Test {
-	var x;
-	Assert isset x;
-};
-
-Test Not_Isset_Test {
-	Assert not isset x;
-};
-
-Test Isset_Variable_Function_Test {
-	var foo = function() {
-		return "done";
-	};
-	Assert isset foo;
-};
-
-Test Isset_Function_Test {
-	function foo {
-		return "done";
-	};
-	Assert isset foo;
+Test Scope_Function_Decl_Test {
+	function foo() {
+		var str = "Hello";
+		function boo() with (str) {
+			Assert isset str;
+		}
+		return boo;
+	}
+	var woo = foo();
+	woo();
 };

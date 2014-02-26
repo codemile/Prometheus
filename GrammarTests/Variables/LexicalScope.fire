@@ -1,59 +1,37 @@
-var x = [1,2,[1,2,3],4,5];
+Tests;
 
-//Tests;
-
-/**
-Test Closure_Scope_Test {
-	function makeFunc {
-		var str = "Hello World";
-		function getMessage {
-			//Assert isset this;
-			//Assert isset str;
-			return str;
-		};
-		str = "Modified";
-		vars;
-		return getMessage;
-	};
+Test Scope_Function_Decl_Test {
+	var x = "Far away";
 	
-	Assert not isset str;
-	Assert isset makeFunc;
+	function foo() {
+		var str = "Hello";
+		function boo() {
+			Assert isset x;
+			Assert isset str; // should be attached to the closure.
+		}
+		Assert isset str;
+		Assert isset boo;
+		return boo;
+	}
 	
-	var foo = makeFunc();
-	Assert foo() == "Modified";
-};
-**/
-/**
-Test Isset_Function_Scope_Test {
-	var x = 4;
-	var foo = function {
-		Assert isset x;
-		return "done";
-	};
-	function boo {
-		Assert isset x;
-		return "done";
-	};
-	Assert foo() == "done";
-	Assert boo()  == "done";
+	var woo = foo();
+	woo();
 };
 
-Test Isset_Deep_Scope_Test {
-	var x = 4;
+Test Scope_Function_Var_Test {
+	var x = "Far away";
+	
 	var foo = function {
+		var str = "Hello";
 		var boo = function {
-			var zoo = function {
-				Assert isset x;
-				return "done";
-			};
-			Assert zoo() == "done";
-			return "done";
-		};
-		Assert boo() == "done";
-		return "done";
-	};
-	Assert foo() == "done";
-	Assert not isset boo;
-	Assert not isset zoo;
+			Assert isset x;
+			Assert isset str; // should be attached to the closure.
+		}
+		Assert isset str;
+		Assert isset boo;
+		return boo;
+	}
+	
+	var woo = foo();
+	woo();
 };
-**/

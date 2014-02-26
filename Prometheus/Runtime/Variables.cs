@@ -68,25 +68,6 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Resolves the assignment value to a data type that
-        /// can be assigned.
-        /// </summary>
-        // TODO: This just seems the wrong way to create a closure. 
-        private DataType ResolveToValue(DataType pValue)
-        {
-            pValue = Resolve(pValue);
-
-            FunctionType func = pValue as FunctionType;
-            if (func == null)
-            {
-                return pValue;
-            }
-
-            InstanceType _this = (InstanceType)Cursor.Stack.Get(IdentifierType.THIS);
-            return new ClosureType(_this, func);
-        }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public Variables(Executor pExecutor)
@@ -102,7 +83,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Assignment)]
         public DataType Assignment(Node pNode, QualifiedType pId, DataType pValue)
         {
-            DataType value = ResolveToValue(pValue);
+            DataType value = Resolve(pValue);
             Cursor.Resolve(pId).Write(value);
             return value;
         }
@@ -116,7 +97,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.Declare)]
         public DataType Declare(Node pNode, IdentifierType pIdentifier, DataType pValue)
         {
-            pValue = ResolveToValue(pValue);
+            pValue = Resolve(pValue);
             Cursor.Stack.Create(pIdentifier.Name, pValue);
             return pValue;
         }

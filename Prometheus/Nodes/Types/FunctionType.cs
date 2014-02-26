@@ -31,7 +31,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public FunctionType(Node pEntry, IEnumerable<DataType> pParameters, bool pCreateStack)
+        public FunctionType(Node pEntry, IEnumerable<DataType> pParameters)
             : this(pEntry)
         {
             _parameters.Values.AddRange(pParameters);
