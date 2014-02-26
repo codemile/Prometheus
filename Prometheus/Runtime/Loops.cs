@@ -1,7 +1,9 @@
-﻿using Prometheus.Exceptions.Executor;
+﻿using System.Collections.Generic;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
 using Prometheus.Storage;
@@ -120,6 +122,42 @@ namespace Prometheus.Runtime
             {
             }
             return UndefinedType.Undefined;
+        }
+
+        /// <summary>
+        /// Handles the execution of an each loop.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.EachControl)]
+        public ArrayType Each(Node pNode, PluralType pPlural, FunctionType pBlock)
+        {
+            Dictionary<string, DataType> variables = new Dictionary<string, DataType>
+                                                     {
+                                                         {pPlural.Singular.Name, UndefinedType.Undefined}
+                                                     };
+
+            ArrayType arr = new ArrayType();
+
+            try
+            {
+                foreach (DataType item in pPlural.Array)
+                {
+                    variables[pPlural.Singular.Name] = item;
+                    try
+                    {
+                        Executor.ExecuteContinuable(pBlock, variables);
+                    }
+                    catch (ReturnException returnEx)
+                    {
+                        arr.Add(returnEx.Value);
+                    }
+                }
+            }
+            catch (BreakException)
+            {
+            }
+
+            return arr;
+
         }
     }
 }

@@ -18,13 +18,13 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// Executes a function reference.
         /// </summary>
-        DataType Execute(FunctionType pBlock);
+        DataType Execute(FunctionType pBlock, Dictionary<string, DataType> pVariables = null);
 
         /// <summary>
+        /// Executes a function reference, but catches a ContinueException
+        /// and returns normally.
         /// </summary>
-        /// <param name="pBlock"></param>
-        /// <returns></returns>
-        DataType ExecuteContinuable(FunctionType pBlock);
+        DataType ExecuteContinuable(FunctionType pBlock, Dictionary<string, DataType> pVariables = null);
 
         /// <summary>
         /// The current position in the node tree.

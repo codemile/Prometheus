@@ -344,8 +344,8 @@ Comment Line  = '//'
 
 <Each Control>			::= 'each' <Plural ID> <Block>
 
-<Plural ID>				::= <Expression>
-						| <Expression> 'as' Identifier
+<Plural ID>				::= '(' <Expression> ')'
+						| '(' <Expression> 'as' Identifier ')'
 
 <Break Control>			::= 'break'
 <Continue Control>		::= 'continue'

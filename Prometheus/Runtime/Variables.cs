@@ -55,13 +55,13 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Creates a plural data type object.
         /// </summary>
-        private DataType CreatePlural(DataType pValue, IdentifierType pSingular)
+        private DataType CreatePlural(Node pNode, DataType pValue, IdentifierType pSingular)
         {
             ArrayType arr = pValue as ArrayType;
             if (arr == null)
             {
                 throw new InvalidArgumentException(
-                    string.Format("Expected array value but found <{0}> instead", pValue.GetType().Name), Cursor.Node);
+                    string.Format("Expected array value but found <{0}> instead", pValue.GetType().Name), pNode);
             }
 
             return new PluralType(arr, pSingular);
@@ -163,12 +163,12 @@ namespace Prometheus.Runtime
             {
                 throw new InvalidArgumentException(
                     "Can not singularize an array identifier. Use the AS keyword to specify singular identifier",
-                    Cursor.Node);
+                    pNode);
             }
 #if DEBUG
             if (!(pointer is MemoryPointer))
             {
-                throw new UnexpectedErrorException("Pointer is of unexpected type", Cursor.Node);
+                throw new UnexpectedErrorException("Pointer is of unexpected type", pNode);
             }
 #endif
             MemoryPointer memPointer = (MemoryPointer)pointer;
@@ -177,11 +177,11 @@ namespace Prometheus.Runtime
             {
                 throw new InflectorException(
                     string.Format("Can not singularize \"{0}\". Use the AS keyword to specify singular identifier",
-                        memPointer.Name), Cursor.Node);
+                        memPointer.Name), pNode);
             }
 
             DataType value = memPointer.Read();
-            return CreatePlural(value, new IdentifierType(singular));
+            return CreatePlural(pNode, value, new IdentifierType(singular));
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.PluralID)]
         public DataType Plural(Node pNode, IdentifierType pSingular, DataType pData)
         {
-            return CreatePlural(Resolve(pData), pSingular);
+            return CreatePlural(pNode, Resolve(pData), pSingular);
         }
 
         /// <summary>

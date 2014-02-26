@@ -192,8 +192,8 @@ namespace Prometheus.Grammar
 		@ForStep_RParen = 181,                           // <For Step> ::= <Expression> ')'
 		@ForStep_RParen2 = 182,                          // <For Step> ::= ')'
 		@EachControl_each = 183,                         // <Each Control> ::= each <Plural ID> <Block>
-		@PluralID = 184,                                 // <Plural ID> ::= <Expression>
-		@PluralID_as_Identifier = 185,                   // <Plural ID> ::= <Expression> as Identifier
+		@PluralID_LParen_RParen = 184,                   // <Plural ID> ::= '(' <Expression> ')'
+		@PluralID_LParen_as_Identifier_RParen = 185,     // <Plural ID> ::= '(' <Expression> as Identifier ')'
 		@BreakControl_break = 186,                       // <Break Control> ::= break
 		@ContinueControl_continue = 187,                 // <Continue Control> ::= continue
 		@AllProcedures = 188,                            // <All Procedures> ::= <Unset Proc>

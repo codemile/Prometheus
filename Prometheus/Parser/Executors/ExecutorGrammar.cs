@@ -48,7 +48,7 @@ namespace Prometheus.Parser.Executors
             if (!_methods.ContainsKey(type))
             {
                 throw new InvalidArgumentException(
-                    string.Format("{0} does not implement <{1}>", GetType().FullName, type), Cursor.Node);
+                    string.Format("{0} does not implement <{1}>", GetType().FullName, type), pNode);
             }
             if (!_methods[type].ContainsKey(pArgCount))
             {

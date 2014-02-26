@@ -100,7 +100,6 @@
     <Compile Include="Parser\Executors\Handlers\HandleStatements.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleClosure.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleExceptions.cs" />
-    <Compile Include="Parser\Executors\Handlers\HandleLoopEach.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleBlock.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleValue.cs" />
     <Compile Include="Parser\Executors\iExecutor.cs" />

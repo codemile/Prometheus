@@ -117,23 +117,20 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// Executes a function reference.
         /// </summary>
-        public DataType Execute(FunctionType pBlock)
+        public DataType Execute(FunctionType pBlock, Dictionary<string, DataType> pVariables = null)
         {
-            using (_cursor.Stack = new CursorSpace(_cursor))
-            {
-                return WalkDownChildren(pBlock.Entry);
-            }
+            return Execute(pBlock.Entry, pVariables);
         }
 
         /// <summary>
         /// Executes a block of code that supports the continue statement
         /// to forward a loop.
         /// </summary>
-        public DataType ExecuteContinuable(FunctionType pBlock)
+        public DataType ExecuteContinuable(FunctionType pBlock, Dictionary<string, DataType> pVariables = null)
         {
             try
             {
-                return Execute(pBlock);
+                return Execute(pBlock, pVariables);
             }
             catch (ContinueException)
             {

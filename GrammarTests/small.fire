@@ -1,12 +1,13 @@
 Tests;
 
-Test For_Break_Test {
+Test Each_Test {
+	var numbers = [1,2,3,4];
 	var x = 0;
-	For(var y=0; y < 10; y++)
-	{
-		x = x + 1;
-		break;
+	var y = 0;
+	Each (numbers) {
+		x = x + number;
+		y++;
 	};
-	Assert y == 0;
-	Assert x == 1;
+	Assert x == 10;
+	Assert y == 4;
 };
