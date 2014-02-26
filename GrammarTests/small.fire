@@ -1,5 +1,9 @@
-var x = 0;
-While (x < 10) {
-	print x;
-	x = x + 1;
+Tests;
+
+Test Do_While_Test {
+	var x = 0;
+	Do {
+		x = x + 1;
+	} While (x < 10);
+	Assert x == 10;
 };

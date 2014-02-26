@@ -43,11 +43,8 @@ namespace Prometheus.Compile.Optimizers
             }
 
             IdentifierType testName = pNode.Children[0].FirstData().Cast<IdentifierType>();
-            Node testBlock = pNode.Children[1];
-
-            pNode.Children.Clear();
             pNode.Data.Add(testName);
-            pNode.Data.Add(new FunctionType(testBlock));
+            pNode.Children.RemoveAt(0);
 
             return true;
         }

@@ -31,7 +31,6 @@ namespace Prometheus.Parser.Executors.Handlers
 
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        GrammarSymbol.Block,
                                                                         GrammarSymbol.ForDeclare,
                                                                         GrammarSymbol.ForExpression,
                                                                         GrammarSymbol.ForStep,
@@ -55,9 +54,7 @@ namespace Prometheus.Parser.Executors.Handlers
         /// </summary>
         public override DataType Handle(Node pNode)
         {
-            return pNode.Type == GrammarSymbol.Block
-                ? new FunctionType(pNode)
-                : new FunctionType(pNode.FirstChild());
+            return new FunctionType(pNode.FirstChild());
 /*
 
             if (pNode.Type != GrammarSymbol.FunctionExpression

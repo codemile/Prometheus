@@ -73,42 +73,42 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// Walks the node tree propagating data up the tree.
         /// </summary>
-        /// <param name="pParent">The parent node</param>
+        /// <param name="pNode">The parent node</param>
         /// <returns>The resulting data</returns>
-        public DataType WalkDownChildren(Node pParent)
+        public DataType WalkDownChildren(Node pNode)
         {
-            if (pParent.Handler != 0)
+            if (pNode.Handler != 0)
             {
-                return _handlers[pParent.Handler].Handle(pParent);
+                return _handlers[pNode.Handler].Handle(pNode);
             }
 
-            int dCount = pParent.Data.Count;
+            int dCount = pNode.Data.Count;
 
-            int cChild = pParent.Children.Count;
+            int cChild = pNode.Children.Count;
             object[] values = new object[cChild + dCount];
             for (int i = 0, c = dCount; i < c; i++)
             {
-                values[i] = pParent.Data[i];
+                values[i] = pNode.Data[i];
             }
             for (int i = 0, j = dCount, c = cChild; i < c; i++, j++)
             {
-                values[j] = WalkDownChildren(pParent.Children[i]);
+                values[j] = WalkDownChildren(pNode.Children[i]);
             }
 
             try
             {
-                _cursor.Node = pParent;
+                _cursor.Node = pNode;
 #if DEBUG
-                ExecutorAssert.Node(_grammarLookup, pParent.Type, pParent);
+                ExecutorAssert.Node(_grammarLookup, pNode.Type, pNode);
 #endif
-                ExecutorBase _base = _grammarLookup[pParent.Type];
+                ExecutorBase _base = _grammarLookup[pNode.Type];
                 return _base.Execute(values);
             }
             catch (PrometheusException e)
             {
                 if (e.Where == null)
                 {
-                    e.Where = pParent.Location;
+                    e.Where = pNode.Location;
                 }
                 throw;
             }

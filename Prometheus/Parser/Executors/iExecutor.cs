@@ -23,7 +23,7 @@ namespace Prometheus.Parser.Executors
         /// <summary>
         /// Processes a branch of the node tree.
         /// </summary>
-        DataType WalkDownChildren(Node pParent);
+        DataType WalkDownChildren(Node pNode);
 
         /// <summary>
         /// Executes a function reference.

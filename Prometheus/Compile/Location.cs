@@ -7,7 +7,7 @@ namespace Prometheus.Compile
     /// Represents a location in the source code.
     /// Used mostly for error reporting.
     /// </summary>
-    [DebuggerDisplay("{FileName} {Row}:{Column}")]
+    [DebuggerDisplay("{ImportFile} {Row}:{Column}")]
     public class Location
     {
         /// <summary>

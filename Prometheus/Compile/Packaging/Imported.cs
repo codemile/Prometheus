@@ -1,8 +1,11 @@
-﻿namespace Prometheus.Compile.Packaging
+﻿using System.Diagnostics;
+
+namespace Prometheus.Compile.Packaging
 {
     /// <summary>
     /// Describes the source code file used to compile an imported file.
     /// </summary>
+    [DebuggerDisplay("{Name}")]
     public class Imported
     {
         /// <summary>
