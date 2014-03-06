@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using GOLD;
 using Prometheus.Compile.Packaging;
@@ -16,9 +17,43 @@ namespace Prometheus.Compile
     public class Compiler
     {
         /// <summary>
+        /// List of nodes not to be trimmed.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _symbols = new HashSet<GrammarSymbol>
+                                                                  {
+                                                                      GrammarSymbol.Program,
+                                                                      GrammarSymbol.TestDecls
+                                                                  };
+
+        /// <summary>
+        /// Flag: Which trimmer to use.
+        /// </summary>
+        private const bool _USE_PARSER_TRIM = true;
+
+        /// <summary>
         /// The GOLD parser.
         /// </summary>
         private readonly GOLD.Parser _parser;
+
+        /// <summary>
+        /// Checks if a node should be trimmed.
+        /// </summary>
+        private static bool CanTrim(Reduction pReduction)
+        {
+            if (pReduction.Count() != 1)
+            {
+                return false;
+            }
+
+            GrammarSymbol symbol = NodeFactory.getSymbol(pReduction);
+            if (_symbols.Contains(symbol))
+            {
+                return false;
+            }
+
+            Token token = pReduction[0];
+            return token.Type() == SymbolType.Nonterminal;
+        }
 
         /// <summary>
         /// Checks if the current response from the parser is to
@@ -91,7 +126,7 @@ namespace Prometheus.Compile
             string[] lines = sourceCode.Split(new[] {'\n'});
 
             _parser.Open(ref sourceCode);
-            _parser.TrimReductions = true;
+            _parser.TrimReductions = _USE_PARSER_TRIM;
 
             for (ParseMessage response = _parser.Parse(); response != ParseMessage.Accept; response = _parser.Parse())
             {
@@ -106,9 +141,18 @@ namespace Prometheus.Compile
                         continue;
                     }
                     Reduction reduction = _parser.CurrentReduction as Reduction;
-                    _parser.CurrentReduction = (reduction != null)
-                        ? NodeFactory.Create(reduction, location)
-                        : _parser.CurrentReduction;
+                    if (reduction == null)
+                    {
+                        continue;
+                    }
+
+                    if (!_USE_PARSER_TRIM && CanTrim(reduction))
+                    {
+                        //_parser.CurrentReduction = _parser.CurrentReduction;
+                        continue;
+                    }
+
+                    _parser.CurrentReduction = NodeFactory.Create(reduction, location);
                 }
                 catch (PrometheusException e)
                 {

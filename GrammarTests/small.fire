@@ -5,3 +5,10 @@ Test Variable_Function_Test {
 	};
 	Assert isset foo;
 };
+
+	Test IsAmountCorrect {
+		var amount = 10.50;
+		var tax = 1.5;
+		Assert amount * tax < 0;
+		Fail;
+	};

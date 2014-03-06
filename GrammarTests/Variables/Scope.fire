@@ -5,9 +5,11 @@ Test Scope_Function_Decl_Test {
 		var str = "Hello";
 		function boo() with (str) {
 			Assert isset str;
+			return str;
 		}
+		str = "World";
 		return boo;
 	}
 	var woo = foo();
-	woo();
+	Assert woo() == "World";
 };

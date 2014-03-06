@@ -17,7 +17,7 @@ namespace Prometheus.Nodes
         /// </summary>
         /// <param name="pReduction">The node being reduced.</param>
         /// <returns>The symbol</returns>
-        private static GrammarSymbol getSymbol(Reduction pReduction)
+        public static GrammarSymbol getSymbol(Reduction pReduction)
         {
             Production parent = pReduction.Parent;
             Symbol symbol = parent.Head();
@@ -38,7 +38,6 @@ namespace Prometheus.Nodes
             Node node = new Node(symbol, pLocation);
             for (int i = 0; i < pReduction.Count(); i++)
             {
-                Token token = pReduction[i];
                 Node child = pReduction[i].Data as Node;
                 if (child != null)
                 {
@@ -46,6 +45,7 @@ namespace Prometheus.Nodes
                     continue;
                 }
 
+                Token token = pReduction[i];
                 SymbolType t = token.Type();
                 if (t != SymbolType.Content)
                 {
