@@ -37,7 +37,7 @@ namespace Prometheus.Grammar
 		@TestDecls = 26,                                 // <Test Decls> ::= <Test Decl>
 		@TestDecls2 = 27,                                // <Test Decls> ::= <Test Decls> <Test Decl>
 		@TestDecls3 = 28,                                // <Test Decls> ::= 
-		@TestDecl_test = 29,                             // <Test Decl> ::= test <Valid ID> <Block> <End>
+		@TestDecl_test = 29,                             // <Test Decl> ::= test <Valid ID> <Block>
 		@TestBlock = 30,                                 // <Test Block> ::= 
 		@TestExecute = 31,                               // <Test Execute> ::= 
 		@End_Semi = 32,                                  // <End> ::= ';'

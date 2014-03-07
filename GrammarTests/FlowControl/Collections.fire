@@ -10,7 +10,7 @@ Test Each_Test {
 	};
 	Assert x == 10;
 	Assert y == 4;
-};
+}
 
 Test Each_As_Test {
 	var numbers = [1,2,3,4];
@@ -19,7 +19,7 @@ Test Each_As_Test {
 		x = x + thing;
 	};
 	Assert x == 10;
-};
+}
 
 Test Each_Literal {
 	var x = 0;
@@ -27,7 +27,7 @@ Test Each_Literal {
 		x = x + num;
 	};
 	Assert x == 15;
-};
+}
 
 Test Each_Break_Test {
 	var numbers = [1,2,3,4];
@@ -37,7 +37,7 @@ Test Each_Break_Test {
 		Break;
 	};
 	Assert x == 1;
-};
+}
 
 Test Each_Continue_Test {
 	var numbers = [1,2,3,4];
@@ -50,11 +50,11 @@ Test Each_Continue_Test {
 	};
 	Assert x == 4;
 	Assert y == 0;
-};
+}
 
 Test Each_Assignment {
 	var x = Each ([1,2,3,4] as num) {
 		return num *2;
 	};
 	Assert x == [2,4,6,8];
-};
+}

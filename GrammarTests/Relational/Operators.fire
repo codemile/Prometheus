@@ -17,7 +17,7 @@ Test Equals {
 	Assert [1,2,3] == [1,2,3];
 	Assert ["ABC"] == ["ABC"];
 	Assert ["ABC"] == ["abc"i];
-};
+}
 
 Test NotEquals{
 	Assert true != false;
@@ -28,22 +28,22 @@ Test NotEquals{
 	Assert "Prometheus" != "prometheus";
 	Assert [1,2,3] != [2,3,4];
 	Assert ["ABC"] != ["abc"];
-};
+}
 
 Test GreaterThan {
 	Assert 3 > 1;
-};
+}
 
 Test LessThan {
 	Assert 1 < 3;
-};
+}
 
 Test GreaterThenEquals {
 	Assert 3 > 1;
 	Assert 1 >= 1;
-};
+}
 
 Test LessThanEquals {
 	Assert 1 <= 3;
 	Assert 3 <= 3;
-};
+}

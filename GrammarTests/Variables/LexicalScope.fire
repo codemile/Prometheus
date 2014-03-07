@@ -16,7 +16,7 @@ Test Scope_Function_Decl_Test {
 	
 	var woo = foo();
 	woo();
-};
+}
 
 Test Scope_Function_Var_Test {
 	var x = "Far away";
@@ -34,4 +34,4 @@ Test Scope_Function_Var_Test {
 	
 	var woo = foo();
 	woo();
-};
+}

@@ -1,0 +1,3 @@
+object FooObject {
+	this.Name = "Foo";
+}

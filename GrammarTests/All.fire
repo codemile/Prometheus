@@ -8,3 +8,6 @@ Use "FlowControl/Loops";
 Use "FlowControl/Collections";
 Use "Closures/Functions";
 Use "Variables/Scope";
+Use "Variables/LexicalScope";
+//Use "Variables/Is";
+//Use "Variables/TypeOf";

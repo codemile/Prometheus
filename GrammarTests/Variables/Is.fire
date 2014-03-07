@@ -1,0 +1,32 @@
+Tests;
+
+Use "Variables/FooObject";
+
+Test Integer_Type {
+	var x = 1;
+	Assert x is integer;
+	Assert x is number;
+	Assert x is not float;
+}
+
+Test Float_Type {
+	var x = 2.3;
+	Assert x is float;
+	Assert x is number;
+	Assert x is not integer;
+}
+
+Test String_Type {
+	var x = "thing";
+	Assert x is string;
+}
+
+Test Function_Type {
+	var x = function foo() { return "thing"; };
+	Assert x is function;
+}
+
+Test Object_Type {
+	var x = new foo();
+	Assert x is object;
+}

@@ -11,5 +11,5 @@ Test Scope_Function_Decl_Test {
 		return boo;
 	}
 	var woo = foo();
-	Assert woo() == "World";
-};
+	Assert woo() == "Hello";
+}

@@ -6,7 +6,7 @@ Test While_Test {
 		x = x +1;
 	};
 	Assert x == 10;
-};
+}
 
 Test While_Break_Test {
 	var x = 0;
@@ -15,7 +15,7 @@ Test While_Break_Test {
 		Break;
 	};
 	Assert x == 1;
-};
+}
 
 Test While_Continue_Test {
 	var x = 0;
@@ -26,7 +26,7 @@ Test While_Continue_Test {
 		y = 99;
 	};
 	Assert y == 0;
-};
+}
 
 Test Until_Test {
 	var x = 0;
@@ -34,7 +34,7 @@ Test Until_Test {
 		x = x +1;
 	};
 	Assert x == 10;
-};
+}
 
 Test Until_Break_Test {
 	var x = 0;
@@ -43,7 +43,7 @@ Test Until_Break_Test {
 		Break;
 	};
 	Assert x == 1;
-};
+}
 
 Test Until_Continue_Test {
 	var x = 0;
@@ -54,7 +54,7 @@ Test Until_Continue_Test {
 		y = 99;
 	};
 	Assert y == 0;
-};
+}
 
 Test Do_While_Test {
 	var x = 0;
@@ -62,7 +62,7 @@ Test Do_While_Test {
 		x = x + 1;
 	} While (x < 10);
 	Assert x == 10;
-};
+}
 
 Test Do_While_Break_Test {
 	var x = 0;
@@ -71,7 +71,7 @@ Test Do_While_Break_Test {
 		Break;
 	} While (x < 10);
 	Assert x == 1;
-};
+}
 
 Test Do_While_Continue_Test {
 	var x = 0;
@@ -83,7 +83,7 @@ Test Do_While_Continue_Test {
 	} While (x < 10);
 	Assert x == 10;
 	Assert y == 0;
-};
+}
 
 Test Do_Until_Test {
 	var x = 0;
@@ -91,7 +91,7 @@ Test Do_Until_Test {
 		x = x + 1;
 	} Until (x == 10);
 	Assert x == 10;
-};
+}
 
 Test Do_Until_Break_Test {
 	var x = 0;
@@ -100,7 +100,7 @@ Test Do_Until_Break_Test {
 		Break;
 	} Until (x == 10);
 	Assert x == 1;
-};
+}
 
 Test Do_Until_Continue_Test {
 	var x = 0;
@@ -112,7 +112,7 @@ Test Do_Until_Continue_Test {
 	} Until (x == 10);
 	Assert x == 10;
 	Assert y == 0;
-};
+}
 
 Test For_Test {
 	var x = 0;
@@ -121,7 +121,7 @@ Test For_Test {
 		x = x + 1;
 	};
 	Assert x == 10;
-};
+}
 
 Test For_NoVar_Test {
 	var x = 0;
@@ -131,7 +131,7 @@ Test For_NoVar_Test {
 		x = x + 1;
 	};
 	Assert x == 5;
-};
+}
 
 Test For_NoStep_Test {
 	var x = 0;
@@ -141,7 +141,7 @@ Test For_NoStep_Test {
 		y++;
 	};
 	Assert x == 10;
-};
+}
 
 Test For_NoVar_NoStep_Test {
 	var x = 0;
@@ -152,7 +152,7 @@ Test For_NoVar_NoStep_Test {
 		y++;
 	};
 	Assert x == 5;
-};
+}
 
 Test For_Break_Test {
 	var x = 0;
@@ -163,7 +163,7 @@ Test For_Break_Test {
 	};
 	Assert not isset y;
 	Assert x == 1;
-};
+}
 
 Test For_Continue_Test {
 	var x = 0;
@@ -174,4 +174,4 @@ Test For_Continue_Test {
 	};
 	Assert not isset y;
 	Assert x == 0;
-};
+}

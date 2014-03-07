@@ -94,7 +94,7 @@ Comment Line  = '//'
 					| <Test Decls> <Test Decl>
 					| ! or none
 
-<Test Decl>			::= 'test' <Valid ID> <Block> <End>
+<Test Decl>			::= 'test' <Valid ID> <Block>
 <Test Block>		::= ! place holder used by optimizer to create functions.
 <Test Execute>		::= ! a marker of when to execute the unit test
 

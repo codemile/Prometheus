@@ -5,7 +5,7 @@ Test IfThen {
 		Return;
 	};
 	Fail "Should not reach here.";
-};
+}
 
 Test IfThenElse {
 	If (false) {
@@ -14,4 +14,4 @@ Test IfThenElse {
 		Return;
 	};
 	Fail "Should not reach here.";
-};
+}
