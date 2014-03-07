@@ -97,6 +97,7 @@
     <Compile Include="Nodes\Types\Bases\iVariablePointer.cs" />
     <Compile Include="Parser\Executors\Handlers\ExecutorHandler.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleArrays.cs" />
+    <Compile Include="Parser\Executors\Handlers\HandleParameters.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleStatements.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleClosure.cs" />
     <Compile Include="Parser\Executors\Handlers\HandleExceptions.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Parser\Executors\iExecutor.cs" />
     <Compile Include="Parser\Executors\Handlers\iExecutorHandler.cs" />
     <Compile Include="Runtime\Conditional.cs" />
+    <Compile Include="Runtime\FunctionDeclaraction.cs" />
     <Compile Include="Runtime\Loops.cs" />
     <Compile Include="Runtime\Search.cs" />
     <Compile Include="Runtime\Tests.cs" />
@@ -134,7 +136,7 @@
     <Compile Include="Parser\Executors\ObjectFactory.cs" />
     <Compile Include="Parser\Executors\ExecutorGrammar.cs" />
     <Compile Include="Runtime\Arguments.cs" />
-    <Compile Include="Runtime\Functions.cs" />
+    <Compile Include="Runtime\FunctionCalling.cs" />
     <Compile Include="Runtime\Math.cs" />
     <Compile Include="Runtime\Objects.cs" />
     <Compile Include="Runtime\Relational.cs" />

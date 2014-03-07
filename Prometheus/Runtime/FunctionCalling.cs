@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Prometheus.Exceptions.Executor;
+﻿using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -11,12 +10,12 @@ namespace Prometheus.Runtime
 {
     /// <summary>
     /// </summary>
-    public class Functions : ExecutorGrammar
+    public class FunctionCalling : ExecutorGrammar
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public Functions(Executor pExecutor)
+        public FunctionCalling(Executor pExecutor)
             : base(pExecutor)
         {
         }
@@ -57,30 +56,6 @@ namespace Prometheus.Runtime
             {
                 return returnData.Value;
             }
-        }
-
-        /// <summary>
-        /// Declares a new function type
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.FunctionDecl)]
-        public DataType FunctionDeclare(Node pNode, IdentifierType pFuncName, IEnumerable<DataType> pParameters, FunctionType pBlock)
-        {
-            InstanceType inst = Resolve<InstanceType>(IdentifierType.This);
-            ClosureType closure = new ClosureType(inst, pParameters, pBlock.Entry);
-
-            Cursor.Stack.Create(pFuncName.Name, closure);
-
-            return UndefinedType.Undefined;
-        }
-
-        /// <summary>
-        /// Creates a new function as part of an expression.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.FunctionExpression)]
-        public ClosureType FunctionExpression(Node pNode, IEnumerable<DataType> pParameters, FunctionType pBlock)
-        {
-            InstanceType inst = Resolve<InstanceType>(IdentifierType.This);
-            return new ClosureType(inst, pParameters, pBlock.Entry);
         }
 
         /// <summary>

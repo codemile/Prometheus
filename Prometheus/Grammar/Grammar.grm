@@ -280,11 +280,15 @@ Comment Line  = '//'
 ! Functions
 ! ===================================================================
 
-<Function Decl>				::= 'function' Identifier <Parameter Array> <Block>
+<Function Decl>				::= 'function' Identifier <Function Parameters> <Block>
 <Function Block>			::= ! place holder used by optimizer to create functions.
 
-<Function Expression>		::= 'function' <Parameter Array> <Block>
+<Function Expression>		::= 'function' <Function Parameters> <Block>
 
+<Function Parameters>		::= <Parameter Array>
+							| <Parameter Array> <With Array>
+
+<With Array>				::= 'with' '(' <Parameter List> ')'
 
 <Parameter Array>			::= '(' ')'
 							| '(' <Parameter List> ')'

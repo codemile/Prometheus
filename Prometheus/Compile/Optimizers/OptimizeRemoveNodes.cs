@@ -11,7 +11,7 @@ namespace Prometheus.Compile.Optimizers
     public class OptimizeRemoveNodes : BaseOptimizer
     {
         /// <summary>
-        /// These nodes can have their child promoted, if it's only one child.
+        /// These nodes can have their child promoted.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
@@ -24,7 +24,8 @@ namespace Prometheus.Compile.Optimizers
                                                                         GrammarSymbol.QualifiedList,
                                                                         GrammarSymbol.ClassNameList,
                                                                         GrammarSymbol.ClassNameList,
-                                                                        GrammarSymbol.ParameterList
+                                                                        GrammarSymbol.ParameterList,
+                                                                        GrammarSymbol.FunctionParameters
                                                                     };
 
         /// <summary>

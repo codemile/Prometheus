@@ -18,7 +18,6 @@ namespace Prometheus.Parser.Executors.Handlers
                                                                     {
                                                                         GrammarSymbol.ArrayLiteral,
                                                                         GrammarSymbol.ArgumentArray,
-                                                                        GrammarSymbol.ParameterArray,
                                                                         GrammarSymbol.TestSuiteArray,
                                                                         GrammarSymbol.QualifiedID,
                                                                         GrammarSymbol.ClassNameID
@@ -50,16 +49,7 @@ namespace Prometheus.Parser.Executors.Handlers
             }
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
-#if DEBUG
-                if (pNode.Symbol == GrammarSymbol.ParameterArray)
-                {
-                    ExecutorAssert.Data(pNode.Children[i], 1);
-                    ExecutorAssert.DataType(pNode.Children[i], 0, typeof (IdentifierType));
-                }
-#endif
-                array.Add(pNode.Symbol == GrammarSymbol.ParameterArray
-                    ? pNode.Children[i].Data[0]
-                    : Executor.WalkDownChildren(pNode.Children[i]));
+                array.Add(Executor.WalkDownChildren(pNode.Children[i]));
             }
             return (DataType)array;
         }

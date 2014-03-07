@@ -1,14 +1,3 @@
-Tests;
-
-Test Variable_Function_Test {
-	var foo = function {
-	};
-	Assert isset foo;
-};
-
-	Test IsAmountCorrect {
-		var amount = 10.50;
-		var tax = 1.5;
-		Assert amount * tax < 0;
-		Fail;
-	};
+function boo() with (str) {
+	return str;
+}
