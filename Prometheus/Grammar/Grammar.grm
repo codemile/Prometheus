@@ -270,7 +270,7 @@ Comment Line  = '//'
 						| <Object Decls> <Object Decl>
 						| ! or none
 
-<Object Decl>			::= 'object' <BaseClass ID> <Parameter Array> <Block> <End>
+<Object Decl>			::= 'object' <BaseClass ID> <Parameter Array> <Block>
 <Object Block>			::= ! place holder used by optimizer to create constructor function.
 
 <BaseClass ID>			::= <ClassName ID> '::' <Valid ID>
@@ -387,4 +387,4 @@ Comment Line  = '//'
 <Variable Functions>	::= <Isset Func>
 						| <TypeOf Func>
 <Isset Func>			::= 'isset' <Qualified ID>
-<TypeOf Func>			::= 'typeof' <Expression>
+<TypeOf Func>			::= 'typeof' '(' <Expression> ')'

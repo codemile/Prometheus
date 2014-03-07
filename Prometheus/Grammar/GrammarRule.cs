@@ -148,7 +148,7 @@ namespace Prometheus.Grammar
 		@ObjectDecls = 137,                              // <Object Decls> ::= <Object Decl>
 		@ObjectDecls2 = 138,                             // <Object Decls> ::= <Object Decls> <Object Decl>
 		@ObjectDecls3 = 139,                             // <Object Decls> ::= 
-		@ObjectDecl_object = 140,                        // <Object Decl> ::= object <BaseClass ID> <Parameter Array> <Block> <End>
+		@ObjectDecl_object = 140,                        // <Object Decl> ::= object <BaseClass ID> <Parameter Array> <Block>
 		@ObjectBlock = 141,                              // <Object Block> ::= 
 		@BaseClassID_ColonColon = 142,                   // <BaseClass ID> ::= <ClassName ID> '::' <Valid ID>
 		@BaseClassID = 143,                              // <BaseClass ID> ::= <Valid ID>
@@ -217,6 +217,6 @@ namespace Prometheus.Grammar
 		@VariableFunctions = 206,                        // <Variable Functions> ::= <Isset Func>
 		@VariableFunctions2 = 207,                       // <Variable Functions> ::= <TypeOf Func>
 		@IssetFunc_isset = 208,                          // <Isset Func> ::= isset <Qualified ID>
-		@TypeOfFunc_typeof = 209                         // <TypeOf Func> ::= typeof <Expression>
+		@TypeOfFunc_typeof_LParen_RParen = 209           // <TypeOf Func> ::= typeof '(' <Expression> ')'
 	}
 }

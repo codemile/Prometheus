@@ -62,7 +62,7 @@ namespace Prometheus.Parser
         /// <summary>
         /// Generates a list of tests to run.
         /// </summary>
-        private static IEnumerable<string> getTestSuite(Node pRoot, IEnumerable<string> pUnitTests)
+        private static IEnumerable<string> getTestsToRun(Node pRoot, IEnumerable<string> pUnitTests)
         {
             Node testSuite = pRoot.FindChild(GrammarSymbol.TestSuiteDecl);
             if (testSuite.Children.Count == 0)
@@ -91,7 +91,7 @@ namespace Prometheus.Parser
         /// <summary>
         /// Creates a list of all unit test declarations.
         /// </summary>
-        private static IEnumerable<string> getUnitTests(Node pImported)
+        private static IEnumerable<string> getUnitTestNames(Node pImported)
         {
             return (from child in pImported.Children
                     where child.Symbol == GrammarSymbol.TestDecl
@@ -153,16 +153,20 @@ namespace Prometheus.Parser
         /// </summary>
         private void ExecuteTests(Compiled pCompiled)
         {
-            foreach (Node imported in pCompiled.Imported)
+            IEnumerable<Node> testNodes = pCompiled.getTestNodes();
+            IList<Node> nodes = pCompiled.getNodes().ToList();
+
+            foreach (Node testNode in testNodes)
             {
                 _logger.Fine("");
-                _logger.Fine("Testing {0}", imported.Location.ImportFile.Name);
+                _logger.Fine("Testing {0}", testNode.Location.ImportFile.Name);
 
-                IEnumerable<string> unitTests = getUnitTests(imported);
-                foreach (string test in getTestSuite(imported, unitTests))
+                IEnumerable<string> unitTests = getUnitTestNames(testNode);
+                foreach (string test in getTestsToRun(testNode, unitTests))
                 {
-                    bool result = ExecuteSafely(new[] {imported}, new Cursor(test));
-                    _logger.Fine("{0} {1}::{2}", result ? "Pass" : "Fail", imported.Location.ImportFile.Name, test);
+                    List<Node> runThese = new List<Node>(nodes) {testNode};
+                    bool result = ExecuteSafely(runThese, new Cursor(test));
+                    _logger.Fine("{0} {1}::{2}", result ? "Pass" : "Fail", testNode.Location.ImportFile.Name, test);
                 }
             }
         }
@@ -228,18 +232,23 @@ namespace Prometheus.Parser
             _customObjects.Add(pName, pValue);
         }
 
+        private static bool IsTestSuite(Node pNode)
+        {
+            return pNode.HasChild(GrammarSymbol.TestSuiteDecl);
+        }
+
         /// <summary>
         /// Runs the code
         /// </summary>
         public void Run(Compiled pCompiled)
         {
-            if (!pCompiled.Root.HasChild(GrammarSymbol.TestSuiteDecl))
+            if (pCompiled.TestSuite)
             {
-                ExecuteSafely(pCompiled.Imported, new Cursor());
+                ExecuteTests(pCompiled);
             }
             else
             {
-                ExecuteTests(pCompiled);
+                ExecuteSafely(pCompiled.Imported, new Cursor());
             }
         }
     }

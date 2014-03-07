@@ -5,4 +5,4 @@ Use "Variables/FooObject";
 Test Object_Type {
 	var x = new foo();
 	Assert typeof(x) == "object";
-};
+}
