@@ -14,14 +14,14 @@ namespace Prometheus.Storage
         /// <summary>
         /// Storage of variable values.
         /// </summary>
-        private readonly Dictionary<string, DataType> _storage;
+        public readonly Dictionary<string, DataType> Storage;
 
         /// <summary>
         /// True if storage is empty.
         /// </summary>
         public bool isEmpty
         {
-            get { return _storage.Count == 0; }
+            get { return Storage.Count == 0; }
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Prometheus.Storage
         /// </summary>
         public StorageSpace(Dictionary<string, DataType> pStorage)
         {
-            _storage = pStorage;
+            Storage = pStorage;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Prometheus.Storage
         /// </summary>
         public virtual void Dispose()
         {
-            _storage.Clear();
+            Storage.Clear();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Prometheus.Storage
         /// <returns>The data</returns>
         public virtual DataType Get(string pName)
         {
-            return _storage.ContainsKey(pName) ? _storage[pName] : null;
+            return Storage.ContainsKey(pName) ? Storage[pName] : null;
         }
 
         /// <summary>
@@ -66,11 +66,11 @@ namespace Prometheus.Storage
         /// <returns>True if name exists</returns>
         public virtual bool Set(string pName, DataType pDataType)
         {
-            if (!_storage.ContainsKey(pName))
+            if (!Storage.ContainsKey(pName))
             {
                 return false;
             }
-            _storage[pName] = pDataType;
+            Storage[pName] = pDataType;
             return true;
         }
 
@@ -80,11 +80,11 @@ namespace Prometheus.Storage
         /// <param name="pName">The name to remove</param>
         public virtual bool Unset(string pName)
         {
-            if (!_storage.ContainsKey(pName))
+            if (!Storage.ContainsKey(pName))
             {
                 return false;
             }
-            _storage.Remove(pName);
+            Storage.Remove(pName);
             return true;
         }
 
@@ -96,13 +96,13 @@ namespace Prometheus.Storage
         /// <param name="pDataType">The data to assign</param>
         public void Assign(string pName, DataType pDataType)
         {
-            if (_storage.ContainsKey(pName))
+            if (Storage.ContainsKey(pName))
             {
-                _storage[pName] = pDataType;
+                Storage[pName] = pDataType;
             }
             else
             {
-                _storage.Add(pName, pDataType);
+                Storage.Add(pName, pDataType);
             }
         }
 
@@ -114,11 +114,11 @@ namespace Prometheus.Storage
         public void Create(string pName, DataType pDataType)
         {
             // only check the current scope
-            if (_storage.ContainsKey(pName))
+            if (Storage.ContainsKey(pName))
             {
                 throw new IdentifierInnerException(string.Format(Errors.IdentifierAlreadyDefined, pName));
             }
-            _storage.Add(pName, pDataType);
+            Storage.Add(pName, pDataType);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Prometheus.Storage
         /// <returns>True if exists</returns>
         public virtual bool Has(string pName)
         {
-            return _storage.ContainsKey(pName);
+            return Storage.ContainsKey(pName);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Prometheus.Storage
         /// <param name="pIndent">Line indent</param>
         public virtual IEnumerable<MemoryItem> Dump(int pIndent = 0)
         {
-            return from item in _storage select new MemoryItem {Level = pIndent, Name = item.Key, Data = item.Value};
+            return from item in Storage select new MemoryItem {Level = pIndent, Name = item.Key, Data = item.Value};
         }
     }
 }

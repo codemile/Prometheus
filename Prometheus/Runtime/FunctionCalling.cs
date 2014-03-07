@@ -43,7 +43,7 @@ namespace Prometheus.Runtime
                 {
                     return UndefinedType.Undefined;
                 }
-                // resolve the argument
+                // resolve the arguments
                 DataType[] arguments = new DataType[pArguments.Count];
                 for (int i = 0, c = arguments.Length; i < c; i++)
                 {

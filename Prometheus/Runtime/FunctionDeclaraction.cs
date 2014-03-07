@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
+using Prometheus.Storage;
 
 namespace Prometheus.Runtime
 {
@@ -12,6 +14,19 @@ namespace Prometheus.Runtime
     /// </summary>
     public class FunctionDeclaraction : ExecutorGrammar
     {
+        /// <summary>
+        /// Generates a collection of variables to persist in a closure.
+        /// </summary>
+        private StorageSpace CreateWith(IEnumerable<DataType> pWith)
+        {
+            StorageSpace withValues = new StorageSpace();
+            foreach (IdentifierType id in pWith.Select(pType=>pType.Cast<IdentifierType>()))
+            {
+                withValues.Create(id.Name, Resolve(new QualifiedType(id)));
+            }
+            return withValues;
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -45,10 +60,8 @@ namespace Prometheus.Runtime
             FunctionType pBlock)
         {
             InstanceType inst = Resolve<InstanceType>(IdentifierType.This);
-            ClosureType closure = new ClosureType(inst, pParameters, pBlock.Entry);
-
+            ClosureType closure = new ClosureType(inst, pParameters, CreateWith(pWith), pBlock.Entry);
             Cursor.Stack.Create(pFuncName.Name, closure);
-
             return UndefinedType.Undefined;
         }
 
@@ -71,11 +84,11 @@ namespace Prometheus.Runtime
         public ClosureType Expression(
             Node pNode,
             IEnumerable<DataType> pParameters,
-            IEnumerable<DataType> pWidth,
+            IEnumerable<DataType> pWith,
             FunctionType pBlock)
         {
             InstanceType inst = Resolve<InstanceType>(IdentifierType.This);
-            return new ClosureType(inst, pParameters, pBlock.Entry);
+            return new ClosureType(inst, pParameters, CreateWith(pWith), pBlock.Entry);
         }
     }
 }

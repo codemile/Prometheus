@@ -5,7 +5,7 @@ Test Scope_Function_Decl_Test {
 	
 	function foo() {
 		var str = "Hello";
-		function boo() {
+		function boo() with (str) {
 			Assert isset x;
 			Assert isset str; // should be attached to the closure.
 		}
@@ -23,14 +23,14 @@ Test Scope_Function_Var_Test {
 	
 	var foo = function {
 		var str = "Hello";
-		var boo = function {
+		var boo = function with (str) {
 			Assert isset x;
 			Assert isset str; // should be attached to the closure.
-		}
+		};
 		Assert isset str;
 		Assert isset boo;
 		return boo;
-	}
+	};
 	
 	var woo = foo();
 	woo();

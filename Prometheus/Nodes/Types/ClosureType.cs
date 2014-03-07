@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Nodes.Types.Bases;
+using Prometheus.Storage;
 
 namespace Prometheus.Nodes.Types
 {
@@ -26,12 +27,18 @@ namespace Prometheus.Nodes.Types
         private readonly InstanceType _this;
 
         /// <summary>
+        /// Values to persist
+        /// </summary>
+        private readonly StorageSpace _with;
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public ClosureType(InstanceType pThis, IEnumerable<DataType> pParameters, Node pBlock)
+        public ClosureType(InstanceType pThis, IEnumerable<DataType> pParameters, StorageSpace pWith, Node pBlock)
         {
             _name = IdentifierType.THIS;
             _this = pThis;
+            _with = pWith;
             Function = new FunctionType(pBlock, pParameters);
         }
 
@@ -48,9 +55,11 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public Dictionary<string, DataType> CreateArguments(DataType[] pArgs = null)
         {
-            Dictionary<string, DataType> variables = (pArgs != null)
-                ? Function.CreateArguments(pArgs)
-                : new Dictionary<string, DataType>();
+            Dictionary<string, DataType> variables = new Dictionary<string, DataType>(_with.Storage);
+            if (pArgs != null)
+            {
+                Function.CreateArguments(ref variables, pArgs);
+            }
             variables.Add(_name, _this);
             return variables;
         }

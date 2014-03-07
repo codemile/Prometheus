@@ -48,7 +48,7 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Creates the variables to be sent when executing the function.
         /// </summary>
-        public Dictionary<string, DataType> CreateArguments(DataType[] pArgs)
+        public void CreateArguments(ref Dictionary<string, DataType> pSpace, DataType[] pArgs)
         {
             if (pArgs.Length != _parameters.Count)
             {
@@ -57,15 +57,11 @@ namespace Prometheus.Nodes.Types
                     pArgs.Length));
             }
 
-            Dictionary<string, DataType> variables = new Dictionary<string, DataType>();
-
             for (int i = 0, c = pArgs.Length; i < c; i++)
             {
                 IdentifierType name = (IdentifierType)_parameters[i];
-                variables.Add(name.Name, pArgs[i]);
+                pSpace.Add(name.Name, pArgs[i]);
             }
-
-            return variables;
         }
     }
 }

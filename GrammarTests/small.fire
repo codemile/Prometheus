@@ -1,3 +1,9 @@
-function boo() with (str) {
-	return str;
+function foo() {
+	var str = "test";
+	return function () with (str) {
+		return str;
+	};
+	str = "fo";
 }
+var x = foo();
+print x();

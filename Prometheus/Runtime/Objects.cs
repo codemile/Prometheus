@@ -30,7 +30,7 @@ namespace Prometheus.Runtime
             DeclarationType baseType = Cursor.Get<DeclarationType>(pDecl.Base);
             StackSpace baseSpace = new StackSpace(pSpace);
             InstanceType baseInst = CreateInstance(baseSpace, baseType);
-            ClosureType baseFunc = new ClosureType(baseInst, new DataType[0], baseType.Constructor.Entry);
+            ClosureType baseFunc = new ClosureType(baseInst, new DataType[0], new StorageSpace(),  baseType.Constructor.Entry);
             inst.GetMembers().Create(IdentifierType.BASE, baseFunc);
 
             return inst;
@@ -96,7 +96,8 @@ namespace Prometheus.Runtime
                 {
                     arguments[i] = Resolve(pArguments[i]);
                 }
-                Dictionary<string, DataType> dataTypes = decl.Constructor.CreateArguments(arguments);
+                Dictionary<string, DataType> dataTypes = new Dictionary<string, DataType>();
+                decl.Constructor.CreateArguments(ref dataTypes, arguments);
                 dataTypes.Add(IdentifierType.THIS, inst);
                 Executor.Execute(decl.Constructor.Entry, dataTypes);
             }
