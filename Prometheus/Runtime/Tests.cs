@@ -13,13 +13,12 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles grammar related to running unit tests.
     /// </summary>
+    // ReSharper disable UnusedParameter.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class Tests : ExecutorGrammar
     {
-        /// <summary>
-        /// List of unit tests to execute.
-        /// </summary>
-        private readonly List<string> _testSuite;
-
         /// <summary>
         /// A list of unit tests defined in the program.
         /// </summary>
@@ -32,7 +31,7 @@ namespace Prometheus.Runtime
             : base(pExecutor)
         {
             _tests = new List<string>();
-            _testSuite = new List<string>();
+            new List<string>();
         }
 
         /// <summary>

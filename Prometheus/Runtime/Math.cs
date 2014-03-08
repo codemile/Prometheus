@@ -17,6 +17,10 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles basic math operations.
     /// </summary>
+    // ReSharper disable UnusedParameter.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class Math : ExecutorGrammar, iOptimizer
     {
         /// <summary>

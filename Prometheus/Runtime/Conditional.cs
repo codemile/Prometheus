@@ -10,6 +10,10 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles conditional execution of blocks of code.
     /// </summary>
+    // ReSharper disable UnusedParameter.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class Conditional : ExecutorGrammar
     {
         /// <summary>

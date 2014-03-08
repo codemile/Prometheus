@@ -3,6 +3,7 @@ Tests;
 Use "Variables/FooObject";
 
 Test Object_Type {
-	var x = new foo();
+	vars;
+	var x = new global.FooObject();
 	Assert typeof(x) == "object";
 }

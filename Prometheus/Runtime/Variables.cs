@@ -13,6 +13,10 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles symbols related to variable management
     /// </summary>
+    // ReSharper disable UnusedParameter.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class Variables : ExecutorGrammar
     {
         /// <summary>
@@ -55,7 +59,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Creates a plural data type object.
         /// </summary>
-        private DataType CreatePlural(Node pNode, DataType pValue, IdentifierType pSingular)
+        private static DataType CreatePlural(Node pNode, DataType pValue, IdentifierType pSingular)
         {
             ArrayType arr = pValue as ArrayType;
             if (arr == null)
@@ -78,8 +82,6 @@ namespace Prometheus.Runtime
         /// <summary>
         /// = Assigns a value to an Identifier
         /// </summary>
-        /// <param name="pId">The variable name</param>
-        /// <param name="pValue">The value to assign</param>
         [ExecuteSymbol(GrammarSymbol.Assignment)]
         public DataType Assignment(Node pNode, QualifiedType pId, DataType pValue)
         {
@@ -91,9 +93,6 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Declares a variable with a value
         /// </summary>
-        /// <param name="pIdentifier">Name of the variable</param>
-        /// <param name="pValue">The value</param>
-        /// <returns>The value assigned</returns>
         [ExecuteSymbol(GrammarSymbol.Declare)]
         public DataType Declare(Node pNode, IdentifierType pIdentifier, DataType pValue)
         {
@@ -105,8 +104,6 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Declares a variable without a value
         /// </summary>
-        /// <param name="pIdentifier">Name of the variable</param>
-        /// <returns>The value assigned</returns>
         [ExecuteSymbol(GrammarSymbol.Declare)]
         public DataType Declare(Node pNode, IdentifierType pIdentifier)
         {
@@ -265,8 +262,6 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Returns the value of a variable.
         /// </summary>
-        /// <param name="pId">The variable name</param>
-        /// <returns>The value or undefined.</returns>
         [ExecuteSymbol(GrammarSymbol.QualifiedID)]
         public DataType Qualified(Node pNode, QualifiedType pId)
         {

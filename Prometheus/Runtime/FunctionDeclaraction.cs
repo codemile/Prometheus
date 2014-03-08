@@ -12,6 +12,10 @@ namespace Prometheus.Runtime
 {
     /// <summary>
     /// </summary>
+    // ReSharper disable UnusedParameter.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class FunctionDeclaraction : ExecutorGrammar
     {
         /// <summary>

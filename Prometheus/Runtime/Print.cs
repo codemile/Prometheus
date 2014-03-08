@@ -11,6 +11,10 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Prints a string to the output.
     /// </summary>
+    // ReSharper disable UnusedParameter.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class Print : ExecutorGrammar
     {
         /// <summary>

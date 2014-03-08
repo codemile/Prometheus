@@ -13,6 +13,10 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Handles grammar related to declaring objects.
     /// </summary>
+    // ReSharper disable UnusedParameter.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class Objects : ExecutorGrammar
     {
         /// <summary>
@@ -79,8 +83,8 @@ namespace Prometheus.Runtime
         public DataType New(Node pNode, QualifiedType pId, ArrayType pArguments)
         {
             // TODO: Create a place to store declarations
-            QualifiedType className = new QualifiedType(new IdentifierType(pId.ToString()));
-            DeclarationType decl = Cursor.Get<DeclarationType>(className);
+            //QualifiedType className = new QualifiedType(new IdentifierType(pId.ToString()));
+            DeclarationType decl = Cursor.Get<DeclarationType>(pId);
 
             StackSpace objSpace = new StackSpace();
 

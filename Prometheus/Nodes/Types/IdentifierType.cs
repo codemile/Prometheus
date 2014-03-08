@@ -15,11 +15,6 @@ namespace Prometheus.Nodes.Types
         public const string BASE = "base";
 
         /// <summary>
-        /// Reference to closure function scope.
-        /// </summary>
-        public const string FUNC = "func";
-
-        /// <summary>
         /// Reference to "this"
         /// </summary>
         public const string THIS = "this";

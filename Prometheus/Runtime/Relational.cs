@@ -15,6 +15,10 @@ namespace Prometheus.Runtime
     /// <summary>
     /// Implements the operators for greater than and less than.
     /// </summary>
+    // ReSharper disable UnusedParameter.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class Relational : ExecutorGrammar, iOptimizer
     {
         /// <summary>

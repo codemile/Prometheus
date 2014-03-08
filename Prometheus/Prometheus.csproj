@@ -135,7 +135,6 @@
     <Compile Include="Parser\Executors\ExecutorReflector.cs" />
     <Compile Include="Parser\Executors\ObjectFactory.cs" />
     <Compile Include="Parser\Executors\ExecutorGrammar.cs" />
-    <Compile Include="Runtime\Arguments.cs" />
     <Compile Include="Runtime\FunctionCalling.cs" />
     <Compile Include="Runtime\Math.cs" />
     <Compile Include="Runtime\Objects.cs" />
