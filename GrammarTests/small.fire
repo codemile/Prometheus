@@ -1,9 +1,11 @@
-Tests;
+Package GrammarTests.Small;
 
 Use "Variables/FooObject";
 
+Tests;
+
 Test Object_Type {
 	vars;
-	var x = new global.FooObject();
+	var x = new GrammarTests.Variables.FooObject();
 	Assert typeof(x) == "object";
 }

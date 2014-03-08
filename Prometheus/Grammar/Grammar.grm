@@ -54,12 +54,12 @@ Comment Line  = '//'
 <Program>		::= <Program Test>
 				| <Program Code>
 
-<Program Test>	::= <Test Suite Decl> <Import Decls> <Test Decls> <Test Execute>
-				| <Test Suite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute>
-				| <Test Suite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute> <Statements>
+<Program Test>	::= <Package Details> <Test Suite Decl> <Test Decls> <Test Execute>
+				| <Package Details> <Test Suite Decl> <Statements> <Test Decls> <Test Execute>
+				| <Package Details> <Test Suite Decl> <Statements> <Test Decls> <Test Execute> <Statements>
 
-<Program Code>	::= <Import Decls> <Object Decls> 
-				| <Import Decls> <Object Decls> <Statements>
+<Program Code>	::= <Package Details> <Object Decls> 
+				| <Package Details> <Object Decls> <Statements>
 
 <Block>			::= '{' <Statements> '}'
 				|  '{' '}'
@@ -199,8 +199,6 @@ Comment Line  = '//'
 <ClassName List>	::= <Member ID> <ClassName List>
 					| ! zero or more
 
-<NameSpace>			::= ! used by the builder to package multiple files.
-
 ! ===================================================================
 ! References to a variable, object member or array index
 ! ===================================================================
@@ -256,11 +254,17 @@ Comment Line  = '//'
 ! Packages
 ! ===================================================================
 
+<Package Details>	::= <Package ID> <Import Decls>
+
 <Import Decls>		::= <Import Decl>
 					| <Import Decls> <Import Decl>
 					| ! or none
 
+<Package ID>		::= 'package' <Qualified ID> <End>
+
 <Import Decl>		::= 'use' StringDouble <End>
+					| 'use' StringSingle <End>
+					| 'use' <Qualified ID> <End>
 
 ! ===================================================================
 ! Objects

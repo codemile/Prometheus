@@ -10,11 +10,11 @@ namespace Prometheus.Grammar
 	{
 		@Program = 0,                                    // <Program> ::= <Program Test>
 		@Program2 = 1,                                   // <Program> ::= <Program Code>
-		@ProgramTest = 2,                                // <Program Test> ::= <Test Suite Decl> <Import Decls> <Test Decls> <Test Execute>
-		@ProgramTest2 = 3,                               // <Program Test> ::= <Test Suite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute>
-		@ProgramTest3 = 4,                               // <Program Test> ::= <Test Suite Decl> <Import Decls> <Statements> <Test Decls> <Test Execute> <Statements>
-		@ProgramCode = 5,                                // <Program Code> ::= <Import Decls> <Object Decls>
-		@ProgramCode2 = 6,                               // <Program Code> ::= <Import Decls> <Object Decls> <Statements>
+		@ProgramTest = 2,                                // <Program Test> ::= <Package Details> <Test Suite Decl> <Test Decls> <Test Execute>
+		@ProgramTest2 = 3,                               // <Program Test> ::= <Package Details> <Test Suite Decl> <Statements> <Test Decls> <Test Execute>
+		@ProgramTest3 = 4,                               // <Program Test> ::= <Package Details> <Test Suite Decl> <Statements> <Test Decls> <Test Execute> <Statements>
+		@ProgramCode = 5,                                // <Program Code> ::= <Package Details> <Object Decls>
+		@ProgramCode2 = 6,                               // <Program Code> ::= <Package Details> <Object Decls> <Statements>
 		@Block_LBrace_RBrace = 7,                        // <Block> ::= '{' <Statements> '}'
 		@Block_LBrace_RBrace2 = 8,                       // <Block> ::= '{' '}'
 		@StatementorBlock = 9,                           // <Statement or Block> ::= <Statement>
@@ -104,119 +104,122 @@ namespace Prometheus.Grammar
 		@ClassNameID = 93,                               // <ClassName ID> ::= <Valid ID> <ClassName List>
 		@ClassNameList = 94,                             // <ClassName List> ::= <Member ID> <ClassName List>
 		@ClassNameList2 = 95,                            // <ClassName List> ::= 
-		@NameSpace = 96,                                 // <NameSpace> ::= 
-		@QualifiedID = 97,                               // <Qualified ID> ::= <Valid ID> <Qualified List>
-		@QualifiedList = 98,                             // <Qualified List> ::= <Member ID> <Qualified List>
-		@QualifiedList_LBracket_RBracket = 99,           // <Qualified List> ::= '[' <Value> ']' <Qualified List>
-		@QualifiedList2 = 100,                           // <Qualified List> ::= 
-		@Value_StringDouble = 101,                       // <Value> ::= StringDouble
-		@Value_StringSingle = 102,                       // <Value> ::= StringSingle
-		@Value_RegExpSlash = 103,                        // <Value> ::= RegExpSlash
-		@Value_RegExpPipe = 104,                         // <Value> ::= RegExpPipe
-		@Value_Number = 105,                             // <Value> ::= Number
-		@Value_Decimal = 106,                            // <Value> ::= Decimal
-		@Value_Boolean = 107,                            // <Value> ::= Boolean
-		@Value_Undefined = 108,                          // <Value> ::= Undefined
-		@Value = 109,                                    // <Value> ::= <Array Literal>
-		@Value2 = 110,                                   // <Value> ::= <Qualified ID>
-		@Value3 = 111,                                   // <Value> ::= <Function Expression>
-		@Value_LParen_RParen = 112,                      // <Value> ::= '(' <Expression> ')'
-		@Value4 = 113,                                   // <Value> ::= <Call Expression>
-		@Value5 = 114,                                   // <Value> ::= <All Functions>
-		@VariableStatements = 115,                       // <Variable Statements> ::= <Declare>
-		@VariableStatements2 = 116,                      // <Variable Statements> ::= <Assignment>
-		@VariableStatements3 = 117,                      // <Variable Statements> ::= <Post Increment>
-		@VariableStatements4 = 118,                      // <Variable Statements> ::= <Pre Increment>
-		@VariableStatements5 = 119,                      // <Variable Statements> ::= <Post Decrement>
-		@VariableStatements6 = 120,                      // <Variable Statements> ::= <Pre Decrement>
-		@ArrayLiteral_LBracket_RBracket = 121,           // <Array Literal> ::= '[' ']'
-		@ArrayLiteral_LBracket_RBracket2 = 122,          // <Array Literal> ::= '[' <Array Literal List> ']'
-		@ArrayLiteralList = 123,                         // <Array Literal List> ::= <Value>
-		@ArrayLiteralList_Comma = 124,                   // <Array Literal List> ::= <Array Literal List> ',' <Value>
-		@Declare_VAR_Identifier = 125,                   // <Declare> ::= VAR Identifier
-		@Declare_VAR_Identifier_Eq = 126,                // <Declare> ::= VAR Identifier '=' <Expression>
-		@Declare_VAR_Identifier_Eq2 = 127,               // <Declare> ::= VAR Identifier '=' <New Expression>
-		@Assignment_Eq = 128,                            // <Assignment> ::= <Qualified ID> '=' <Expression>
-		@PostIncrement_PlusPlus = 129,                   // <Post Increment> ::= <Qualified ID> '++'
-		@PreIncrement_PlusPlus = 130,                    // <Pre Increment> ::= '++' <Qualified ID>
-		@PostDecrement_MinusMinus = 131,                 // <Post Decrement> ::= <Qualified ID> '--'
-		@PreDecrement_MinusMinus = 132,                  // <Pre Decrement> ::= '--' <Qualified ID>
+		@QualifiedID = 96,                               // <Qualified ID> ::= <Valid ID> <Qualified List>
+		@QualifiedList = 97,                             // <Qualified List> ::= <Member ID> <Qualified List>
+		@QualifiedList_LBracket_RBracket = 98,           // <Qualified List> ::= '[' <Value> ']' <Qualified List>
+		@QualifiedList2 = 99,                            // <Qualified List> ::= 
+		@Value_StringDouble = 100,                       // <Value> ::= StringDouble
+		@Value_StringSingle = 101,                       // <Value> ::= StringSingle
+		@Value_RegExpSlash = 102,                        // <Value> ::= RegExpSlash
+		@Value_RegExpPipe = 103,                         // <Value> ::= RegExpPipe
+		@Value_Number = 104,                             // <Value> ::= Number
+		@Value_Decimal = 105,                            // <Value> ::= Decimal
+		@Value_Boolean = 106,                            // <Value> ::= Boolean
+		@Value_Undefined = 107,                          // <Value> ::= Undefined
+		@Value = 108,                                    // <Value> ::= <Array Literal>
+		@Value2 = 109,                                   // <Value> ::= <Qualified ID>
+		@Value3 = 110,                                   // <Value> ::= <Function Expression>
+		@Value_LParen_RParen = 111,                      // <Value> ::= '(' <Expression> ')'
+		@Value4 = 112,                                   // <Value> ::= <Call Expression>
+		@Value5 = 113,                                   // <Value> ::= <All Functions>
+		@VariableStatements = 114,                       // <Variable Statements> ::= <Declare>
+		@VariableStatements2 = 115,                      // <Variable Statements> ::= <Assignment>
+		@VariableStatements3 = 116,                      // <Variable Statements> ::= <Post Increment>
+		@VariableStatements4 = 117,                      // <Variable Statements> ::= <Pre Increment>
+		@VariableStatements5 = 118,                      // <Variable Statements> ::= <Post Decrement>
+		@VariableStatements6 = 119,                      // <Variable Statements> ::= <Pre Decrement>
+		@ArrayLiteral_LBracket_RBracket = 120,           // <Array Literal> ::= '[' ']'
+		@ArrayLiteral_LBracket_RBracket2 = 121,          // <Array Literal> ::= '[' <Array Literal List> ']'
+		@ArrayLiteralList = 122,                         // <Array Literal List> ::= <Value>
+		@ArrayLiteralList_Comma = 123,                   // <Array Literal List> ::= <Array Literal List> ',' <Value>
+		@Declare_VAR_Identifier = 124,                   // <Declare> ::= VAR Identifier
+		@Declare_VAR_Identifier_Eq = 125,                // <Declare> ::= VAR Identifier '=' <Expression>
+		@Declare_VAR_Identifier_Eq2 = 126,               // <Declare> ::= VAR Identifier '=' <New Expression>
+		@Assignment_Eq = 127,                            // <Assignment> ::= <Qualified ID> '=' <Expression>
+		@PostIncrement_PlusPlus = 128,                   // <Post Increment> ::= <Qualified ID> '++'
+		@PreIncrement_PlusPlus = 129,                    // <Pre Increment> ::= '++' <Qualified ID>
+		@PostDecrement_MinusMinus = 130,                 // <Post Decrement> ::= <Qualified ID> '--'
+		@PreDecrement_MinusMinus = 131,                  // <Pre Decrement> ::= '--' <Qualified ID>
+		@PackageDetails = 132,                           // <Package Details> ::= <Package ID> <Import Decls>
 		@ImportDecls = 133,                              // <Import Decls> ::= <Import Decl>
 		@ImportDecls2 = 134,                             // <Import Decls> ::= <Import Decls> <Import Decl>
 		@ImportDecls3 = 135,                             // <Import Decls> ::= 
-		@ImportDecl_use_StringDouble = 136,              // <Import Decl> ::= use StringDouble <End>
-		@ObjectDecls = 137,                              // <Object Decls> ::= <Object Decl>
-		@ObjectDecls2 = 138,                             // <Object Decls> ::= <Object Decls> <Object Decl>
-		@ObjectDecls3 = 139,                             // <Object Decls> ::= 
-		@ObjectDecl_object = 140,                        // <Object Decl> ::= object <BaseClass ID> <Parameter Array> <Block>
-		@ObjectBlock = 141,                              // <Object Block> ::= 
-		@BaseClassID_ColonColon = 142,                   // <BaseClass ID> ::= <ClassName ID> '::' <Valid ID>
-		@BaseClassID = 143,                              // <BaseClass ID> ::= <Valid ID>
-		@FunctionDecl_function_Identifier = 144,         // <Function Decl> ::= function Identifier <Function Parameters> <Block>
-		@FunctionBlock = 145,                            // <Function Block> ::= 
-		@FunctionExpression_function = 146,              // <Function Expression> ::= function <Function Parameters> <Block>
-		@FunctionParameters = 147,                       // <Function Parameters> ::= <Parameter Array>
-		@FunctionParameters2 = 148,                      // <Function Parameters> ::= <Parameter Array> <With Array>
-		@WithArray_with_LParen_RParen = 149,             // <With Array> ::= with '(' <Parameter List> ')'
-		@ParameterArray_LParen_RParen = 150,             // <Parameter Array> ::= '(' ')'
-		@ParameterArray_LParen_RParen2 = 151,            // <Parameter Array> ::= '(' <Parameter List> ')'
-		@ParameterArray = 152,                           // <Parameter Array> ::= 
-		@ParameterList = 153,                            // <Parameter List> ::= <Parameter Name>
-		@ParameterList_Comma = 154,                      // <Parameter List> ::= <Parameter List> ',' <Parameter Name>
-		@ParameterName_Identifier = 155,                 // <Parameter Name> ::= Identifier
-		@CallExpression = 156,                           // <Call Expression> ::= <Qualified ID> <Argument Array>
-		@CallExpression2 = 157,                          // <Call Expression> ::= <Call Expression> <Argument Array>
-		@NewExpression_new = 158,                        // <New Expression> ::= new <ClassName ID> <Argument Array>
-		@ArgumentArray_LParen_RParen = 159,              // <Argument Array> ::= '(' ')'
-		@ArgumentArray_LParen_RParen2 = 160,             // <Argument Array> ::= '(' <Argument List> ')'
-		@ArgumentList = 161,                             // <Argument List> ::= <Expression>
-		@ArgumentList_Comma = 162,                       // <Argument List> ::= <Argument List> ',' <Expression>
-		@FlowControl = 163,                              // <Flow Control> ::= <If Control>
-		@FlowControl2 = 164,                             // <Flow Control> ::= <While Control>
-		@FlowControl3 = 165,                             // <Flow Control> ::= <Until Control>
-		@FlowControl4 = 166,                             // <Flow Control> ::= <Do While Control>
-		@FlowControl5 = 167,                             // <Flow Control> ::= <Do Until Control>
-		@FlowControl6 = 168,                             // <Flow Control> ::= <For Control>
-		@FlowControl7 = 169,                             // <Flow Control> ::= <Each Control>
-		@FlowControl8 = 170,                             // <Flow Control> ::= <Break Control> <End>
-		@FlowControl9 = 171,                             // <Flow Control> ::= <Continue Control> <End>
-		@IfControl_if_LParen_RParen = 172,               // <If Control> ::= if '(' <Expression> ')' <Block>
-		@IfControl_if_LParen_RParen_else = 173,          // <If Control> ::= if '(' <Expression> ')' <Block> else <Block>
-		@WhileControl_while = 174,                       // <While Control> ::= while <While Expression> <Block>
-		@UntilControl_until = 175,                       // <Until Control> ::= until <While Expression> <Block>
-		@DoWhileControl_do_while = 176,                  // <Do While Control> ::= do <Block> while <While Expression>
-		@DoUntilControl_do_until = 177,                  // <Do Until Control> ::= do <Block> until <While Expression>
-		@WhileExpression_LParen_RParen = 178,            // <While Expression> ::= '(' <Expression> ')'
-		@ForControl_for = 179,                           // <For Control> ::= for <For Declare> <For Expression> <For Step> <Block>
-		@ForDeclare_LParen = 180,                        // <For Declare> ::= '(' <Variable Statements> <End>
-		@ForDeclare_LParen2 = 181,                       // <For Declare> ::= '(' <End>
-		@ForExpression = 182,                            // <For Expression> ::= <Expression> <End>
-		@ForExpression2 = 183,                           // <For Expression> ::= <End>
-		@ForStep_RParen = 184,                           // <For Step> ::= <Expression> ')'
-		@ForStep_RParen2 = 185,                          // <For Step> ::= ')'
-		@EachControl_each = 186,                         // <Each Control> ::= each <Plural ID> <Block>
-		@PluralID_LParen_RParen = 187,                   // <Plural ID> ::= '(' <Expression> ')'
-		@PluralID_LParen_as_Identifier_RParen = 188,     // <Plural ID> ::= '(' <Expression> as Identifier ')'
-		@BreakControl_break = 189,                       // <Break Control> ::= break
-		@ContinueControl_continue = 190,                 // <Continue Control> ::= continue
-		@AllProcedures = 191,                            // <All Procedures> ::= <Unset Proc>
-		@AllProcedures2 = 192,                           // <All Procedures> ::= <Print Proc>
-		@AllProcedures3 = 193,                           // <All Procedures> ::= <Return Proc>
-		@AllProcedures4 = 194,                           // <All Procedures> ::= <Assert Proc>
-		@AllProcedures5 = 195,                           // <All Procedures> ::= <Fail Proc>
-		@AllProcedures6 = 196,                           // <All Procedures> ::= <List Vars>
-		@UnsetProc_unset = 197,                          // <Unset Proc> ::= unset <Qualified ID>
-		@PrintProc_print = 198,                          // <Print Proc> ::= print <Expression>
-		@ReturnProc_return = 199,                        // <Return Proc> ::= return <Expression>
-		@ReturnProc_return2 = 200,                       // <Return Proc> ::= return
-		@AssertProc_assert = 201,                        // <Assert Proc> ::= assert <Expression>
-		@FailProc_fail = 202,                            // <Fail Proc> ::= fail <Expression>
-		@FailProc_fail2 = 203,                           // <Fail Proc> ::= fail
-		@ListVars_vars = 204,                            // <List Vars> ::= vars
-		@AllFunctions = 205,                             // <All Functions> ::= <Variable Functions>
-		@VariableFunctions = 206,                        // <Variable Functions> ::= <Isset Func>
-		@VariableFunctions2 = 207,                       // <Variable Functions> ::= <TypeOf Func>
-		@IssetFunc_isset = 208,                          // <Isset Func> ::= isset <Qualified ID>
-		@TypeOfFunc_typeof_LParen_RParen = 209           // <TypeOf Func> ::= typeof '(' <Expression> ')'
+		@PackageID_package = 136,                        // <Package ID> ::= package <Qualified ID> <End>
+		@ImportDecl_use_StringDouble = 137,              // <Import Decl> ::= use StringDouble <End>
+		@ImportDecl_use_StringSingle = 138,              // <Import Decl> ::= use StringSingle <End>
+		@ImportDecl_use = 139,                           // <Import Decl> ::= use <Qualified ID> <End>
+		@ObjectDecls = 140,                              // <Object Decls> ::= <Object Decl>
+		@ObjectDecls2 = 141,                             // <Object Decls> ::= <Object Decls> <Object Decl>
+		@ObjectDecls3 = 142,                             // <Object Decls> ::= 
+		@ObjectDecl_object = 143,                        // <Object Decl> ::= object <BaseClass ID> <Parameter Array> <Block>
+		@ObjectBlock = 144,                              // <Object Block> ::= 
+		@BaseClassID_ColonColon = 145,                   // <BaseClass ID> ::= <ClassName ID> '::' <Valid ID>
+		@BaseClassID = 146,                              // <BaseClass ID> ::= <Valid ID>
+		@FunctionDecl_function_Identifier = 147,         // <Function Decl> ::= function Identifier <Function Parameters> <Block>
+		@FunctionBlock = 148,                            // <Function Block> ::= 
+		@FunctionExpression_function = 149,              // <Function Expression> ::= function <Function Parameters> <Block>
+		@FunctionParameters = 150,                       // <Function Parameters> ::= <Parameter Array>
+		@FunctionParameters2 = 151,                      // <Function Parameters> ::= <Parameter Array> <With Array>
+		@WithArray_with_LParen_RParen = 152,             // <With Array> ::= with '(' <Parameter List> ')'
+		@ParameterArray_LParen_RParen = 153,             // <Parameter Array> ::= '(' ')'
+		@ParameterArray_LParen_RParen2 = 154,            // <Parameter Array> ::= '(' <Parameter List> ')'
+		@ParameterArray = 155,                           // <Parameter Array> ::= 
+		@ParameterList = 156,                            // <Parameter List> ::= <Parameter Name>
+		@ParameterList_Comma = 157,                      // <Parameter List> ::= <Parameter List> ',' <Parameter Name>
+		@ParameterName_Identifier = 158,                 // <Parameter Name> ::= Identifier
+		@CallExpression = 159,                           // <Call Expression> ::= <Qualified ID> <Argument Array>
+		@CallExpression2 = 160,                          // <Call Expression> ::= <Call Expression> <Argument Array>
+		@NewExpression_new = 161,                        // <New Expression> ::= new <ClassName ID> <Argument Array>
+		@ArgumentArray_LParen_RParen = 162,              // <Argument Array> ::= '(' ')'
+		@ArgumentArray_LParen_RParen2 = 163,             // <Argument Array> ::= '(' <Argument List> ')'
+		@ArgumentList = 164,                             // <Argument List> ::= <Expression>
+		@ArgumentList_Comma = 165,                       // <Argument List> ::= <Argument List> ',' <Expression>
+		@FlowControl = 166,                              // <Flow Control> ::= <If Control>
+		@FlowControl2 = 167,                             // <Flow Control> ::= <While Control>
+		@FlowControl3 = 168,                             // <Flow Control> ::= <Until Control>
+		@FlowControl4 = 169,                             // <Flow Control> ::= <Do While Control>
+		@FlowControl5 = 170,                             // <Flow Control> ::= <Do Until Control>
+		@FlowControl6 = 171,                             // <Flow Control> ::= <For Control>
+		@FlowControl7 = 172,                             // <Flow Control> ::= <Each Control>
+		@FlowControl8 = 173,                             // <Flow Control> ::= <Break Control> <End>
+		@FlowControl9 = 174,                             // <Flow Control> ::= <Continue Control> <End>
+		@IfControl_if_LParen_RParen = 175,               // <If Control> ::= if '(' <Expression> ')' <Block>
+		@IfControl_if_LParen_RParen_else = 176,          // <If Control> ::= if '(' <Expression> ')' <Block> else <Block>
+		@WhileControl_while = 177,                       // <While Control> ::= while <While Expression> <Block>
+		@UntilControl_until = 178,                       // <Until Control> ::= until <While Expression> <Block>
+		@DoWhileControl_do_while = 179,                  // <Do While Control> ::= do <Block> while <While Expression>
+		@DoUntilControl_do_until = 180,                  // <Do Until Control> ::= do <Block> until <While Expression>
+		@WhileExpression_LParen_RParen = 181,            // <While Expression> ::= '(' <Expression> ')'
+		@ForControl_for = 182,                           // <For Control> ::= for <For Declare> <For Expression> <For Step> <Block>
+		@ForDeclare_LParen = 183,                        // <For Declare> ::= '(' <Variable Statements> <End>
+		@ForDeclare_LParen2 = 184,                       // <For Declare> ::= '(' <End>
+		@ForExpression = 185,                            // <For Expression> ::= <Expression> <End>
+		@ForExpression2 = 186,                           // <For Expression> ::= <End>
+		@ForStep_RParen = 187,                           // <For Step> ::= <Expression> ')'
+		@ForStep_RParen2 = 188,                          // <For Step> ::= ')'
+		@EachControl_each = 189,                         // <Each Control> ::= each <Plural ID> <Block>
+		@PluralID_LParen_RParen = 190,                   // <Plural ID> ::= '(' <Expression> ')'
+		@PluralID_LParen_as_Identifier_RParen = 191,     // <Plural ID> ::= '(' <Expression> as Identifier ')'
+		@BreakControl_break = 192,                       // <Break Control> ::= break
+		@ContinueControl_continue = 193,                 // <Continue Control> ::= continue
+		@AllProcedures = 194,                            // <All Procedures> ::= <Unset Proc>
+		@AllProcedures2 = 195,                           // <All Procedures> ::= <Print Proc>
+		@AllProcedures3 = 196,                           // <All Procedures> ::= <Return Proc>
+		@AllProcedures4 = 197,                           // <All Procedures> ::= <Assert Proc>
+		@AllProcedures5 = 198,                           // <All Procedures> ::= <Fail Proc>
+		@AllProcedures6 = 199,                           // <All Procedures> ::= <List Vars>
+		@UnsetProc_unset = 200,                          // <Unset Proc> ::= unset <Qualified ID>
+		@PrintProc_print = 201,                          // <Print Proc> ::= print <Expression>
+		@ReturnProc_return = 202,                        // <Return Proc> ::= return <Expression>
+		@ReturnProc_return2 = 203,                       // <Return Proc> ::= return
+		@AssertProc_assert = 204,                        // <Assert Proc> ::= assert <Expression>
+		@FailProc_fail = 205,                            // <Fail Proc> ::= fail <Expression>
+		@FailProc_fail2 = 206,                           // <Fail Proc> ::= fail
+		@ListVars_vars = 207,                            // <List Vars> ::= vars
+		@AllFunctions = 208,                             // <All Functions> ::= <Variable Functions>
+		@VariableFunctions = 209,                        // <Variable Functions> ::= <Isset Func>
+		@VariableFunctions2 = 210,                       // <Variable Functions> ::= <TypeOf Func>
+		@IssetFunc_isset = 211,                          // <Isset Func> ::= isset <Qualified ID>
+		@TypeOfFunc_typeof_LParen_RParen = 212           // <TypeOf Func> ::= typeof '(' <Expression> ')'
 	}
 }

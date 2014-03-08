@@ -1,3 +1,5 @@
+Package GrammarTests.Closures;
+
 Tests;
 
 Test Declare_Function_Test {

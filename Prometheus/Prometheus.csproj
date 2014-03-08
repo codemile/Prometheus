@@ -108,6 +108,8 @@
     <Compile Include="Runtime\Conditional.cs" />
     <Compile Include="Runtime\FunctionDeclaraction.cs" />
     <Compile Include="Runtime\Loops.cs" />
+    <Compile Include="Runtime\Instancing.cs" />
+    <Compile Include="Runtime\Packages.cs" />
     <Compile Include="Runtime\Search.cs" />
     <Compile Include="Runtime\Tests.cs" />
     <Compile Include="Packages\Reader.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
@@ -20,21 +19,12 @@ namespace Prometheus.Parser
         /// <summary>
         /// The current namespace.
         /// </summary>
-        [Obsolete("Not reliable in cursor. Must be passed down call stack.")] public QualifiedType NameSpace;
+        public QualifiedType Package;
 
         /// <summary>
         /// The current stack of local variables.
         /// </summary>
         public iMemorySpace Stack;
-
-        /// <summary>
-        /// The current node being executed.
-        /// </summary>
-        [Obsolete]
-        public Node Node
-        {
-            get { throw new NotImplementedException(); }
-        }
 
         /// <summary>
         /// Constructor
@@ -43,7 +33,7 @@ namespace Prometheus.Parser
         {
             Stack = null;
             UnitTest = null;
-            NameSpace = new QualifiedType("Global");
+            Package = new QualifiedType("Global");
         }
 
         /// <summary>

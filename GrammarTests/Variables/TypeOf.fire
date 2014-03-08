@@ -1,3 +1,5 @@
+Package GrammarTests.Variables;
+
 Tests;
 
 Use "Variables/FooObject";

@@ -17,6 +17,7 @@ namespace Prometheus.Compile.Optimizers
                                                                     {
                                                                         GrammarSymbol.ObjectDecls,
                                                                         GrammarSymbol.TestDecls,
+                                                                        GrammarSymbol.PackageDetails,
                                                                         GrammarSymbol.ImportDecls,
                                                                         GrammarSymbol.ProgramTest,
                                                                         GrammarSymbol.ProgramCode,

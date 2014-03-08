@@ -1,3 +1,5 @@
+Package GrammarTests.Variables;
+
 Tests;
 
 Test Scope_Function_Decl_Test {

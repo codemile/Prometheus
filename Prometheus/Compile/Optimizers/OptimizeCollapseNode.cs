@@ -15,7 +15,6 @@ namespace Prometheus.Compile.Optimizers
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        //GrammarSymbol.Block,
                                                                         GrammarSymbol.Statements,
                                                                         GrammarSymbol.Statement,
                                                                     };
