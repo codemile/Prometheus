@@ -54,7 +54,7 @@
     <Compile Include="Compile\Optimizer.cs" />
     <Compile Include="Compile\Optimizers\OptimizeQualifier.cs" />
     <Compile Include="Compile\Optimizers\OptimizeTest.cs" />
-    <Compile Include="Compile\Optimizers\OptimizeValue.cs" />
+    <Compile Include="Compile\Optimizers\OptimizeTypes.cs" />
     <Compile Include="Compile\Packaging\Compiled.cs" />
     <Compile Include="Compile\Packaging\Imported.cs" />
     <Compile Include="Exceptions\Compiler\OptimizationException.cs" />
@@ -87,6 +87,7 @@
     <Compile Include="Nodes\Types\BooleanType.cs" />
     <Compile Include="Nodes\Types\ClosureType.cs" />
     <Compile Include="Nodes\Types\FunctionType.cs" />
+    <Compile Include="Nodes\Types\IsType.cs" />
     <Compile Include="Nodes\Types\NumericType.cs" />
     <Compile Include="Nodes\Types\PluralType.cs" />
     <Compile Include="Nodes\Types\QualifiedType.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Parser\Executors\iExecutor.cs" />
     <Compile Include="Parser\Executors\Handlers\iExecutorHandler.cs" />
     <Compile Include="Runtime\Conditional.cs" />
+    <Compile Include="Runtime\Types.cs" />
     <Compile Include="Storage\StorageDump.cs" />
     <Compile Include="Runtime\FunctionDeclaraction.cs" />
     <Compile Include="Runtime\Loops.cs" />

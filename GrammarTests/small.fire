@@ -1,8 +1,4 @@
 Package GrammarTests.Small;
 
-Use "Variables/FooObject";
-
-var x = new GrammarTests.Variables.FooObject();
-x.loop = x;
-var y = x;
-vars;
+var x = 1;
+print x is not float;

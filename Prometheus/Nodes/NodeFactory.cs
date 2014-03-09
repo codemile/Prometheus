@@ -1,6 +1,7 @@
 ﻿using GOLD;
 using Prometheus.Compile;
 using Prometheus.Grammar;
+using Prometheus.Nodes.Types;
 
 namespace Prometheus.Nodes
 {
@@ -40,6 +41,14 @@ namespace Prometheus.Nodes
 
                 Symbol parent = token.Parent;
                 GrammarSymbol dataType = (GrammarSymbol)parent.TableIndex();
+
+                // special case, types carry the symbol on the right
+                if (symbol == GrammarSymbol.Types)
+                {
+                    node.Data.Add(new IsType(dataType));
+                    continue;
+                }
+
                 if (!DataTypeFactory.isDataType(dataType))
                 {
                     continue;

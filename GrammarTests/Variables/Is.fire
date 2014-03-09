@@ -1,8 +1,8 @@
 Package GrammarTests.Variables;
 
-Tests;
+Use "FooObject";
 
-Use "Variables/FooObject";
+Tests;
 
 Test Integer_Type {
 	var x = 1;
@@ -21,14 +21,26 @@ Test Float_Type {
 Test String_Type {
 	var x = "thing";
 	Assert x is string;
+	Assert x is not regex;
+}
+
+Test Regex_Type {
+	var x = /thing/;
+	Assert x is string;
+	Assert x is regex;
 }
 
 Test Function_Type {
-	var x = function foo() { return "thing"; };
+	var x = function { return "thing"; };
 	Assert x is function;
 }
 
 Test Object_Type {
-	var x = new foo();
+	var x = new GrammarTests.Variables.FooObject();
 	Assert x is object;
+}
+
+Test Array_Type {
+	var x = [1,2,3];
+	Assert x is array;
 }

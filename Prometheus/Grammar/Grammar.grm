@@ -35,7 +35,7 @@ StringSingle	= [''] ( {SingleString Chars} | '\' {Printable} )* [''] [icf]*
 RegExpSlash		= '/' ({RegExp Chars} | '\' {Non Terminator})+ '/' [icf]*
 RegExpPipe		= '|' ({RegExp Chars} | '\' {Non Terminator})+ '|' [icf]*
 
-Number			= [0123456789]+
+Numeric			= [0123456789]+
 Decimal			= [0123456789]+ '.' [0123456789]+
 Boolean			= 'true' | 'false' | 'on' | 'off' | 'yes' | 'no' | 'always' | 'never'
 Undefined		= 'undefined'
@@ -110,6 +110,7 @@ Comment Line  = '//'
 ! ===================================================================
 ! Expressions
 ! ===================================================================
+
 <Expression>  ::= <Search Chain>
 
 ! ===================================================================
@@ -132,8 +133,8 @@ Comment Line  = '//'
 <Gte Operator>			::= <Gte Operator> '>=' <Lte Operator> | <Lte Operator>
 <Lte Operator>			::= <Lte Operator> '<=' <Equal Operator> | <Equal Operator>
 
-<Equal Operator>			::= <Equal Operator> '==' <Not Equal Operator> | <Not Equal Operator>
-<Not Equal Operator>		::= <Not Equal Operator> '!=' <And Operator> 
+<Equal Operator>		::= <Equal Operator> '==' <Not Equal Operator> | <Not Equal Operator>
+<Not Equal Operator>	::= <Not Equal Operator> '!=' <And Operator> 
 						| <Not Equal Operator> '<>' <And Operator> | <And Operator>
 <And Operator>			::= <And Operator> 'AND' <Or Operator> 
 						| <And Operator> '&&' <Or Operator> | <Or Operator>
@@ -151,7 +152,6 @@ Comment Line  = '//'
 <Multiply Expression>    ::= <Multiply Expression> '*' <Divide Expression>  | <Divide Expression> 
 <Divide Expression>		::= <Divide Expression> '/' <Remainder Expression>  | <Remainder Expression>
 <Remainder Expression>	::= <Remainder Expression> '%' <Unary Chain>  | <Unary Chain>
-
 
 ! ===================================================================
 ! Unary Operators
@@ -185,7 +185,30 @@ Comment Line  = '//'
 						| <Each Operator>
 
 <Each Operator>			::= <Each Control>
+						| <Type Chain>
+
+! ===================================================================
+! Type Operators
+! ===================================================================
+
+<Type Chain>			::= <Is Operator>
+
+<Is Operator>			::= <Qualified ID> 'IS' <Types>
+						| <Is Not Operator>
+
+<Is Not Operator>		::= <Qualified ID> 'IS' 'NOT' <Types>
 						| <Value>
+
+<Types>					::= 'number'
+						| 'integer'
+						| 'float'
+						| 'string'
+						| 'regex'
+						| 'function'
+						| 'object'
+						| 'class'
+						| 'array'
+						| 'undefined'
 
 ! ===================================================================
 ! Variables And Primitives
@@ -215,7 +238,7 @@ Comment Line  = '//'
 					| StringSingle
 					| RegExpSlash
 					| RegExpPipe
-					| Number
+					| Numeric
 					| Decimal
 					| Boolean
 					| Undefined

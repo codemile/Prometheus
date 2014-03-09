@@ -9,21 +9,20 @@ namespace Prometheus.Compile.Optimizers
     /// <summary>
     /// Value nodes can have their data assigned to their parents, and then be dropped from the tree.
     /// </summary>
-    [Obsolete]
-    public class OptimizeValue : BaseOptimizer
+    public class OptimizeTypes : BaseOptimizer
     {
         /// <summary>
         /// These nodes can have their child promoted, if it's only one child.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        GrammarSymbol.Value,
+                                                                        GrammarSymbol.Types
                                                                     };
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptimizeValue(iExecutor pExecutor)
+        public OptimizeTypes(iExecutor pExecutor)
             : base(pExecutor, _nodeTypes)
         {
         }

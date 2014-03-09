@@ -23,7 +23,7 @@ namespace Prometheus.Nodes
                                                                         GrammarSymbol.StringSingle,
                                                                         GrammarSymbol.RegExpSlash,
                                                                         GrammarSymbol.RegExpPipe,
-                                                                        GrammarSymbol.Number,
+                                                                        GrammarSymbol.Numeric,
                                                                         GrammarSymbol.Decimal,
                                                                         GrammarSymbol.Boolean,
                                                                         GrammarSymbol.Undefined,
@@ -39,14 +39,14 @@ namespace Prometheus.Nodes
         {
             switch (pSymbol)
             {
-                    // drop the quotes
+                // drop the quotes
                 case GrammarSymbol.StringDouble:
                 case GrammarSymbol.StringSingle:
                 case GrammarSymbol.RegExpSlash:
                 case GrammarSymbol.RegExpPipe:
                     return CreateString(pValue);
 
-                case GrammarSymbol.Number:
+                case GrammarSymbol.Numeric:
                     return new NumericType(Convert.ToInt64(pValue));
 
                 case GrammarSymbol.Decimal:
