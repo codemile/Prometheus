@@ -1,7 +1,6 @@
 ﻿using GOLD;
 using Prometheus.Compile;
 using Prometheus.Grammar;
-using Prometheus.Parser.Executors.Handlers;
 
 namespace Prometheus.Nodes
 {
@@ -12,19 +11,6 @@ namespace Prometheus.Nodes
     /// </summary>
     public static class NodeFactory
     {
-        /// <summary>
-        /// Gets the grammar symbol.
-        /// </summary>
-        /// <param name="pReduction">The node being reduced.</param>
-        /// <returns>The symbol</returns>
-        public static GrammarSymbol getSymbol(Reduction pReduction)
-        {
-            Production parent = pReduction.Parent;
-            Symbol symbol = parent.Head();
-            GrammarSymbol parserSymbol = (GrammarSymbol)symbol.TableIndex();
-            return parserSymbol;
-        }
-
         /// <summary>
         /// Initializes a new Node object from a Reduction object.
         /// </summary>
@@ -63,6 +49,19 @@ namespace Prometheus.Nodes
                 node.Data.Add(DataTypeFactory.Create(pLocation, dataType, str));
             }
             return node;
+        }
+
+        /// <summary>
+        /// Gets the grammar symbol.
+        /// </summary>
+        /// <param name="pReduction">The node being reduced.</param>
+        /// <returns>The symbol</returns>
+        public static GrammarSymbol getSymbol(Reduction pReduction)
+        {
+            Production parent = pReduction.Parent;
+            Symbol symbol = parent.Head();
+            GrammarSymbol parserSymbol = (GrammarSymbol)symbol.TableIndex();
+            return parserSymbol;
         }
     }
 }

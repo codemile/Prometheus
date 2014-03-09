@@ -25,7 +25,7 @@ namespace Prometheus.Runtime
         /// </summary>
         private InstanceType CreateInstance(iMemorySpace pSpace, DeclarationType pDecl)
         {
-            InstanceType inst = new InstanceType(pSpace);
+            InstanceType inst = new InstanceType(pDecl.ClassName, pSpace);
             if (pDecl.Base == null)
             {
                 return inst;
@@ -34,7 +34,8 @@ namespace Prometheus.Runtime
             DeclarationType baseType = Cursor.Get<DeclarationType>(pDecl.Base);
             StackSpace baseSpace = new StackSpace(pSpace);
             InstanceType baseInst = CreateInstance(baseSpace, baseType);
-            ClosureType baseFunc = new ClosureType(baseInst, new DataType[0], new StorageSpace(), baseType.Constructor.Entry);
+            ClosureType baseFunc = new ClosureType(baseInst, new DataType[0], new StorageSpace(),
+                baseType.Constructor.Entry);
             inst.GetMembers().Create(IdentifierType.BASE, baseFunc);
 
             return inst;
@@ -63,8 +64,6 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.NewExpression)]
         public DataType New(Node pNode, QualifiedType pId, ArrayType pArguments)
         {
-            // TODO: Create a place to store declarations
-            //QualifiedType className = new QualifiedType(new IdentifierType(pId.ToString()));
             DeclarationType decl = Cursor.Get<DeclarationType>(pId);
 
             StackSpace objSpace = new StackSpace();

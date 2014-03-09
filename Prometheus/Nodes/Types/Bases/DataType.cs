@@ -10,12 +10,23 @@ namespace Prometheus.Nodes.Types.Bases
     public abstract class DataType
     {
         /// <summary>
+        /// Returns an array type. Creating a new type if required.
+        /// </summary>
+        /// <returns>An array collection</returns>
+        private IEnumerable<DataType> ToArray()
+        {
+            return (GetType() == typeof (ArrayType))
+                ? (ArrayType)this
+                : new ArrayType(this);
+        }
+
+        /// <summary>
         /// </summary>
         /// <param name="pHaystack"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ToArray<T>(DataType pHaystack) where T : class
+        public static IEnumerable<T> ToArray<T>(DataType pHaystack) where T : DataType
         {
-            ArrayType items = pHaystack.ToArray();
+            IEnumerable<DataType> items = pHaystack.ToArray();
             return from item in items select item.Cast<T>();
         }
 
@@ -32,7 +43,7 @@ namespace Prometheus.Nodes.Types.Bases
         /// </summary>
         /// <typeparam name="T">The target type</typeparam>
         /// <returns>The result</returns>
-        public T Cast<T>() where T : class
+        public T Cast<T>() where T : DataType
         {
             T item = this as T;
             if (item == null)
@@ -40,17 +51,6 @@ namespace Prometheus.Nodes.Types.Bases
                 throw DataTypeException.InvalidTypes(string.Format("Cast<{0}>", typeof (T).Name), this);
             }
             return item;
-        }
-
-        /// <summary>
-        /// Returns an array type. Creating a new type if required.
-        /// </summary>
-        /// <returns>An array collection</returns>
-        public ArrayType ToArray()
-        {
-            return (GetType() == typeof (ArrayType))
-                ? (ArrayType)this
-                : new ArrayType(this);
         }
 
         /// <summary>

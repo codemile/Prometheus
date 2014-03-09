@@ -1,17 +1,35 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
-using Prometheus.Storage;
 
-namespace PrometheusTest.Mock.Storage
+namespace Prometheus.Storage
 {
-    public class MockStorage : iMemorySpace
+    /// <summary>
+    /// Handles storage of packages, and the object declarations in those packages.
+    /// </summary>
+    public class NameSpace : DataType, iMemorySpace
     {
+        /// <summary>
+        /// Holds references to sub-packages via their name.
+        /// </summary>
+        private readonly Dictionary<string, DataType> _space;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public NameSpace()
+        {
+            _space = new Dictionary<string, DataType>();
+        }
+
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
+            _space.Clear();
         }
 
         /// <summary>
@@ -19,7 +37,7 @@ namespace PrometheusTest.Mock.Storage
         /// </summary>
         public IEnumerable<MemoryItem> Dump()
         {
-            return new MemoryItem[0];
+            return _space.Select(pItem=>new MemoryItem {Name = pItem.Key, Data = pItem.Value});
         }
 
         /// <summary>
@@ -30,6 +48,7 @@ namespace PrometheusTest.Mock.Storage
         /// <param name="pDataType">The data to assign</param>
         public void Assign(string pName, DataType pDataType)
         {
+            throw new NameSpaceException("Can not modify namespace declarations at runtime.");
         }
 
         /// <summary>
@@ -39,6 +58,11 @@ namespace PrometheusTest.Mock.Storage
         /// <param name="pDataType">The data to assign</param>
         public void Create(string pName, DataType pDataType)
         {
+            if (_space.ContainsKey(pName))
+            {
+                throw new NameSpaceException(string.Format("Namespace identity <{0}> already exists.", pName));
+            }
+            _space.Add(pName, pDataType);
         }
 
         /// <summary>
@@ -48,6 +72,10 @@ namespace PrometheusTest.Mock.Storage
         /// <returns>The data</returns>
         public DataType Get(string pName)
         {
+            if (_space.ContainsKey(pName))
+            {
+                return _space[pName];
+            }
             return UndefinedType.Undefined;
         }
 
@@ -58,7 +86,7 @@ namespace PrometheusTest.Mock.Storage
         /// <returns>True if exists</returns>
         public bool Has(string pName)
         {
-            return false;
+            return _space.ContainsKey(pName);
         }
 
         /// <summary>
@@ -69,7 +97,7 @@ namespace PrometheusTest.Mock.Storage
         /// <returns>True if name exists</returns>
         public bool Set(string pName, DataType pDataType)
         {
-            return false;
+            throw new NameSpaceException("Can not modify namespace declarations at runtime.");
         }
 
         /// <summary>
@@ -78,7 +106,7 @@ namespace PrometheusTest.Mock.Storage
         /// <param name="pName">The name to remove</param>
         public bool Unset(string pName)
         {
-            return false;
+            throw new NameSpaceException("Can not unset namespace declarations at runtime.");
         }
     }
 }

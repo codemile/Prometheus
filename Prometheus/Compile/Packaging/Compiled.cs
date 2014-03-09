@@ -28,17 +28,17 @@ namespace Prometheus.Compile.Packaging
             get { return Imported[Imported.Count - 1]; }
         }
 
-        private static bool IsTestSuite(Node pNode)
-        {
-            return pNode.HasChild(GrammarSymbol.TestSuiteDecl);
-        }
-
         /// <summary>
         /// True if compiled program is a test suite.
         /// </summary>
         public bool TestSuite
         {
             get { return IsTestSuite(Root); }
+        }
+
+        private static bool IsTestSuite(Node pNode)
+        {
+            return pNode.HasChild(GrammarSymbol.TestSuiteDecl);
         }
 
         /// <summary>
@@ -51,19 +51,19 @@ namespace Prometheus.Compile.Packaging
         }
 
         /// <summary>
-        /// All the compiled nodes that are test suites.
-        /// </summary>
-        public IEnumerable<Node> getTestNodes()
-        {
-            return from node in Imported where IsTestSuite(node) select node;
-        }
-
-        /// <summary>
         /// All the compiled nodes that are executable code.
         /// </summary>
         public IEnumerable<Node> getNodes()
         {
             return from node in Imported where !IsTestSuite(node) select node;
+        }
+
+        /// <summary>
+        /// All the compiled nodes that are test suites.
+        /// </summary>
+        public IEnumerable<Node> getTestNodes()
+        {
+            return from node in Imported where IsTestSuite(node) select node;
         }
     }
 }

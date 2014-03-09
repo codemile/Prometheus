@@ -1,5 +1,4 @@
-﻿using Logging;
-using Prometheus.Exceptions.Executor;
+﻿using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -19,43 +18,6 @@ namespace Prometheus.Runtime
     // ReSharper disable ClassNeverInstantiated.Global
     public class Variables : ExecutorGrammar
     {
-        /// <summary>
-        /// Logging
-        /// </summary>
-        private static readonly Logger _logger = Logger.Create(typeof (Variables));
-
-        /// <summary>
-        /// Prints a memory space recursively for object instances.
-        /// </summary>
-        private static void Print(iMemoryDump pMemory, int pIndent)
-        {
-            foreach (MemoryItem item in pMemory.Dump(pIndent))
-            {
-                string indent = "";
-                if (item.Level > 0)
-                {
-                    indent = " ".PadLeft(pIndent + item.Level);
-                }
-                InstanceType inst = item.Data as InstanceType;
-                if (inst != null)
-                {
-                    _logger.Fine("{0}{1} = instance[", indent, item.Name);
-                    Print(inst.GetMembers(), pIndent + 1);
-                    _logger.Fine("{0}]", indent);
-                    continue;
-                }
-                ArrayType array = item.Data as ArrayType;
-                if (array != null)
-                {
-                    _logger.Fine("{0}{1} = array({2})[", indent, item.Name, array.Values.Count);
-                    Print(array, pIndent + 1);
-                    _logger.Fine("{0}]", indent);
-                    continue;
-                }
-                _logger.Fine("{0}{1} = {2}", indent, item.Name, item.Data);
-            }
-        }
-
         /// <summary>
         /// Creates a plural data type object.
         /// </summary>
@@ -118,16 +80,6 @@ namespace Prometheus.Runtime
         {
             iVariablePointer pointer = Cursor.Resolve(pId);
             return new BooleanType(pointer.IsValid());
-        }
-
-        /// <summary>
-        /// Decrement
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.ListVars)]
-        public DataType ListVars(Node pNode)
-        {
-            Print(Cursor.Stack, 0);
-            return UndefinedType.Undefined;
         }
 
         /// <summary>

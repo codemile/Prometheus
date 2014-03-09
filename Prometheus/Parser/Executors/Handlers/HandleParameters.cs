@@ -37,8 +37,8 @@ namespace Prometheus.Parser.Executors.Handlers
             for (int i = 0, c = pNode.Children.Count; i < c; i++)
             {
 #if DEBUG
-                    ExecutorAssert.Data(pNode.Children[i], 1);
-                    ExecutorAssert.DataType(pNode.Children[i], 0, typeof (IdentifierType));
+                ExecutorAssert.Data(pNode.Children[i], 1);
+                ExecutorAssert.DataType(pNode.Children[i], 0, typeof (IdentifierType));
 #endif
                 array.Add(pNode.Children[i].Data[0]);
             }

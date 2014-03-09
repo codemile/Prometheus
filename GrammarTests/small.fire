@@ -2,10 +2,7 @@ Package GrammarTests.Small;
 
 Use "Variables/FooObject";
 
-Tests;
-
-Test Object_Type {
-	vars;
-	var x = new GrammarTests.Variables.FooObject();
-	Assert typeof(x) == "object";
-}
+var x = new GrammarTests.Variables.FooObject();
+x.loop = x;
+var y = x;
+vars;

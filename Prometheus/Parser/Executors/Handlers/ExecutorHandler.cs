@@ -4,7 +4,6 @@ using Prometheus.Compile;
 using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
-using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 

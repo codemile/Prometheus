@@ -3,5 +3,3 @@ Package GrammarTests.Variables;
 object FooObject {
 	this.Name = "Foo";
 }
-
-vars;

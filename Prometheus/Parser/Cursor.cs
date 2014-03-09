@@ -27,6 +27,20 @@ namespace Prometheus.Parser
         public iMemorySpace Stack;
 
         /// <summary>
+        /// The root reference.
+        /// </summary>
+        private iMemorySpace _root;
+
+        /// <summary>
+        /// The root for the stack space.
+        /// </summary>
+        public iMemorySpace Root
+        {
+            get { return _root; }
+            set { _root = Stack = value; }
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Cursor()
@@ -99,6 +113,11 @@ namespace Prometheus.Parser
                         break;
                     }
                     member = stack.Get(id.Name);
+                    NameSpace space = member as NameSpace;
+                    if (space != null)
+                    {
+                        stack = space;
+                    }
                     continue;
                 }
 

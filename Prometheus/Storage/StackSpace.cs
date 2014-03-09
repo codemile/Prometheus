@@ -38,7 +38,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        public StackSpace(iMemorySpace pParent, Dictionary<string, DataType> pStorage)
+        protected StackSpace(iMemorySpace pParent, Dictionary<string, DataType> pStorage)
             : base(pStorage)
         {
             Parent = pParent;
@@ -56,11 +56,11 @@ namespace Prometheus.Storage
         /// <summary>
         /// Prints a list of all variables.
         /// </summary>
-        public override IEnumerable<MemoryItem> Dump(int pIndent = 0)
+        public override IEnumerable<MemoryItem> Dump()
         {
             return Parent == null
-                ? base.Dump(pIndent)
-                : Parent.Dump(pIndent + 1).Union(base.Dump(pIndent));
+                ? base.Dump()
+                : Parent.Dump().Union(base.Dump());
         }
 
         /// <summary>

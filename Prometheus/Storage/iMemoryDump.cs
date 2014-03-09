@@ -11,7 +11,6 @@ namespace Prometheus.Storage
         /// <summary>
         /// Derived classes will handle the printing.
         /// </summary>
-        /// <param name="pIndent">Line indent</param>
-        IEnumerable<MemoryItem> Dump(int pIndent = 0);
+        IEnumerable<MemoryItem> Dump();
     }
 }

@@ -234,15 +234,13 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Derived classes will handle the printing.
         /// </summary>
-        /// <param name="pIndent">Line indent</param>
-        public IEnumerable<MemoryItem> Dump(int pIndent = 0)
+        public IEnumerable<MemoryItem> Dump()
         {
             int count = 0;
             return from item in Values
                    select
                        new MemoryItem
                        {
-                           Level = pIndent,
                            Name = (count++).ToString(CultureInfo.InvariantCulture),
                            Data = item
                        };

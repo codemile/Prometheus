@@ -38,8 +38,8 @@ namespace Prometheus.Runtime
             pHaystacks = Resolve(pHaystacks);
             pNeedles = Resolve(pNeedles);
 
-            IEnumerable<iSearchHaystack> haystacks = DataType.ToArray<iSearchHaystack>(pHaystacks);
-            IEnumerable<iSearchNeedle> needles = DataType.ToArray<iSearchNeedle>(pNeedles);
+            IEnumerable<iSearchHaystack> haystacks = DataType.ToArray<StringType>(pHaystacks);
+            IEnumerable<iSearchNeedle> needles = DataType.ToArray<StringType>(pNeedles);
 
             return needles.Any(pNeedle=>haystacks.Any(pStack=>pStack.Contains(pNeedle)))
                 ? BooleanType.True

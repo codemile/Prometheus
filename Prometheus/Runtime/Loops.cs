@@ -28,6 +28,41 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
+        /// Handles the execution of an each loop.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.EachControl)]
+        public ArrayType Each(Node pNode, PluralType pPlural, FunctionType pBlock)
+        {
+            Dictionary<string, DataType> variables = new Dictionary<string, DataType>
+                                                     {
+                                                         {pPlural.Singular.Name, UndefinedType.Undefined}
+                                                     };
+
+            ArrayType arr = new ArrayType();
+
+            try
+            {
+                foreach (DataType item in pPlural.Array)
+                {
+                    variables[pPlural.Singular.Name] = item;
+                    try
+                    {
+                        Executor.ExecuteContinuable(pBlock, variables);
+                    }
+                    catch (ReturnException returnEx)
+                    {
+                        arr.Add(returnEx.Value);
+                    }
+                }
+            }
+            catch (BreakException)
+            {
+            }
+
+            return arr;
+        }
+
+        /// <summary>
         /// Handles until loop block.
         /// </summary>
         [ExecuteSymbol(GrammarSymbol.DoUntilControl)]
@@ -126,42 +161,6 @@ namespace Prometheus.Runtime
             {
             }
             return UndefinedType.Undefined;
-        }
-
-        /// <summary>
-        /// Handles the execution of an each loop.
-        /// </summary>
-        [ExecuteSymbol(GrammarSymbol.EachControl)]
-        public ArrayType Each(Node pNode, PluralType pPlural, FunctionType pBlock)
-        {
-            Dictionary<string, DataType> variables = new Dictionary<string, DataType>
-                                                     {
-                                                         {pPlural.Singular.Name, UndefinedType.Undefined}
-                                                     };
-
-            ArrayType arr = new ArrayType();
-
-            try
-            {
-                foreach (DataType item in pPlural.Array)
-                {
-                    variables[pPlural.Singular.Name] = item;
-                    try
-                    {
-                        Executor.ExecuteContinuable(pBlock, variables);
-                    }
-                    catch (ReturnException returnEx)
-                    {
-                        arr.Add(returnEx.Value);
-                    }
-                }
-            }
-            catch (BreakException)
-            {
-            }
-
-            return arr;
-
         }
     }
 }

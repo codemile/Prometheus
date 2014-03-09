@@ -106,6 +106,7 @@
     <Compile Include="Parser\Executors\iExecutor.cs" />
     <Compile Include="Parser\Executors\Handlers\iExecutorHandler.cs" />
     <Compile Include="Runtime\Conditional.cs" />
+    <Compile Include="Storage\StorageDump.cs" />
     <Compile Include="Runtime\FunctionDeclaraction.cs" />
     <Compile Include="Runtime\Loops.cs" />
     <Compile Include="Runtime\Instancing.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Runtime\Search.cs" />
     <Compile Include="Runtime\Tests.cs" />
     <Compile Include="Packages\Reader.cs" />
+    <Compile Include="Runtime\Dump.cs" />
     <Compile Include="Storage\iMemoryDump.cs" />
     <Compile Include="Storage\iMemorySpace.cs" />
     <Compile Include="Storage\MemoryPointer.cs" />
@@ -126,6 +128,7 @@
     <Compile Include="Nodes\Types\UndefinedType.cs" />
     <Compile Include="Parser\Cursor.cs" />
     <Compile Include="Parser\Executors\Executor.cs" />
+    <Compile Include="Storage\NameSpace.cs" />
     <Compile Include="Storage\ObjectSpace.cs" />
     <Compile Include="Storage\MemoryItem.cs" />
     <Compile Include="Storage\StackSpace.cs" />

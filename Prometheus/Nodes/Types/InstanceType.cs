@@ -9,6 +9,11 @@ namespace Prometheus.Nodes.Types
     public class InstanceType : DataType
     {
         /// <summary>
+        /// The name of the class this instance represents.
+        /// </summary>
+        public readonly QualifiedType ClassName;
+
+        /// <summary>
         /// Members of this object
         /// </summary>
         private readonly iMemorySpace _members;
@@ -16,8 +21,9 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public InstanceType(iMemorySpace pMembers)
+        public InstanceType(QualifiedType pClassName, iMemorySpace pMembers)
         {
+            ClassName = pClassName;
             _members = pMembers;
         }
 

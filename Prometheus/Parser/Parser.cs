@@ -59,6 +59,11 @@ namespace Prometheus.Parser
         /// </summary>
         private readonly Dictionary<string, DataType> _customVaraibles;
 
+        private static bool IsTestSuite(Node pNode)
+        {
+            return pNode.HasChild(GrammarSymbol.TestSuiteDecl);
+        }
+
         /// <summary>
         /// Generates a list of tests to run.
         /// </summary>
@@ -108,18 +113,25 @@ namespace Prometheus.Parser
                 // create the global variables
                 Dictionary<string, DataType> globals = new Dictionary<string, DataType>(_customVaraibles)
                                                        {
-                                                           {"this", new InstanceType()}
+                                                           {
+                                                               "this", new InstanceType(
+                                                               new QualifiedType("global"),
+                                                               new StorageSpace())
+                                                           }
                                                        };
 
                 foreach (KeyValuePair<string, object> customObject in _customObjects)
                 {
                     ObjectSpace objSpace = new ObjectSpace(customObject.Value);
-                    globals.Add(customObject.Key, new InstanceType(objSpace));
+                    globals.Add(customObject.Key,
+                        new InstanceType(
+                            new QualifiedType(string.Format("global.{0}", customObject.Value.GetType().Name.ToLower())),
+                            objSpace));
                 }
 
-                foreach (Node node in pNode)
+                using (pCursor.Root = new CursorSpace(pCursor, globals))
                 {
-                    using (pCursor.Stack = new CursorSpace(pCursor, globals))
+                    foreach (Node node in pNode)
                     {
                         executor.Execute(node, new Dictionary<string, DataType>());
                     }
@@ -230,11 +242,6 @@ namespace Prometheus.Parser
         public void CreateObject(string pNameSpace, string pName, object pValue)
         {
             _customObjects.Add(pName, pValue);
-        }
-
-        private static bool IsTestSuite(Node pNode)
-        {
-            return pNode.HasChild(GrammarSymbol.TestSuiteDecl);
         }
 
         /// <summary>

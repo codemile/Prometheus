@@ -5,6 +5,7 @@ using Prometheus.Nodes.Types;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Parser.Executors;
 using Prometheus.Parser.Executors.Attributes;
+using Prometheus.Storage;
 
 namespace Prometheus.Runtime
 {
@@ -45,7 +46,10 @@ namespace Prometheus.Runtime
             DeclarationType decl = new DeclarationType(
                 className,
                 new FunctionType(pConstructor.Entry, pParameters));
-            Cursor.Stack.Create(className.ToString(), decl);
+
+            NameSpace nameSpace = Resolve<NameSpace>(Cursor.Package);
+            nameSpace.Create(pObjectName.Name, decl);
+
             return decl;
         }
 
@@ -62,7 +66,10 @@ namespace Prometheus.Runtime
                 pBaseName,
                 className,
                 new FunctionType(pConstructor.Entry, pParameters));
-            Cursor.Stack.Create(className.ToString(), decl);
+
+            NameSpace nameSpace = Resolve<NameSpace>(Cursor.Package);
+            nameSpace.Create(pObjectName.Name, decl);
+
             return decl;
         }
     }

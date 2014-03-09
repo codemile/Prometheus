@@ -1,4 +1,6 @@
-﻿namespace Prometheus.Exceptions.Executor
+﻿using Prometheus.Nodes;
+
+namespace Prometheus.Exceptions.Executor
 {
     /// <summary>
     /// NameSpace exceptions
@@ -8,9 +10,16 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="pMessage">Exception message</param>
         public NameSpaceException(string pMessage)
             : base(pMessage)
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public NameSpaceException(string pMessage, Node pNode)
+            : base(pMessage, pNode)
         {
         }
     }
