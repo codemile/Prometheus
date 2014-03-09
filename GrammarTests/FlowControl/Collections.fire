@@ -3,11 +3,11 @@ Package GrammarTests.FlowControl;
 Tests;
 
 Test Each_Test {
-	var numbers = [1,2,3,4];
+	var values = [1,2,3,4];
 	var x = 0;
 	var y = 0;
-	Each (numbers) {
-		x = x + number;
+	Each (values) {
+		x = x + value;
 		y++;
 	};
 	Assert x == 10;

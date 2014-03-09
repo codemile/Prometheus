@@ -10,6 +10,6 @@ Use "Closures/Functions";
 Use "Variables/Scope";
 Use "Variables/LexicalScope";
 Use "Variables/Is";
-//Use "Variables/TypeOf";
+Use "Variables/TypeOf";
 
 Tests;
