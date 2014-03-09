@@ -1,4 +1,3 @@
 Package GrammarTests.Small;
-
-var x = 1;
-print x is not float;
+var x;
+print x is undefined;

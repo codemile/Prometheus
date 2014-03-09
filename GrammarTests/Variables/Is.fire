@@ -4,6 +4,17 @@ Use "FooObject";
 
 Tests;
 
+Test Undefined_Type {
+	var x;
+	var y = undefined;
+	
+	Assert x is undefined;
+	Assert y is undefined;
+	
+	Assert x == undefined;
+	Assert y == undefined;
+}
+
 Test Integer_Type {
 	var x = 1;
 	Assert x is integer;
@@ -30,14 +41,29 @@ Test Regex_Type {
 	Assert x is regex;
 }
 
-Test Function_Type {
+Test Closure_Type {
 	var x = function { return "thing"; };
 	Assert x is function;
+}
+
+Test Function_Type {
+	function foo() { 
+		return "thing"; 
+	};
+	Assert foo is function;
 }
 
 Test Object_Type {
 	var x = new GrammarTests.Variables.FooObject();
 	Assert x is object;
+}
+
+Test Class_Type {
+	Assert GrammarTests.Variables.FooObject is class;
+}
+
+Test Package_Type {
+	Assert GrammarTests.Variables is package;
 }
 
 Test Array_Type {

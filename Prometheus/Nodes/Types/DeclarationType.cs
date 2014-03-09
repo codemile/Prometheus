@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Prometheus.Nodes.Types.Attributes;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -7,6 +8,7 @@ namespace Prometheus.Nodes.Types
     /// Holds the definition of an object.
     /// </summary>
     [DebuggerDisplay("{{ClassName}}")]
+    [DataTypeInfo("Class")]
     public class DeclarationType : DataType
     {
         /// <summary>

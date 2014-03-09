@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Prometheus.Nodes.Types.Attributes;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 
@@ -10,6 +11,7 @@ namespace Prometheus.Nodes.Types
     /// <summary>
     /// Holds an array of values.
     /// </summary>
+    [DataTypeInfo("Array")]
     public class ArrayType : DataType, IList<DataType>, iMemoryDump
     {
         /// <summary>

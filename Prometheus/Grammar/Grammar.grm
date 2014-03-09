@@ -193,10 +193,12 @@ Comment Line  = '//'
 
 <Type Chain>			::= <Is Operator>
 
-<Is Operator>			::= <Qualified ID> 'IS' <Types>
+<Is Operator>			::= <Qualified ID> 'IS' <Qualified ID>
+						| <Qualified ID> 'IS' <Types>
 						| <Is Not Operator>
 
-<Is Not Operator>		::= <Qualified ID> 'IS' 'NOT' <Types>
+<Is Not Operator>		::= <Qualified ID> 'IS' 'NOT' <Qualified ID>
+						| <Qualified ID> 'IS' 'NOT' <Types>
 						| <Value>
 
 <Types>					::= 'number'
@@ -205,10 +207,12 @@ Comment Line  = '//'
 						| 'string'
 						| 'regex'
 						| 'function'
+						| 'closure'
 						| 'object'
 						| 'class'
 						| 'array'
 						| 'undefined'
+						| 'package'
 
 ! ===================================================================
 ! Variables And Primitives

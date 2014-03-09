@@ -47,8 +47,8 @@ namespace Prometheus.Runtime
                 className,
                 new FunctionType(pConstructor.Entry, pParameters));
 
-            NameSpace nameSpace = Resolve<NameSpace>(Cursor.Package);
-            nameSpace.Create(pObjectName.Name, decl);
+            NameSpaceType nameSpaceType = Resolve<NameSpaceType>(Cursor.Package);
+            nameSpaceType.Create(pObjectName.Name, decl);
 
             return decl;
         }
@@ -67,8 +67,8 @@ namespace Prometheus.Runtime
                 className,
                 new FunctionType(pConstructor.Entry, pParameters));
 
-            NameSpace nameSpace = Resolve<NameSpace>(Cursor.Package);
-            nameSpace.Create(pObjectName.Name, decl);
+            NameSpaceType nameSpaceType = Resolve<NameSpaceType>(Cursor.Package);
+            nameSpaceType.Create(pObjectName.Name, decl);
 
             return decl;
         }

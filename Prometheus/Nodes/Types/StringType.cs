@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Prometheus.Exceptions.Executor;
+using Prometheus.Nodes.Types.Attributes;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -8,6 +10,8 @@ namespace Prometheus.Nodes.Types
     /// <summary>
     /// Boxes string values
     /// </summary>
+    [DataTypeInfo("String")]
+    [DataTypeInfo("RegEx")]
     public class StringType : DataType, iSearchNeedle, iSearchHaystack
     {
         /// <summary>
@@ -217,6 +221,16 @@ namespace Prometheus.Nodes.Types
 
             _regex = new Regex(str);
             return _regex;
+        }
+
+        /// <summary>
+        /// The different possible types for this data type.
+        /// </summary>
+        public override IEnumerable<string> GetTypes()
+        {
+            return IsRegex
+                ? new[] {"regex", "string"}
+                : new[] {"string"};
         }
     }
 }

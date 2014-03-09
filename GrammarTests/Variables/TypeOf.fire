@@ -1,8 +1,12 @@
 Package GrammarTests.Variables;
+Use "FooObject";
 
 Tests;
 
-Use "Variables/FooObject";
+Test Undefined_Type {
+	var x;
+	Assert typeof(x) == "undefined";
+}
 
 Test Integer_Type {
 	var x = 1;
@@ -19,12 +23,30 @@ Test String_Type {
 	Assert typeof(x) == "string";
 }
 
+Test Regex_Type {
+	var x = /thing/;
+	Assert typeof(x) == "regex";
+}
+
+Test Array_Type {
+	var x = [1,2,3];
+	Assert typeof(x) == "array";
+}
+
 Test Function_Type {
-	var x = function foo() { return "thing"; };
+	var x = function { return "thing"; };
 	Assert typeof(x) == "function";
 }
 
 Test Object_Type {
-	var x = new foo();
+	var x = new GrammarTests.Variables.FooObject();
 	Assert typeof(x) == "object";
+}
+
+Test Class_Type {
+	Assert typeof(GrammarTests.Variables.FooObject) == "class";
+}
+
+Test Package_Type {
+	Assert typeof(GrammarTests.Variables) == "package";
 }

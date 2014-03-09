@@ -1,4 +1,5 @@
-﻿using Prometheus.Nodes.Types.Bases;
+﻿using Prometheus.Nodes.Types.Attributes;
+using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 
 namespace Prometheus.Nodes.Types
@@ -6,6 +7,7 @@ namespace Prometheus.Nodes.Types
     /// <summary>
     /// Holds the data associated with an instance of an object.
     /// </summary>
+    [DataTypeInfo("Object")]
     public class InstanceType : DataType
     {
         /// <summary>

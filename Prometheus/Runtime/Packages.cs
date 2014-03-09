@@ -48,7 +48,7 @@ namespace Prometheus.Runtime
                 if (package.Has(id.Name))
                 {
                     DataType value = package.Get(id.Name);
-                    package = value as NameSpace;
+                    package = value as NameSpaceType;
                     if (package == null)
                     {
                         throw new NameSpaceException(
@@ -58,9 +58,9 @@ namespace Prometheus.Runtime
                     continue;
                 }
 
-                NameSpace newSpace = new NameSpace();
-                package.Create(id.Name, newSpace);
-                package = newSpace;
+                NameSpaceType newSpaceType = new NameSpaceType();
+                package.Create(id.Name, newSpaceType);
+                package = newSpaceType;
             }
 
             Cursor.Package = pID;

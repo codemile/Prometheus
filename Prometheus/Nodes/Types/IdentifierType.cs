@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Prometheus.Nodes.Types.Attributes;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types

@@ -113,10 +113,10 @@ namespace Prometheus.Parser
                         break;
                     }
                     member = stack.Get(id.Name);
-                    NameSpace space = member as NameSpace;
-                    if (space != null)
+                    NameSpaceType spaceType = member as NameSpaceType;
+                    if (spaceType != null)
                     {
-                        stack = space;
+                        stack = spaceType;
                     }
                     continue;
                 }

@@ -88,7 +88,7 @@ namespace Prometheus.Parser.Executors
         /// marked obsolete will be ignored.
         /// </summary>
         /// <returns>A collection of types that extend that type.</returns>
-        private static IEnumerable<Type> GetTypes<T>()
+        public static IEnumerable<Type> GetTypes<T>()
             where T : class
         {
             Type assign = typeof (T);

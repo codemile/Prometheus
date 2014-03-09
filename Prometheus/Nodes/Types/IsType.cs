@@ -11,24 +11,16 @@ namespace Prometheus.Nodes.Types
     public class IsType : DataType
     {
         /// <summary>
-        /// The type
+        /// The type as a string.
         /// </summary>
-        public readonly GrammarSymbol Type;
+        public readonly string Name;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public IsType(GrammarSymbol pType)
         {
-            Type = pType;
-        }
-
-        /// <summary>
-        /// The type as a string.
-        /// </summary>
-        public override string ToString()
-        {
-            return Type.ToString().ToLower();
+            Name = pType.ToString().ToLower();
         }
     }
 }

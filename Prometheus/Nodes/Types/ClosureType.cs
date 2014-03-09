@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Prometheus.Nodes.Types.Attributes;
 using Prometheus.Nodes.Types.Bases;
 using Prometheus.Storage;
 
@@ -9,6 +10,7 @@ namespace Prometheus.Nodes.Types
     /// as the "this" reference. The compiled flag just means that the function
     /// has been created as an object in the heap.
     /// </summary>
+    [DataTypeInfo("Function")]
     public class ClosureType : DataType
     {
         /// <summary>

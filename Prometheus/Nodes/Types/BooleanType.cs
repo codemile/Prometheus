@@ -1,10 +1,12 @@
-﻿using Prometheus.Nodes.Types.Bases;
+﻿using Prometheus.Nodes.Types.Attributes;
+using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Boxes a boolean value.
     /// </summary>
+    [DataTypeInfo("Boolean")]
     public class BooleanType : DataType
     {
         /// <summary>

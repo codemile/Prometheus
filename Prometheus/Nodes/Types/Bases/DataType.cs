@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Exceptions.Executor;
+using Prometheus.Nodes.Types.Attributes;
 
 namespace Prometheus.Nodes.Types.Bases
 {
@@ -36,6 +37,16 @@ namespace Prometheus.Nodes.Types.Bases
         public virtual DataType Clone()
         {
             return this;
+        }
+
+        /// <summary>
+        /// A list of data types as a string.
+        /// </summary>
+        public virtual IEnumerable<string> GetTypes()
+        {
+            return GetType()
+                .GetCustomAttributes(typeof (DataTypeInfoAttribute), true)
+                .Select(pType=>((DataTypeInfoAttribute)pType).Name);
         }
 
         /// <summary>

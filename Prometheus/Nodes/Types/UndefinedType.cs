@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Prometheus.Nodes.Types.Attributes;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -7,6 +8,7 @@ namespace Prometheus.Nodes.Types
     /// Represents an undefined value.
     /// </summary>
     [DebuggerDisplay("Undefined")]
+    [DataTypeInfo("Undefined")]
     public class UndefinedType : DataType
     {
         /// <summary>
@@ -19,7 +21,7 @@ namespace Prometheus.Nodes.Types
         /// </summary>
         public override string ToString()
         {
-            return "Undefined";
+            return "undefined";
         }
     }
 }

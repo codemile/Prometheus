@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Exceptions.Executor;
-using Prometheus.Nodes.Types;
+using Prometheus.Nodes.Types.Attributes;
 using Prometheus.Nodes.Types.Bases;
+using Prometheus.Storage;
 
-namespace Prometheus.Storage
+namespace Prometheus.Nodes.Types
 {
     /// <summary>
     /// Handles storage of packages, and the object declarations in those packages.
     /// </summary>
-    public class NameSpace : DataType, iMemorySpace
+    [DataTypeInfo("Package")]
+    public class NameSpaceType : DataType, iMemorySpace
     {
         /// <summary>
         /// Holds references to sub-packages via their name.
@@ -19,7 +21,7 @@ namespace Prometheus.Storage
         /// <summary>
         /// Constructor
         /// </summary>
-        public NameSpace()
+        public NameSpaceType()
         {
             _space = new Dictionary<string, DataType>();
         }

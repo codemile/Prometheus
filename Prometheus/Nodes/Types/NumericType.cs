@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Prometheus.Nodes.Types.Attributes;
 using Prometheus.Nodes.Types.Bases;
 
 namespace Prometheus.Nodes.Types
@@ -6,6 +8,9 @@ namespace Prometheus.Nodes.Types
     /// <summary>
     /// Boxes primitive types
     /// </summary>
+    [DataTypeInfo("Number")]
+    [DataTypeInfo("Integer")]
+    [DataTypeInfo("Float")]
     public class NumericType : DataType
     {
         /// <summary>
@@ -77,6 +82,18 @@ namespace Prometheus.Nodes.Types
         public override string ToString()
         {
             return Value + (isDouble ? "f" : "");
+        }
+
+        /// <summary>
+        /// The data types for this number.
+        /// </summary>
+        public override IEnumerable<string> GetTypes()
+        {
+            return new[]
+                   {
+                       isLong ? "integer" : "float",
+                       "number"
+                   };
         }
     }
 }
