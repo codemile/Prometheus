@@ -1,3 +1,4 @@
 Package GrammarTests.Small;
-var x;
-print x is undefined;
+
+print "This houses is big" contains none 'hous';
+

@@ -8,7 +8,7 @@ namespace Prometheus.Nodes.Types
     /// Represents the type info for data.
     /// </summary>
     [DebuggerDisplay("{{Type}}")]
-    public class IsType : DataType
+    public class TerminalType : DataType
     {
         /// <summary>
         /// The type as a string.
@@ -18,9 +18,25 @@ namespace Prometheus.Nodes.Types
         /// <summary>
         /// Constructor
         /// </summary>
-        public IsType(GrammarSymbol pType)
+        public TerminalType(GrammarSymbol pType)
         {
             Name = pType.ToString().ToLower();
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TerminalType(string pName)
+        {
+            Name = pName.ToLower();
+        }
+
+        /// <summary>
+        /// The type as a string.
+        /// </summary>
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

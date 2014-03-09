@@ -47,8 +47,8 @@ namespace Prometheus.Runtime
         [ExecuteSymbol(GrammarSymbol.IsOperator)]
         public BooleanType Is(Node pNode, DataType pArg1, DataType pArg2)
         {
-            return (pArg1 is IsType)
-                ? Is(pNode, (IsType)pArg1, (QualifiedType)pArg2)
+            return (pArg1 is TerminalType)
+                ? Is(pNode, (TerminalType)pArg1, (QualifiedType)pArg2)
                 : Is(pNode, (QualifiedType)pArg1, (QualifiedType)pArg2);
         }
 
@@ -74,7 +74,7 @@ namespace Prometheus.Runtime
         /// <summary>
         /// Checks if a variable is of a type.
         /// </summary>
-        public BooleanType Is(Node pNode, IsType pType, QualifiedType pId)
+        public BooleanType Is(Node pNode, TerminalType pType, QualifiedType pId)
         {
             DataType value = Resolve<DataType>(pId);
             return new BooleanType(value.GetTypes().Any(pValueType => pValueType == pType.Name));

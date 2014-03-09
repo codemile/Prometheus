@@ -1,0 +1,25 @@
+Package GrammarTasks.Matching;
+
+Tests;
+
+var x = "This house is too big";
+
+Test Contains_Test {
+	Assert x contains "ous";
+	Assert x contains ["ous","oo"];
+	Assert x contains ["ous","oo"];
+	Assert x contains 'house';
+}
+
+Test Contains_Any_Test {
+	Assert x contains any ["small","tiny","big"];
+}
+
+Test Contains_All_Test {
+	Assert x contains all ["This","house"];
+}
+
+Test Contains_None_Test {
+	Assert x contains none ["horse","wood","small"];
+	Assert (x contains none ["this","house"]) == false;
+}

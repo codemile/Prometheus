@@ -1,4 +1,5 @@
-﻿using GOLD;
+﻿using System.Collections.Generic;
+using GOLD;
 using Prometheus.Compile;
 using Prometheus.Grammar;
 using Prometheus.Nodes.Types;
@@ -12,6 +13,14 @@ namespace Prometheus.Nodes
     /// </summary>
     public static class NodeFactory
     {
+        /// <summary>
+        /// These nodes has a terminal associated with them that needs to be converted into a DataType.
+        /// </summary>
+        private static readonly HashSet<GrammarSymbol> _terminalData = new HashSet<GrammarSymbol>
+                                                                       {
+                                                                           GrammarSymbol.Types
+                                                                       };
+
         /// <summary>
         /// Initializes a new Node object from a Reduction object.
         /// </summary>
@@ -42,10 +51,10 @@ namespace Prometheus.Nodes
                 Symbol parent = token.Parent;
                 GrammarSymbol dataType = (GrammarSymbol)parent.TableIndex();
 
-                // special case, types carry the symbol on the right
-                if (symbol == GrammarSymbol.Types)
+                // special case, these nodes carry the terminal on the right
+                if (_terminalData.Contains(symbol))
                 {
-                    node.Data.Add(new IsType(dataType));
+                    node.Data.Add(new TerminalType(dataType));
                     continue;
                 }
 

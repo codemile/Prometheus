@@ -29,7 +29,8 @@ namespace Prometheus.Nodes
                                                                         GrammarSymbol.Undefined,
                                                                         GrammarSymbol.Identifier,
                                                                         GrammarSymbol.ValidID,
-                                                                        GrammarSymbol.MemberName
+                                                                        GrammarSymbol.MemberName,
+                                                                        GrammarSymbol.Quantifier
                                                                     };
 
         /// <summary>
@@ -77,6 +78,9 @@ namespace Prometheus.Nodes
 
                 case GrammarSymbol.MemberName:
                     return new IdentifierType(pValue.Substring(1));
+
+                case GrammarSymbol.Quantifier:
+                    return new TerminalType(pValue);
             }
 
             throw new UnsupportedDataTypeException(string.Format("{0} is not a supported data type.", pSymbol),

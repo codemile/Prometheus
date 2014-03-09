@@ -6,23 +6,22 @@ using Prometheus.Parser.Executors;
 namespace Prometheus.Compile.Optimizers
 {
     /// <summary>
-    /// Types symbols are converted to data on the parent. This was the IsOperator has the type as data.
+    /// Drops the parent node if the parent is Value. Value nodes should only hold constant data, and not have children.
     /// </summary>
-    public class OptimizeTypes : BaseOptimizer
+    public class OptimizeValue : BaseOptimizer
     {
         /// <summary>
         /// These nodes can have their child promoted, if it's only one child.
         /// </summary>
         private static readonly HashSet<GrammarSymbol> _nodeTypes = new HashSet<GrammarSymbol>
                                                                     {
-                                                                        GrammarSymbol.Types,
-                                                                        GrammarSymbol.QuantifierType
+                                                                        GrammarSymbol.Value
                                                                     };
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptimizeTypes(iExecutor pExecutor)
+        public OptimizeValue(iExecutor pExecutor)
             : base(pExecutor, _nodeTypes)
         {
         }
@@ -32,12 +31,13 @@ namespace Prometheus.Compile.Optimizers
         /// </summary>
         public override bool OptimizeChild(Node pParent, Node pChild)
         {
-#if DEBUG
-            Assertion.Children(0, pChild);
-            Assertion.Data(1, pChild);
-#endif
-            pParent.Data.Add(pChild.FirstData());
-            pParent.Children.Remove(pChild);
+            if (pChild.Data.Count != 0
+                || pChild.Children.Count != 1)
+            {
+                return false;
+            }
+
+            pParent.Children.ReplaceNode(pChild, pChild.Children);
             return true;
         }
     }

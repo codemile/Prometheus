@@ -21,7 +21,8 @@ namespace Prometheus.Compile.Optimizers
                                                                         GrammarSymbol.Program,
                                                                         GrammarSymbol.ProgramCode,
                                                                         GrammarSymbol.ImportDecls,
-                                                                        GrammarSymbol.ObjectDecls
+                                                                        GrammarSymbol.ObjectDecls,
+                                                                        GrammarSymbol.QuantifierType
                                                                     };
 
         /// <summary>

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Prometheus.Exceptions.Executor;
 using Prometheus.Grammar;
 using Prometheus.Nodes;
 using Prometheus.Nodes.Types;
@@ -19,6 +21,11 @@ namespace Prometheus.Runtime
     public class Search : ExecutorGrammar
     {
         /// <summary>
+        /// Default quantifier
+        /// </summary>
+        private readonly static TerminalType _all = new TerminalType("any");
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Search(Executor pExecutor)
@@ -27,13 +34,19 @@ namespace Prometheus.Runtime
         }
 
         /// <summary>
-        /// Processes a boolean result for searches.
+        /// True if the haystack contains one of the needles.
         /// </summary>
-        /// <param name="pHaystacks">What to search in</param>
-        /// <param name="pNeedles">The terms to find</param>
-        /// <returns>Boolean result</returns>
         [ExecuteSymbol(GrammarSymbol.ContainsTerm)]
-        public DataType Contains(Node pNode, DataType pHaystacks, DataType pNeedles)
+        public BooleanType Contains(Node pNode, DataType pHaystacks, DataType pNeedles)
+        {
+            return Contains(pNode, _all, pHaystacks, pNeedles);
+        }
+
+        /// <summary>
+        /// True if the haystack contains one of the needles.
+        /// </summary>
+        [ExecuteSymbol(GrammarSymbol.ContainsTerm)]
+        public BooleanType Contains(Node pNode, TerminalType pQuantifier, DataType pHaystacks, DataType pNeedles)
         {
             pHaystacks = Resolve(pHaystacks);
             pNeedles = Resolve(pNeedles);
@@ -41,9 +54,23 @@ namespace Prometheus.Runtime
             IEnumerable<iSearchHaystack> haystacks = DataType.ToArray<StringType>(pHaystacks);
             IEnumerable<iSearchNeedle> needles = DataType.ToArray<StringType>(pNeedles);
 
-            return needles.Any(pNeedle=>haystacks.Any(pStack=>pStack.Contains(pNeedle)))
-                ? BooleanType.True
-                : BooleanType.False;
+            switch (pQuantifier.Name)
+            {
+                case "all":
+                    return needles.All(pNeedle=>haystacks.Any(pStack=>pStack.Contains(pNeedle)))
+                        ? BooleanType.True
+                        : BooleanType.False;
+                case "any":
+                    return needles.Any(pNeedle=>haystacks.Any(pStack=>pStack.Contains(pNeedle)))
+                        ? BooleanType.True
+                        : BooleanType.False;
+                case "none":
+                    return needles.Any(pNeedle=>haystacks.Any(pStack=>pStack.Contains(pNeedle)))
+                        ? BooleanType.False
+                        : BooleanType.True;
+            }
+
+            throw new InvalidArgumentException(string.Format("<contains> operator does not support quantifier <{0}>", pQuantifier.Name),pNode);
         }
     }
 }

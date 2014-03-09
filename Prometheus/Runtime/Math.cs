@@ -77,6 +77,12 @@ namespace Prometheus.Runtime
                 return false;
             }
 
+            if (pNode.Children[0].Data.Count != 1
+                || pNode.Children[1].Data.Count != 1)
+            {
+                return false;
+            }
+
             DataType valueA = pNode.Children[0].Data[0];
             DataType valueB = pNode.Children[1].Data[0];
 

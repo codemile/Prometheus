@@ -11,5 +11,6 @@ Use "Variables/Scope";
 Use "Variables/LexicalScope";
 Use "Variables/Is";
 Use "Variables/TypeOf";
+Use "Matching/Contains";
 
 Tests;

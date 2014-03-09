@@ -71,9 +71,15 @@ namespace Prometheus.Runtime
         /// <returns>True if tree was modified.</returns>
         public bool OptimizeNode(Node pNode)
         {
-            if (pNode.Children.Count != 2 ||
-                pNode.Data.Count != 0 ||
-                !CanReduce(pNode))
+            if (pNode.Children.Count != 2 
+                || pNode.Data.Count != 0
+                || !CanReduce(pNode))
+            {
+                return false;
+            }
+
+            if (pNode.Children[0].Data.Count != 1
+                || pNode.Children[1].Data.Count != 1)
             {
                 return false;
             }

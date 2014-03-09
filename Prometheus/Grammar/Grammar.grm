@@ -39,6 +39,7 @@ Numeric			= [0123456789]+
 Decimal			= [0123456789]+ '.' [0123456789]+
 Boolean			= 'true' | 'false' | 'on' | 'off' | 'yes' | 'no' | 'always' | 'never'
 Undefined		= 'undefined'
+Quantifier		= 'any' | 'all' | 'none'
 
 ! ===================================================================
 ! Comments
@@ -119,8 +120,11 @@ Comment Line  = '//'
 
 <Search Chain>			::= <Contains Term>
 
-<Contains Term>			::= <Contains Term> 'CONTAINS' <Boolean Chain>
-						| <Contains Term> 'HAS' <Boolean Chain> | <Boolean Chain>
+<Contains Term>			::= <Contains Term> 'CONTAINS' <Quantifier Type> <Boolean Chain>
+						| <Boolean Chain>
+
+<Quantifier Type>		::= Quantifier
+						| ! or none
 
 ! ===================================================================
 ! Boolean Operators
