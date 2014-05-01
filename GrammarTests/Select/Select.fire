@@ -1,0 +1,11 @@
+Package GrammarTests.Select;
+
+Test;
+
+var words = "This is my sample data I will use." / " ";
+
+Test Select_Test {
+	var x = select words yield upper(word);
+	Assert x is array;
+	
+}

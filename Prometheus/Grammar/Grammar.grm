@@ -40,6 +40,7 @@ Decimal			= [0123456789]+ '.' [0123456789]+
 Boolean			= 'true' | 'false' | 'on' | 'off' | 'yes' | 'no' | 'always' | 'never'
 Undefined		= 'undefined'
 Quantifier		= 'any' | 'all' | 'none'
+Direction		= 'asc' | 'desc'
 
 ! ===================================================================
 ! Comments
@@ -254,6 +255,7 @@ Comment Line  = '//'
 					| <Qualified ID>
 					| <Function Expression>
 					| '(' <Expression> ')'
+					| <Select Chain>
 					| <Call Expression>
 					| <All Functions>
 
@@ -388,6 +390,34 @@ Comment Line  = '//'
 
 <Break Control>			::= 'break'
 <Continue Control>		::= 'continue'
+
+! ===================================================================
+! SELECT Queries
+! ===================================================================
+
+<Select Chain>			::= <Select Query> <Yield>
+						| <Select Query> <Select Chain> <Yield>
+
+<Select Query>			::= 'select' <Plural ID> <Where> <Order By> 
+
+<Select Statements>		::= <Select Statement>
+						| <Select Statement> <Select Statements>
+						| ! or none
+
+<Select Statement>		::= <Declare>
+						| <Where>
+
+<Where>					::= 'where' <Expression>
+						| ! or none
+
+<Order By>				::= 'order' 'by' <Expression> <Order Direction>
+						| ! or none
+
+<Order Direction>		::= Direction
+						| ! or none
+
+<Yield>					::= <Expression>
+						| ! or none
 
 ! ===================================================================
 ! Procedures
